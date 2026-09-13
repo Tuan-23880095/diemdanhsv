@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xem điểm — Sinh viên</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/print.css">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+
+<header class="brand-bar text-white no-print">
+  <div class="mx-auto flex max-w-lg items-center justify-between gap-3 px-4 py-3">
+    <div class="flex items-center gap-3">
+      <a href="../index.html" class="text-white/80 hover:text-white">&larr;</a>
+      <h1 class="text-base font-bold">Xem điểm</h1>
+    </div>
+    <div id="session-bar" class="flex items-center gap-3 text-sm">
+      <span id="who" class="opacity-90"></span>
+    </div>
+  </div>
+</header>
+
+<main class="mx-auto max-w-lg px-4 py-6">
+
+  <!-- BƯỚC 1 — nhập MSSV -->
+  <section id="step-mssv" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" hidden>
+    <h2 class="text-lg font-bold">Xác minh danh tính</h2>
+    <p class="mt-1 text-sm text-slate-600">
+      Nhập mã số sinh viên. Hệ thống sẽ gửi một mã xác minh tới địa chỉ email
+      nhà trường của bạn — chỉ người mở được hộp thư đó mới xem được điểm.
+    </p>
+
+    <form id="mssv-form" class="mt-4 space-y-4">
+      <div>
+        <label for="mssv" class="block text-sm font-medium text-slate-700">Mã số sinh viên</label>
+        <input id="mssv" name="mssv" type="text" inputmode="numeric" autocomplete="off"
+               maxlength="10" required placeholder="25160003"
+               class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+      </div>
+      <button id="send-btn" type="submit"
+              class="w-full rounded-lg bg-blue-700 px-4 py-3 text-base font-semibold text-white transition hover:bg-blue-800 disabled:bg-slate-300">
+        Gửi mã xác minh
+      </button>
+    </form>
+  </section>
+
+  <!-- BƯỚC 2 — nhập mã từ email -->
+  <section id="step-code" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" hidden>
+    <h2 class="text-lg font-bold">Nhập mã từ email</h2>
+    <p id="code-hint" class="mt-1 text-sm text-slate-600"></p>
+
+    <form id="code-form" class="mt-4 space-y-4">
+      <div>
+        <label for="code" class="block text-sm font-medium text-slate-700">Mã xác minh (4 ký tự)</label>
+        <input id="code" name="code" type="text" autocomplete="one-time-code"
+               autocapitalize="characters" spellcheck="false" maxlength="4" required placeholder="A8K2"
+               class="code-input mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-center text-2xl font-bold uppercase focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+        <p class="mt-1 text-xs text-slate-500">Không thấy email? Kiểm tra hộp thư rác.</p>
+      </div>
+
+      <button id="verify-btn" type="submit"
+              class="w-full rounded-lg bg-blue-700 px-4 py-3 text-base font-semibold text-white transition hover:bg-blue-800 disabled:bg-slate-300">
+        Xem điểm
+      </button>
+    </form>
+
+    <div class="mt-3 flex items-center justify-between text-sm">
+      <button type="button" id="back-btn" class="text-slate-500 hover:text-slate-800">
+        &larr; Đổi mã số khác
+      </button>
+      <button type="button" id="resend-btn"
+              class="font-medium text-blue-700 hover:text-blue-900 disabled:text-slate-400">
+        Gửi lại mã
+      </button>
+    </div>
+  </section>
+
+  <!-- THÔNG BÁO -->
+  <div id="message" class="mt-4" hidden></div>
+
+  <!-- BẢNG ĐIỂM -->
+  <div id="grades-box" hidden>
+    <div id="classes" class="space-y-4"></div>
+
+    <div class="mt-4 flex gap-2 no-print">
+      <button type="button" id="print-btn"
+              class="flex-1 rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100">
+        In bảng điểm
+      </button>
+      <button type="button" id="exit-btn"
+              class="flex-1 rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100">
+        Thoát
+      </button>
+    </div>
+
+    <p class="mt-4 text-center text-xs text-slate-400">
+      Thấy điểm chưa đúng thì liên hệ giảng viên để kiểm tra.
+    </p>
+  </div>
+
+</main>
+
+<script src="../js/config/config.js"></script>
+<script src="../js/services/APIService.js"></script>
+<script src="../js/views/GradeView.js"></script>
+<script src="../js/controllers/GradeController.js"></script>
+<script>
+  // Không có logic nghiệp vụ trong HTML — chỉ nối dây (thiết kế B.3)
+  document.addEventListener('DOMContentLoaded', function () {
+    new GradeController(new APIService(CONFIG.API_URL), new GradeView()).init();
+    document.getElementById('print-btn').addEventListener('click', function () { window.print(); });
+  });
+</script>
+</body>
+</html>
