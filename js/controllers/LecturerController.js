@@ -116,8 +116,15 @@ class LecturerController {
     if (!this.sessionId || !this.token) return;
     try {
       this.view.renderRoster(await this.api.liveRoster(this.token, this.sessionId));
+      this.lastError = '';
     } catch (err) {
-      if (/hết hạn/.test(err.message)) { this.view.toast(err.message, 'error'); this.logout(); }
+      if (/hết hạn/.test(err.message)) { this.view.toast(err.message, 'error'); this.logout(); return; }
+      // Trước đây mọi lỗi khác bị nuốt im lặng -> giảng viên chỉ thấy trang
+      // trống, không biết vì sao. Báo ra, mỗi lỗi một lần để vòng 10s không spam.
+      if (err.message !== this.lastError) {
+        this.lastError = err.message;
+        this.view.toast(err.message, 'error');
+      }
     }
   }
 }

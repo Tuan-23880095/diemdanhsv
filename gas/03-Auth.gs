@@ -95,7 +95,7 @@ const AuthService = {
   /**
    * Kiểm tra quyền thao tác trên một lớp cụ thể (thiết kế D.9 — nhiều
    * giảng viên). ADMIN thao tác được mọi lớp. LECTURER chỉ thao tác được
-   * lớp mình đứng tên LecturerID trong 03_CLASSES.
+   * lớp có TÊN MÌNH trong danh sách LecturerID của 03_CLASSES.
    * Gọi ngay sau requireRole(), TRƯỚC khi đọc/ghi bất cứ gì của lớp đó.
    * Ném lỗi rõ ràng thay vì âm thầm trả danh sách rỗng.
    */
@@ -103,13 +103,45 @@ const AuthService = {
     if (me.role === ROLE.ADMIN) return;
 
     const cls = Repos.classes().findOne({ ClassID: classId });
-    if (!cls || String(cls.LecturerID).trim() !== String(me.userId).trim()) {
+    if (!cls || !classHasLecturer_(cls, me.userId)) {
       throw new Error('Bạn không có quyền thao tác trên lớp này.');
     }
   }
 };
 
 /* ------------------------------------------------------------------ */
+
+/**
+ * [D.9 mở rộng — nhiều giảng viên chung một lớp]
+ * 03_CLASSES.LecturerID lưu DANH SÁCH UserID cách nhau bởi dấu phẩy
+ * (ví dụ "1607,2015,2962"), KHÔNG còn là một giá trị đơn.
+ *
+ * KHÔNG tạo nhiều dòng cùng ClassID để "gán" nhiều giảng viên — SheetRepo
+ * (findOne/findWhere) chỉ đọc dòng ĐẦU TIÊN trùng ClassID, nên giảng viên
+ * ở các dòng sau vẫn bị từ chối dù đã điền tay. Có dữ liệu cũ kiểu đó thì
+ * chạy fixRealData() (11-FixRealData.gs) một lần để gộp về đúng dạng này.
+ */
+function classHasLecturer_(cls, userId) {
+  // BẪY ĐỊNH DẠNG VIỆT NAM: dấu phẩy là dấu thập phân, nên ô "1607,2115"
+  // (đúng 2 giảng viên) bị Sheets tự đổi thành SỐ 1607.2115 — chính lỗi làm
+  // tài khoản tuan/lien thấy lớp Thực tập sư phạm nhưng mở ra trang trống.
+  // Tách theo cả dấu chấm để đọc đúng; và chạy fixLecturerIdFormat()
+  // (11-FixRealData.gs) để đưa cột về dạng văn bản, vì dạng số làm mất số 0
+  // cuối (1607,2110 -> 1607.211).
+  const raw = cls.LecturerID === undefined || cls.LecturerID === null ? '' : cls.LecturerID;
+  const list = String(raw).split(/[,;.\s]+/).map(function (s) { return s.trim(); });
+  return list.indexOf(String(userId).trim()) !== -1;
+}
+
+/**
+ * Dòng còn hiệu lực: Status = ACTIVE, hoặc để TRỐNG (thầy thêm buổi học bằng
+ * tay thường quên cột Status — buổi 04–06 của TTSP26 bị ẩn khỏi danh sách vì vậy).
+ * Chỉ ẩn khi ghi rõ INACTIVE.
+ */
+function isActiveRow_(r) {
+  const s = String(r.Status === undefined || r.Status === null ? '' : r.Status).trim().toUpperCase();
+  return s === '' || s === RECORD_STATUS.ACTIVE;
+}
 
 /** SHA-256 với salt riêng cho từng tài khoản */
 function hashPassword_(plain, salt) {

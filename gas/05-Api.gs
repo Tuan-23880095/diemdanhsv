@@ -21,6 +21,10 @@
  * (Apps Script không trả lời được OPTIONS), và vẫn đọc được JSON trả về.
  */
 
+// Đổi mỗi khi sửa code backend, rồi kiểm lại qua <API_URL>?action=ping —
+// đây là cách DUY NHẤT biết chắc bản deploy đang chạy đã có code mới.
+const API_VERSION = '2.4-fixquyen';
+
 /** Router GET — chỉ dành cho thao tác ĐỌC */
 function doGet(e) {
   try {
@@ -30,11 +34,16 @@ function doGet(e) {
     switch (action) {
 
       case 'ping':
-        return ok({ time: nowStamp(), version: '2.1-D9' });
+        return ok({ time: nowStamp(), version: API_VERSION });
 
       // Sinh viên xem lịch sử điểm danh của mình
       case 'studentHistory':
         return ok(AttendanceService.studentHistory(p.mssv, p.classId));
+
+      // Sinh viên xem điểm. KHÔNG nhận MSSV ở đây — danh tính lấy từ token
+      // đã xác minh qua email, nên không truyền MSSV bạn khác vào xem trộm được.
+      case 'myGrades':
+        return ok(GradeService.myGrades(p.token));
 
       // Giảng viên: danh sách check-in thời gian thực (D.8 lớp 5)
       case 'liveRoster':
@@ -45,9 +54,7 @@ function doGet(e) {
         const me = AuthService.requireRole(p.token, [ROLE.LECTURER, ROLE.ADMIN]);
         let classes = Repos.classes().findWhere({ Status: RECORD_STATUS.ACTIVE });
         if (me.role === ROLE.LECTURER) {
-          classes = classes.filter(function (c) {
-            return String(c.LecturerID).trim() === String(me.userId).trim();
-          });
+          classes = classes.filter(function (c) { return classHasLecturer_(c, me.userId); });
         }
         return ok(classes.map(stripRow_));
       }
@@ -56,7 +63,8 @@ function doGet(e) {
         const me = AuthService.requireRole(p.token, [ROLE.LECTURER, ROLE.ADMIN]);
         AuthService.assertClassAccess(me, p.classId);
         return ok(Repos.sessions()
-                       .findWhere({ ClassID: p.classId, Status: RECORD_STATUS.ACTIVE })
+                       .findWhere({ ClassID: p.classId })
+                       .filter(isActiveRow_)
                        .sort(function (a, b) { return Number(a.SessionNo) - Number(b.SessionNo); })
                        .map(stripRow_));
       }
@@ -88,6 +96,19 @@ function doPost(e) {
 
       case 'logout':
         return ok(AuthService.logout(body.token));
+
+      // Sinh viên xin mã xem điểm — hệ thống gửi mã tới email đã lưu sẵn
+      case 'requestGradeCode': {
+        const r = GradeAuth.requestCode(body.mssv);
+        return r.ok ? ok({ message: r.message }) : fail(r.message);
+      }
+
+      // Đối chiếu mã, cấp token xem điểm
+      case 'verifyGradeCode': {
+        const r = GradeAuth.verifyCode(body.mssv, body.code);
+        if (!r.ok) return fail(r.reason);
+        return ok({ token: r.token, mssv: r.mssv, fullName: r.fullName });
+      }
 
       case 'openAttendance':
         return ok(AttendanceService.open(body.token, body.sessionId, {

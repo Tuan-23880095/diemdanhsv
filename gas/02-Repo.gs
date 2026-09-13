@@ -42,15 +42,28 @@ class SheetRepo {
     return i + 1;
   }
 
-  /** Toàn bộ dòng dữ liệu dưới dạng object { TênCột: giá trị, _row: số dòng thật } */
+  /**
+   * Toàn bộ dòng dữ liệu dưới dạng object { TênCột: giá trị, _row: số dòng thật }
+   *
+   * Ô ngày/giờ được trả về dạng chuỗi "yyyy-MM-ddTHH:mm:ss", KHÔNG phải Date.
+   * Lý do: nowStamp() ghi chuỗi, nhưng Google Sheets tự đổi chuỗi đó thành
+   * ngày-giờ. Đọc lại ra Date thì String(Date) = "Sun Sep 13 2026 ...", mọi phép
+   * so sánh chuỗi thời gian trong AttendanceService sai hết (mã điểm danh
+   * không bao giờ hết hạn, ai gửi trễ cũng thành "Có mặt").
+   */
   all() {
     const last = this.sheet.getLastRow();
     if (last < 2) return [];
     const values = this.sheet.getRange(2, 1, last - 1, this.headers.length).getValues();
     const headers = this.headers;
+    const tz = getSpreadsheet().getSpreadsheetTimeZone() || CONFIG.TIMEZONE;
     return values.map(function (row, i) {
       const obj = { _row: i + 2 };
-      headers.forEach(function (h, c) { if (h) obj[h] = row[c]; });
+      headers.forEach(function (h, c) {
+        if (!h) return;
+        const v = row[c];
+        obj[h] = v instanceof Date ? Utilities.formatDate(v, tz, "yyyy-MM-dd'T'HH:mm:ss") : v;
+      });
       return obj;
     });
   }

@@ -286,7 +286,7 @@ const AttendanceService = {
     const auth = AuthService.identifyStudent(mssv, classId);
     if (!auth.ok) throw new Error(auth.reason);
 
-    const sessions = Repos.sessions().findWhere({ ClassID: classId, Status: RECORD_STATUS.ACTIVE });
+    const sessions = Repos.sessions().findWhere({ ClassID: classId }).filter(isActiveRow_);
     const byId = {};
     Repos.attendance().findWhere({ StudentID: auth.student.StudentID })
       .forEach(function (r) { byId[String(r.SessionID).trim()] = r; });
