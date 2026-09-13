@@ -1,0 +1,28 @@
+/* css/main.css — bổ sung cho Tailwind, giữ tối thiểu */
+
+:root { --brand: #0b4f9e; }
+
+body { -webkit-tap-highlight-color: transparent; }
+
+/* Ô nhập mã điểm danh: to, giãn chữ, dễ đọc trên điện thoại */
+.code-input {
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mã chiếu lên máy chiếu — phải đọc được từ cuối giảng đường */
+.code-display {
+  letter-spacing: 0.18em;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(3rem, 14vw, 7rem);
+  line-height: 1;
+}
+
+.brand-bar { background: var(--brand); }
+
+table { border-collapse: collapse; }
+
+/* Bảng rộng hơn màn hình thì cuộn ngang trong khung của nó,
+   không đẩy cả trang lệch sang phải trên điện thoại */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }

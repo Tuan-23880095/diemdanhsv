@@ -1,0 +1,23 @@
+# Dữ liệu sinh viên — TUYỆT ĐỐI không đưa lên GitHub
+*.csv
+*.xlsx
+*.xls
+data/
+danh-sach/
+*danh-sach*
+*DanhSach*
+
+# Thông tin nhạy cảm
+**/secrets.js
+**/*-local.js
+.env
+
+# Rác hệ điều hành
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Trình soạn thảo
+.vscode/
+.idea/
+*.swp
