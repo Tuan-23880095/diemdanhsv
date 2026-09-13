@@ -65,4 +65,11 @@ class APIService {
   openAttendance(token, sessionId, o) { return this.post('openAttendance', Object.assign({ token, sessionId }, o || {})); }
   closeAttendance(token, sessionId)   { return this.post('closeAttendance', { token, sessionId }); }
   checkin(payload)                    { return this.post('checkin', payload); }
+
+  /* ---- Xem điểm: xác minh hai bước qua email ----
+     myGrades KHÔNG nhận mssv. Danh tính nằm trong token đã xác minh, nên
+     không thể truyền MSSV của bạn khác vào để xem trộm điểm. */
+  requestGradeCode(mssv)              { return this.post('requestGradeCode', { mssv }); }
+  verifyGradeCode(mssv, code)         { return this.post('verifyGradeCode', { mssv, code }); }
+  myGrades(token)                     { return this.get('myGrades', { token }); }
 }
