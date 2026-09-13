@@ -102,6 +102,25 @@ class SheetRepo {
     });
   }
 
+  /**
+   * Thêm nhiều dòng trong MỘT lần ghi. Dùng khi nhập hàng trăm dòng —
+   * gọi insert() lặp lại thì mỗi appendRow tốn ~0,3 giây, dễ vượt giới hạn
+   * 6 phút của Apps Script.
+   */
+  insertMany(objs) {
+    if (!objs.length) return 0;
+    const self = this;
+    return withLock_(function () {
+      const rows = objs.map(function (obj) {
+        return self.headers.map(function (h) {
+          return Object.prototype.hasOwnProperty.call(obj, h) ? obj[h] : '';
+        });
+      });
+      self.sheet.getRange(self.sheet.getLastRow() + 1, 1, rows.length, self.headers.length).setValues(rows);
+      return rows.length;
+    });
+  }
+
   /** Cập nhật một phần dòng đã biết số dòng thật (_row). */
   updateRow(rowNumber, patch) {
     const self = this;
