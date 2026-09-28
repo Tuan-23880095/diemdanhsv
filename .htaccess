@@ -1,0 +1,20 @@
+# .htaccess — đặt ở gốc public_html trên Hostinger (LiteSpeed/Apache)
+# Repo được deploy nguyên khối, nên phải chặn những thứ không dành cho trình duyệt.
+
+Options -Indexes
+DirectoryIndex index.html index.php
+
+RewriteEngine On
+
+# Cho phép thư mục xác minh SSL miễn phí (Let's Encrypt) — KHÔNG được chặn
+RewriteRule ^\.well-known/ - [L]
+
+# Chặn file/thư mục ẩn: .git, .github, .gitignore, .firebaserc…
+RewriteRule (^|/)\. - [F,L]
+
+# Chặn mã backend cũ, tài liệu nội bộ, schema CSDL
+RewriteRule ^(gas|docs|db|_firebase-upload)(/|$) - [F,L]
+
+# Chặn tài liệu và script không phục vụ web
+RewriteRule \.(md|ps1|sql|gs|yml|yaml|log|bak)$ - [F,L]
+RewriteRule ^firebase\.json$ - [F,L]
