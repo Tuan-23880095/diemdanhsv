@@ -21,3 +21,11 @@ desktop.ini
 .vscode/
 .idea/
 *.swp
+
+# Khoá deploy, bản upload tạm, cấu hình máy chủ — không bao giờ lên Git
+Tạo khóa deploy/
+_firebase-upload/
+private/
+config.php
+*.pem
+*service-account*.json
