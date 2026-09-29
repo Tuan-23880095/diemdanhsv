@@ -230,14 +230,15 @@ nhận khi viết code GĐ2 (không đoán ở đây).
    dùng stub (ví dụ ghi log thay vì gửi) cho đến khi thầy tạo hộp thư
    `noreply@diemdanhsv.com`.
 
-## 11. Việc tiếp theo (GĐ4)
+## 11. Việc tiếp theo (GĐ5)
 
-GĐ2 (nền PHP + `ping`) và GĐ3 (`login`/`logout`/`requestGradeCode`/
-`verifyGradeCode`, xem mục 12) đã xong. GĐ4 (PLAN): `openAttendance`,
-`closeAttendance`, `checkin`, `liveRoster` đủ 6 lớp bù D.8 (mục 7) — cần
-thêm `require_role()`/`assert_class_access()` (đọc bảng `auth_tokens`
-Kind='LECTURER', port `classHasLecturer_()` từ `gas/03-Auth.gs`) mà GĐ3
-chưa cần dùng tới.
+GĐ2 (nền PHP + `ping`), GĐ3 (`login`/`logout`/`requestGradeCode`/
+`verifyGradeCode`, mục 12) và GĐ4 (`openAttendance`/`closeAttendance`/
+`checkin`/`liveRoster`, mục 13) đã xong. GĐ5 (PLAN): `studentHistory`,
+`myGrades`, `listClasses`, `listSessions`; smoke test 13/13 trên seed;
+review bảo mật độc lập (có thể giao Abacus DeepAgent, trước 17/10/2026).
+`studentHistory` dùng lại `identify_student()` đã có sẵn từ GĐ4
+(`api/lib/roles.php`) — không cần viết lại logic xác thực MSSV.
 
 ## 12. Cập nhật GĐ3 — `login`/`logout`/`requestGradeCode`/`verifyGradeCode`
 
@@ -270,3 +271,74 @@ Port đúng theo mục 6 (rehash mật khẩu qua 2 bước) và mục 10.1 (b�
   hạn token) — cần chạy trên host Hostinger hoặc máy có MariaDB trước khi
   coi GĐ3 là "Xong khi" đầy đủ theo PLAN ("Test tài khoản demo: đăng nhập,
   rehash, token hết hạn").
+
+## 13. Cập nhật GĐ4 — `openAttendance`/`closeAttendance`/`checkin`/`liveRoster`
+
+Port đúng theo mục 5 (bảng đối chiếu 13 action) và đủ sáu lớp bù D.8 (mục 7),
+thêm `api/lib/roles.php` (mới) cho `require_role()`/`assert_class_access()`/
+`identify_student()` mà GĐ3 chưa cần. Vài quyết định triển khai cụ thể, để
+phiên sau không phải đọc lại code:
+
+- **`require_role()` đọc bảng `auth_tokens` JOIN `users`** thay
+  `CacheService.get('tok_'+token)` cũ — không lưu lại `role`/`name` trong
+  chính token như cache cũ, tra trực tiếp `users.Role`/`users.FullName` qua
+  `auth_tokens.SubjectID` mỗi lần gọi. **Không kiểm lại `users.Status`** ở
+  đây, giữ đúng hành vi bản gốc (token còn hạn thì còn dùng được tới khi hết
+  hạn/logout, kể cả nếu tài khoản bị khoá sau đó) — cần thầy xác nhận đây là
+  hành vi mong muốn, hay nên thêm kiểm `Status='ACTIVE'` (siết chặt hơn bản
+  gốc); tạm giữ nguyên bản gốc theo đúng rule "giữ nguyên hành vi" của PLAN.
+- **Định dạng ngày giờ trả về cho frontend PHẢI có ký tự `'T'`**
+  (`"Y-m-d\TH:i:s"`, hàm mới `db_stamp_to_iso()` trong `api/lib/attendance.php`)
+  — KHÁC với định dạng DATETIME mặc định của MySQL (`"Y-m-d H:i:s"`, dùng
+  dấu cách). `js/models/Attendance.js` (`timeOnly()`: `indexOf('T')`) và
+  `js/views/StudentView.js` (`checkInTime.replace('T',' ')`) đọc đúng ký tự
+  `'T'` này để tách giờ khỏi ngày — nếu trả nguyên định dạng MySQL, trang sẽ
+  hiển thị cả ngày lẫn giờ thay vì chỉ "HH:mm". Áp dụng cho `startTime`,
+  `lateAfter`, `endTime` (`openAttendance`) và `checkInTime`
+  (`checkin`, `liveRoster`). `action_ping()` (GĐ2) đã theo đúng quy ước này
+  từ trước, GĐ4 chỉ làm tương tự cho các trường mới.
+- **Trường GPS/khoảng cách thiếu (`lat`/`lng`/`accuracy`/`distanceM`) trả
+  về `''` (chuỗi rỗng) trong JSON, KHÔNG phải `null`** — khác quy ước PHP
+  thông thường nhưng đúng hành vi Sheets cũ (ô trống = `''`).
+  `js/models/Attendance.js` so sánh `data.distanceM === '' ? null :
+  Number(...)`; nếu PHP trả `null` thay vì `''`, phép so sánh `=== ''` sai,
+  `Number(null)` ra `0`, hiển thị nhầm khoảng cách 0m thay vì "không có GPS".
+  Hàm mới `blank_if_null()` chuyển `null` → `''` CHỈ khi build JSON trả về;
+  khi ghi CSDL (cột `DECIMAL NULL`) vẫn dùng `null` thật (PDO bind đúng
+  `NULL`), không dùng `''` (MySQL sẽ báo lỗi "Incorrect decimal value").
+- **`checkin` upsert vào `attendance`:** SELECT trước để quyết định
+  `action` (`'INSERTED'`/`'UPDATED'`, giữ đúng chữ hoa như
+  `gas/02-Repo.gs` `upsert()`), rồi INSERT/UPDATE tương ứng trong
+  `db_transaction()`; nếu INSERT đụng `UNIQUE KEY uq_att_student_session`
+  (SQLSTATE `23000`, hai request cùng MSSV/buổi lọt qua đồng thời — hiếm),
+  bắt lỗi rồi UPDATE lại, coi như `'UPDATED'`. UNIQUE KEY là chốt chặn THẬT
+  (D.8 lớp 3) — SELECT trước chỉ để đặt tên `action` cho đúng, không phải
+  cơ chế chống trùng chính (khác `withLock_()` cũ dùng script lock toàn
+  cục — MySQL không có tương đương rẻ, đây là lý do `api/lib/db.php` đã ghi
+  chú "dựa vào UNIQUE KEY... thay vì tự cài khoá tiến trình" từ GĐ2).
+- **`openAttendance` tính `startTime`/`lateAfter`/`endTime` bằng PHP
+  (`DateTimeImmutable` khởi tạo từ `db_now()`)** thay vì `NOW()`/`DATE_ADD()`
+  trong SQL — tránh phải SELECT lại sau INSERT để lấy giá trị đã tính, đồng
+  thời vẫn dùng giờ CSDL (`db_now()`) làm mốc để tránh lệch giờ PHP/MySQL
+  (đúng nguyên tắc mục 6, GĐ3 đã áp dụng cho `requestGradeCode`).
+- **Test đã chạy trong phiên này:** `php -l` sạch trên toàn bộ file
+  mới/sửa. Test thuần (không đụng CSDL) cho `haversine_meters()`,
+  `evaluate_gps()` (5 nhánh: thiếu toạ độ, accuracy vượt hạn mức, lớp chưa
+  khai toạ độ phòng, trong bán kính, ngoài bán kính), `class_has_lecturer()`
+  (đủ các dấu phân cách `,;. ` + không khớp nhầm UserID), `db_stamp_to_iso()`,
+  `blank_if_null()` — tất cả PASS. `generate_unique_code()` test bằng PDO
+  SQLite trong bộ nhớ (chỉ SELECT đơn giản, không cú pháp riêng MySQL nên
+  dùng SQLite thay MariaDB được ở mức này): 20 mã liên tiếp không trùng
+  đúng bảng chữ/độ dài, mã `CLOSED` được phép tái sử dụng (không bị coi là
+  "đang chiếm"), hết mã khi bảng chữ cạn → ném lỗi rõ ràng — tất cả PASS.
+  Test định tuyến `api_dispatch()` (sai phương thức GET/POST, action lạ,
+  action chưa triển khai, `checkin` sai định dạng mã) xác nhận các action
+  mới trả đúng lỗi TRƯỚC khi chạm CSDL — tất cả PASS.
+  **Sandbox phiên này vẫn KHÔNG có MariaDB/MySQL cục bộ** (không có mạng ra
+  ngoài để cài, giống GĐ2/GĐ3) nên **chưa test được toàn luồng qua PDO thật**
+  của `openAttendance`/`closeAttendance`/`checkin`/`liveRoster` (mở mã →
+  check-in đúng/trễ/hết hạn → đóng đánh dấu vắng → danh sách real-time đúng
+  số đếm) — tiêu chí "Xong khi" của GĐ4 trong PLAN
+  ("`runSmokeTest` chuyển sang PHP, ca phải từ chối đều bị từ chối") **cần
+  chạy trên host Hostinger hoặc máy có MariaDB trước khi coi GĐ4 hoàn tất
+  đầy đủ.**

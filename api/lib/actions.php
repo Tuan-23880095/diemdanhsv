@@ -6,15 +6,16 @@ declare(strict_types=1);
  * đối chiếu docs/04-API-PHP.md mục 5.
  *
  * GĐ2 (PLAN) triển khai `ping`. GĐ3 thêm `login`/`logout`/`requestGradeCode`/
- * `verifyGradeCode` (api/lib/auth.php, api/lib/gradeauth.php). 8 action còn
- * lại (studentHistory, myGrades, liveRoster, listClasses, listSessions,
- * openAttendance, closeAttendance, checkin) trả lỗi rõ ràng "chưa triển
- * khai" — KHÁC với "Action không hợp lệ" (dành cho tên action không nằm
- * trong danh sách 13 action cũ, giữ đúng nguyên văn gas/05-Api.gs dòng 76
- * để không phải sửa frontend). Việc triển khai nốt nằm ở GĐ4–GĐ5.
+ * `verifyGradeCode` (api/lib/auth.php, api/lib/gradeauth.php). GĐ4 thêm
+ * `openAttendance`/`closeAttendance`/`checkin`/`liveRoster`
+ * (api/lib/attendance.php, api/lib/roles.php). 4 action còn lại
+ * (studentHistory, myGrades, listClasses, listSessions) trả lỗi rõ ràng
+ * "chưa triển khai" — KHÁC với "Action không hợp lệ" (dành cho tên action
+ * không nằm trong danh sách 13 action cũ, giữ đúng nguyên văn gas/05-Api.gs
+ * dòng 76 để không phải sửa frontend). Việc triển khai nốt nằm ở GĐ5.
  */
 
-const API_VERSION = 'php-0.2';
+const API_VERSION = 'php-0.3';
 
 /** action => 'GET' | 'POST', đúng danh sách 13 action + phương thức cũ. */
 const KNOWN_ACTIONS = [
@@ -76,9 +77,25 @@ function api_dispatch(string $action, string $method, array $params): void
             action_verify_grade_code($params);
             return;
 
+        case 'openAttendance':
+            action_open_attendance($params);
+            return;
+
+        case 'closeAttendance':
+            action_close_attendance($params);
+            return;
+
+        case 'checkin':
+            action_checkin($params);
+            return;
+
+        case 'liveRoster':
+            action_live_roster($params);
+            return;
+
         default:
-            // 8 action còn lại: xem docs/04-API-PHP.md mục 11 + PLAN GĐ4–GĐ5.
-            api_fail('Action "' . $action . '" chưa được triển khai (sẽ có ở GĐ4–GĐ5).');
+            // 4 action còn lại: xem docs/04-API-PHP.md mục 11 + PLAN GĐ5.
+            api_fail('Action "' . $action . '" chưa được triển khai (sẽ có ở GĐ5).');
             return;
     }
 }
