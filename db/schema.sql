@@ -235,12 +235,20 @@ CREATE TABLE IF NOT EXISTS auth_tokens (
   KEY idx_tokens_exp (ExpiresAt)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Mã xác minh gửi qua email khi sinh viên xem điểm (requestGradeCode)
+-- Mã xác minh gửi qua email khi sinh viên xem điểm (requestGradeCode).
+-- SendCount/WindowStartAt thay 'gcount_' (giới hạn 5 lần gửi / 24h cuộn),
+-- LastSentAt thay 'gsent_' (cooldown 60s chống bấm trùng) của bản Apps
+-- Script cũ (gas/08-GradeService.gs) — bổ sung ở GĐ3, xem docs/04-API-PHP.md
+-- mục 10.1. Một dòng/sinh viên, ghi đè mỗi lần xin mã mới (không xoá dòng
+-- khi mã hết hạn, để giữ được lịch sử gửi cho giới hạn 24h).
 CREATE TABLE IF NOT EXISTS grade_codes (
-  StudentID  VARCHAR(40) NOT NULL,
-  CodeHash   VARCHAR(255) NOT NULL,
-  Attempts   INT NOT NULL DEFAULT 0,
-  ExpiresAt  DATETIME NOT NULL,
-  CreatedAt  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  StudentID     VARCHAR(40) NOT NULL,
+  CodeHash      VARCHAR(255) NOT NULL,     -- hash('sha256', mã) — không lưu mã thô
+  Attempts      INT NOT NULL DEFAULT 0,
+  ExpiresAt     DATETIME NOT NULL,
+  SendCount     INT NOT NULL DEFAULT 0,    -- số lần gửi trong cửa sổ 24h hiện tại
+  WindowStartAt DATETIME NULL,             -- mốc bắt đầu cửa sổ 24h (cuộn, không theo ngày lịch)
+  LastSentAt    DATETIME NULL,             -- lần gửi gần nhất — cooldown 60s
+  CreatedAt     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (StudentID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

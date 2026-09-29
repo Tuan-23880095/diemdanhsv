@@ -5,14 +5,16 @@ declare(strict_types=1);
  * api/lib/actions.php — Router 13 action cũ (gas/05-Api.gs) theo đúng bảng
  * đối chiếu docs/04-API-PHP.md mục 5.
  *
- * GĐ2 (PLAN) chỉ triển khai `ping`, để kiểm `php -l` sạch + xác nhận bản
- * deploy đang chạy. 12 action còn lại trả lỗi rõ ràng "chưa triển khai" —
- * KHÁC với "Action không hợp lệ" (dành cho tên action không nằm trong danh
- * sách 13 action cũ, giữ đúng nguyên văn gas/05-Api.gs dòng 76 để không
- * phải sửa frontend). Việc triển khai từng action nằm ở GĐ3–GĐ5.
+ * GĐ2 (PLAN) triển khai `ping`. GĐ3 thêm `login`/`logout`/`requestGradeCode`/
+ * `verifyGradeCode` (api/lib/auth.php, api/lib/gradeauth.php). 8 action còn
+ * lại (studentHistory, myGrades, liveRoster, listClasses, listSessions,
+ * openAttendance, closeAttendance, checkin) trả lỗi rõ ràng "chưa triển
+ * khai" — KHÁC với "Action không hợp lệ" (dành cho tên action không nằm
+ * trong danh sách 13 action cũ, giữ đúng nguyên văn gas/05-Api.gs dòng 76
+ * để không phải sửa frontend). Việc triển khai nốt nằm ở GĐ4–GĐ5.
  */
 
-const API_VERSION = 'php-0.1';
+const API_VERSION = 'php-0.2';
 
 /** action => 'GET' | 'POST', đúng danh sách 13 action + phương thức cũ. */
 const KNOWN_ACTIONS = [
@@ -58,9 +60,25 @@ function api_dispatch(string $action, string $method, array $params): void
             action_ping();
             return;
 
+        case 'login':
+            action_login($params);
+            return;
+
+        case 'logout':
+            action_logout($params);
+            return;
+
+        case 'requestGradeCode':
+            action_request_grade_code($params);
+            return;
+
+        case 'verifyGradeCode':
+            action_verify_grade_code($params);
+            return;
+
         default:
-            // 12 action còn lại: xem docs/04-API-PHP.md mục 11 + PLAN GĐ3–GĐ5.
-            api_fail('Action "' . $action . '" chưa được triển khai (sẽ có ở GĐ3–GĐ5).');
+            // 8 action còn lại: xem docs/04-API-PHP.md mục 11 + PLAN GĐ4–GĐ5.
+            api_fail('Action "' . $action . '" chưa được triển khai (sẽ có ở GĐ4–GĐ5).');
             return;
     }
 }

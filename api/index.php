@@ -23,6 +23,9 @@ require __DIR__ . '/lib/response.php';
 require __DIR__ . '/lib/config.php';
 require __DIR__ . '/lib/db.php';
 require __DIR__ . '/lib/audit.php';
+require __DIR__ . '/lib/mailer.php';
+require __DIR__ . '/lib/auth.php';
+require __DIR__ . '/lib/gradeauth.php';
 require __DIR__ . '/lib/actions.php';
 
 // Khớp CONFIG.TIMEZONE cũ (Asia/Ho_Chi_Minh) — đặt sớm, không phụ thuộc
