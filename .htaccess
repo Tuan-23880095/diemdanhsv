@@ -12,8 +12,9 @@ RewriteRule ^\.well-known/ - [L]
 # Chặn file/thư mục ẩn: .git, .github, .gitignore, .firebaserc…
 RewriteRule (^|/)\. - [F,L]
 
-# Chặn mã backend cũ, tài liệu nội bộ, schema CSDL
-RewriteRule ^(gas|docs|db|_firebase-upload)(/|$) - [F,L]
+# Chặn mã backend cũ, tài liệu nội bộ, schema CSDL, script quản trị CLI-only
+# (tools/ — rule 3 của dự án, xem tools/README.md)
+RewriteRule ^(gas|docs|db|tools|_firebase-upload)(/|$) - [F,L]
 
 # Chặn tài liệu và script không phục vụ web
 RewriteRule \.(md|ps1|sql|gs|yml|yaml|log|bak)$ - [F,L]

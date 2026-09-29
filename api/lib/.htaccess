@@ -1,0 +1,9 @@
+# Chỉ api/index.php mới được truy cập trực tiếp qua web — các file trong
+# lib/ chỉ chứa hàm/hằng số, KHÔNG được browse trực tiếp (phòng thủ thêm,
+# ngoài rule "một điểm vào duy nhất" ở docs/04-API-PHP.md mục 1).
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Deny from all
+</IfModule>
