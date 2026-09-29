@@ -230,15 +230,18 @@ nhận khi viết code GĐ2 (không đoán ở đây).
    dùng stub (ví dụ ghi log thay vì gửi) cho đến khi thầy tạo hộp thư
    `noreply@diemdanhsv.com`.
 
-## 11. Việc tiếp theo (GĐ5)
+## 11. Việc tiếp theo (GĐ6)
 
 GĐ2 (nền PHP + `ping`), GĐ3 (`login`/`logout`/`requestGradeCode`/
-`verifyGradeCode`, mục 12) và GĐ4 (`openAttendance`/`closeAttendance`/
-`checkin`/`liveRoster`, mục 13) đã xong. GĐ5 (PLAN): `studentHistory`,
-`myGrades`, `listClasses`, `listSessions`; smoke test 13/13 trên seed;
-review bảo mật độc lập (có thể giao Abacus DeepAgent, trước 17/10/2026).
-`studentHistory` dùng lại `identify_student()` đã có sẵn từ GĐ4
-(`api/lib/roles.php`) — không cần viết lại logic xác thực MSSV.
+`verifyGradeCode`, mục 12), GĐ4 (`openAttendance`/`closeAttendance`/
+`checkin`/`liveRoster`, mục 13) và GĐ5 (`studentHistory`/`myGrades`/
+`listClasses`/`listSessions`, mục 14) đã xong — **đủ 13/13 action cũ có
+code PHP**, không còn action nào trả "chưa triển khai". GĐ6 (PLAN): script
+di dời dữ liệu (`tools/import.php`, CLI, idempotent, dry-run, đối soát số
+dòng) + hàm xuất JSON từ Apps Script + cron mysqldump sao lưu — THẦY chạy
+qua SSH. Review bảo mật độc lập của GĐ5 (có thể giao Abacus DeepAgent,
+trước 17/10/2026) **chưa thực hiện** trong phiên GĐ5 này — để dành cho một
+phiên riêng hoặc gộp vào trước GĐ9 (checklist staging).
 
 ## 12. Cập nhật GĐ3 — `login`/`logout`/`requestGradeCode`/`verifyGradeCode`
 
@@ -342,3 +345,61 @@ phiên sau không phải đọc lại code:
   ("`runSmokeTest` chuyển sang PHP, ca phải từ chối đều bị từ chối") **cần
   chạy trên host Hostinger hoặc máy có MariaDB trước khi coi GĐ4 hoàn tất
   đầy đủ.**
+
+## 14. Cập nhật GĐ5 — `studentHistory`/`myGrades`/`listClasses`/`listSessions`
+
+Port đúng theo mục 5 (bảng đối chiếu 13 action). `api/lib/queries.php`
+(mới) — 4 action ĐỌC cuối cùng, tái dùng `identify_student()`/`require_role()`/
+`assert_class_access()`/`class_has_lecturer()` đã có từ GĐ4
+(`api/lib/roles.php`). `API_VERSION` → `php-0.4`. Vài quyết định triển khai
+cụ thể, để phiên sau không phải đọc lại code:
+
+- **`require_student()` (mới, `api/lib/roles.php`)** — xác thực token xem
+  điểm (`Kind='GRADE'` trong `auth_tokens`, cấp bởi `verifyGradeCode` GĐ3),
+  thay `GradeAuth.requireStudent()` cũ (`CacheService.get('gtok_'+token)`).
+  Đặt cạnh `require_role()` thay vì trong `gradeauth.php` vì cùng là "xác
+  thực danh tính từ token" — `gradeauth.php` chỉ còn phần *cấp* token
+  (`requestGradeCode`/`verifyGradeCode`), `roles.php` giữ phần *đọc lại*
+  token (cả LECTURER lẫn GRADE) cho các action sau.
+- **`studentHistory` trả ĐỦ mọi buổi `ACTIVE` của lớp**, kể cả buổi sinh
+  viên chưa check-in — không chỉ những buổi đã có dòng `attendance`. Buổi
+  chưa check-in → `status: 'ABSENT'`, `checkInTime: ''` (đúng hành vi
+  `byId[...]` trả `undefined` của bản gas cũ, gas/04-AttendanceService.gs
+  dòng 294-305). `checkInTime` dùng lại `db_stamp_to_iso()` (GĐ4) để giữ
+  ký tự `'T'` — cùng lý do định dạng ngày giờ đã ghi ở mục 13.
+- **`myGrades` không nhận `mssv`** — danh tính lấy từ token GRADE
+  (`require_student()`), đúng thiết kế "xác minh qua email" (mục 6). Điểm
+  tra theo `UNIQUE KEY uq_grade (StudentID, GradeColumnID)` — không cần
+  thêm điều kiện `ClassID` (đã ghi ở mục 4, dòng `10_GRADES`→`grades`).
+  `average` chỉ tính trên các cột ĐÃ có điểm (`weightDone`), giữ đúng ngữ
+  nghĩa "điểm tạm" của bản gas cũ (dòng 236) — cột chưa chấm trả
+  `score: null`, không tính là 0.
+- **`listClasses`/`listSessions` giữ nguyên [D.9]**: `listClasses` lọc theo
+  `class_has_lecturer()` cho LECTURER (danh sách nhiều `UserID` cách nhau
+  dấu phẩy trong `LecturerID`), ADMIN thấy hết; `listSessions` gọi
+  `assert_class_access()` NGAY SAU `require_role()`, TRƯỚC khi đọc bất cứ
+  gì — LECTURER không đứng tên lớp bị từ chối rõ ràng (`"Bạn không có
+  quyền thao tác trên lớp này."`) thay vì âm thầm trả mảng rỗng.
+- **Test đã chạy trong phiên này:** `php -l` sạch trên toàn bộ file
+  mới/sửa. Sandbox phiên này **vẫn KHÔNG có MariaDB/MySQL cục bộ** (không
+  có mạng ra ngoài để cài, giống GĐ2-GĐ4) nên test bằng PDO SQLite trong
+  file tạm (không phải cú pháp riêng MySQL — 4 action GĐ5 chỉ dùng
+  `SELECT`/`JOIN`/`ORDER BY`, không đụng `NOW()`/`ON DUPLICATE KEY` như các
+  action ghi; đăng ký thêm hàm `NOW()` cho SQLite chỉ để test
+  `require_role()`/`require_student()`): dữ liệu demo gồm 3 lớp (1 lớp
+  nhiều giảng viên, 1 lớp INACTIVE), 1 buổi học INACTIVE, 2 sinh viên demo
+  (1 chưa check-in buổi nào, 1 mới có điểm 1/2 cột) — **tất cả PASS**:
+  `studentHistory` trả đúng buổi đã điểm danh/chưa điểm danh, đúng 3 lỗi
+  MSSV (sai định dạng/không tồn tại/không ghi danh lớp), lọc đúng buổi
+  INACTIVE; `myGrades` trả đúng điểm đã có + cột chưa chấm = null, đúng
+  `average`/`weightDone`, từ chối đúng khi token hết hạn/thiếu, lọc đúng
+  cột điểm INACTIVE; `listClasses` lọc đúng theo giảng viên (kể cả lớp
+  nhiều giảng viên) và ẩn đúng lớp INACTIVE, ADMIN thấy hết; `listSessions`
+  từ chối đúng khi LECTURER không đứng tên lớp, ADMIN truy cập được mọi
+  lớp; định tuyến `api_dispatch()` xác nhận cả 13/13 action đã có code
+  (không còn action nào trả "chưa triển khai"), action lạ/rỗng vẫn đúng lỗi
+  cũ, sai phương thức GET/POST vẫn bị từ chối đúng thông báo. **Chưa chạy
+  được smoke test 13/13 trên CSDL MySQL thật** (tiêu chí "Xong khi" của GĐ5
+  trong PLAN) và **chưa có review bảo mật độc lập** (mục 11) — cần làm
+  trên host Hostinger hoặc máy có MariaDB, và một phiên riêng cho review,
+  trước khi coi GĐ5 hoàn tất đầy đủ theo PLAN.
