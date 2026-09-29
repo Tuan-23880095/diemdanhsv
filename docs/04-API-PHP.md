@@ -196,17 +196,17 @@ nhận khi viết code GĐ2 (không đoán ở đây).
 
 ## 10. Việc còn để ngỏ — cần thầy xác nhận trước khi code GĐ2–GĐ8
 
-1. **`grade_codes` thiếu 2 cột so với logic cũ.** `GradeAuth` cũ
-   (`gas/08-GradeService.gs`) dùng 4 khoá cache riêng: mã (`gcode_`), số lần
-   sai (`gtry_`), **đã gửi trong 60 giây gần nhất hay chưa** (`gsent_`, để
-   không gửi trùng khi SV bấm lại), và **đếm số lần gửi trong 24 giờ**
-   (`gcount_`, giới hạn `MAX_SENDS_PER_DAY=5`). Bảng `grade_codes` hiện tại
-   trong `db/schema.sql` chỉ có `StudentID (PK), CodeHash, Attempts, ExpiresAt,
-   CreatedAt` — **không đủ chỗ lưu "số lần gửi trong 24h" và "thời điểm gửi
-   gần nhất"**. Cần bổ sung 2 cột (ví dụ `SentToday INT`, `LastSentAt DATETIME`,
-   reset theo ngày) hoặc một bảng phụ `grade_code_sends`, trước khi viết
-   `requestGradeCode`/`verifyGradeCode` ở GĐ3. **Đây là việc của GĐ3, không
-   sửa `db/schema.sql` ở GĐ1.**
+1. ~~**`grade_codes` thiếu 2 cột so với logic cũ.**~~ **ĐÃ GIẢI QUYẾT ở GĐ3.**
+   `GradeAuth` cũ (`gas/08-GradeService.gs`) dùng 4 khoá cache riêng: mã
+   (`gcode_`), số lần sai (`gtry_`), **đã gửi trong 60 giây gần nhất hay
+   chưa** (`gsent_`), và **đếm số lần gửi trong 24 giờ** (`gcount_`, giới
+   hạn `MAX_SENDS_PER_DAY=5`). GĐ3 thêm 3 cột vào `grade_codes`:
+   `SendCount` (thay `gcount_`), `WindowStartAt` (mốc bắt đầu cửa sổ 24h
+   CUỘN — không theo ngày lịch, đúng TTL 86400s của cache cũ),
+   `LastSentAt` (thay `gsent_`, cooldown 60s). `db/schema.sql` đã cập nhật
+   cho CSDL mới; CSDL đã tồn tại trên host thật (chưa có dữ liệu) dùng
+   `db/migrations/002-grade-codes-send-tracking.sql`. Chi tiết luồng ở
+   mục 12 dưới đây.
 2. **Ranh giới "code quản trị chỉ CLI" (rule 3) áp dụng tới đâu.** Rule 3 ghi
    "Code quản trị (import điểm, sửa dữ liệu hàng loạt, tạo tài khoản giảng
    viên...) chỉ được viết dưới dạng script CLI trong `tools/`". Đọc theo
@@ -230,10 +230,43 @@ nhận khi viết code GĐ2 (không đoán ở đây).
    dùng stub (ví dụ ghi log thay vì gửi) cho đến khi thầy tạo hộp thư
    `noreply@diemdanhsv.com`.
 
-## 11. Việc tiếp theo (GĐ2)
+## 11. Việc tiếp theo (GĐ4)
 
-Viết `api/index.php`: router theo `action`, kết nối PDO (đọc `../private/config.php`),
-hàm `ok()`/`fail()` đúng khuôn phong bì mục 1, wrapper transaction thay
-`withLock_`, và action `ping` (trả `{time, version: 'php-0.1'}`) để kiểm
-`php -l` sạch + gọi thử `?action=ping` trên nhánh `agent/web-g2` — theo đúng
-tiêu chí "Xong khi" của GĐ2 trong PLAN.
+GĐ2 (nền PHP + `ping`) và GĐ3 (`login`/`logout`/`requestGradeCode`/
+`verifyGradeCode`, xem mục 12) đã xong. GĐ4 (PLAN): `openAttendance`,
+`closeAttendance`, `checkin`, `liveRoster` đủ 6 lớp bù D.8 (mục 7) — cần
+thêm `require_role()`/`assert_class_access()` (đọc bảng `auth_tokens`
+Kind='LECTURER', port `classHasLecturer_()` từ `gas/03-Auth.gs`) mà GĐ3
+chưa cần dùng tới.
+
+## 12. Cập nhật GĐ3 — `login`/`logout`/`requestGradeCode`/`verifyGradeCode`
+
+Port đúng theo mục 6 (rehash mật khẩu qua 2 bước) và mục 10.1 (bổ sung
+`grade_codes`). Vài quyết định triển khai cụ thể, để phiên sau không phải
+đọc lại code:
+
+- **Mã xác minh xem điểm lưu HASH (`hash('sha256', $code)`) trong
+  `CodeHash`**, không lưu mã thô — khác bản GAS cũ (cache lưu thô), an
+  toàn hơn nếu CSDL bị lộ. Không ảnh hưởng hành vi phía người dùng.
+- **`grade_codes` một dòng/sinh viên, KHÔNG xoá dòng** khi mã hết hạn hay
+  đã dùng — chỉ `invalidate_grade_code()` (đặt `CodeHash=''`,
+  `ExpiresAt` về quá khứ) để giữ lại `SendCount`/`WindowStartAt` cho giới
+  hạn 24h. Xoá dòng ở đây sẽ vô tình reset giới hạn 5 lần/24h.
+- **Cooldown 60s và giới hạn 5 lần/24h dùng `db_now()`** (giờ CSDL, không
+  phải giờ PHP) để tránh lệch giờ giữa host PHP và MariaDB khi so sánh
+  `LastSentAt`/`WindowStartAt`.
+- **SMTP vẫn là stub** (`api/lib/mailer.php` → `mail_send()`, chỉ
+  `error_log()`) — bỏ qua bước kiểm "quota gửi mail còn lại"
+  (`MailApp.getRemainingDailyQuota()` cũ không có tương đương chờ SMTP
+  thật). Thay thân `mail_send()` khi có hộp thư `noreply@diemdanhsv.com`
+  thật, không cần đổi nơi gọi.
+- **Test đã chạy trong phiên này:** `php -l` sạch trên toàn bộ file mới/sửa.
+  Sandbox phiên này KHÔNG có MariaDB/MySQL cục bộ (không có mạng ra ngoài
+  để cài) nên chỉ test được các hàm THUẦN không đụng CSDL (`is_modern_hash`,
+  `legacy_sha256_hash` + `password_hash`/`password_verify` roundtrip,
+  `generate_grade_code`, các hằng số TTL/giới hạn, công thức "còn N lần
+  thử") — tất cả PASS. **Chưa test được toàn luồng qua PDO thật** (login
+  với tài khoản demo, rehash mật khẩu cũ→mới, xin mã→xác minh→token, hết
+  hạn token) — cần chạy trên host Hostinger hoặc máy có MariaDB trước khi
+  coi GĐ3 là "Xong khi" đầy đủ theo PLAN ("Test tài khoản demo: đăng nhập,
+  rehash, token hết hạn").

@@ -61,3 +61,14 @@ function db_transaction(callable $fn)
         throw $e;
     }
 }
+
+/**
+ * Giờ hiện tại THEO CSDL (không phải giờ PHP) — dùng khi so sánh với các
+ * cột DATETIME đã lưu (ExpiresAt, LastSentAt, WindowStartAt…) để tránh lệch
+ * giờ giữa PHP và MySQL. Trả chuỗi 'Y-m-d H:i:s', ghép được với
+ * `new DateTimeImmutable()` (GĐ3 — requestGradeCode/verifyGradeCode).
+ */
+function db_now(): string
+{
+    return (string) db()->query('SELECT NOW()')->fetchColumn();
+}
