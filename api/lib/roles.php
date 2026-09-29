@@ -1,0 +1,133 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * api/lib/roles.php — requireRole/assertClassAccess/identifyStudent
+ * (gas/03-Auth.gs). GĐ3 chỉ port login/logout/requestGradeCode/verifyGradeCode
+ * (không cần phân quyền theo lớp); GĐ4 (PLAN) cần các hàm này cho
+ * openAttendance/closeAttendance/checkin/liveRoster — xem docs/04-API-PHP.md
+ * mục 5, mục 13.
+ */
+
+/**
+ * requireRole — xác thực token giảng viên/admin (Kind='LECTURER' trong
+ * auth_tokens), thay CacheService.get('tok_'+token) cũ. Ném lỗi rõ ràng nếu
+ * token hết hạn/không tồn tại, hoặc vai trò không nằm trong $roles — đúng
+ * AuthService.requireRole() (gas/03-Auth.gs dòng 79-88).
+ *
+ * KHÔNG kiểm lại users.Status ở đây — giữ đúng hành vi bản gốc: một khi đã
+ * đăng nhập, token còn hạn thì còn dùng được cho tới khi hết hạn/logout, kể
+ * cả nếu tài khoản bị khoá sau đó (CacheService cũ tách rời khỏi sheet Users
+ * theo cách y hệt).
+ *
+ * @param string[] $roles
+ * @return array{userId:string, role:string, name:string}
+ */
+function require_role(string $token, array $roles): array
+{
+    $token = trim($token);
+    $expiredMsg = 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+    if ($token === '') {
+        throw new RuntimeException($expiredMsg);
+    }
+
+    $stmt = db()->prepare(
+        "SELECT t.SubjectID, u.Role, u.FullName FROM auth_tokens t " .
+        "JOIN users u ON u.UserID = t.SubjectID " .
+        "WHERE t.Token = :token AND t.Kind = 'LECTURER' AND t.ExpiresAt > NOW() LIMIT 1"
+    );
+    $stmt->execute(['token' => $token]);
+    $row = $stmt->fetch();
+    if (!$row) {
+        throw new RuntimeException($expiredMsg);
+    }
+
+    if (!in_array((string) $row['Role'], $roles, true)) {
+        throw new RuntimeException('Tài khoản không có quyền thực hiện thao tác này.');
+    }
+
+    return [
+        'userId' => (string) $row['SubjectID'],
+        'role'   => (string) $row['Role'],
+        'name'   => (string) $row['FullName'],
+    ];
+}
+
+/**
+ * assertClassAccess (thiết kế D.9 — nhiều giảng viên) — gọi NGAY SAU
+ * require_role(), TRƯỚC khi đọc/ghi bất cứ gì của lớp đó. ADMIN thao tác
+ * được mọi lớp; LECTURER chỉ thao tác được lớp có UserID mình trong
+ * classes.LecturerID (danh sách cách nhau bởi dấu phẩy — gas/03-Auth.gs
+ * dòng 96-134). Ném lỗi rõ ràng thay vì âm thầm trả danh sách rỗng.
+ *
+ * @param array{userId:string, role:string, name:string} $me
+ */
+function assert_class_access(array $me, string $classId): void
+{
+    if ($me['role'] === 'ADMIN') {
+        return;
+    }
+
+    $stmt = db()->prepare('SELECT LecturerID FROM classes WHERE ClassID = :id LIMIT 1');
+    $stmt->execute(['id' => $classId]);
+    $cls = $stmt->fetch();
+
+    if (!$cls || !class_has_lecturer((string) $cls['LecturerID'], $me['userId'])) {
+        throw new RuntimeException('Bạn không có quyền thao tác trên lớp này.');
+    }
+}
+
+/**
+ * classHasLecturer_ (gas/03-Auth.gs dòng 124-134) — classes.LecturerID lưu
+ * NHIỀU UserID cách nhau bởi dấu phẩy/chấm/chấm phẩy/khoảng trắng (bản Sheets
+ * cũ từng bị Google Sheets tự đổi dấu phẩy thập phân thành dấu chấm — tách
+ * theo cả hai để đọc đúng, giữ nguyên yêu cầu docblock gốc dù MySQL VARCHAR
+ * không mắc lỗi tự-đổi-định-dạng đó).
+ */
+function class_has_lecturer(string $lecturerIdRaw, string $userId): bool
+{
+    $parts = preg_split('/[,;.\s]+/', trim($lecturerIdRaw)) ?: [];
+    $needle = trim($userId);
+    foreach ($parts as $p) {
+        if (trim($p) === $needle) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * identifyStudent (gas/03-Auth.gs dòng 22-46) — nhận diện SV theo MSSV +
+ * kiểm tra ghi danh vào đúng lớp (D.8 lớp 2). Dùng cho `checkin` (GĐ4) và sẽ
+ * dùng lại cho `studentHistory` (GĐ5) — đặt chung ở đây từ GĐ4 để tránh viết
+ * lại logic xác thực MSSV ở GĐ5.
+ *
+ * @return array{ok:bool, reason?:string, student?:array}
+ */
+function identify_student(string $mssv, string $classId): array
+{
+    $clean = strtoupper(trim($mssv));
+
+    if (!preg_match('/^[0-9]{6,10}$/', $clean)) {
+        return ['ok' => false, 'reason' => 'MSSV không hợp lệ (phải là 6–10 chữ số).'];
+    }
+
+    $stmt = db()->prepare("SELECT * FROM students WHERE MSSV = :m AND Status = 'ACTIVE' LIMIT 1");
+    $stmt->execute(['m' => $clean]);
+    $student = $stmt->fetch();
+    if (!$student) {
+        return ['ok' => false, 'reason' => 'Không tìm thấy MSSV ' . $clean . ' trong hệ thống.'];
+    }
+
+    // [D.8 lớp 2] MSSV phải có trong danh sách lớp đang mở điểm danh — không
+    // có bước này thì MSSV bất kỳ của trường đều ghi được một dòng rác.
+    $stmt = db()->prepare(
+        "SELECT EnrollmentID FROM enrollments WHERE StudentID = :sid AND ClassID = :cid AND Status = 'ACTIVE' LIMIT 1"
+    );
+    $stmt->execute(['sid' => $student['StudentID'], 'cid' => $classId]);
+    if (!$stmt->fetch()) {
+        return ['ok' => false, 'reason' => 'MSSV ' . $clean . ' không có trong danh sách lớp này.'];
+    }
+
+    return ['ok' => true, 'student' => $student];
+}
