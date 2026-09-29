@@ -97,6 +97,44 @@ function class_has_lecturer(string $lecturerIdRaw, string $userId): bool
 }
 
 /**
+ * require_student — xác thực token xem điểm (Kind='GRADE' trong auth_tokens,
+ * cấp bởi `verifyGradeCode` — api/lib/gradeauth.php), thay
+ * CacheService.get('gtok_'+token) cũ (GradeAuth.requireStudent,
+ * gas/08-GradeService.gs dòng 160-164). Dùng cho `myGrades` (GĐ5) — KHÔNG
+ * nhận mssv từ tham số, danh tính lấy từ token đã xác minh qua email nên
+ * không truyền MSSV bạn khác vào xem trộm được điểm.
+ *
+ * @return array{studentId:string, mssv:string, fullName:string}
+ */
+function require_student(string $token): array
+{
+    $token = trim($token);
+    // Nguyên văn thông báo cũ — GradeAuth.requireStudent chỉ có một lỗi duy
+    // nhất, không phân biệt "thiếu token" và "hết hạn" như require_role().
+    $expiredMsg = 'Phiên xem điểm đã hết hạn. Vui lòng xin mã mới.';
+    if ($token === '') {
+        throw new RuntimeException($expiredMsg);
+    }
+
+    $stmt = db()->prepare(
+        "SELECT s.StudentID, s.MSSV, s.FullName FROM auth_tokens t " .
+        "JOIN students s ON s.StudentID = t.SubjectID " .
+        "WHERE t.Token = :token AND t.Kind = 'GRADE' AND t.ExpiresAt > NOW() LIMIT 1"
+    );
+    $stmt->execute(['token' => $token]);
+    $row = $stmt->fetch();
+    if (!$row) {
+        throw new RuntimeException($expiredMsg);
+    }
+
+    return [
+        'studentId' => (string) $row['StudentID'],
+        'mssv'      => (string) $row['MSSV'],
+        'fullName'  => (string) $row['FullName'],
+    ];
+}
+
+/**
  * identifyStudent (gas/03-Auth.gs dòng 22-46) — nhận diện SV theo MSSV +
  * kiểm tra ghi danh vào đúng lớp (D.8 lớp 2). Dùng cho `checkin` (GĐ4) và sẽ
  * dùng lại cho `studentHistory` (GĐ5) — đặt chung ở đây từ GĐ4 để tránh viết

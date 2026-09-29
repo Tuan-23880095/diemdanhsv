@@ -8,14 +8,13 @@ declare(strict_types=1);
  * GĐ2 (PLAN) triển khai `ping`. GĐ3 thêm `login`/`logout`/`requestGradeCode`/
  * `verifyGradeCode` (api/lib/auth.php, api/lib/gradeauth.php). GĐ4 thêm
  * `openAttendance`/`closeAttendance`/`checkin`/`liveRoster`
- * (api/lib/attendance.php, api/lib/roles.php). 4 action còn lại
- * (studentHistory, myGrades, listClasses, listSessions) trả lỗi rõ ràng
- * "chưa triển khai" — KHÁC với "Action không hợp lệ" (dành cho tên action
- * không nằm trong danh sách 13 action cũ, giữ đúng nguyên văn gas/05-Api.gs
- * dòng 76 để không phải sửa frontend). Việc triển khai nốt nằm ở GĐ5.
+ * (api/lib/attendance.php, api/lib/roles.php). GĐ5 thêm 4 action ĐỌC cuối
+ * cùng — `studentHistory`, `myGrades`, `listClasses`, `listSessions`
+ * (api/lib/queries.php) — đủ 13/13 action cũ, không còn nhánh "chưa triển
+ * khai" nào trong router này.
  */
 
-const API_VERSION = 'php-0.3';
+const API_VERSION = 'php-0.4';
 
 /** action => 'GET' | 'POST', đúng danh sách 13 action + phương thức cũ. */
 const KNOWN_ACTIONS = [
@@ -93,9 +92,20 @@ function api_dispatch(string $action, string $method, array $params): void
             action_live_roster($params);
             return;
 
-        default:
-            // 4 action còn lại: xem docs/04-API-PHP.md mục 11 + PLAN GĐ5.
-            api_fail('Action "' . $action . '" chưa được triển khai (sẽ có ở GĐ5).');
+        case 'studentHistory':
+            action_student_history($params);
+            return;
+
+        case 'myGrades':
+            action_my_grades($params);
+            return;
+
+        case 'listClasses':
+            action_list_classes($params);
+            return;
+
+        case 'listSessions':
+            action_list_sessions($params);
             return;
     }
 }
