@@ -168,27 +168,55 @@ function err($r, ?string $contains = null): bool
 /*  Máy chủ dev + client HTTP                                           */
 /* ------------------------------------------------------------------ */
 
+/*
+ * Ba cách gọi API, chọn theo hàm host cho phép:
+ *   1. proc_open  → bật php -S (máy chủ dev) rồi gọi HTTP thật (song song bằng curl_multi).
+ *   2. exec       → như trên nhưng bật php -S bằng shell nền (Hostinger cấm proc_open, cho exec).
+ *   3. in-process → không bật được máy chủ: nạp api/lib/*.php vào chính tiến trình này,
+ *                   gọi api_dispatch() trực tiếp (api_ok/api_fail ném ApiResponse nhờ hằng
+ *                   API_INPROCESS). Các ca "song song" khi đó chạy TUẦN TỰ — vẫn kiểm đúng
+ *                   logic giới hạn, nhưng KHÔNG chứng minh được chống đua (H1).
+ */
+$mode = 'inprocess';
 $port = 18000 + random_int(0, 999);
 $base = "http://127.0.0.1:$port/api/index.php";
-$env = [
-    'DIEMDANH_CONFIG'        => $configPath,
-    'PHP_CLI_SERVER_WORKERS' => '4', // để thử request song song thật (H1)
-    'PATH'                   => (string) getenv('PATH'),
-];
-$server = proc_open(
-    [PHP_BINARY, '-S', "127.0.0.1:$port", '-t', $root],
-    [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
-    $pipes,
-    $root,
-    $env
-);
-if (!is_resource($server)) {
-    fwrite(STDERR, "Không bật được máy chủ dev php -S.\n");
-    exit(2);
+$serverPid = null;
+$server = null;
+
+if (function_exists('proc_open')) {
+    $env = [
+        'DIEMDANH_CONFIG'        => $configPath,
+        'PHP_CLI_SERVER_WORKERS' => '4', // để thử request song song thật (H1)
+        'PATH'                   => (string) getenv('PATH'),
+    ];
+    $server = proc_open(
+        [PHP_BINARY, '-S', "127.0.0.1:$port", '-t', $root],
+        [0 => ['pipe', 'r'], 1 => ['file', '/dev/null', 'w'], 2 => ['file', '/dev/null', 'w']],
+        $pipes,
+        $root,
+        $env
+    );
+    if (is_resource($server)) {
+        $mode = 'http';
+        register_shutdown_function(static function () use ($server): void {
+            proc_terminate($server);
+        });
+    }
+} elseif (function_exists('exec')) {
+    $cmd = sprintf(
+        'cd %s && DIEMDANH_CONFIG=%s PHP_CLI_SERVER_WORKERS=4 nohup %s -S 127.0.0.1:%d -t %s >/dev/null 2>&1 & echo $!',
+        escapeshellarg($root), escapeshellarg($configPath), escapeshellarg(PHP_BINARY), $port, escapeshellarg($root)
+    );
+    $out = [];
+    @exec($cmd, $out);
+    $serverPid = (int) ($out[0] ?? 0);
+    if ($serverPid > 0) {
+        $mode = 'http';
+        register_shutdown_function(static function () use ($serverPid): void {
+            @exec('kill ' . $serverPid . ' >/dev/null 2>&1');
+        });
+    }
 }
-register_shutdown_function(static function () use ($server): void {
-    proc_terminate($server);
-});
 
 function http_handle(string $method, array $params)
 {
@@ -215,15 +243,46 @@ function decode_body($body)
 
 function api(string $method, array $params)
 {
+    global $mode;
+    if ($mode === 'inprocess') {
+        return api_inprocess($method, $params);
+    }
     $ch = http_handle($method, $params);
     $body = curl_exec($ch);
     curl_close($ch);
     return decode_body($body);
 }
 
+/**
+ * Gọi api_dispatch() ngay trong tiến trình này — mô phỏng đúng api/index.php:
+ * ApiResponse → phong bì; PDOException/Error → thông báo chung (M1);
+ * RuntimeException nghiệp vụ → fail(message).
+ */
+function api_inprocess(string $method, array $params)
+{
+    $action = trim((string) ($params['action'] ?? ''));
+    try {
+        api_dispatch($action, $method, $params);
+        return ['__raw' => '(không có phản hồi)'];
+    } catch (ApiResponse $r) {
+        // json_encode/decode để y hệt dữ liệu client nhận qua HTTP (float/int/null).
+        return json_decode(json_encode($r->payload, JSON_UNESCAPED_UNICODE), true);
+    } catch (PDOException | Error $e) {
+        return ['status' => 'error', 'message' => 'Lỗi máy chủ. Vui lòng thử lại sau.', 'data' => null];
+    } catch (Throwable $e) {
+        return ['status' => 'error', 'message' => $e->getMessage() !== '' ? $e->getMessage() : 'Lỗi không xác định.', 'data' => null];
+    }
+}
+
 /** Gửi nhiều request CÙNG LÚC (curl_multi) — dùng cho kiểm tra race (H1). */
 function api_parallel(string $method, array $paramsList): array
 {
+    global $mode;
+    if ($mode === 'inprocess') {
+        // Không có máy chủ → chạy tuần tự. Kết quả vẫn phải đúng giới hạn,
+        // nhưng không chứng minh được chống đua (xem ghi chú đầu mục).
+        return array_map(static fn ($p) => api_inprocess($method, $p), $paramsList);
+    }
     $mh = curl_multi_init();
     $handles = [];
     foreach ($paramsList as $i => $p) {
@@ -246,15 +305,38 @@ function api_parallel(string $method, array $paramsList): array
     return $out;
 }
 
-$up = false;
-for ($i = 0; $i < 50 && !$up; $i++) {
-    usleep(100000);
-    $r = @api('GET', ['action' => 'ping']);
-    $up = ok($r);
+if ($mode === 'http') {
+    $up = false;
+    for ($i = 0; $i < 50 && !$up; $i++) {
+        usleep(100000);
+        $r = @api('GET', ['action' => 'ping']);
+        $up = ok($r);
+    }
+    if (!$up) {
+        echo "Máy chủ dev php -S không phản hồi sau 5 giây — chuyển sang chế độ in-process.\n";
+        $mode = 'inprocess';
+    }
 }
-if (!$up) {
-    fwrite(STDERR, "Máy chủ dev không phản hồi ping sau 5 giây.\n");
-    exit(2);
+
+if ($mode === 'inprocess') {
+    // Nạp API vào chính tiến trình này. API_INPROCESS phải định nghĩa TRƯỚC
+    // khi nạp response.php. DIEMDANH_CONFIG trỏ CSDL THỬ (config.php chỉ đọc
+    // biến này ở SAPI cli).
+    define('API_INPROCESS', true);
+    putenv('DIEMDANH_CONFIG=' . $configPath);
+    $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+    date_default_timezone_set('Asia/Ho_Chi_Minh');
+    // error_log() của API (stub mail, lỗi CSDL…) ở CLI mặc định in ra màn hình
+    // → chuyển vào file tạm để kết quả PASS/FAIL dễ đọc.
+    $apiLog = sys_get_temp_dir() . '/diemdanhsv-smoke-api.log';
+    ini_set('error_log', $apiLog);
+    foreach (['response', 'config', 'db', 'audit', 'mailer', 'auth', 'gradeauth', 'roles', 'attendance', 'queries', 'admin', 'actions'] as $lib) {
+        require $root . '/api/lib/' . $lib . '.php';
+    }
+    echo "CHẾ ĐỘ: in-process (host không cho bật php -S — proc_open/exec bị cấm). " .
+         "Các ca \"song song\" chạy tuần tự, không chứng minh chống đua. Log API: $apiLog\n";
+} else {
+    echo "CHẾ ĐỘ: HTTP thật qua php -S trên cổng $port" . ($serverPid ? " (pid $serverPid, bật bằng exec)" : '') . ".\n";
 }
 
 /* ------------------------------------------------------------------ */
