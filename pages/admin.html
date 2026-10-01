@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quản trị — Môn, lớp, sinh viên</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+
+<header class="brand-bar text-white">
+  <div class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+    <div class="flex items-center gap-3">
+      <a href="../index.html" class="text-white/80 hover:text-white">&larr;</a>
+      <h1 class="text-base font-bold">Quản trị môn, lớp, sinh viên</h1>
+    </div>
+    <div id="dash-user" class="flex items-center gap-3 text-sm">
+      <span id="who" class="opacity-90"></span>
+      <a href="lecturer.html" class="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Điểm danh</a>
+      <button id="logout-btn" class="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Đăng xuất</button>
+    </div>
+  </div>
+</header>
+
+<main class="mx-auto max-w-5xl px-4 py-6">
+
+  <!-- ĐĂNG NHẬP (cùng tài khoản giảng viên) -->
+  <section id="login-box" class="mx-auto max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <h2 class="text-lg font-bold">Đăng nhập</h2>
+    <p class="mt-1 text-sm text-slate-600">Dùng tài khoản giảng viên. Giảng viên chỉ quản lý lớp mình đứng tên; tài khoản quản trị quản lý tất cả.</p>
+    <form id="login-form" class="mt-4 space-y-3">
+      <div>
+        <label for="username" class="block text-sm font-medium text-slate-700">Tên đăng nhập</label>
+        <input id="username" type="text" autocomplete="username" required
+               class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-slate-700">Mật khẩu</label>
+        <input id="password" type="password" autocomplete="current-password" required
+               class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+      </div>
+      <p id="login-error" class="text-sm text-red-700" hidden></p>
+      <button type="submit" class="w-full rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white hover:bg-blue-800">Đăng nhập</button>
+    </form>
+  </section>
+
+  <!-- BẢNG QUẢN TRỊ -->
+  <section id="dashboard" hidden>
+
+    <nav class="flex flex-wrap gap-1 border-b border-slate-200 text-sm">
+      <button data-tab="classes"  class="tab-btn px-3 py-2 font-semibold">Lớp học</button>
+      <button data-tab="roster"   class="tab-btn px-3 py-2">Sinh viên của lớp</button>
+      <button data-tab="sessions" class="tab-btn px-3 py-2">Buổi học</button>
+      <button data-tab="courses"  class="tab-btn px-3 py-2" id="tab-courses-btn">Môn học</button>
+    </nav>
+
+    <!-- LỚP -->
+    <div data-panel="classes" class="mt-4 grid gap-4 lg:grid-cols-5">
+      <div class="lg:col-span-3 rounded-2xl border border-slate-200 bg-white p-4">
+        <div class="flex items-center justify-between">
+          <h2 class="font-semibold">Danh sách lớp</h2>
+          <button id="class-new-btn" class="rounded-lg bg-blue-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-800">+ Lớp mới</button>
+        </div>
+        <div class="table-wrap mt-2">
+          <table class="w-full text-left text-sm">
+            <thead class="text-xs uppercase text-slate-500">
+              <tr><th class="px-2 py-2">Mã lớp</th><th class="px-2 py-2">Môn</th><th class="px-2 py-2">HK / Năm</th>
+                  <th class="px-2 py-2">Giảng viên</th><th class="px-2 py-2">TT</th><th></th></tr>
+            </thead>
+            <tbody id="class-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <form id="class-form" class="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 space-y-3" hidden>
+        <h2 id="class-form-title" class="font-semibold">Lớp mới</h2>
+        <input type="hidden" name="classId">
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Môn học <span class="admin-only">*</span></label>
+          <select name="courseId" class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"></select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Mã lớp *</label>
+          <input name="classCode" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="VD: MTH00001-01">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div><label class="block text-sm font-medium text-slate-700">Học kỳ</label>
+            <input name="semester" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="1"></div>
+          <div><label class="block text-sm font-medium text-slate-700">Năm học</label>
+            <input name="academicYear" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="2026-2027"></div>
+        </div>
+        <div class="admin-only">
+          <label class="block text-sm font-medium text-slate-700">Giảng viên (chọn một hoặc nhiều) *</label>
+          <select name="lecturerIds" multiple size="4" class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"></select>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div><label class="block text-sm font-medium text-slate-700">Vĩ độ phòng</label>
+            <input name="roomLat" type="number" step="any" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+          <div><label class="block text-sm font-medium text-slate-700">Kinh độ</label>
+            <input name="roomLng" type="number" step="any" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+          <div><label class="block text-sm font-medium text-slate-700">Bán kính (m)</label>
+            <input name="allowedRadiusM" type="number" min="10" value="100" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+        </div>
+        <p class="text-xs text-slate-500">Để trống toạ độ nếu chưa đo — hệ thống sẽ không đối chiếu GPS cho lớp này.</p>
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Trạng thái</label>
+          <select name="status" class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2">
+            <option value="ACTIVE">Đang hoạt động</option><option value="INACTIVE">Ngưng (ẩn khỏi điểm danh)</option>
+          </select>
+        </div>
+        <div class="flex gap-2">
+          <button type="submit" class="rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white hover:bg-blue-800">Lưu</button>
+          <button type="button" id="class-cancel-btn" class="rounded-lg border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-100">Huỷ</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- SINH VIÊN CỦA LỚP -->
+    <div data-panel="roster" class="mt-4 space-y-4" hidden>
+      <div>
+        <label for="roster-class" class="block text-sm font-medium text-slate-700">Lớp</label>
+        <select id="roster-class" class="mt-1 w-full max-w-md rounded-lg border border-slate-300 bg-white px-3 py-2"><option value="">— Chọn lớp —</option></select>
+      </div>
+
+      <div id="roster-body" class="grid gap-4 lg:grid-cols-5" hidden>
+        <div class="lg:col-span-3 rounded-2xl border border-slate-200 bg-white p-4">
+          <h2 class="font-semibold">Danh sách sinh viên <span id="roster-count" class="text-sm font-normal text-slate-500"></span></h2>
+          <div class="table-wrap mt-2">
+            <table class="w-full text-left text-sm">
+              <thead class="text-xs uppercase text-slate-500">
+                <tr><th class="px-2 py-2">MSSV</th><th class="px-2 py-2">Họ tên</th><th class="px-2 py-2">Email</th><th class="px-2 py-2">TT</th><th></th></tr>
+              </thead>
+              <tbody id="roster-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2 space-y-4">
+          <form id="enroll-form" class="rounded-2xl border border-slate-200 bg-white p-4 space-y-2">
+            <h2 class="font-semibold">Thêm một sinh viên</h2>
+            <input name="mssv" required pattern="[0-9]{6,10}" placeholder="MSSV (6–10 chữ số)" class="w-full rounded-lg border border-slate-300 px-3 py-2">
+            <input name="fullName" placeholder="Họ tên (bắt buộc nếu SV chưa có trong hệ thống)" class="w-full rounded-lg border border-slate-300 px-3 py-2">
+            <input name="email" type="email" placeholder="Email (không bắt buộc)" class="w-full rounded-lg border border-slate-300 px-3 py-2">
+            <button type="submit" class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">Thêm vào lớp</button>
+          </form>
+
+          <div class="rounded-2xl border border-slate-200 bg-white p-4 space-y-2">
+            <h2 class="font-semibold">Nhập danh sách từ file CSV</h2>
+            <p class="text-xs text-slate-500">File cần dòng tiêu đề có cột <b>MSSV</b> và <b>Họ tên</b> (hoặc Họ đệm + Tên), có thể thêm <b>Email</b>. Xuất từ Excel: Lưu dạng CSV UTF-8.</p>
+            <input id="csv-file" type="file" accept=".csv,text/csv,text/plain" class="block w-full text-sm">
+            <textarea id="csv-text" rows="4" placeholder="…hoặc dán nội dung CSV vào đây" class="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs"></textarea>
+            <div class="flex gap-2">
+              <button id="csv-preview-btn" class="rounded-lg border border-blue-700 px-3 py-1.5 text-sm font-semibold text-blue-700 hover:bg-blue-50">Kiểm tra trước</button>
+              <button id="csv-import-btn" disabled class="rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800 disabled:bg-slate-300">Nhập thật</button>
+            </div>
+            <div id="csv-report" class="text-sm" hidden></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUỔI HỌC -->
+    <div data-panel="sessions" class="mt-4 space-y-4" hidden>
+      <div>
+        <label for="session-class" class="block text-sm font-medium text-slate-700">Lớp</label>
+        <select id="session-class" class="mt-1 w-full max-w-md rounded-lg border border-slate-300 bg-white px-3 py-2"><option value="">— Chọn lớp —</option></select>
+      </div>
+      <div id="session-body" class="grid gap-4 lg:grid-cols-5" hidden>
+        <div class="lg:col-span-3 rounded-2xl border border-slate-200 bg-white p-4">
+          <div class="flex items-center justify-between">
+            <h2 class="font-semibold">Buổi học</h2>
+            <button id="session-new-btn" class="rounded-lg bg-blue-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-800">+ Buổi mới</button>
+          </div>
+          <div class="table-wrap mt-2">
+            <table class="w-full text-left text-sm">
+              <thead class="text-xs uppercase text-slate-500">
+                <tr><th class="px-2 py-2">#</th><th class="px-2 py-2">Ngày</th><th class="px-2 py-2">Giờ</th><th class="px-2 py-2">Nội dung</th><th class="px-2 py-2">TT</th><th></th></tr>
+              </thead>
+              <tbody id="session-table"></tbody>
+            </table>
+          </div>
+        </div>
+        <form id="session-form" class="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 space-y-2" hidden>
+          <h2 id="session-form-title" class="font-semibold">Buổi mới</h2>
+          <input type="hidden" name="sessionId">
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-sm font-medium text-slate-700">Buổi số *</label>
+              <input name="sessionNo" type="number" min="1" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+            <div><label class="block text-sm font-medium text-slate-700">Ngày</label>
+              <input name="date" type="date" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-sm font-medium text-slate-700">Bắt đầu</label>
+              <input name="startTime" type="time" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+            <div><label class="block text-sm font-medium text-slate-700">Kết thúc</label>
+              <input name="endTime" type="time" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+          </div>
+          <div><label class="block text-sm font-medium text-slate-700">Nội dung</label>
+            <input name="content" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+          <div><label class="block text-sm font-medium text-slate-700">Trạng thái</label>
+            <select name="status" class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2">
+              <option value="ACTIVE">Đang hoạt động</option><option value="INACTIVE">Ngưng</option>
+            </select></div>
+          <div class="flex gap-2">
+            <button type="submit" class="rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white hover:bg-blue-800">Lưu</button>
+            <button type="button" id="session-cancel-btn" class="rounded-lg border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-100">Huỷ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MÔN HỌC (chỉ ADMIN sửa) -->
+    <div data-panel="courses" class="mt-4 grid gap-4 lg:grid-cols-5" hidden>
+      <div class="lg:col-span-3 rounded-2xl border border-slate-200 bg-white p-4">
+        <div class="flex items-center justify-between">
+          <h2 class="font-semibold">Môn học</h2>
+          <button id="course-new-btn" class="admin-only rounded-lg bg-blue-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-800">+ Môn mới</button>
+        </div>
+        <div class="table-wrap mt-2">
+          <table class="w-full text-left text-sm">
+            <thead class="text-xs uppercase text-slate-500">
+              <tr><th class="px-2 py-2">Mã môn</th><th class="px-2 py-2">Tên môn</th><th class="px-2 py-2">TC</th><th class="px-2 py-2">TT</th><th></th></tr>
+            </thead>
+            <tbody id="course-table"></tbody>
+          </table>
+        </div>
+      </div>
+      <form id="course-form" class="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 space-y-2" hidden>
+        <h2 id="course-form-title" class="font-semibold">Môn mới</h2>
+        <input type="hidden" name="courseId">
+        <div><label class="block text-sm font-medium text-slate-700">Mã môn *</label>
+          <input name="courseCode" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+        <div><label class="block text-sm font-medium text-slate-700">Tên môn *</label>
+          <input name="courseName" required class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+        <div class="grid grid-cols-3 gap-2">
+          <div><label class="block text-sm font-medium text-slate-700">Tín chỉ</label>
+            <input name="credits" type="number" step="0.5" min="0" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+          <div><label class="block text-sm font-medium text-slate-700">Giờ LT</label>
+            <input name="theoryHours" type="number" min="0" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+          <div><label class="block text-sm font-medium text-slate-700">Giờ TH</label>
+            <input name="practiceHours" type="number" min="0" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"></div>
+        </div>
+        <div><label class="block text-sm font-medium text-slate-700">Trạng thái</label>
+          <select name="status" class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2">
+            <option value="ACTIVE">Đang hoạt động</option><option value="INACTIVE">Ngưng</option>
+          </select></div>
+        <div class="flex gap-2">
+          <button type="submit" class="rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white hover:bg-blue-800">Lưu</button>
+          <button type="button" id="course-cancel-btn" class="rounded-lg border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-100">Huỷ</button>
+        </div>
+      </form>
+    </div>
+
+  </section>
+</main>
+
+<div id="toast" class="toast fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-slate-900 px-4 py-2 text-sm text-white shadow-lg" hidden></div>
+
+<script src="../js/config/config.js"></script>
+<script src="../js/services/APIService.js"></script>
+<script src="../js/views/AdminView.js"></script>
+<script src="../js/controllers/AdminController.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new AdminController(new APIService(CONFIG.API_URL), new AdminView()).init();
+  });
+</script>
+</body>
+</html>

@@ -72,4 +72,20 @@ class APIService {
   requestGradeCode(mssv)              { return this.post('requestGradeCode', { mssv }); }
   verifyGradeCode(mssv, code)         { return this.post('verifyGradeCode', { mssv, code }); }
   myGrades(token)                     { return this.get('myGrades', { token }); }
+
+  /* ---- Quản trị (GĐ7, api/lib/admin.php) — mọi lời gọi đều cần token giảng viên/admin ---- */
+  adminListCourses(token)             { return this.get('adminListCourses', { token }); }
+  adminListLecturers(token)           { return this.get('adminListLecturers', { token }); }
+  adminListClasses(token)             { return this.get('adminListClasses', { token }); }
+  adminListRoster(token, classId)     { return this.get('adminListRoster', { token, classId }); }
+  adminListSessions(token, classId)   { return this.get('adminListSessions', { token, classId }); }
+  adminSaveCourse(token, c)           { return this.post('adminSaveCourse', Object.assign({ token }, c)); }
+  adminSaveClass(token, c)            { return this.post('adminSaveClass', Object.assign({ token }, c)); }
+  adminSaveSession(token, s)          { return this.post('adminSaveSession', Object.assign({ token }, s)); }
+  adminSaveStudent(token, s)          { return this.post('adminSaveStudent', Object.assign({ token }, s)); }
+  adminEnroll(token, classId, s)      { return this.post('adminEnroll', Object.assign({ token, classId }, s)); }
+  adminUnenroll(token, classId, mssv) { return this.post('adminUnenroll', { token, classId, mssv }); }
+  adminImportRoster(token, classId, csv, dryRun) {
+    return this.post('adminImportRoster', { token, classId, csv, dryRun: !!dryRun });
+  }
 }

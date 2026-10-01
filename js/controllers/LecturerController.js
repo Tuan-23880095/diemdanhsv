@@ -31,6 +31,7 @@ class LecturerController {
       this.token = data.token;
       sessionStorage.setItem('dd_token', data.token);
       sessionStorage.setItem('dd_name', data.fullName);
+      sessionStorage.setItem('dd_role', data.role); // trang quản trị (GĐ7) đọc để bật/tắt phần chỉ ADMIN
       this.view.enterDashboard(data.fullName);
       await this.loadClasses();
     } catch (err) {
@@ -44,6 +45,7 @@ class LecturerController {
     this.token = null;
     sessionStorage.removeItem('dd_token');
     sessionStorage.removeItem('dd_name');
+    sessionStorage.removeItem('dd_role');
     this.view.exitDashboard();
   }
 
