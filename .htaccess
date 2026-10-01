@@ -16,6 +16,14 @@ RewriteRule (^|/)\. - [F,L]
 # (tools/ — rule 3 của dự án, xem tools/README.md)
 RewriteRule ^(gas|docs|db|tools|_firebase-upload)(/|$) - [F,L]
 
+# Thư viện nội bộ của API — chỉ được nạp qua require từ api/index.php,
+# không gọi trực tiếp qua web (GĐ5 review bảo mật, L1)
+RewriteRule ^api/lib(/|$) - [F,L]
+
+# File log lỗi PHP mặc định của shared hosting (tên 'error_log', không có
+# đuôi .log) — có thể chứa thông tin nhạy cảm (GĐ5 review bảo mật, H2)
+RewriteRule (^|/)error_log$ - [F,L]
+
 # Chặn tài liệu và script không phục vụ web
 RewriteRule \.(md|ps1|sql|gs|yml|yaml|log|bak)$ - [F,L]
 RewriteRule ^firebase\.json$ - [F,L]

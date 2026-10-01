@@ -79,7 +79,7 @@ function action_login(array $params): void
     } else {
         // Bước 1 (mục 6): còn hash sha256 cũ — verify rồi rehash NGAY LẬP TỨC.
         $salt = (string) ($user['Salt'] ?? '');
-        if (legacy_sha256_hash($password, $salt) === $hash) {
+        if (hash_equals($hash, legacy_sha256_hash($password, $salt))) {
             $verified = true;
             db_transaction(function (PDO $pdo) use ($user, $password): void {
                 $upd = $pdo->prepare(

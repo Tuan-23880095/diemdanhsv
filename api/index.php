@@ -19,6 +19,10 @@
 
 declare(strict_types=1);
 
+// Không bao giờ in warning/notice lẫn vào JSON trả về (sẽ làm hỏng phong bì
+// và có thể lộ đường dẫn) — chỉ ghi vào log phía server.
+ini_set('display_errors', '0');
+
 require __DIR__ . '/lib/response.php';
 require __DIR__ . '/lib/config.php';
 require __DIR__ . '/lib/db.php';
@@ -55,7 +59,16 @@ $action = trim((string) ($params['action'] ?? ''));
 
 try {
     api_dispatch($action, $method, $params);
+} catch (PDOException | Error $e) {
+    // GĐ5 review bảo mật (docs/05-GD5-smoke-review.md, M1): lỗi CSDL (PDO)
+    // và lỗi lập trình (TypeError…) KHÔNG trả nguyên văn cho client — thông
+    // điệp PDO lộ tên cột, tên user CSDL ("Access denied for user …"). Ghi
+    // chi tiết vào error_log phía server, trả thông báo chung.
+    error_log('[api] ' . $action . ': ' . get_class($e) . ': ' . $e->getMessage());
+    api_fail('Lỗi máy chủ. Vui lòng thử lại sau.');
 } catch (Throwable $e) {
-    // Tương đương catch(err){return fail(err.message)} của doGet/doPost cũ.
+    // Lỗi nghiệp vụ do code tự ném (RuntimeException từ require_role(),
+    // require_student(), assert_class_access()…) — thông điệp viết sẵn cho
+    // người dùng, giữ nguyên như catch(err){return fail(err.message)} cũ.
     api_fail($e->getMessage());
 }

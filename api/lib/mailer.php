@@ -18,11 +18,18 @@ declare(strict_types=1);
  */
 function mail_send(string $to, string $subject, string $body): void
 {
+    // GĐ5 review bảo mật (docs/05-GD5-smoke-review.md, H2): MẶC ĐỊNH KHÔNG
+    // ghi thân email (có mã xác minh xem điểm) ra error_log — trên shared
+    // hosting file error_log có thể nằm ngay trong public_html/api/. Chỉ ghi
+    // thân email khi file cấu hình bí mật bật rõ ràng
+    // app.mail_stub_log_body = true (dùng trên CSDL thử, KHÔNG bật ở host thật).
+    $logBody = (app_config()['app']['mail_stub_log_body'] ?? false) === true;
+
     error_log(sprintf(
         '[mail_send STUB] chưa cấu hình SMTP thật (docs/04-API-PHP.md mục 10.4) — ' .
         'sẽ gửi tới %s | subject=%s | body=%s',
         $to,
         $subject,
-        str_replace("\n", ' \\n ', $body)
+        $logBody ? str_replace("\n", ' \\n ', $body) : '(ẩn — bật app.mail_stub_log_body để xem khi test)'
     ));
 }
