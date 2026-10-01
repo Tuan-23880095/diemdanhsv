@@ -283,8 +283,8 @@ function action_admin_save_class(array $params): void
             $data['CourseID'] = $courseId;
         }
         if ($lecturerIds !== '') {
-            // Mọi UserID phải tồn tại và là LECTURER/ADMIN — FK chỉ kiểm được ID đầu
-            // (cột lưu danh sách), nên kiểm tay ở đây.
+            // Mọi UserID phải tồn tại và là LECTURER/ADMIN. Cột lưu DANH SÁCH nên
+            // KHÔNG có khoá ngoại (db/migrations/003) — ứng dụng phải tự kiểm ở đây.
             foreach (explode(',', $lecturerIds) as $uid) {
                 $chk = db()->prepare("SELECT 1 FROM users WHERE UserID = :id AND Role IN ('LECTURER','ADMIN')");
                 $chk->execute(['id' => $uid]);

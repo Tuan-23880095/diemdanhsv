@@ -563,6 +563,18 @@ hai bước), Buổi học, Môn học.
   sandbox không cài được MariaDB (như GĐ5 nợ). Thầy chạy
   `php tools/smoke_test.php --config=../private/config.test.php` trên host.
 
+### Kết quả chạy trên host (01/10/2026, CSDL thử)
+
+Lần đầu: 80/100 PASS. 20 FAIL đều do MỘT lỗi: `adminSaveClass` tạo lớp có 2
+giảng viên bị MariaDB từ chối vì `db/schema.sql` (GĐ1) đặt khoá ngoại
+`fk_classes_lecturer` trên `LecturerID`, trong khi thiết kế (mục 4, D.9) lưu
+cột này dạng danh sách `"1607,2015"`. Khoá ngoại đó cũng sẽ làm
+`tools/import.php` thất bại với dữ liệu thật có lớp 2 giảng viên. Sửa:
+`db/migrations/003-classes-lecturerid-csv.sql` bỏ khoá ngoại (giữ chỉ số),
+`db/schema.sql` cập nhật cho CSDL mới, thêm `tools/migrate.php` để áp
+migration lên CSDL thật/thử; `smoke_test.php` tự áp migrations mỗi lần chạy.
+Host cấm `proc_open`/`exec` nên smoke test chạy ở chế độ in-process (PR #9).
+
 ### Chưa làm / chờ thầy
 
 - Nhánh này dựa trên `agent/web-g5b` (PR #7) vì dùng chung
