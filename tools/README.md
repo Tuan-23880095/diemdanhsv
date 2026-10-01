@@ -33,9 +33,10 @@ Quy ước cho mọi script thêm vào đây (từ GĐ6 trở đi theo PLAN):
   mới (ví dụ 003 bỏ khoá ngoại `classes.LecturerID`).
 - **`smoke_test.php`** — smoke test 13 + 12 action trên CSDL THỬ với dữ liệu
   demo (xem `docs/05-GD5-smoke-review.md`). Tự áp migrations trước khi chạy.
-- **`backup.php`** — `mysqldump` + gzip vào `../private/backups/`, tự dọn
-  bản cũ (`--keep=N`). Đặt lịch qua hPanel Cron Jobs. Xem docs/04-API-PHP.md
-  mục 15.
+- **`backup.php`** — sao lưu CSDL bằng PHP thuần (PDO + gzip, KHÔNG dùng
+  `mysqldump`/shell vì host cấm `exec`), vào `../private/backups/`, tự dọn
+  bản cũ (`--keep=N`), `--dry-run` liệt kê bảng + số dòng, `--config=` cho
+  CSDL thử. Đặt lịch qua hPanel Cron Jobs (lệnh mẫu ở đầu file).
 
 Script thêm sau (GĐ7/8 theo PLAN, ví dụ `create-lecturer.php`,
 `fix-data.php`) theo đúng quy ước ở trên — xem docs/04-API-PHP.md mục 9.
