@@ -731,8 +731,12 @@ check('adminImportGrades dry-run: 4 cột (Giữa kỳ đã có → cập nhật
     && (float) $r['data']['weightTotal'] === 110.0 && str_contains((string) $r['data']['weightNote'], 'quy về'), brief($r));
 check('adminImportGrades ghi thật khi còn lỗi → error, không ghi', err(api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1', 'csv' => $csv, 'dryRun' => false]), 'lỗi')
     && (int) $pdo->query("SELECT COUNT(*) FROM grade_columns WHERE ClassID = 'SMOKE_C1' AND Name = 'Cuối kỳ' AND Weight = 50")->fetchColumn() === 0);
-check('adminImportGrades tiêu đề thiếu trọng số cho cột mới → lỗi dòng 1', err(api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1',
-    'csv' => "MSSV,Bài tập lớn\n99000001,9", 'dryRun' => false]), 'thiếu trọng số'));
+$r = api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1', 'csv' => "MSSV,Bài tập lớn\n99000001,9", 'dryRun' => true]);
+check('adminImportGrades tiêu đề thiếu trọng số cho cột mới → dry-run báo lỗi dòng 1 "thiếu trọng số"', ok($r) && count($r['data']['errors']) === 1
+    && $r['data']['errors'][0]['line'] === 1 && str_contains((string) $r['data']['errors'][0]['error'], 'thiếu trọng số'), brief($r));
+check('… và ghi thật khi đó bị từ chối, không tạo cột', err(api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1',
+    'csv' => "MSSV,Bài tập lớn\n99000001,9", 'dryRun' => false]), 'lỗi')
+    && (int) $pdo->query("SELECT COUNT(*) FROM grade_columns WHERE ClassID = 'SMOKE_C1' AND Name = 'Bài tập lớn'")->fetchColumn() === 0);
 $csv2 = "MSSV,Thường xuyên (20%),Giữa kỳ (20%),Cuối kỳ (50%),Điểm cộng (10%)\n99000001,8,7.5,8,\n99000002,9,,7,1\n";
 $r = api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1', 'csv' => $csv2, 'dryRun' => false]);
 check('adminImportGrades ghi thật → 2 cột mới + 2 cột cập nhật (Giữa kỳ, Cuối kỳ), 6 ô điểm', ok($r) && $r['data']['written'] === true
