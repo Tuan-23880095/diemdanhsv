@@ -112,41 +112,55 @@ function action_my_grades(array $params): void
             $scoresByCol[(string) $g['GradeColumnID']] = $g['Score'];
         }
 
-        $weighted = 0.0;
-        $weightDone = 0.0;
-        $weightTotal = 0.0;
         $columns = [];
-
         foreach ($cols as $col) {
-            $w = (float) $col['Weight'];
-            $weightTotal += $w;
-
             $raw = $scoresByCol[(string) $col['GradeColumnID']] ?? null;
             $has = $raw !== null && trim((string) $raw) !== '';
-            $score = $has ? (float) $raw : null;
-
-            if ($has) {
-                $weighted += $score * $w;
-                $weightDone += $w;
-            }
-
             $columns[] = [
                 'name'   => $col['Name'],
-                'weight' => $w,
-                'score'  => $score,
+                'weight' => (float) $col['Weight'],
+                'score'  => $has ? (float) $raw : null,
             ];
         }
+
+        // GĐ8: điểm tổng = Σ điểm×trọng số/100 trên phần đã chấm, quy về tối đa
+        // 10 (tổng trọng số có thể là 110% vì có "Điểm cộng" — thầy chốt
+        // 02/10/2026). 'average' cũ (trung bình trên phần đã chấm) giữ lại cho
+        // tương thích, nhưng giao diện dùng 'total'.
+        $totals = grading_total($columns);
+        $weighted = 0.0;
+        $weightDone = 0.0;
+        foreach ($columns as $c) {
+            if ($c['score'] !== null) {
+                $weighted += $c['score'] * $c['weight'];
+                $weightDone += $c['weight'];
+            }
+        }
+
+        // Chuyên cần + cấm thi tính TRỰC TIẾP từ điểm danh (luôn mới nhất, không
+        // phụ thuộc giảng viên đã bấm "Ghi điểm chuyên cần" hay chưa).
+        $stats = attendance_stats($classId);
+        $mine = $stats['rows'][$me['studentId']] ?? null;
 
         $classes[] = [
             'classCode'   => $en['ClassCode'],
             'courseName'  => (string) $en['CourseName'],
             'courseCode'  => (string) $en['CourseCode'],
             'columns'     => $columns,
-            // Trung bình tính trên phần ĐÃ có điểm, kèm tỉ lệ đã chấm — giữ
-            // đúng ngữ nghĩa "điểm tạm" gas/08-GradeService.gs dòng 236.
             'average'     => $weightDone > 0 ? round($weighted / $weightDone, 2) : null,
-            'weightDone'  => $weightDone,
-            'weightTotal' => $weightTotal,
+            'total'       => $totals['total'],
+            'weightDone'  => $totals['weightDone'],
+            'weightTotal' => $totals['weightTotal'],
+            'attendance'  => $mine === null ? null : [
+                'sessionsCounted'    => $stats['sessionsCounted'],
+                'present'            => $mine['present'],
+                'late'               => $mine['late'],
+                'absent'             => $mine['absent'],
+                'excused'            => $mine['excused'],
+                'score'              => $mine['score'],
+                'equivalentAbsences' => $mine['equivalentAbsences'],
+                'banned'             => $mine['banned'],
+            ],
         ];
     }
 

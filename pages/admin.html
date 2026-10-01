@@ -52,6 +52,7 @@
       <button data-tab="classes"  class="tab-btn px-3 py-2 font-semibold">Lớp học</button>
       <button data-tab="roster"   class="tab-btn px-3 py-2">Sinh viên của lớp</button>
       <button data-tab="sessions" class="tab-btn px-3 py-2">Buổi học</button>
+      <button data-tab="grades"   class="tab-btn px-3 py-2">Điểm &amp; chuyên cần</button>
       <button data-tab="courses"  class="tab-btn px-3 py-2" id="tab-courses-btn">Môn học</button>
     </nav>
 
@@ -207,6 +208,91 @@
             <button type="button" id="session-cancel-btn" class="rounded-lg border border-slate-300 px-4 py-2 text-slate-700 hover:bg-slate-100">Huỷ</button>
           </div>
         </form>
+      </div>
+
+      <!-- ĐIỂM DANH TAY cho một buổi (thay importManualAttendance) -->
+      <div id="manual-box" class="rounded-2xl border border-slate-200 bg-white p-4" hidden>
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="font-semibold">Điểm danh tay — <span id="manual-title"></span></h2>
+          <div class="flex gap-2 text-sm">
+            <button id="manual-all-present" class="rounded-lg border border-slate-300 px-3 py-1 hover:bg-slate-100">Tất cả: Có mặt</button>
+            <button id="manual-save-btn" class="rounded-lg bg-emerald-700 px-3 py-1 font-semibold text-white hover:bg-emerald-800">Lưu thay đổi</button>
+            <button id="manual-close-btn" class="rounded-lg border border-slate-300 px-3 py-1 hover:bg-slate-100">Đóng</button>
+          </div>
+        </div>
+        <p class="mt-1 text-xs text-slate-500">Chỉ những dòng thầy đổi mới được ghi. Bản ghi do sinh viên tự check-in giữ nguyên giờ/vị trí/thiết bị, chỉ đổi trạng thái. Dùng để nhập buổi cũ hoặc đổi "Vắng" thành "Vắng có phép".</p>
+        <div class="table-wrap mt-2">
+          <table class="w-full text-left text-sm">
+            <thead class="text-xs uppercase text-slate-500">
+              <tr><th class="px-2 py-2">MSSV</th><th class="px-2 py-2">Họ tên</th><th class="px-2 py-2">Hiện tại</th><th class="px-2 py-2">Đổi thành</th></tr>
+            </thead>
+            <tbody id="manual-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ĐIỂM & CHUYÊN CẦN -->
+    <div data-panel="grades" class="mt-4 space-y-4" hidden>
+      <div>
+        <label for="grade-class" class="block text-sm font-medium text-slate-700">Lớp</label>
+        <select id="grade-class" class="mt-1 w-full max-w-md rounded-lg border border-slate-300 bg-white px-3 py-2"><option value="">— Chọn lớp —</option></select>
+      </div>
+      <div id="grade-body" class="space-y-4" hidden>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 class="font-semibold">Chuyên cần (tự tính từ điểm danh)</h2>
+            <div class="flex gap-2 text-sm">
+              <button id="att-preview-btn" class="rounded-lg border border-blue-700 px-3 py-1 font-semibold text-blue-700 hover:bg-blue-50">Tính thử</button>
+              <button id="att-apply-btn" disabled class="rounded-lg bg-emerald-700 px-3 py-1 font-semibold text-white hover:bg-emerald-800 disabled:bg-slate-300">Ghi vào bảng điểm</button>
+            </div>
+          </div>
+          <p id="att-rules" class="mt-1 text-xs text-slate-500"></p>
+          <div id="att-report" class="mt-2" hidden>
+            <p id="att-summary" class="text-sm"></p>
+            <div class="table-wrap mt-2">
+              <table class="w-full text-left text-sm">
+                <thead class="text-xs uppercase text-slate-500">
+                  <tr><th class="px-2 py-2">MSSV</th><th class="px-2 py-2">Họ tên</th><th class="px-2 py-2 text-right">Mặt</th><th class="px-2 py-2 text-right">Trễ</th>
+                      <th class="px-2 py-2 text-right">Vắng</th><th class="px-2 py-2 text-right">Phép</th><th class="px-2 py-2 text-right">Điểm</th><th class="px-2 py-2">Cấm thi</th></tr>
+                </thead>
+                <tbody id="att-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid gap-4 lg:grid-cols-5">
+          <div class="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 space-y-2">
+            <h2 class="font-semibold">Nhập điểm từ CSV</h2>
+            <p class="text-xs text-slate-500">Cột đầu là <b>MSSV</b>, các cột sau là đầu điểm kèm trọng số trong ngoặc. Ô trống = chưa chấm (không ghi). Điểm 0–10. Tổng trọng số có thể vượt 100% (điểm cộng) — điểm tổng quy về tối đa 10.</p>
+            <pre id="grade-template" class="overflow-x-auto rounded-lg bg-slate-50 p-2 text-xs">MSSV,Thường xuyên (20%),Giữa kỳ (20%),Cuối kỳ (50%),Điểm cộng (10%)
+99000001,8,7.5,8,
+99000002,9,,7,1</pre>
+            <input id="grade-file" type="file" accept=".csv,text/csv,text/plain" class="block w-full text-sm">
+            <textarea id="grade-csv" rows="5" placeholder="…hoặc dán nội dung CSV vào đây" class="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs"></textarea>
+            <div class="flex gap-2">
+              <button id="grade-preview-btn" class="rounded-lg border border-blue-700 px-3 py-1.5 text-sm font-semibold text-blue-700 hover:bg-blue-50">Kiểm tra trước</button>
+              <button id="grade-import-btn" disabled class="rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800 disabled:bg-slate-300">Nhập thật</button>
+            </div>
+            <div id="grade-csv-report" class="text-sm" hidden></div>
+          </div>
+
+          <div class="lg:col-span-3 rounded-2xl border border-slate-200 bg-white p-4">
+            <div class="flex items-center justify-between">
+              <h2 class="font-semibold">Bảng điểm hiện tại</h2>
+              <button id="grade-refresh-btn" class="rounded-lg border border-slate-300 px-3 py-1 text-sm hover:bg-slate-100">Tải lại</button>
+            </div>
+            <p id="grade-weight-note" class="mt-1 text-xs text-slate-500"></p>
+            <div class="table-wrap mt-2">
+              <table class="w-full text-left text-sm">
+                <thead id="grade-thead" class="text-xs uppercase text-slate-500"></thead>
+                <tbody id="grade-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

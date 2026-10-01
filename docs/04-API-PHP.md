@@ -230,17 +230,17 @@ nhận khi viết code GĐ2 (không đoán ở đây).
    dùng stub (ví dụ ghi log thay vì gửi) cho đến khi thầy tạo hộp thư
    `noreply@diemdanhsv.com`.
 
-## 11. Việc tiếp theo (GĐ8)
+## 11. Việc tiếp theo (GĐ9)
 
 GĐ2 (nền PHP + `ping`), GĐ3 (`login`/`logout`/`requestGradeCode`/
 `verifyGradeCode`, mục 12), GĐ4 (`openAttendance`/`closeAttendance`/
 `checkin`/`liveRoster`, mục 13), GĐ5 (`studentHistory`/`myGrades`/
 `listClasses`/`listSessions`, mục 14), GĐ6 (di dời dữ liệu + sao lưu,
 mục 15) và GĐ7 (quản trị web tối thiểu, mục 16) đã xong — **đủ 13/13 action
-cũ + 12 action quản trị**. Nợ GĐ5 (smoke test 13/13 + review bảo mật độc
-lập bằng Claude Opus, KHÔNG dùng Abacus) đã trả — xem
-`docs/05-GD5-smoke-review.md`. GĐ8 (PLAN): nhập điểm CSV, tính điểm chuyên
-cần, nhập tay điểm danh.
+cũ + 18 action quản trị** (GĐ7 mục 16, GĐ8 mục 17). Nợ GĐ5 (smoke test +
+review bảo mật độc lập bằng Claude Opus, KHÔNG dùng Abacus) đã trả — xem
+`docs/05-GD5-smoke-review.md`. GĐ9 (PLAN): staging + checklist 7 mục, thầy
+nhập dữ liệu thật, so khớp Apps Script, review/test độc lập lần 2.
 
 ## 12. Cập nhật GĐ3 — `login`/`logout`/`requestGradeCode`/`verifyGradeCode`
 
@@ -591,3 +591,61 @@ Bật `display_errors` trong script để lỗi CLI không còn bị nuốt.
   thể thêm nếu cần).
 - Chữ hướng dẫn giảng viên trên trang quản trị do Claude viết tạm; PLAN ghi
   Gemini soạn — chưa gửi handoff vì phiên không có việc đủ lớn để tách.
+
+## 17. Cập nhật GĐ8 — chuyên cần tự động, nhập điểm CSV, điểm danh tay (`api/lib/grading.php`)
+
+Giai đoạn 8/10 của PLAN. Thay `gas/10-AttendanceScore.gs`, `09-GradeImport.gs`,
+`12-ManualAttendance.gs`. Thầy quyết ngày 02/10/2026:
+
+- **Công thức chuyên cần** (thay rubric ĐG1.6 của bản GAS): thang 10, trọng
+  số 10%. Mỗi buổi vắng không phép −3, vắng có phép −1,5, trễ −1; thấp nhất
+  0. **Cấm thi** khi "vắng không phép tương đương" ≥ 3, với tương đương =
+  vắng + ⌊trễ/3⌋ + ⌊có phép/2⌋ (3 trễ = 1 vắng, 2 có phép = 1 vắng — khớp mức
+  trừ điểm). Chỉ tính trên buổi **đã điểm danh** (có bản ghi `attendance`);
+  sinh viên không có bản ghi ở buổi đó = vắng không phép. Hằng số đọc từ
+  `app.attendance_rules` trong config (mẫu ở `db/config.sample.php`).
+- **Trọng số điểm** lưu theo **phần trăm** trong `grade_columns.Weight`
+  (đúng `parseGradeHeader_` cũ). Khuôn: Cuối kỳ 50, Giữa kỳ 20, Thường xuyên
+  20, Điểm cộng 10, Chuyên cần 10 — tổng 110%. **Điểm tổng** = Σ điểm×trọng
+  số/100 trên các cột đã chấm, **quy về tối đa 10** (`grading_total()`).
+- Nhập điểm CSV và điểm danh tay đều trên web (token + đúng lớp), theo ranh
+  giới rule 3 thầy đã quyết ở GĐ7.
+
+### 6 action mới (cùng phong bì, đều cần `token` LECTURER/ADMIN + đúng lớp)
+
+| Action | Method | Tham số | Ghi chú |
+|---|---|---|---|
+| `adminAttendanceReport` | GET | `classId` | Bảng chuyên cần tính thử: mặt/trễ/vắng/phép, điểm, vắng tương đương, cờ cấm thi, `rules`. Không ghi gì. |
+| `adminApplyAttendanceScore` | POST | `classId` | Tạo/cập nhật cột "Chuyên cần" (10%) rồi upsert `grades` cho mọi SV ACTIVE. Idempotent. Từ chối nếu chưa có buổi nào điểm danh. |
+| `adminGradesReport` | GET | `classId` | Ma trận SV × cột điểm, `total` (quy về 10), `weightDone/weightTotal`, `banned`, `attendanceScore`. |
+| `adminImportGrades` | POST | `classId`, `csv`, `dryRun` | Tiêu đề `MSSV,Tên (NN%),…`; ô trống = chưa chấm (không ghi); điểm 0–10; cột đã có → cập nhật trọng số; dry-run trả báo cáo + `weightNote` khi tổng ≠ 100; ghi thật một transaction, chỉ khi hết lỗi. |
+| `adminSessionAttendance` | GET | `sessionId` | Danh sách lớp + trạng thái hiện có của buổi (null = chưa có bản ghi). |
+| `adminSetAttendance` | POST | `sessionId`, `marks:[{mssv,status}]` | status PRESENT/LATE/ABSENT/EXCUSED; rỗng = không đụng. Một SV một bản ghi (D.8-3); bản ghi check-in thật chỉ đổi `Status` + `Note` ("Nhập tay bởi …, trước: X"), giữ giờ/GPS/thiết bị. |
+
+`myGrades` (sinh viên) thêm `total` (quy về 10) và `attendance` {sessionsCounted,
+present, late, absent, excused, score, equivalentAbsences, banned} tính trực tiếp
+từ điểm danh — luôn mới nhất, không phụ thuộc giảng viên đã bấm "Ghi vào bảng
+điểm" hay chưa. `average` cũ giữ lại cho tương thích. `API_VERSION` → `php-0.6`.
+
+### Giao diện
+
+`pages/admin.html` thêm tab **Điểm & chuyên cần** (Tính thử → Ghi vào bảng
+điểm; nhập điểm CSV hai bước với mẫu tiêu đề; bảng điểm hiện tại có tổng và cờ
+cấm thi) và nút **Điểm danh tay** ở mỗi buổi trong tab Buổi học (bảng chọn
+trạng thái từng SV, chỉ gửi dòng đã đổi). `pages/diem.html` (sinh viên) hiện
+điểm tổng quy về 10 và khối Chuyên cần kèm cảnh báo cấm thi.
+
+### Test đã chạy
+
+- Sandbox: `php -l`, `node --check` sạch; công thức + `grading_total` +
+  `grading_parse_csv` chạy thật bằng PHP CLI; trang quản trị chạy thật bằng
+  Chromium với API giả lập (điểm danh tay gửi đúng `marks`, tính thử → ghi,
+  CSV dry-run → nhập thật); không lỗi JS.
+- `tools/smoke_test.php` thêm 33 kiểm tra (tổng 133) cho công thức và 6 action.
+  Chạy trên host (CSDL thử) — xem STATE/RUN.
+
+### Chưa làm / chờ thầy
+
+- Chưa có "xuất bảng điểm ra CSV/Excel" — nếu cần, thêm ở GĐ9.
+- Tên 5 cột điểm mặc định chỉ nằm trong mẫu CSV trên trang; không tự tạo cột
+  khi tạo lớp (giảng viên tự nhập CSV hoặc bấm ghi chuyên cần).

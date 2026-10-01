@@ -334,7 +334,7 @@ if ($mode === 'inprocess') {
     // → chuyển vào file tạm để kết quả PASS/FAIL dễ đọc.
     $apiLog = sys_get_temp_dir() . '/diemdanhsv-smoke-api.log';
     ini_set('error_log', $apiLog);
-    foreach (['response', 'config', 'db', 'audit', 'mailer', 'auth', 'gradeauth', 'roles', 'attendance', 'queries', 'admin', 'actions'] as $lib) {
+    foreach (['response', 'config', 'db', 'audit', 'mailer', 'auth', 'gradeauth', 'roles', 'attendance', 'queries', 'admin', 'grading', 'actions'] as $lib) {
         require $root . '/api/lib/' . $lib . '.php';
     }
     echo "CHẾ ĐỘ: in-process (host không cho bật php -S — proc_open/exec bị cấm). " .
@@ -406,8 +406,8 @@ foreach ([[1, 1], [2, 1], [4, 1], [3, 2]] as [$s, $c]) {
 $ins($pdo, 'sessions', ['SessionID' => 'SMOKE_SS1', 'ClassID' => 'SMOKE_C1', 'SessionNo' => 1, 'Date' => date('Y-m-d'), 'Content' => 'Buổi demo 1']);
 $ins($pdo, 'sessions', ['SessionID' => 'SMOKE_SS2', 'ClassID' => 'SMOKE_C2', 'SessionNo' => 1, 'Date' => date('Y-m-d'), 'Content' => 'Buổi demo lớp 2']);
 $ins($pdo, 'sessions', ['SessionID' => 'SMOKE_SS3', 'ClassID' => 'SMOKE_C1', 'SessionNo' => 2, 'Date' => date('Y-m-d'), 'Content' => 'Buổi demo 2 (mã hết hạn)']);
-$ins($pdo, 'grade_columns', ['GradeColumnID' => 'SMOKE_G1', 'ClassID' => 'SMOKE_C1', 'Name' => 'Giữa kỳ', 'Weight' => 0.4, 'SortOrder' => 1]);
-$ins($pdo, 'grade_columns', ['GradeColumnID' => 'SMOKE_G2', 'ClassID' => 'SMOKE_C1', 'Name' => 'Cuối kỳ', 'Weight' => 0.6, 'SortOrder' => 2]);
+$ins($pdo, 'grade_columns', ['GradeColumnID' => 'SMOKE_G1', 'ClassID' => 'SMOKE_C1', 'Name' => 'Giữa kỳ', 'Weight' => 40, 'SortOrder' => 1]);
+$ins($pdo, 'grade_columns', ['GradeColumnID' => 'SMOKE_G2', 'ClassID' => 'SMOKE_C1', 'Name' => 'Cuối kỳ', 'Weight' => 60, 'SortOrder' => 2]);
 $ins($pdo, 'grades', ['GradeID' => 'SMOKE_GR1', 'StudentID' => 'SMOKE_S1', 'ClassID' => 'SMOKE_C1', 'GradeColumnID' => 'SMOKE_G1', 'Score' => 8.0]);
 
 echo "Đã gieo dữ liệu demo (ID tiền tố " . SMOKE_PREFIX . ", MSSV 9900000x).\n";
@@ -558,6 +558,10 @@ $r = api('GET', ['action' => 'myGrades', 'token' => $gtok]);
 $cls = $r['data']['classes'][0] ?? [];
 check('myGrades S1 → 1 lớp, 2 cột, trung bình tạm 8 trên phần đã chấm', ok($r) && count($r['data']['classes']) === 1
     && count($cls['columns'] ?? []) === 2 && (float) $cls['average'] === 8.0, brief($r));
+check('myGrades S1 → total = 8×40/100 = 3.2, weightDone 40/100 (GĐ8)', ok($r) && (float) $cls['total'] === 3.2
+    && (float) $cls['weightDone'] === 40.0 && (float) $cls['weightTotal'] === 100.0, brief($cls));
+check('myGrades S1 → chuyên cần: 1 buổi đã điểm danh, có mặt 1, điểm 10, không cấm thi (GĐ8)', ok($r) && ($cls['attendance']['sessionsCounted'] ?? -1) === 1
+    && $cls['attendance']['present'] === 1 && (float) $cls['attendance']['score'] === 10.0 && $cls['attendance']['banned'] === false, brief($cls['attendance'] ?? null));
 check('myGrades không nhận mssv từ tham số (vẫn trả điểm của chủ token)', ok($t = api('GET', ['action' => 'myGrades', 'token' => $gtok, 'mssv' => '99000002']))
     && $t['data']['mssv'] === '99000001', brief($t));
 
@@ -658,6 +662,110 @@ check('adminImportRoster lớp người khác → error', err(api('POST', ['acti
 $audit = (int) $pdo->query("SELECT COUNT(*) FROM audit_log WHERE Action LIKE 'ADMIN\\_%'")->fetchColumn();
 check('audit_log ghi mọi thao tác quản trị ghi', $audit >= 10, "có $audit dòng");
 
+section('GĐ8 — chuyên cần / nhập điểm CSV / điểm danh tay (api/lib/grading.php)');
+// Công thức thuần (không CSDL) — thầy chốt 02/10/2026
+$rules = ['absent_penalty' => 3.0, 'excused_penalty' => 1.5, 'late_penalty' => 1.0, 'late_per_absence' => 3, 'excused_per_absence' => 2, 'ban_threshold' => 3, 'max_score' => 10.0];
+$f = static fn (int $p, int $l, int $a, int $e) => attendance_score(['present' => $p, 'late' => $l, 'absent' => $a, 'excused' => $e], $rules);
+check('công thức: đủ mặt → 10, không cấm', $f(10, 0, 0, 0) === ['score' => 10.0, 'equivalentAbsences' => 0, 'banned' => false]);
+check('công thức: 1 vắng 1 phép 1 trễ → 10−3−1,5−1 = 4,5; tđ 1', $f(5, 1, 1, 1)['score'] === 4.5 && $f(5, 1, 1, 1)['equivalentAbsences'] === 1 && !$f(5, 1, 1, 1)['banned']);
+check('công thức: 3 trễ = 1 vắng tđ; 2 phép = 1 vắng tđ; 1 vắng → 3 tđ → CẤM THI', $f(0, 3, 1, 2) === ['score' => 10.0 - 3 - 3 - 3, 'equivalentAbsences' => 3, 'banned' => true]);
+check('công thức: 2 trễ + 1 phép → 0 tđ (chưa đủ quy đổi), điểm 6,5', $f(3, 2, 0, 1) === ['score' => 6.5, 'equivalentAbsences' => 0, 'banned' => false]);
+check('công thức: 5 vắng → điểm không âm (0), cấm thi', $f(0, 0, 5, 0)['score'] === 0.0 && $f(0, 0, 5, 0)['banned']);
+check('điểm tổng: 9×50% + 9×20% + 10×20% + 10×10% + 10×10% = 10,3 → quy về 10', grading_total([
+    ['weight' => 50, 'score' => 9], ['weight' => 20, 'score' => 9], ['weight' => 20, 'score' => 10], ['weight' => 10, 'score' => 10], ['weight' => 10, 'score' => 10],
+]) === ['total' => 10.0, 'weightDone' => 110.0, 'weightTotal' => 110.0]);
+check('điểm tổng: 8×50% + 9×20% + 10×20% + 10×10% + 10×10% = 9,8 (chưa chạm trần)', grading_total([
+    ['weight' => 50, 'score' => 8], ['weight' => 20, 'score' => 9], ['weight' => 20, 'score' => 10], ['weight' => 10, 'score' => 10], ['weight' => 10, 'score' => 10],
+])['total'] === 9.8);
+check('điểm tổng: chưa chấm cột nào → null', grading_total([['weight' => 50, 'score' => null]])['total'] === null);
+
+// Lớp C1: SS1 đã đóng điểm danh (S1 PRESENT, S2 PRESENT/LATE?, S4 ABSENT). Thêm buổi SS3 bằng tay rồi tính.
+$r = api('GET', ['action' => 'adminAttendanceReport', 'token' => $tok2, 'classId' => 'SMOKE_C1']);
+check('adminAttendanceReport lớp người khác → error', err($r, 'không có quyền'));
+$r = api('GET', ['action' => 'adminAttendanceReport', 'token' => $tok1, 'classId' => 'SMOKE_C1']);
+$byMssv = static fn ($rep) => array_column($rep['data']['rows'] ?? [], null, 'mssv');
+$rows = $byMssv($r);
+check('adminAttendanceReport C1: 1 buổi đã điểm danh; S1 có mặt; S4 vắng (đóng điểm danh); S2 có bản ghi', ok($r) && $r['data']['sessionsCounted'] === 1
+    && $rows['99000001']['present'] === 1 && $rows['99000004']['absent'] === 1 && (float) $rows['99000004']['score'] === 7.0, brief($r));
+
+$r = api('GET', ['action' => 'adminSessionAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS3']);
+check('adminSessionAttendance buổi chưa điểm danh → 3 SV, status null', ok($r) && count($r['data']['rows']) === 3 && $r['data']['rows'][0]['status'] === null, brief($r));
+check('adminSessionAttendance buổi lớp khác → error', err(api('GET', ['action' => 'adminSessionAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS2']), 'không có quyền'));
+check('adminSetAttendance trạng thái lạ → error, không ghi', err(api('POST', ['action' => 'adminSetAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS3',
+    'marks' => [['mssv' => '99000001', 'status' => 'XYZ']]]), 'không hợp lệ'));
+check('adminSetAttendance MSSV ngoài lớp → error', err(api('POST', ['action' => 'adminSetAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS3',
+    'marks' => [['mssv' => '99000003', 'status' => 'PRESENT']]]), 'không có trong danh sách'));
+$r = api('POST', ['action' => 'adminSetAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS3', 'marks' => [
+    ['mssv' => '99000001', 'status' => 'LATE'], ['mssv' => '99000002', 'status' => 'EXCUSED'], ['mssv' => '99000004', 'status' => ''], // '' = không đụng
+]]);
+check('adminSetAttendance ghi 2 dòng mới, bỏ qua dòng rỗng', ok($r) && $r['data']['inserted'] === 2 && $r['data']['updated'] === 0, brief($r));
+$r = api('POST', ['action' => 'adminSetAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS3', 'marks' => [['mssv' => '99000001', 'status' => 'LATE'], ['mssv' => '99000002', 'status' => 'ABSENT']]]);
+check('adminSetAttendance lần 2: 1 giữ nguyên, 1 đổi (EXCUSED→ABSENT), vẫn 1 dòng/SV (D.8-3)', ok($r) && $r['data']['unchanged'] === 1 && $r['data']['updated'] === 1
+    && (int) $pdo->query("SELECT COUNT(*) FROM attendance WHERE SessionID = 'SMOKE_SS3'")->fetchColumn() === 2, brief($r));
+$r = api('POST', ['action' => 'adminSetAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS1', 'marks' => [['mssv' => '99000004', 'status' => 'EXCUSED']]]);
+$row = $pdo->query("SELECT Status, Note FROM attendance WHERE SessionID = 'SMOKE_SS1' AND StudentID = 'SMOKE_S4'")->fetch();
+check('adminSetAttendance đổi ABSENT (do đóng điểm danh) → EXCUSED, Note ghi "trước: ABSENT"', ok($r) && $row['Status'] === 'EXCUSED' && str_contains((string) $row['Note'], 'trước: ABSENT'), brief($row));
+
+// Bây giờ C1 có 2 buổi đã điểm danh: SS1 (S1 P, S2 P/L, S4 EXCUSED) + SS3 (S1 LATE, S2 ABSENT, S4 không có dòng = ABSENT)
+$r = api('GET', ['action' => 'adminAttendanceReport', 'token' => $tok1, 'classId' => 'SMOKE_C1']);
+$rows = $byMssv($r);
+check('adminAttendanceReport sau nhập tay: 2 buổi; S1 = 1 mặt 1 trễ → 9; S4 = 1 phép 1 vắng → 5,5', ok($r) && $r['data']['sessionsCounted'] === 2
+    && (float) $rows['99000001']['score'] === 9.0 && $rows['99000001']['late'] === 1
+    && (float) $rows['99000004']['score'] === 5.5 && $rows['99000004']['excused'] === 1 && $rows['99000004']['absent'] === 1, brief($rows['99000004'] ?? null));
+
+$r = api('POST', ['action' => 'adminApplyAttendanceScore', 'token' => $tok1, 'classId' => 'SMOKE_C1']);
+$colId = (string) $pdo->query("SELECT GradeColumnID FROM grade_columns WHERE ClassID = 'SMOKE_C1' AND Name = 'Chuyên cần'")->fetchColumn();
+$cc = $pdo->query("SELECT Weight FROM grade_columns WHERE GradeColumnID = '$colId'")->fetchColumn();
+check('adminApplyAttendanceScore → tạo cột "Chuyên cần" 10%, ghi 3 SV', ok($r) && $r['data']['columnCreated'] === true && $r['data']['written'] === 3
+    && $colId !== '' && (float) $cc === 10.0, brief($r));
+$sc = $pdo->query("SELECT Score FROM grades WHERE GradeColumnID = '$colId' AND StudentID = 'SMOKE_S4'")->fetchColumn();
+check('điểm chuyên cần S4 trong grades = 5,5', (float) $sc === 5.5, "Score=$sc");
+$r = api('POST', ['action' => 'adminApplyAttendanceScore', 'token' => $tok1, 'classId' => 'SMOKE_C1']);
+$ncol = (int) $pdo->query("SELECT COUNT(*) FROM grade_columns WHERE ClassID = 'SMOKE_C1' AND Name = 'Chuyên cần'")->fetchColumn();
+check('adminApplyAttendanceScore chạy lại → idempotent (vẫn 1 cột, UPDATED)', ok($r) && $r['data']['columnCreated'] === false && $ncol === 1, brief($r));
+
+$csv = "MSSV;Thường xuyên (20%);Giữa kỳ (20%);Cuối kỳ (50%);Điểm cộng (10%)\n99000001;8;7,5;8;\n99000002;9;;7;1\n99000003;5;5;5;\n99000004;11;;;\n";
+$r = api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1', 'csv' => $csv, 'dryRun' => true]);
+check('adminImportGrades dry-run: 4 cột (Giữa kỳ đã có → cập nhật 40→20), 2 dòng hợp lệ, 2 lỗi (SV ngoài lớp, điểm 11), tổng 110%', ok($r)
+    && count($r['data']['columns']) === 4 && $r['data']['validRows'] === 2 && count($r['data']['errors']) === 2
+    && (float) $r['data']['weightTotal'] === 110.0 && str_contains((string) $r['data']['weightNote'], 'quy về'), brief($r));
+check('adminImportGrades ghi thật khi còn lỗi → error, không ghi', err(api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1', 'csv' => $csv, 'dryRun' => false]), 'lỗi')
+    && (int) $pdo->query("SELECT COUNT(*) FROM grade_columns WHERE ClassID = 'SMOKE_C1' AND Name = 'Cuối kỳ' AND Weight = 50")->fetchColumn() === 0);
+check('adminImportGrades tiêu đề thiếu trọng số cho cột mới → lỗi dòng 1', err(api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1',
+    'csv' => "MSSV,Bài tập lớn\n99000001,9", 'dryRun' => false]), 'thiếu trọng số'));
+$csv2 = "MSSV,Thường xuyên (20%),Giữa kỳ (20%),Cuối kỳ (50%),Điểm cộng (10%)\n99000001,8,7.5,8,\n99000002,9,,7,1\n";
+$r = api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1', 'csv' => $csv2, 'dryRun' => false]);
+check('adminImportGrades ghi thật → 2 cột mới + 2 cột cập nhật (Giữa kỳ, Cuối kỳ), 6 ô điểm', ok($r) && $r['data']['written'] === true
+    && $r['data']['counts']['columnsCreated'] === 2 && $r['data']['counts']['columnsUpdated'] === 2 && $r['data']['counts']['scoresWritten'] === 6, brief($r));
+$w = $pdo->query("SELECT Weight FROM grade_columns WHERE ClassID = 'SMOKE_C1' AND Name = 'Giữa kỳ'")->fetchColumn();
+check('trọng số "Giữa kỳ" đổi 40 → 20 theo tiêu đề CSV', (float) $w === 20.0, "Weight=$w");
+$r = api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1', 'csv' => $csv2, 'dryRun' => false]);
+$ng = (int) $pdo->query("SELECT COUNT(*) FROM grades WHERE ClassID = 'SMOKE_C1'")->fetchColumn();
+check('adminImportGrades chạy lại → idempotent (0 cột mới, số dòng grades không tăng)', ok($r) && $r['data']['counts']['columnsCreated'] === 0 && $ng === 9, "grades=$ng");
+
+$r = api('GET', ['action' => 'adminGradesReport', 'token' => $tok1, 'classId' => 'SMOKE_C1']);
+$g = array_column($r['data']['rows'] ?? [], null, 'mssv');
+// S1: TX 8×20 + GK 7.5×20 + CK 8×50 + CC 9×10 = 1.6+1.5+4+0.9 = 8.0; Điểm cộng chưa chấm → weightDone 100/110
+check('adminGradesReport S1: 5 cột, tổng 8,0 trên 100/110% trọng số, không cấm thi', ok($r) && count($r['data']['columns']) === 5
+    && (float) $g['99000001']['total'] === 8.0 && (float) $g['99000001']['weightDone'] === 100.0 && (float) $r['data']['weightTotal'] === 110.0
+    && $g['99000001']['banned'] === false, brief($g['99000001'] ?? null));
+// S2: TX 9×20 + CK 7×50 + ĐC 1×10 + CC (S2: SS1 PRESENT/LATE? + SS3 ABSENT) — chỉ kiểm total ≤ 10 và có attendanceScore
+check('adminGradesReport S2: tổng ≤ 10, có attendanceScore', ok($r) && (float) $g['99000002']['total'] <= 10.0 && isset($g['99000002']['attendanceScore']), brief($g['99000002'] ?? null));
+check('adminGradesReport lớp người khác → error', err(api('GET', ['action' => 'adminGradesReport', 'token' => $tok2, 'classId' => 'SMOKE_C1']), 'không có quyền'));
+
+// Sinh viên xem điểm: tổng quy về 10 + chuyên cần trực tiếp từ điểm danh
+$setCode($pdo, 'ACDH');
+$r = api('POST', ['action' => 'verifyGradeCode', 'mssv' => '99000001', 'code' => 'ACDH']);
+$gtok2 = (string) ($r['data']['token'] ?? '');
+$r = api('GET', ['action' => 'myGrades', 'token' => $gtok2]);
+$cls = [];
+foreach ($r['data']['classes'] ?? [] as $c) { if ($c['classCode'] === 'DEMO101-01') $cls = $c; } // S1 đã được ghi danh thêm lớp c3 ở GĐ7
+check('myGrades S1 sau GĐ8: total 8,0; attendance 2 buổi, trễ 1, điểm 9, không cấm thi', ok($r) && (float) $cls['total'] === 8.0
+    && ($cls['attendance']['sessionsCounted'] ?? -1) === 2 && $cls['attendance']['late'] === 1 && (float) $cls['attendance']['score'] === 9.0
+    && $cls['attendance']['banned'] === false, brief($cls));
+$audit = (int) $pdo->query("SELECT COUNT(*) FROM audit_log WHERE Action IN ('ADMIN_SET_ATTENDANCE','ADMIN_ATTENDANCE_SCORE','ADMIN_IMPORT_GRADES')")->fetchColumn();
+check('audit_log ghi các thao tác GĐ8', $audit >= 6, "có $audit dòng");
+
 section('logout');
 $r = api('POST', ['action' => 'logout', 'token' => $tok1]);
 check('logout → {ok:true}', ok($r) && ($r['data']['ok'] ?? false) === true, brief($r));
@@ -668,9 +776,10 @@ check('token đã logout không dùng được nữa', err(api('GET', ['action' 
 $covered = ['ping', 'login', 'logout', 'listClasses', 'listSessions', 'openAttendance', 'checkin', 'liveRoster',
     'closeAttendance', 'studentHistory', 'requestGradeCode', 'verifyGradeCode', 'myGrades'];
 $coveredAdmin = ['adminListCourses', 'adminListLecturers', 'adminListClasses', 'adminListRoster', 'adminListSessions',
-    'adminSaveCourse', 'adminSaveClass', 'adminSaveSession', 'adminSaveStudent', 'adminEnroll', 'adminUnenroll', 'adminImportRoster'];
+    'adminSaveCourse', 'adminSaveClass', 'adminSaveSession', 'adminSaveStudent', 'adminEnroll', 'adminUnenroll', 'adminImportRoster',
+    'adminAttendanceReport', 'adminApplyAttendanceScore', 'adminGradesReport', 'adminImportGrades', 'adminSessionAttendance', 'adminSetAttendance'];
 echo "\nĐã chạy " . count($covered) . "/13 action cũ: " . implode(', ', $covered) . "\n";
-echo "Đã chạy " . count($coveredAdmin) . "/12 action quản trị GĐ7: " . implode(', ', $coveredAdmin) . "\n";
+echo "Đã chạy " . count($coveredAdmin) . "/18 action quản trị GĐ7+GĐ8: " . implode(', ', $coveredAdmin) . "\n";
 
 if ($opts['keep_data']) {
     echo "--keep-data: GIỮ dữ liệu demo trong CSDL thử.\n";

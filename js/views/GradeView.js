@@ -161,20 +161,34 @@ class GradeView {
         : '<tr><td colspan="3" class="px-3 py-6 text-center text-slate-400">' +
           'Lớp này chưa có đầu điểm nào.</td></tr>';
 
-      // Nói rõ đây là điểm tạm khi chưa chấm hết — tránh hiểu nhầm là điểm cuối
+      // Điểm tổng = Σ điểm×trọng số/100, quy về tối đa 10 (GĐ8). Nói rõ đây là
+      // điểm tạm khi chưa chấm hết — tránh hiểu nhầm là điểm cuối.
       const done = Number(c.weightDone) || 0;
       const total = Number(c.weightTotal) || 0;
       const partial = done > 0 && done < total;
-      const avgBlock = c.average === null || c.average === undefined
+      const final = c.total !== undefined && c.total !== null ? c.total : c.average;
+      const avgBlock = final === null || final === undefined
         ? '<p class="text-sm text-slate-500">Chưa có đầu điểm nào được chấm.</p>'
         : '<p class="text-sm text-slate-600">' + (partial ? 'Điểm tạm tính' : 'Điểm tổng kết') + '</p>' +
           '<p class="text-3xl font-extrabold ' +
-            (Number(c.average) >= 5 ? 'text-emerald-700' : 'text-red-700') + '">' +
-            this._esc(c.average) + '</p>' +
+            (Number(final) >= 5 ? 'text-emerald-700' : 'text-red-700') + '">' +
+            this._esc(final) + '</p>' +
           (partial
             ? '<p class="mt-1 text-xs text-amber-700">Mới chấm ' + done + '/' + total +
               '% trọng số — điểm sẽ đổi khi chấm nốt phần còn lại.</p>'
             : '');
+
+      // Chuyên cần tính trực tiếp từ điểm danh (GĐ8)
+      const a = c.attendance;
+      const attBlock = !a ? '' :
+        '<div class="mt-3 rounded-xl border ' + (a.banned ? 'border-red-200 bg-red-50' : 'border-slate-200 bg-slate-50') + ' p-3 text-sm">' +
+          '<p class="font-semibold">Chuyên cần' + (a.banned ? ' — <span class="text-red-700">Cấm thi</span>' : '') + '</p>' +
+          '<p class="text-slate-600">' + a.sessionsCounted + ' buổi đã điểm danh: có mặt ' + a.present + ', trễ ' + a.late +
+            ', vắng ' + a.absent + ', vắng có phép ' + a.excused + '. Điểm chuyên cần: <b>' + this._esc(a.score) + '</b>/10.</p>' +
+          (a.banned
+            ? '<p class="mt-1 text-xs text-red-700">Vắng không phép tương đương ' + a.equivalentAbsences + ' buổi (3 trễ = 1 vắng, 2 có phép = 1 vắng) — đủ ngưỡng cấm thi. Liên hệ giảng viên nếu có nhầm lẫn.</p>'
+            : '<p class="mt-1 text-xs text-slate-500">Vắng không phép tương đương: ' + a.equivalentAbsences + ' buổi (từ 3 buổi là cấm thi).</p>') +
+        '</div>';
 
       return '<section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">' +
         '<h2 class="font-bold">' + this._esc(c.courseName || c.courseCode || '(chưa đặt tên môn)') + '</h2>' +
@@ -190,6 +204,7 @@ class GradeView {
           '</table>' +
         '</div>' +
         '<div class="mt-3 border-t border-slate-100 pt-3">' + avgBlock + '</div>' +
+        attBlock +
       '</section>';
     }).join('');
   }

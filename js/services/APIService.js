@@ -88,4 +88,14 @@ class APIService {
   adminImportRoster(token, classId, csv, dryRun) {
     return this.post('adminImportRoster', { token, classId, csv, dryRun: !!dryRun });
   }
+
+  /* ---- Điểm & chuyên cần (GĐ8, api/lib/grading.php) ---- */
+  adminAttendanceReport(token, classId)     { return this.get('adminAttendanceReport', { token, classId }); }
+  adminApplyAttendanceScore(token, classId) { return this.post('adminApplyAttendanceScore', { token, classId }); }
+  adminGradesReport(token, classId)         { return this.get('adminGradesReport', { token, classId }); }
+  adminImportGrades(token, classId, csv, dryRun) {
+    return this.post('adminImportGrades', { token, classId, csv, dryRun: !!dryRun });
+  }
+  adminSessionAttendance(token, sessionId)  { return this.get('adminSessionAttendance', { token, sessionId }); }
+  adminSetAttendance(token, sessionId, marks) { return this.post('adminSetAttendance', { token, sessionId, marks }); }
 }
