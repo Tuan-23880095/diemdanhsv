@@ -218,7 +218,10 @@ function action_checkin(array $params): void
         $conflicts = (int) $stmt->fetchColumn();
     }
     $note = $conflicts > 0 ? ('Trùng thiết bị với ' . $conflicts . ' MSSV khác') : '';
-    $ip = (string) ($params['ip'] ?? '');
+    // GĐ5 review bảo mật (docs/05-GD5-smoke-review.md, M3): IP lấy từ phía
+    // máy chủ (đúng chú thích cột IP trong db/schema.sql), KHÔNG tin tham số
+    // 'ip' do client tự khai — client gửi gì cũng bị bỏ qua.
+    $ip = substr((string) ($_SERVER['REMOTE_ADDR'] ?? ''), 0, 45);
 
     $mutable = [
         'Status'      => $status,

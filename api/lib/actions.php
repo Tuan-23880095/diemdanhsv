@@ -14,7 +14,7 @@ declare(strict_types=1);
  * khai" nào trong router này.
  */
 
-const API_VERSION = 'php-0.4';
+const API_VERSION = 'php-0.5';
 
 /** action => 'GET' | 'POST', đúng danh sách 13 action + phương thức cũ. */
 const KNOWN_ACTIONS = [
@@ -31,6 +31,21 @@ const KNOWN_ACTIONS = [
     'openAttendance'   => 'POST',
     'closeAttendance'  => 'POST',
     'checkin'          => 'POST',
+
+    // GĐ7 — quản trị web tối thiểu (api/lib/admin.php, docs/04-API-PHP.md mục 16).
+    // Action MỚI, ngoài 13 action cũ; cùng khuôn phong bì, đều cần token.
+    'adminListCourses'   => 'GET',
+    'adminListLecturers' => 'GET',
+    'adminListClasses'   => 'GET',
+    'adminListRoster'    => 'GET',
+    'adminListSessions'  => 'GET',
+    'adminSaveCourse'    => 'POST',
+    'adminSaveClass'     => 'POST',
+    'adminSaveSession'   => 'POST',
+    'adminSaveStudent'   => 'POST',
+    'adminEnroll'        => 'POST',
+    'adminUnenroll'      => 'POST',
+    'adminImportRoster'  => 'POST',
 ];
 
 /** Điều hướng theo $action, gọi thẳng api_ok()/api_fail() (hai hàm này tự exit). */
@@ -107,6 +122,19 @@ function api_dispatch(string $action, string $method, array $params): void
         case 'listSessions':
             action_list_sessions($params);
             return;
+
+        case 'adminListCourses':   action_admin_list_courses($params);   return;
+        case 'adminListLecturers': action_admin_list_lecturers($params); return;
+        case 'adminListClasses':   action_admin_list_classes($params);   return;
+        case 'adminListRoster':    action_admin_list_roster($params);    return;
+        case 'adminListSessions':  action_admin_list_sessions($params);  return;
+        case 'adminSaveCourse':    action_admin_save_course($params);    return;
+        case 'adminSaveClass':     action_admin_save_class($params);     return;
+        case 'adminSaveSession':   action_admin_save_session($params);   return;
+        case 'adminSaveStudent':   action_admin_save_student($params);   return;
+        case 'adminEnroll':        action_admin_enroll($params);         return;
+        case 'adminUnenroll':      action_admin_unenroll($params);       return;
+        case 'adminImportRoster':  action_admin_import_roster($params);  return;
     }
 }
 

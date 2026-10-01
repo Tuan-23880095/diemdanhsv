@@ -27,5 +27,8 @@ return [
         'window_minutes'       => 15,
         'gps_accuracy_limit_m' => 150,
         'default_radius_m'     => 100,
+        // Stub mail (GĐ3): true = ghi cả thân email (có mã xem điểm) vào error_log.
+        // CHỈ bật trên CSDL thử — KHÔNG bật ở host thật (docs/05-GD5-smoke-review.md, H2).
+        'mail_stub_log_body'   => false,
     ],
 ];

@@ -23,6 +23,18 @@ function app_config(): array
     // = .../private/config.php (anh em của public_html, đúng rule 4).
     $path = dirname(__DIR__, 2) . '/../private/config.php';
 
+    // Chỉ cho tools/smoke_test.php (GĐ5): trỏ sang file cấu hình của CSDL
+    // THỬ qua biến môi trường DIEMDANH_CONFIG. Chỉ có hiệu lực khi PHP chạy
+    // bằng CLI hoặc máy chủ dev `php -S` (cli-server) — LiteSpeed/Apache trên
+    // host thật (SAPI litespeed/fpm) KHÔNG bao giờ đọc biến này, nên request
+    // web không thể đổi được CSDL đích.
+    if (in_array(PHP_SAPI, ['cli', 'cli-server'], true)) {
+        $override = getenv('DIEMDANH_CONFIG');
+        if (is_string($override) && $override !== '') {
+            $path = $override;
+        }
+    }
+
     if (!is_file($path)) {
         throw new RuntimeException(
             'Chưa có file cấu hình bí mật (' . basename($path) . '). ' .
