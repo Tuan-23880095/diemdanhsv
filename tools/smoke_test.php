@@ -83,6 +83,28 @@ $pdo = new PDO(
     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
 );
 
+// GĐ9 review lần 2 (M9): rào "đây có phải CSDL thử" phải chạy TRƯỚC khi áp
+// migration. Trước đây migration (vd 003 DROP FOREIGN KEY) chạy xong rồi mới
+// kiểm, nên --config trỏ nhầm sang CSDL thật là đã kịp sửa cấu trúc CSDL thật.
+// Bảng chưa tồn tại (CSDL trống, lần đầu --init-schema) thì bỏ qua rào này.
+$guardRules = [
+    'users'    => "Username NOT LIKE 'smoke\\_%'",
+    'courses'  => "CourseCode NOT LIKE 'DEMO%'",
+    'classes'  => "CourseID NOT IN (SELECT CourseID FROM courses WHERE CourseCode LIKE 'DEMO%')",
+    'students' => "MSSV NOT LIKE '990000%'",
+];
+foreach ($guardRules as $t => $where) {
+    try {
+        $n = (int) $pdo->query("SELECT COUNT(*) FROM `$t` WHERE $where")->fetchColumn();
+    } catch (PDOException $e) {
+        continue; // bảng chưa có → CSDL trống, chưa có gì để bảo vệ
+    }
+    if ($n > 0) {
+        fwrite(STDERR, "TỪ CHỐI: bảng `$t` có $n dòng KHÔNG phải dữ liệu demo — đây không phải CSDL thử trống.\n");
+        exit(2);
+    }
+}
+
 // Luôn áp migrations (idempotent) để CSDL thử theo kịp schema mới nhất;
 // --init-schema thì nạp cả db/schema.sql trước.
 {
@@ -110,20 +132,6 @@ foreach ($tables as $t) {
         $pdo->query("SELECT 1 FROM `$t` LIMIT 1");
     } catch (PDOException $e) {
         fwrite(STDERR, "Thiếu bảng `$t` trong CSDL thử — chạy lại với --init-schema.\n");
-        exit(2);
-    }
-}
-
-$guard = [
-    'users'    => "Username NOT LIKE 'smoke\\_%'",
-    'courses'  => "CourseCode NOT LIKE 'DEMO%'",
-    'classes'  => "CourseID NOT IN (SELECT CourseID FROM courses WHERE CourseCode LIKE 'DEMO%')",
-    'students' => "MSSV NOT LIKE '990000%'",
-];
-foreach ($guard as $t => $where) {
-    $n = (int) $pdo->query("SELECT COUNT(*) FROM `$t` WHERE $where")->fetchColumn();
-    if ($n > 0) {
-        fwrite(STDERR, "TỪ CHỐI: bảng `$t` có $n dòng KHÔNG phải dữ liệu demo — đây không phải CSDL thử trống.\n");
         exit(2);
     }
 }
@@ -770,6 +778,84 @@ check('myGrades S1 sau GĐ8: total 8,0; attendance 2 buổi, trễ 1, điểm 9,
 $audit = (int) $pdo->query("SELECT COUNT(*) FROM audit_log WHERE Action IN ('ADMIN_SET_ATTENDANCE','ADMIN_ATTENDANCE_SCORE','ADMIN_IMPORT_GRADES')")->fetchColumn();
 check('audit_log ghi các thao tác GĐ8', $audit >= 6, "có $audit dòng");
 
+section('GĐ9 — sửa lỗi từ review bảo mật độc lập lần 2');
+// H3: LECTURER KHÔNG được ghi đè họ tên/email/Status của SV đã có
+$pdo->prepare("UPDATE students SET FullName = :n, Email = :e WHERE MSSV = '99000002'")
+    ->execute(['n' => 'SV Demo 2', 'e' => 'sv2-that@example.invalid']);
+$r = api('POST', ['action' => 'adminEnroll', 'token' => $tok1, 'classId' => $c3, 'mssv' => '99000002',
+    'fullName' => 'Tên Bị Đổi', 'email' => 'ke-xau@example.invalid']);
+$st = $pdo->query("SELECT FullName, Email FROM students WHERE MSSV = '99000002'")->fetch();
+check('H3: adminEnroll KHÔNG ghi đè họ tên/email SV đã có (chặn đổi email để chiếm mã xem điểm)',
+    ok($r) && $st['FullName'] === 'SV Demo 2' && $st['Email'] === 'sv2-that@example.invalid', brief($st));
+$pdo->prepare("UPDATE students SET Email = NULL WHERE MSSV = '99000002'")->execute();
+$r = api('POST', ['action' => 'adminEnroll', 'token' => $tok1, 'classId' => $c3, 'mssv' => '99000002', 'email' => 'dien-cho-trong@example.invalid']);
+$em = (string) $pdo->query("SELECT Email FROM students WHERE MSSV = '99000002'")->fetchColumn();
+check('H3: nhưng VẪN điền được email khi ô đang trống', ok($r) && $em === 'dien-cho-trong@example.invalid', $em);
+$pdo->prepare("UPDATE students SET Status = 'INACTIVE' WHERE MSSV = '99000002'")->execute();
+api('POST', ['action' => 'adminEnroll', 'token' => $tok1, 'classId' => $c3, 'mssv' => '99000002']);
+$stt = (string) $pdo->query("SELECT Status FROM students WHERE MSSV = '99000002'")->fetchColumn();
+check('H3: adminEnroll KHÔNG tự bật lại SV mà ADMIN đã khoá', $stt === 'INACTIVE', $stt);
+$pdo->prepare("UPDATE students SET Status = 'ACTIVE' WHERE MSSV = '99000002'")->execute();
+check('H3: LECTURER đổi email SV đã có email → error (chỉ ADMIN)', err(api('POST', ['action' => 'adminSaveStudent', 'token' => $tok1,
+    'mssv' => '99000002', 'email' => 'doi-lan-nua@example.invalid']), 'Chỉ quản trị viên'));
+$r = api('POST', ['action' => 'adminSaveStudent', 'token' => $tokA, 'mssv' => '99000002', 'email' => 'admin-doi@example.invalid']);
+check('H3: ADMIN vẫn đổi được email', ok($r) && (string) $pdo->query("SELECT Email FROM students WHERE MSSV = '99000002'")->fetchColumn() === 'admin-doi@example.invalid', brief($r));
+
+// H4 + M6: tiêu đề CSV điểm
+$r = api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1',
+    'csv' => "MSSV,Bài tập 1 (10%),Bài tập 2 (10%)\n99000001,8,9", 'dryRun' => true]);
+check('H4: "Bài tập 1"/"Bài tập 2" là HAI cột riêng, không gộp thành "Bài tập"', ok($r) && count($r['data']['columns']) === 2
+    && $r['data']['columns'][0]['name'] === 'Bài tập 1' && $r['data']['columns'][1]['name'] === 'Bài tập 2', brief($r['data']['columns'] ?? null));
+check('H4: hai cột cùng tên → error', err(api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1',
+    'csv' => "MSSV,Giữa kỳ (20%),giữa kỳ (30%)\n99000001,8,7", 'dryRun' => true]), 'cùng tên'));
+check('M6: trọng số 500% → error (trước đây làm điểm tổng cả lớp chạm trần 10)', err(api('POST', ['action' => 'adminImportGrades',
+    'token' => $tok1, 'classId' => 'SMOKE_C1', 'csv' => "MSSV,Cuối kỳ (500%)\n99000001,5", 'dryRun' => true]), 'không hợp lệ'));
+
+// M7: chặn file quá lớn / quá nhiều dòng
+$big = "MSSV,Giữa kỳ (20%)\n" . str_repeat("99000001,8\n", 1100);
+check('M7: CSV quá nhiều dòng → error', err(api('POST', ['action' => 'adminImportGrades', 'token' => $tok1, 'classId' => 'SMOKE_C1', 'csv' => $big, 'dryRun' => true]), 'dòng'));
+check('M7: CSV danh sách lớp quá nhiều dòng → error', err(api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => $c3,
+    'csv' => "MSSV,Ho ten\n" . str_repeat("99000001,X\n", 1100), 'dryRun' => true]), 'dòng'));
+
+// M8: không xoá cột khi request thiếu trường
+$pdo->prepare("UPDATE classes SET RoomLat = 21.0, RoomLng = 105.8, AllowedRadiusM = 60 WHERE ClassID = :id")->execute(['id' => $c3]);
+$r = api('POST', ['action' => 'adminSaveClass', 'token' => $tok1, 'classId' => $c3, 'classCode' => 'DEMO101-03C']);
+$row = $pdo->query("SELECT ClassCode, RoomLat, RoomLng, AllowedRadiusM, Status FROM classes WHERE ClassID = '$c3'")->fetch();
+check('M8: adminSaveClass chỉ gửi classCode → GIỮ toạ độ phòng + bán kính (trước đây xoá, tắt kiểm GPS)',
+    ok($r) && $row['ClassCode'] === 'DEMO101-03C' && (float) $row['RoomLat'] === 21.0 && (int) $row['AllowedRadiusM'] === 60, brief($row));
+$r = api('POST', ['action' => 'adminSaveSession', 'token' => $tok1, 'classId' => $c3, 'sessionId' => $ses, 'sessionNo' => 1]);
+$row = $pdo->query("SELECT `Date`, Content, StartTime FROM sessions WHERE SessionID = '$ses'")->fetch();
+check('M8: adminSaveSession chỉ gửi sessionNo → GIỮ ngày, nội dung, giờ', ok($r) && $row['Date'] === '2026-10-02'
+    && $row['Content'] === 'Buổi 1' && $row['StartTime'] === '07:30', brief($row));
+
+// M10: tài khoản bị khoá thì token hết hiệu lực NGAY
+$pdo->prepare("UPDATE users SET Status = 'INACTIVE' WHERE UserID = 'SMOKE_U2'")->execute();
+check('M10: token của giảng viên vừa bị khoá không dùng được nữa', err(api('GET', ['action' => 'listClasses', 'token' => $tok2]), 'hết hạn'));
+$pdo->prepare("UPDATE users SET Status = 'ACTIVE' WHERE UserID = 'SMOKE_U2'")->execute();
+check('M10: bật lại tài khoản thì token cũ dùng được tiếp', ok(api('GET', ['action' => 'listClasses', 'token' => $tok2])));
+
+// L9: danh sách giảng viên dài quá → báo lỗi, không cắt âm thầm
+check('L9: lecturerIds dài quá 40 ký tự → error rõ ràng', err(api('POST', ['action' => 'adminSaveClass', 'token' => $tokA,
+    'classCode' => 'DEMO101-04', 'courseId' => 'SMOKE_CO1', 'lecturerIds' => 'SMOKE_U1,SMOKE_U2,SMOKE_U3,SMOKE_U1,SMOKE_U2']), 'LecturerID'));
+
+// L10: nhập tay KHÔNG xoá cảnh báo trùng thiết bị trong Note
+$noteBefore = (string) $pdo->query("SELECT Note FROM attendance WHERE StudentID = 'SMOKE_S2' AND SessionID = 'SMOKE_SS1'")->fetchColumn();
+api('POST', ['action' => 'adminSetAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS1', 'marks' => [['mssv' => '99000002', 'status' => 'EXCUSED']]]);
+$noteAfter = (string) $pdo->query("SELECT Note FROM attendance WHERE StudentID = 'SMOKE_S2' AND SessionID = 'SMOKE_SS1'")->fetchColumn();
+check('L10: Note cũ ("Trùng thiết bị…") được GIỮ, chỉ nối thêm ghi chú nhập tay',
+    str_contains($noteBefore, 'Trùng thiết bị') && str_contains($noteAfter, 'Trùng thiết bị') && str_contains($noteAfter, 'Nhập tay'),
+    "trước=[$noteBefore] sau=[$noteAfter]");
+
+// L6: một lớp không có hai cột điểm cùng tên
+$dup = false;
+try {
+    $pdo->prepare("INSERT INTO grade_columns (GradeColumnID, ClassID, Name, Weight, SortOrder, Status) VALUES (:id, 'SMOKE_C1', 'Chuyên cần', 10, 9, 'ACTIVE')")
+        ->execute(['id' => 'SMOKE_GDUP']);
+} catch (PDOException $e) {
+    $dup = $e->getCode() === '23000';
+}
+check('L6: CSDL chặn hai đầu điểm cùng tên trong một lớp (UNIQUE uq_gcol_class_name)', $dup, 'không bị chặn');
+
 section('logout');
 $r = api('POST', ['action' => 'logout', 'token' => $tok1]);
 check('logout → {ok:true}', ok($r) && ($r['data']['ok'] ?? false) === true, brief($r));
@@ -784,6 +870,7 @@ $coveredAdmin = ['adminListCourses', 'adminListLecturers', 'adminListClasses', '
     'adminAttendanceReport', 'adminApplyAttendanceScore', 'adminGradesReport', 'adminImportGrades', 'adminSessionAttendance', 'adminSetAttendance'];
 echo "\nĐã chạy " . count($covered) . "/13 action cũ: " . implode(', ', $covered) . "\n";
 echo "Đã chạy " . count($coveredAdmin) . "/18 action quản trị GĐ7+GĐ8: " . implode(', ', $coveredAdmin) . "\n";
+echo "Đã kiểm các bản sửa từ review bảo mật độc lập lần 2 (GĐ9): H3, H4, M6, M7, M8, M10, L6, L9, L10.\n";
 
 if ($opts['keep_data']) {
     echo "--keep-data: GIỮ dữ liệu demo trong CSDL thử.\n";

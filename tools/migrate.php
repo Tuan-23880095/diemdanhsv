@@ -21,9 +21,10 @@ if (php_sapi_name() !== 'cli') {
 }
 
 $root = dirname(__DIR__);
-$opts = ['dry_run' => false, 'config' => null];
+$opts = ['dry_run' => false, 'config' => null, 'yes' => false];
 foreach (array_slice($argv, 1) as $arg) {
     if ($arg === '--dry-run') { $opts['dry_run'] = true; continue; }
+    if ($arg === '--yes') { $opts['yes'] = true; continue; }
     if (str_starts_with($arg, '--config=')) { $opts['config'] = substr($arg, 9); continue; }
     fwrite(STDERR, "Tham số không rõ: $arg\n");
     exit(2);
@@ -46,18 +47,41 @@ if (!$files) {
     exit(0);
 }
 
-$cfg = app_config()['db'] ?? [];
+try {
+    $cfg = app_config()['db'] ?? [];
+} catch (Throwable $e) {
+    fwrite(STDERR, $e->getMessage() . "\n");
+    exit(1);
+}
 echo 'CSDL đích: ' . ($cfg['name'] ?? '?') . '@' . ($cfg['host'] ?? '?') . ($opts['dry_run'] ? ' — DRY-RUN, không chạy gì' : '') . "\n";
 
-/** Tách file SQL thành từng câu (theo dấu ; cuối dòng), bỏ dòng chú thích. */
+/**
+ * Tách file SQL thành từng câu. Dấu ; cuối dòng kết thúc một câu, TRỪ khi đang
+ * ở trong thân BEGIN…END (CREATE PROCEDURE — migration 004 dùng thủ tục để
+ * idempotent). Bỏ dòng chú thích.
+ */
 function migrate_split(string $sql): array
 {
     $lines = array_filter(array_map('rtrim', explode("\n", $sql)), static fn ($l) => !str_starts_with(ltrim($l), '--'));
     $stmts = [];
     $buf = '';
+    $depth = 0;
     foreach ($lines as $l) {
         $buf .= $l . "\n";
-        if (str_ends_with(rtrim($l), ';')) {
+        $t = strtoupper(trim($l));
+        // BEGIN mở thân thủ tục; END; đóng. (IF…THEN/END IF nằm trong thân nên
+        // không cần đếm riêng — chỉ cần biết đang ở trong thân hay không.)
+        if ($t === 'BEGIN' || str_ends_with($t, ' BEGIN')) {
+            $depth++;
+        } elseif ($depth > 0 && (str_starts_with($t, 'END;') || $t === 'END')) {
+            $depth--;
+            if ($depth === 0) {
+                $stmts[] = trim($buf);
+                $buf = '';
+            }
+            continue;
+        }
+        if ($depth === 0 && str_ends_with(rtrim($l), ';')) {
             $stmts[] = trim($buf);
             $buf = '';
         }
@@ -66,6 +90,15 @@ function migrate_split(string $sql): array
         $stmts[] = trim($buf);
     }
     return $stmts;
+}
+
+// GĐ9 review lần 2 (L12): ghi vào CSDL THẬT (không có --config) phải có --yes,
+// giống tools/import.php — tránh gõ thiếu --dry-run là sửa luôn cấu trúc CSDL thật.
+if (!$opts['dry_run'] && $opts['config'] === null && !$opts['yes']) {
+    echo "Đây là CSDL THẬT (" . ($cfg['name'] ?? '?') . ") và thiếu --yes — KHÔNG chạy gì.\n";
+    echo "Xem trước:  php tools/migrate.php --dry-run\n";
+    echo "Chạy thật:  php tools/migrate.php --yes\n";
+    exit(0);
 }
 
 $pdo = $opts['dry_run'] ? null : db();

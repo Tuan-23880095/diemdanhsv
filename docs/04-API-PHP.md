@@ -230,7 +230,7 @@ nhận khi viết code GĐ2 (không đoán ở đây).
    dùng stub (ví dụ ghi log thay vì gửi) cho đến khi thầy tạo hộp thư
    `noreply@diemdanhsv.com`.
 
-## 11. Việc tiếp theo (GĐ9)
+## 11. Việc tiếp theo (GĐ10)
 
 GĐ2 (nền PHP + `ping`), GĐ3 (`login`/`logout`/`requestGradeCode`/
 `verifyGradeCode`, mục 12), GĐ4 (`openAttendance`/`closeAttendance`/
@@ -239,8 +239,11 @@ GĐ2 (nền PHP + `ping`), GĐ3 (`login`/`logout`/`requestGradeCode`/
 mục 15) và GĐ7 (quản trị web tối thiểu, mục 16) đã xong — **đủ 13/13 action
 cũ + 18 action quản trị** (GĐ7 mục 16, GĐ8 mục 17). Nợ GĐ5 (smoke test +
 review bảo mật độc lập bằng Claude Opus, KHÔNG dùng Abacus) đã trả — xem
-`docs/05-GD5-smoke-review.md`. GĐ9 (PLAN): staging + checklist 7 mục, thầy
-nhập dữ liệu thật, so khớp Apps Script, review/test độc lập lần 2.
+`docs/05-GD5-smoke-review.md`. GĐ9 (mục 18) đã xong phần code: chạy thử song
+song `?api=php`, `tools/compare_gas_php.php`, review bảo mật lần 2 — còn chờ
+thầy chạy checklist 7 mục trên dữ liệu thật (`docs/06-GD9-staging-checklist.md`).
+GĐ10 (PLAN): cutover ngoài giờ dạy — đổi `API_URL`, giữ Apps Script dự phòng
+≥ 1 tuần.
 
 ## 12. Cập nhật GĐ3 — `login`/`logout`/`requestGradeCode`/`verifyGradeCode`
 
@@ -649,3 +652,68 @@ trạng thái từng SV, chỉ gửi dòng đã đổi). `pages/diem.html` (sinh
 - Chưa có "xuất bảng điểm ra CSV/Excel" — nếu cần, thêm ở GĐ9.
 - Tên 5 cột điểm mặc định chỉ nằm trong mẫu CSV trên trang; không tự tạo cột
   khi tạo lớp (giảng viên tự nhập CSV hoặc bấm ghi chuyên cần).
+
+## 18. Cập nhật GĐ9 — chạy thử song song, so khớp dữ liệu, review bảo mật lần 2
+
+Giai đoạn 9/10 của PLAN. Chi tiết thao tác cho thầy: **`docs/06-GD9-staging-checklist.md`**
+(cách bật `?api=php`, checklist 7 mục, việc cần làm trước cutover).
+
+### Chạy thử song song — `?api=` có allowlist
+
+`js/config/config.js` nhận `?api=gas` (mặc định, Apps Script đang chạy thật)
+hoặc `?api=php` (backend PHP cùng domain). **Chỉ hai giá trị này** —
+`API_TARGETS` là bảng cố định trong mã nguồn, KHÔNG nhận URL từ tham số: nếu
+nhận, một đường link `?api=https://trang-la…` gửi cho sinh viên sẽ lấy được
+MSSV, mã điểm danh và mật khẩu giảng viên trong khi địa chỉ trang vẫn là tên
+miền thật. Lựa chọn ghi nhớ trong `sessionStorage` (tab hiện tại), và khi khác
+mặc định thì mọi trang có dải băng vàng cảnh báo + liên kết quay lại bản thật.
+Trang web mặc định **không đổi hành vi** — vẫn gọi Apps Script.
+
+### So khớp dữ liệu — `tools/compare_gas_php.php`
+
+CLI, CHỈ ĐỌC, PHP thuần. Đọc file JSON do `exportAllToDriveJSON()` tạo rồi so
+với CSDL: số dòng từng bảng, ID thiếu/thừa, số dòng lệch nội dung kèm tên cột
+lệch. So sánh "mềm" để không báo lệch oan (ngày giờ `T` vs khoảng trắng, `8` vs
+`8.00` vs `8,0`, `''` vs `NULL`); bỏ qua `PasswordHash`/`Salt` (đã rehash là
+đúng), `CreatedAt`/`UpdatedAt`, `audit_log.Data`. Mã thoát 0 khi khớp.
+
+### Review bảo mật độc lập lần 2 (Claude Opus, subagent riêng) — đã sửa
+
+| Mã | Mức | Vấn đề | Sửa |
+|---|---|---|---|
+| H3 | CAO | `admin_upsert_enroll` (dùng bởi `adminEnroll`, `adminImportRoster`) ghi đè họ tên/email/Status của SV **đã có** mà chỉ kiểm quyền trên LỚP. Ai dạy một lớp bất kỳ cũng đổi được email của mọi SV trong trường chỉ bằng MSSV → xin mã xem điểm về hộp thư mình → xem điểm mọi lớp của em đó. | Chỉ ĐIỀN vào chỗ trống, không ghi đè; không đụng `Status`. `adminSaveStudent`: đổi email của SV đã có email là việc của ADMIN. |
+| H4 | CAO | Regex tiêu đề coi mọi số cuối tên là trọng số: `Bài tập 1`, `Bài tập 2`, `Bài tập 3` đều thành cột `Bài tập` → ghi đè nhau trong `grades`, báo cáo vẫn "thành công". | Trọng số chỉ nhận trong ngoặc `(20%)`/`(20)` hoặc có `%`; hai cột cùng tên → từ chối file. |
+| M6 | TB | Trọng số không giới hạn: `Cuối kỳ (500%)` + điểm 5 → điểm tổng CẢ LỚP chạm trần 10. | Kẹp 0–100, báo lỗi rõ. |
+| M7 | TB | Không chặn CSV khổng lồ; `errors[]` có thể hàng triệu phần tử rồi `json_encode` → hết bộ nhớ. | Chặn 512 KB và 1000 dòng cho cả hai loại CSV; `errors[]` cắt còn 200, thêm `errorCount`. |
+| M8 | TB | `adminSaveClass/Session/Course` UPDATE mọi cột từ `$data`: request thiếu `roomLat/roomLng` là **xoá toạ độ phòng** → `evaluate_gps()` trả `VALID` cho mọi check-in, tức tắt kiểm GPS của lớp mà không ai hay. | Chỉ ghi cột có trong request; cột không gửi giữ giá trị cũ. |
+| M9 | TB | `smoke_test.php` áp migration **trước** rào "đây có phải CSDL thử" → `--config` trỏ nhầm là đã kịp `DROP FOREIGN KEY` trên CSDL thật. | Đưa rào lên trước; bảng chưa tồn tại thì bỏ qua rào. |
+| M10 | TB | `require_role` không kiểm `users.Status`: tài khoản bị khoá vẫn nhập điểm, sửa điểm danh được tới 6 giờ. | Thêm `AND u.Status = 'ACTIVE'`. **Đổi so với bản GAS** (bản cũ cố tình bỏ qua) — khoá tài khoản giờ có hiệu lực ngay. |
+| L6 | THẤP | `grade_columns` không có UNIQUE `(ClassID, Name)` → hai lần bấm đồng thời có thể tạo hai cột "Chuyên cần", cộng 10% hai lần. | `db/migrations/004` + `schema.sql`. |
+| L7 | THẤP | Một chỗ nội suy `$pdo->quote($classId)` trong `query()`. | Dùng tham số buộc. |
+| L9 | THẤP | `LecturerID` `VARCHAR(40)` bị `mb_substr` cắt âm thầm → một giảng viên mất quyền. | Kiểm độ dài trước, báo lỗi rõ. |
+| L10 | THẤP | `adminSetAttendance` ghi đè `Note`, xoá mất cảnh báo "Trùng thiết bị…" (D.8-4) khỏi `liveRoster`. | Nối thêm vào `Note`, không ghi đè. |
+| L12 | THẤP | `tools/migrate.php` ghi vào CSDL thật không cần xác nhận; bộ tách câu SQL cắt nát `CREATE PROCEDURE`. | Bắt buộc `--yes` cho CSDL thật; tách câu hiểu `BEGIN…END`. |
+
+**Review xác nhận đạt:** mọi câu SQL trong code mới đều tham số hoá; mọi action
+ghi đều `require_role` → `admin_load_class`/`grading_load_session` trước khi
+đụng dữ liệu; `sessionId`/`studentId` của lớp khác bị từ chối; token GRADE của
+sinh viên không với được action quản trị; hai bộ nhập CSV đều một transaction,
+không ghi gì khi còn lỗi, chạy lại an toàn; `API_INPROCESS` không thể kích hoạt
+từ web; `backup.php` không gọi shell, tự kiểm file.
+
+**Chưa sửa — chờ thầy quyết** (ghi trong `docs/06`, mục cuối): M4 rate limit (nên
+làm trước cutover), M2, M5, L8 (thông báo "không tìm thấy" vs "không có quyền"),
+L11 (SV ghi danh muộn bị tính vắng các buổi trước; điểm tổng giữa kỳ hiển thị
+nhỏ), L13 (`import.php` chạy lại với export thiếu cột sẽ làm trắng cột đó).
+
+### Test đã chạy
+
+- `php -l`, `node --check` sạch. Bộ đọc tiêu đề CSV điểm và `cmp_norm` của
+  `compare_gas_php.php` chạy thật bằng PHP CLI (ngày giờ `T`, `8`/`8.00`/`8,0`,
+  `''`/`NULL`).
+- Chromium: `?api=php` bật dải băng và đổi `CONFIG.API_URL`; `?api=gas` tắt;
+  ghi nhớ trong tab; **`?api=https://ke-xau.invalid/x` và `?api=KHONGCO` bị bỏ
+  qua, `API_URL` vẫn là Apps Script**; trang quản trị không lỗi JS.
+- `tools/smoke_test.php` thêm 17 kiểm tra (tổng 152) cho đúng các mục H3, H4,
+  M6, M7, M8, M10, L6, L9, L10 ở trên.
+- `tools/migrate.php --dry-run` tách đúng `CREATE PROCEDURE` của migration 004.
