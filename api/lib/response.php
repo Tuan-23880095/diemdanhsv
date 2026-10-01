@@ -12,16 +12,45 @@ declare(strict_types=1);
  * này thay vì dùng mã lỗi HTTP riêng cho lỗi nghiệp vụ.
  */
 
+/**
+ * Chỉ dành cho tools/smoke_test.php chạy API "trong cùng tiến trình" (host
+ * shared hosting cấm proc_open nên không bật được máy chủ thử php -S). Khi
+ * hằng API_INPROCESS được định nghĩa = true TRƯỚC khi nạp file này, api_ok()/
+ * api_fail() KHÔNG echo + exit mà ném ApiResponse mang phong bì; smoke test
+ * bắt lại. api/index.php không bao giờ định nghĩa hằng này → request web
+ * giữ nguyên hành vi cũ 100%.
+ */
+final class ApiResponse extends Exception
+{
+    /** @var array{status:string, message:string, data:mixed} */
+    public array $payload;
+
+    public function __construct(array $payload)
+    {
+        parent::__construct((string) $payload['message']);
+        $this->payload = $payload;
+    }
+}
+
+/** Xuất phong bì rồi kết thúc request (hoặc ném ApiResponse khi chạy in-process). */
+function api_emit(array $payload): void
+{
+    if (defined('API_INPROCESS') && API_INPROCESS === true) {
+        throw new ApiResponse($payload);
+    }
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}
+
 /** Trả {status:'success', message:'', data}. Kết thúc request ngay. */
 function api_ok($data = null): void
 {
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode([
+    api_emit([
         'status'  => 'success',
         'message' => '',
         'data'    => $data,
-    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    exit;
+    ]);
 }
 
 /**
@@ -31,11 +60,9 @@ function api_ok($data = null): void
  */
 function api_fail(string $message): void
 {
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode([
+    api_emit([
         'status'  => 'error',
         'message' => $message !== '' ? $message : 'Lỗi không xác định.',
         'data'    => null,
-    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    exit;
+    ]);
 }
