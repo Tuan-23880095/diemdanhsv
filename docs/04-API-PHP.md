@@ -575,6 +575,13 @@ cột này dạng danh sách `"1607,2015"`. Khoá ngoại đó cũng sẽ làm
 migration lên CSDL thật/thử; `smoke_test.php` tự áp migrations mỗi lần chạy.
 Host cấm `proc_open`/`exec` nên smoke test chạy ở chế độ in-process (PR #9).
 
+**Bổ sung 01/10 (sau PR #10):** `tools/backup.php` bản GĐ6 gọi `mysqldump`
+qua `exec`/`shell_exec` — host cấm cả hai nên chết im lặng. Viết lại bằng PHP
+thuần: PDO đọc `SHOW CREATE TABLE` + `SELECT *` trong một snapshot
+`REPEATABLE READ`, ghi `.sql.gz` bằng zlib (DROP/CREATE + INSERT lô 200
+dòng, `FOREIGN_KEY_CHECKS=0`), tự đọc lại file tới dòng cuối để xác nhận.
+Bật `display_errors` trong script để lỗi CLI không còn bị nuốt.
+
 ### Chưa làm / chờ thầy
 
 - Nhánh này dựa trên `agent/web-g5b` (PR #7) vì dùng chung
