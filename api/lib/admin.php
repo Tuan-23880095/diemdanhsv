@@ -24,6 +24,8 @@ declare(strict_types=1);
  */
 
 const ADMIN_IMPORT_MAX_ROWS = 1000;
+const ADMIN_CSV_MAX_BYTES = 512 * 1024;    // ~512 KB, quá đủ cho 1000 dòng
+const ADMIN_MAX_ERRORS_REPORTED = 200;     // không json_encode hàng triệu lỗi
 
 /* ------------------------------------------------------------------ */
 /*  Hàm phụ dùng chung                                                  */
@@ -187,16 +189,28 @@ function action_admin_save_course(array $params): void
         return;
     }
 
+    $isNew = $courseId === '';
+    $old = null;
+    if (!$isNew) {
+        $st = db()->prepare('SELECT * FROM courses WHERE CourseID = :id LIMIT 1');
+        $st->execute(['id' => $courseId]);
+        $old = $st->fetch() ?: null;
+        if (!$old) {
+            api_fail('Không tìm thấy môn ' . $courseId . '.');
+            return;
+        }
+    }
+
+    // GĐ9 review lần 2 (M8): giữ nguyên cột không gửi.
+    $keepC = static fn (string $k, string $col, $val) => $isNew || array_key_exists($k, $params) ? $val : $old[$col];
     $data = [
         'CourseCode'    => $code,
         'CourseName'    => $name,
-        'Credits'       => admin_num($params, 'credits'),
-        'TheoryHours'   => admin_num($params, 'theoryHours') === null ? null : (int) admin_num($params, 'theoryHours'),
-        'PracticeHours' => admin_num($params, 'practiceHours') === null ? null : (int) admin_num($params, 'practiceHours'),
-        'Status'        => admin_status($params),
+        'Credits'       => $keepC('credits', 'Credits', admin_num($params, 'credits')),
+        'TheoryHours'   => $keepC('theoryHours', 'TheoryHours', admin_num($params, 'theoryHours') === null ? null : (int) admin_num($params, 'theoryHours')),
+        'PracticeHours' => $keepC('practiceHours', 'PracticeHours', admin_num($params, 'practiceHours') === null ? null : (int) admin_num($params, 'practiceHours')),
+        'Status'        => $keepC('status', 'Status', admin_status($params, $old ? (string) $old['Status'] : 'ACTIVE')),
     ];
-
-    $isNew = $courseId === '';
     $courseId = db_transaction(function (PDO $pdo) use ($data, $courseId, $isNew): string {
         if ($isNew) {
             $id = new_id('CRS');
@@ -254,15 +268,20 @@ function action_admin_save_class(array $params): void
         return;
     }
 
-    $data = [
-        'ClassCode'      => $classCode,
-        'Semester'       => admin_str($params, 'semester', 10),
-        'AcademicYear'   => admin_str($params, 'academicYear', 20),
-        'RoomLat'        => admin_num($params, 'roomLat'),
-        'RoomLng'        => admin_num($params, 'roomLng'),
-        'AllowedRadiusM' => admin_num($params, 'allowedRadiusM') === null ? 100 : max(10, (int) admin_num($params, 'allowedRadiusM')),
-        'Status'         => admin_status($params),
-    ];
+    // GĐ9 review lần 2 (M8): chỉ ghi những cột CÓ TRONG request. Trước đây gọi
+    // adminSaveClass mà không gửi roomLat/roomLng là XOÁ toạ độ phòng → evaluate_gps()
+    // trả VALID cho mọi check-in, tức tắt kiểm GPS của lớp đó mà không ai hay.
+    $data = ['ClassCode' => $classCode];
+    if ($isNew || array_key_exists('semester', $params))       $data['Semester'] = admin_str($params, 'semester', 10);
+    if ($isNew || array_key_exists('academicYear', $params))   $data['AcademicYear'] = admin_str($params, 'academicYear', 20);
+    if ($isNew || array_key_exists('roomLat', $params))        $data['RoomLat'] = admin_num($params, 'roomLat');
+    if ($isNew || array_key_exists('roomLng', $params))        $data['RoomLng'] = admin_num($params, 'roomLng');
+    if ($isNew || array_key_exists('allowedRadiusM', $params)) {
+        $data['AllowedRadiusM'] = admin_num($params, 'allowedRadiusM') === null ? 100 : max(10, (int) admin_num($params, 'allowedRadiusM'));
+    }
+    if ($isNew || array_key_exists('status', $params)) {
+        $data['Status'] = admin_status($params, $existing ? (string) $existing['Status'] : 'ACTIVE');
+    }
 
     if ($me['role'] === 'ADMIN') {
         $courseId = admin_str($params, 'courseId', 40);
@@ -283,6 +302,12 @@ function action_admin_save_class(array $params): void
             $data['CourseID'] = $courseId;
         }
         if ($lecturerIds !== '') {
+            // Cột VARCHAR(40): cắt bớt là âm thầm làm một giảng viên mất quyền
+            // (GĐ9 review lần 2, L9) → kiểm độ dài TRƯỚC, báo lỗi rõ ràng.
+            if (strlen($lecturerIds) > 40) {
+                api_fail('Danh sách giảng viên dài ' . strlen($lecturerIds) . ' ký tự, vượt giới hạn 40 của cột LecturerID — chọn ít giảng viên hơn cho một lớp.');
+                return;
+            }
             // Mọi UserID phải tồn tại và là LECTURER/ADMIN. Cột lưu DANH SÁCH nên
             // KHÔNG có khoá ngoại (db/migrations/003) — ứng dụng phải tự kiểm ở đây.
             foreach (explode(',', $lecturerIds) as $uid) {
@@ -293,7 +318,7 @@ function action_admin_save_class(array $params): void
                     return;
                 }
             }
-            $data['LecturerID'] = mb_substr($lecturerIds, 0, 40);
+            $data['LecturerID'] = $lecturerIds;
         }
     }
 
@@ -348,17 +373,27 @@ function action_admin_save_session(array $params): void
         }
     }
 
-    $data = [
-        'SessionNo' => $sessionNo,
-        'Date'      => $date === '' ? null : $date,
-        'DayOfWeek' => admin_str($params, 'dayOfWeek', 20),
-        'StartTime' => admin_str($params, 'startTime', 5) ?: null,
-        'EndTime'   => admin_str($params, 'endTime', 5) ?: null,
-        'Content'   => trim((string) ($params['content'] ?? '')),
-        'Status'    => admin_status($params),
-    ];
-
     $isNew = $sessionId === '';
+    $old = null;
+    if (!$isNew) {
+        $st = db()->prepare('SELECT * FROM sessions WHERE SessionID = :id AND ClassID = :cid LIMIT 1');
+        $st->execute(['id' => $sessionId, 'cid' => $classId]);
+        $old = $st->fetch() ?: null;
+        if (!$old) {
+            api_fail('Không tìm thấy buổi học ' . $sessionId . ' trong lớp này.');
+            return;
+        }
+    }
+
+    // GĐ9 review lần 2 (M8): giữ nguyên cột không gửi, không xoá Date/Content.
+    $data = ['SessionNo' => $sessionNo];
+    $keep = static fn (string $k, string $col, $val) => $isNew || array_key_exists($k, $params) ? $val : $old[$col];
+    $data['Date']      = $keep('date', 'Date', $date === '' ? null : $date);
+    $data['DayOfWeek'] = $keep('dayOfWeek', 'DayOfWeek', admin_str($params, 'dayOfWeek', 20));
+    $data['StartTime'] = $keep('startTime', 'StartTime', admin_str($params, 'startTime', 5) ?: null);
+    $data['EndTime']   = $keep('endTime', 'EndTime', admin_str($params, 'endTime', 5) ?: null);
+    $data['Content']   = $keep('content', 'Content', trim((string) ($params['content'] ?? '')));
+    $data['Status']    = $keep('status', 'Status', admin_status($params, $old ? (string) $old['Status'] : 'ACTIVE'));
     $sessionId = db_transaction(function (PDO $pdo) use ($data, $classId, $sessionId, $isNew): string {
         if ($isNew) {
             $id = new_id('SES');
@@ -375,11 +410,6 @@ function action_admin_save_session(array $params): void
             'WHERE SessionID = :id AND ClassID = :cid'
         );
         $upd->execute($data + ['id' => $sessionId, 'cid' => $classId]);
-        $chk = $pdo->prepare('SELECT 1 FROM sessions WHERE SessionID = :id AND ClassID = :cid');
-        $chk->execute(['id' => $sessionId, 'cid' => $classId]);
-        if (!$chk->fetch()) {
-            throw new RuntimeException('Không tìm thấy buổi học ' . $sessionId . ' trong lớp này.');
-        }
         return $sessionId;
     });
 
@@ -443,6 +473,14 @@ function action_admin_save_student(array $params): void
         api_fail('Sinh viên mới cần có họ tên.');
         return;
     }
+    // GĐ9 review lần 2 (H3): email là đường nhận mã xem điểm → chỉ ADMIN đổi được
+    // email của sinh viên đã có. LECTURER sửa được họ tên (lớp mình) và điền email
+    // khi ô đang trống.
+    if ($student && $email !== '' && $email !== (string) ($student['Email'] ?? '')
+        && trim((string) ($student['Email'] ?? '')) !== '' && $me['role'] !== 'ADMIN') {
+        api_fail('Chỉ quản trị viên đổi được email của sinh viên đã có email (email là đường nhận mã xem điểm).');
+        return;
+    }
 
     $data = [
         'FullName' => $fullName !== '' ? $fullName : (string) $student['FullName'],
@@ -492,12 +530,25 @@ function admin_upsert_enroll(PDO $pdo, string $classId, string $mssv, string $fu
             ->execute(['id' => $studentId, 'm' => $mssv, 'n' => $fullName, 'e' => $email !== '' ? $email : null]);
         $out['student'] = 'INSERTED';
     } else {
+        // GĐ9 review lần 2 (H3): MSSV đã có trong hệ thống thì KHÔNG ghi đè họ tên/
+        // email đang có — chỉ ĐIỀN VÀO CHỖ TRỐNG. Trước đây ai dạy một lớp bất kỳ
+        // cũng đổi được email của MỌI sinh viên trong trường chỉ bằng MSSV (qua
+        // adminEnroll/adminImportRoster), rồi xin mã xem điểm về hộp thư của mình
+        // → xem được điểm mọi lớp của em đó. Cũng KHÔNG đụng Status: bật lại một
+        // SV mà ADMIN đã khoá là việc của ADMIN (adminSaveStudent).
         $studentId = (string) $student['StudentID'];
-        $newName = $fullName !== '' ? $fullName : (string) $student['FullName'];
-        $newEmail = $email !== '' ? $email : $student['Email'];
-        if ($newName !== (string) $student['FullName'] || $newEmail !== $student['Email'] || $student['Status'] !== 'ACTIVE') {
-            $pdo->prepare("UPDATE students SET FullName = :n, Email = :e, Status = 'ACTIVE' WHERE StudentID = :id")
-                ->execute(['n' => $newName, 'e' => $newEmail, 'id' => $studentId]);
+        $set = [];
+        $bind = ['id' => $studentId];
+        if ($fullName !== '' && trim((string) $student['FullName']) === '') {
+            $set[] = 'FullName = :n';
+            $bind['n'] = $fullName;
+        }
+        if ($email !== '' && trim((string) ($student['Email'] ?? '')) === '') {
+            $set[] = 'Email = :e';
+            $bind['e'] = $email;
+        }
+        if ($set) {
+            $pdo->prepare('UPDATE students SET ' . implode(', ', $set) . ' WHERE StudentID = :id')->execute($bind);
             $out['student'] = 'UPDATED';
         }
     }
@@ -650,7 +701,8 @@ function action_admin_import_roster(array $params): void
         'totalRows' => count($rows) + count($errors),
         'validRows' => count($rows),
         'plan'      => $plan,
-        'errors'    => $errors,
+        'errorCount' => count($errors),
+        'errors'    => array_slice($errors, 0, ADMIN_MAX_ERRORS_REPORTED),
         'preview'   => array_slice(array_map(static fn ($r) => [
             'line' => $r['line'], 'mssv' => $r['mssv'], 'fullName' => $r['fullName'], 'email' => $r['email'],
             'studentExists' => $r['studentExists'], 'alreadyEnrolled' => $r['alreadyEnrolled'],
@@ -693,12 +745,19 @@ function action_admin_import_roster(array $params): void
  */
 function admin_parse_roster_csv(string $csv): array
 {
+    // Chặn file quá lớn TRƯỚC khi phân tích (GĐ9 review lần 2, M7).
+    if (strlen($csv) > ADMIN_CSV_MAX_BYTES) {
+        return ['error' => 'File quá lớn (' . round(strlen($csv) / 1024) . ' KB, tối đa ' . round(ADMIN_CSV_MAX_BYTES / 1024) . ' KB).'];
+    }
     $csv = preg_replace('/^\xEF\xBB\xBF/', '', $csv) ?? $csv;
     $csv = str_replace(["\r\n", "\r"], "\n", trim($csv));
     if ($csv === '') {
         return ['error' => 'Chưa có nội dung CSV.'];
     }
     $lines = explode("\n", $csv);
+    if (count($lines) - 1 > ADMIN_IMPORT_MAX_ROWS) {
+        return ['error' => 'File có ' . (count($lines) - 1) . ' dòng, quá ' . ADMIN_IMPORT_MAX_ROWS . ' dòng cho phép mỗi lần.'];
+    }
     $header = $lines[0];
     $delim = ',';
     foreach ([';', "\t", ','] as $d) {

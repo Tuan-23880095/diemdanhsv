@@ -168,6 +168,10 @@ CREATE TABLE IF NOT EXISTS grade_columns (
   Status        ENUM('ACTIVE','INACTIVE') NOT NULL DEFAULT 'ACTIVE',
   CreatedAt     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (GradeColumnID),
+  -- Một lớp không có hai đầu điểm cùng tên: grading_ensure_column() tra theo
+  -- (ClassID, Name) nên trùng tên sẽ sinh hai cột, cộng trọng số hai lần
+  -- (GĐ9 review lần 2, L6). CSDL đã tạo trước: migration 004.
+  UNIQUE KEY uq_gcol_class_name (ClassID, Name),
   KEY idx_gcol_class (ClassID, SortOrder),
   CONSTRAINT fk_gcol_class FOREIGN KEY (ClassID) REFERENCES classes(ClassID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

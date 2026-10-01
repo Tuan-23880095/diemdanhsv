@@ -25,6 +25,10 @@ declare(strict_types=1);
  * điểm tổng = Σ điểm×trọng số/100, QUY VỀ TỐI ĐA 10 (grading_total()).
  */
 
+const GRADING_CSV_MAX_BYTES = 512 * 1024;  // ~512 KB, quá đủ cho 1000 dòng × 10 cột
+const GRADING_MAX_ROWS = 1000;             // số dòng dữ liệu tối đa mỗi lần nhập
+const GRADING_MAX_ERRORS_REPORTED = 200;   // không json_encode hàng triệu lỗi
+
 /** Hằng số công thức, cho phép ghi đè trong config bí mật (app.attendance_rules). */
 function attendance_rules(): array
 {
@@ -221,7 +225,9 @@ function grading_ensure_column(PDO $pdo, string $classId, string $name, float $w
         }
         return ['GradeColumnID' => (string) $col['GradeColumnID'], 'created' => false];
     }
-    $max = (int) $pdo->query("SELECT COALESCE(MAX(SortOrder), 0) FROM grade_columns WHERE ClassID = " . $pdo->quote($classId))->fetchColumn();
+    $maxStmt = $pdo->prepare('SELECT COALESCE(MAX(SortOrder), 0) FROM grade_columns WHERE ClassID = :cid');
+    $maxStmt->execute(['cid' => $classId]);
+    $max = (int) $maxStmt->fetchColumn();
     $id = new_id('GCL');
     $pdo->prepare("INSERT INTO grade_columns (GradeColumnID, ClassID, Name, Weight, SortOrder, Status) VALUES (:id, :cid, :n, :w, :o, 'ACTIVE')")
         ->execute(['id' => $id, 'cid' => $classId, 'n' => $name, 'w' => $weight, 'o' => $max + 1]);
@@ -364,7 +370,8 @@ function action_admin_import_grades(array $params): void
         'totalRows'   => count($valid) + count(array_filter($errors, static fn ($e) => $e['line'] > 1)),
         'validRows'   => count($valid),
         'cells'       => $cellCount,
-        'errors'      => $errors,
+        'errorCount'  => count($errors),
+        'errors'      => array_slice($errors, 0, GRADING_MAX_ERRORS_REPORTED),
         'preview'     => array_slice(array_map(static fn ($r) => ['line' => $r['line'], 'mssv' => $r['mssv'], 'scores' => $r['scores']], $valid), 0, 20),
         'written'     => false,
     ];
@@ -412,6 +419,10 @@ function action_admin_import_grades(array $params): void
  */
 function grading_parse_csv(string $csv): array
 {
+    // Chặn file quá lớn trước khi phân tích (GĐ9 review lần 2, M7).
+    if (strlen($csv) > GRADING_CSV_MAX_BYTES) {
+        return ['error' => 'File quá lớn (' . round(strlen($csv) / 1024) . ' KB, tối đa ' . round(GRADING_CSV_MAX_BYTES / 1024) . ' KB).'];
+    }
     $csv = preg_replace('/^\xEF\xBB\xBF/', '', $csv) ?? $csv;
     $csv = str_replace(["\r\n", "\r"], "\n", trim($csv));
     if ($csv === '') {
@@ -443,16 +454,39 @@ function grading_parse_csv(string $csv): array
     $columns = [];
     foreach ($headers as $i => $h) {
         if ($i === $mssvIdx || $h === '' || in_array(admin_norm_header($h), $skipAliases, true)) continue;
-        // "Giữa kỳ (20%)" | "Giữa kỳ 20" | "Giữa kỳ" (không trọng số)
-        if (preg_match('/^(.*?)[\s(\[]*(\d+(?:[.,]\d+)?)\s*%?\s*[)\]]*$/u', $h, $m) && trim($m[1]) !== '') {
-            $name = trim(preg_replace('/[\s(\[]+$/u', '', $m[1]) ?? $m[1]);
-            $columns[] = ['name' => mb_substr($name, 0, 100), 'weight' => (float) str_replace(',', '.', $m[2]), 'index' => $i];
+        // Trọng số CHỈ nhận khi ở trong ngoặc — "Giữa kỳ (20%)", "Giữa kỳ (20)" —
+        // hoặc có dấu % — "Giữa kỳ 20%". KHÔNG nhận số trần cuối tên: "Bài tập 1",
+        // "Bài tập 2" trước đây đều bị đọc thành cột "Bài tập" trọng số 1, 2 rồi
+        // ghi đè nhau (GĐ9 review lần 2, H4). Cột không có trọng số → lấy trọng số
+        // của cột cùng tên đã có trong lớp, không có thì báo lỗi.
+        if (preg_match('/^(.*\S)\s*[(\[](\d+(?:[.,]\d+)?)\s*%?[)\]]$/u', $h, $m)
+            || preg_match('/^(.*\S)\s+(\d+(?:[.,]\d+)?)\s*%$/u', $h, $m)) {
+            $weight = (float) str_replace(',', '.', $m[2]);
+            if ($weight < 0 || $weight > 100) {
+                // Trọng số vô lý (vd 500%) làm điểm tổng của CẢ LỚP chạm trần 10
+                // (GĐ9 review lần 2, M6).
+                return ['error' => 'Trọng số "' . $m[2] . '%" ở cột "' . trim($m[1]) . '" không hợp lệ (0–100).'];
+            }
+            $columns[] = ['name' => mb_substr(trim($m[1]), 0, 100), 'weight' => $weight, 'index' => $i];
         } else {
             $columns[] = ['name' => mb_substr($h, 0, 100), 'weight' => null, 'index' => $i];
         }
     }
     if (!$columns) {
         return ['error' => 'Dòng tiêu đề không có đầu điểm nào ngoài MSSV.'];
+    }
+    // Hai cột cùng tên sẽ ghi đè nhau trong grades (uq_grade) — chặn ngay.
+    $names = [];
+    foreach ($columns as $c) {
+        $k = mb_strtolower($c['name']);
+        if (isset($names[$k])) {
+            return ['error' => 'Hai cột cùng tên "' . $c['name'] . '" trong dòng tiêu đề — đặt tên khác nhau (điểm sẽ ghi đè nhau).'];
+        }
+        $names[$k] = true;
+    }
+
+    if (count($lines) - 1 > GRADING_MAX_ROWS) {
+        return ['error' => 'File có ' . (count($lines) - 1) . ' dòng, quá ' . GRADING_MAX_ROWS . ' dòng cho phép mỗi lần.'];
     }
 
     $rows = [];
@@ -595,7 +629,13 @@ function action_admin_set_attendance(array $params): void
             "INSERT INTO attendance (AttendanceID, StudentID, SessionID, Status, CheckInTime, GpsFlag, Note) " .
             "VALUES (:id, :sid, :ses, :st, NULL, 'NO_GPS', :note)"
         );
-        $upd = $pdo->prepare('UPDATE attendance SET Status = :st, Note = :note WHERE AttendanceID = :id');
+        // NỐI thêm vào Note, KHÔNG ghi đè: Note của bản check-in thật có thể đang
+        // giữ cảnh báo "Trùng thiết bị với N MSSV khác" (D.8-4) — xoá đi là mất
+        // bằng chứng trên liveRoster (GĐ9 review lần 2, L10).
+        $upd = $pdo->prepare(
+            "UPDATE attendance SET Status = :st, " .
+            "Note = TRIM(BOTH ' | ' FROM CONCAT(COALESCE(Note, ''), ' | ', :note)) WHERE AttendanceID = :id"
+        );
         foreach ($plan as $studentId => $p) {
             $sel->execute(['sid' => $studentId, 'ses' => $sessionId]);
             $cur = $sel->fetch();

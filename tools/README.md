@@ -33,6 +33,9 @@ Quy ước cho mọi script thêm vào đây (từ GĐ6 trở đi theo PLAN):
   mới (ví dụ 003 bỏ khoá ngoại `classes.LecturerID`).
 - **`smoke_test.php`** — smoke test 13 + 12 action trên CSDL THỬ với dữ liệu
   demo (xem `docs/05-GD5-smoke-review.md`). Tự áp migrations trước khi chạy.
+- **`compare_gas_php.php`** — so khớp file JSON xuất từ Apps Script với CSDL
+  (CHỈ ĐỌC): số dòng, ID thiếu/thừa, dòng lệch nội dung. Dùng ở checklist GĐ9
+  (`docs/06-GD9-staging-checklist.md` mục 2).
 - **`backup.php`** — sao lưu CSDL bằng PHP thuần (PDO + gzip, KHÔNG dùng
   `mysqldump`/shell vì host cấm `exec`), vào `../private/backups/`, tự dọn
   bản cũ (`--keep=N`), `--dry-run` liệt kê bảng + số dòng, `--config=` cho

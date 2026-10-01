@@ -15,10 +15,11 @@ declare(strict_types=1);
  * token hết hạn/không tồn tại, hoặc vai trò không nằm trong $roles — đúng
  * AuthService.requireRole() (gas/03-Auth.gs dòng 79-88).
  *
- * KHÔNG kiểm lại users.Status ở đây — giữ đúng hành vi bản gốc: một khi đã
- * đăng nhập, token còn hạn thì còn dùng được cho tới khi hết hạn/logout, kể
- * cả nếu tài khoản bị khoá sau đó (CacheService cũ tách rời khỏi sheet Users
- * theo cách y hệt).
+ * GĐ9 review lần 2 (M10) — ĐỔI so với bản GAS: kiểm users.Status = 'ACTIVE' ở
+ * đây. Bản gốc (CacheService) để token còn hạn 6 giờ dùng được kể cả sau khi
+ * khoá tài khoản; từ GĐ7/GĐ8 token đó còn nhập được danh sách lớp, nhập điểm,
+ * sửa điểm danh — quá rộng cho một tài khoản đã bị khoá. Khoá tài khoản giờ có
+ * hiệu lực NGAY với mọi action cần vai trò.
  *
  * @param string[] $roles
  * @return array{userId:string, role:string, name:string}
@@ -34,7 +35,8 @@ function require_role(string $token, array $roles): array
     $stmt = db()->prepare(
         "SELECT t.SubjectID, u.Role, u.FullName FROM auth_tokens t " .
         "JOIN users u ON u.UserID = t.SubjectID " .
-        "WHERE t.Token = :token AND t.Kind = 'LECTURER' AND t.ExpiresAt > NOW() LIMIT 1"
+        "WHERE t.Token = :token AND t.Kind = 'LECTURER' AND t.ExpiresAt > NOW() " .
+        "AND u.Status = 'ACTIVE' LIMIT 1"
     );
     $stmt->execute(['token' => $token]);
     $row = $stmt->fetch();
