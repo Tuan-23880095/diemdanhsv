@@ -12,6 +12,8 @@ class AdminController {
     this.sessions = [];
     this.rosterClassId = '';
     this.sessionClassId = '';
+    this.gradeClassId = '';
+    this.manualSessionId = null;
   }
 
   init() {
@@ -37,6 +39,19 @@ class AdminController {
     v.onSessionCancel(() => v.hideSessionForm());
     v.onSessionEdit(id => v.showSessionForm(this.sessions.find(s => s.SessionID === id)));
     v.onSessionSubmit(d => this.saveSession(d));
+
+    v.onManualOpen(id => this.openManual(id));
+    v.onManualSave(marks => this.saveManual(marks));
+    v.onManualClose(() => v.hideManual());
+    v.onManualAllPresent();
+
+    v.onGradeClassChange(id => this.loadGrades(id));
+    v.onAttPreview(() => this.attendancePreview());
+    v.onAttApply(() => this.attendanceApply());
+    v.onGradeFile(csv => this.importGrades(csv, true));
+    v.onGradePreview(csv => this.importGrades(csv, true));
+    v.onGradeImport(csv => this.importGrades(csv, false));
+    v.onGradeRefresh(() => this.loadGrades(this.gradeClassId));
 
     v.onCourseNew(() => v.showCourseForm(null));
     v.onCourseCancel(() => v.hideCourseForm());
@@ -86,6 +101,7 @@ class AdminController {
   onTab(name) {
     if (name === 'roster' && this.rosterClassId) this.loadRoster(this.rosterClassId);
     if (name === 'sessions' && this.sessionClassId) this.loadSessions(this.sessionClassId);
+    if (name === 'grades' && this.gradeClassId) this.loadGrades(this.gradeClassId);
   }
 
   /* ---- Nạp dữ liệu ---- */
@@ -169,6 +185,59 @@ class AdminController {
       await this.api.adminUnenroll(this.token, this.rosterClassId, mssv);
       this.view.toast('Đã gỡ ' + mssv + ' khỏi lớp.');
       await this.loadRoster(this.rosterClassId);
+    } catch (err) { this.fail(err); }
+  }
+
+  /* ---- Điểm danh tay ---- */
+  async openManual(sessionId) {
+    try {
+      const info = await this.api.adminSessionAttendance(this.token, sessionId);
+      this.manualSessionId = sessionId;
+      this.view.showManual(info);
+    } catch (err) { this.fail(err); }
+  }
+
+  async saveManual(marks) {
+    if (!marks.length) { this.view.toast('Chưa đổi dòng nào.', 'error'); return; }
+    try {
+      const r = await this.api.adminSetAttendance(this.token, this.manualSessionId, marks);
+      this.view.toast('Đã ghi: thêm ' + r.inserted + ', đổi ' + r.updated + ', giữ nguyên ' + r.unchanged + '.');
+      await this.openManual(this.manualSessionId);
+    } catch (err) { this.fail(err); }
+  }
+
+  /* ---- Điểm & chuyên cần ---- */
+  async loadGrades(classId) {
+    this.gradeClassId = classId;
+    this.view.setGradesVisible(!!classId);
+    if (!classId) return;
+    try { this.view.renderGradesReport(await this.api.adminGradesReport(this.token, classId)); }
+    catch (err) { this.fail(err); }
+  }
+
+  async attendancePreview() {
+    try { this.view.renderAttendanceReport(await this.api.adminAttendanceReport(this.token, this.gradeClassId), false); }
+    catch (err) { this.fail(err); }
+  }
+
+  async attendanceApply() {
+    try {
+      const r = await this.api.adminApplyAttendanceScore(this.token, this.gradeClassId);
+      this.view.renderAttendanceReport(Object.assign({ bannedCount: r.rows.filter(x => x.banned).length }, r), true);
+      this.view.toast('Đã ghi điểm chuyên cần cho ' + r.written + ' sinh viên.');
+      await this.loadGrades(this.gradeClassId);
+    } catch (err) { this.fail(err); }
+  }
+
+  async importGrades(csv, dryRun) {
+    if (!csv || !csv.trim()) { this.view.toast('Chưa có nội dung CSV.', 'error'); return; }
+    try {
+      const rep = await this.api.adminImportGrades(this.token, this.gradeClassId, csv, dryRun);
+      this.view.renderGradeCsvReport(rep);
+      if (rep.written) {
+        this.view.toast('Đã nhập ' + rep.counts.scoresWritten + ' ô điểm.');
+        await this.loadGrades(this.gradeClassId);
+      }
     } catch (err) { this.fail(err); }
   }
 

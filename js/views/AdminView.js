@@ -23,7 +23,18 @@ class AdminView {
       sessionNewBtn: $('session-new-btn'), sessionCancelBtn: $('session-cancel-btn'),
 
       courseTable: $('course-table'), courseForm: $('course-form'), courseFormTitle: $('course-form-title'),
-      courseNewBtn: $('course-new-btn'), courseCancelBtn: $('course-cancel-btn')
+      courseNewBtn: $('course-new-btn'), courseCancelBtn: $('course-cancel-btn'),
+
+      manualBox: $('manual-box'), manualTitle: $('manual-title'), manualTable: $('manual-table'),
+      manualSaveBtn: $('manual-save-btn'), manualCloseBtn: $('manual-close-btn'), manualAllPresent: $('manual-all-present'),
+
+      gradeClass: $('grade-class'), gradeBody: $('grade-body'),
+      attPreviewBtn: $('att-preview-btn'), attApplyBtn: $('att-apply-btn'), attRules: $('att-rules'),
+      attReport: $('att-report'), attSummary: $('att-summary'), attTable: $('att-table'),
+      gradeFile: $('grade-file'), gradeCsv: $('grade-csv'), gradePreviewBtn: $('grade-preview-btn'),
+      gradeImportBtn: $('grade-import-btn'), gradeCsvReport: $('grade-csv-report'),
+      gradeRefreshBtn: $('grade-refresh-btn'), gradeWeightNote: $('grade-weight-note'),
+      gradeThead: $('grade-thead'), gradeTable: $('grade-table')
     };
     this.tabs = Array.from(document.querySelectorAll('.tab-btn'));
     this.panels = Array.from(document.querySelectorAll('[data-panel]'));
@@ -134,7 +145,7 @@ class AdminView {
 
   /* ---- Lớp chọn ở tab sinh viên/buổi học ---- */
   fillClassPickers(rows) {
-    [this.el.rosterClass, this.el.sessionClass].forEach(sel => {
+    [this.el.rosterClass, this.el.sessionClass, this.el.gradeClass].forEach(sel => {
       const cur = sel.value;
       this._fillSelect(sel, rows.filter(c => c.Status === 'ACTIVE'), 'ClassID', c => c.ClassCode + ' — ' + c.CourseName, '— Chọn lớp —');
       sel.value = cur;
@@ -142,6 +153,7 @@ class AdminView {
   }
   onRosterClassChange(h)  { this.el.rosterClass.addEventListener('change', () => h(this.el.rosterClass.value)); }
   onSessionClassChange(h) { this.el.sessionClass.addEventListener('change', () => h(this.el.sessionClass.value)); }
+  onGradeClassChange(h)   { this.el.gradeClass.addEventListener('change', () => h(this.el.gradeClass.value)); }
 
   /* ---- Sinh viên của lớp ---- */
   onEnrollSubmit(h)  { this.el.enrollForm.addEventListener('submit', ev => { ev.preventDefault(); h(this._formData(this.el.enrollForm)); }); }
@@ -201,7 +213,7 @@ class AdminView {
   onSessionCancel(h) { this.el.sessionCancelBtn.addEventListener('click', h); }
   onSessionSubmit(h) { this.el.sessionForm.addEventListener('submit', ev => { ev.preventDefault(); h(this._formData(this.el.sessionForm)); }); }
   onSessionEdit(h)   { this.el.sessionTable.addEventListener('click', ev => { const b = ev.target.closest('[data-edit]'); if (b) h(b.dataset.edit); }); }
-  setSessionsVisible(v) { this.el.sessionBody.hidden = !v; this.hideSessionForm(); }
+  setSessionsVisible(v) { this.el.sessionBody.hidden = !v; this.hideSessionForm(); this.hideManual(); }
   renderSessions(rows) {
     this.el.sessionTable.innerHTML = rows.length ? rows.map(s => '<tr class="border-t border-slate-100">' +
       '<td class="px-2 py-2">' + this._esc(s.SessionNo) + '</td>' +
@@ -209,9 +221,40 @@ class AdminView {
       '<td class="px-2 py-2 text-xs">' + this._esc((s.StartTime || '') + (s.EndTime ? '–' + s.EndTime : '')) + '</td>' +
       '<td class="px-2 py-2">' + this._esc(s.Content) + '</td>' +
       '<td class="px-2 py-2">' + this._status(s.Status) + '</td>' +
-      '<td class="px-2 py-2 text-right"><button data-edit="' + this._esc(s.SessionID) + '" class="text-blue-700 hover:underline">Sửa</button></td></tr>').join('')
+      '<td class="px-2 py-2 text-right whitespace-nowrap"><button data-manual="' + this._esc(s.SessionID) + '" class="mr-2 text-emerald-700 hover:underline">Điểm danh tay</button>' +
+      '<button data-edit="' + this._esc(s.SessionID) + '" class="text-blue-700 hover:underline">Sửa</button></td></tr>').join('')
       : '<tr><td colspan="6" class="px-2 py-4 text-center text-slate-500">Chưa có buổi học — cần ít nhất một buổi để mở điểm danh.</td></tr>';
   }
+  onManualOpen(h)  { this.el.sessionTable.addEventListener('click', ev => { const b = ev.target.closest('[data-manual]'); if (b) h(b.dataset.manual); }); }
+  onManualSave(h)  { this.el.manualSaveBtn.addEventListener('click', () => h(this._manualMarks())); }
+  onManualClose(h) { this.el.manualCloseBtn.addEventListener('click', h); }
+  onManualAllPresent() {
+    this.el.manualAllPresent.addEventListener('click', () => {
+      this.el.manualTable.querySelectorAll('select').forEach(sel => { sel.value = 'PRESENT'; });
+    });
+  }
+  _manualMarks() {
+    // Chỉ gửi dòng có chọn giá trị khác hiện tại (rỗng = không đụng)
+    return Array.from(this.el.manualTable.querySelectorAll('select')).map(sel => ({ mssv: sel.dataset.mssv, status: sel.value }))
+      .filter(m => m.status !== '');
+  }
+  _statusLabel(s) {
+    return { PRESENT: 'Có mặt', LATE: 'Trễ', ABSENT: 'Vắng', EXCUSED: 'Vắng có phép' }[s] || (s ? s : '— chưa có —');
+  }
+  showManual(info) {
+    this.el.manualTitle.textContent = 'buổi ' + info.sessionNo + (info.date ? ' (' + info.date + ')' : '');
+    const opts = [['', '(giữ nguyên)'], ['PRESENT', 'Có mặt'], ['LATE', 'Trễ'], ['ABSENT', 'Vắng'], ['EXCUSED', 'Vắng có phép']];
+    this.el.manualTable.innerHTML = info.rows.length ? info.rows.map(r => '<tr class="border-t border-slate-100">' +
+      '<td class="px-2 py-1 font-mono">' + this._esc(r.mssv) + '</td>' +
+      '<td class="px-2 py-1">' + this._esc(r.fullName) + '</td>' +
+      '<td class="px-2 py-1 text-xs">' + this._esc(this._statusLabel(r.status)) + (r.checkInTime ? '<br><span class="text-slate-400">' + this._esc(r.checkInTime.replace('T', ' ')) + '</span>' : '') + '</td>' +
+      '<td class="px-2 py-1"><select data-mssv="' + this._esc(r.mssv) + '" class="rounded border border-slate-300 bg-white px-2 py-1 text-sm">' +
+        opts.map(o => '<option value="' + o[0] + '">' + o[1] + '</option>').join('') + '</select></td></tr>').join('')
+      : '<tr><td colspan="4" class="px-2 py-4 text-center text-slate-500">Lớp chưa có sinh viên.</td></tr>';
+    this.el.manualBox.hidden = false;
+    this.el.manualBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  hideManual() { this.el.manualBox.hidden = true; }
   showSessionForm(s, nextNo) {
     this.el.sessionFormTitle.textContent = s ? 'Sửa buổi ' + s.SessionNo : 'Buổi mới';
     this._fillForm(this.el.sessionForm, s ? {
@@ -221,6 +264,79 @@ class AdminView {
     this.el.sessionForm.hidden = false;
   }
   hideSessionForm() { this.el.sessionForm.hidden = true; }
+
+  /* ---- Điểm & chuyên cần ---- */
+  onAttPreview(h)    { this.el.attPreviewBtn.addEventListener('click', h); }
+  onAttApply(h)      { this.el.attApplyBtn.addEventListener('click', () => { if (confirm('Ghi điểm chuyên cần vào bảng điểm của lớp này? Điểm cũ của cột "Chuyên cần" sẽ được cập nhật.')) h(); }); }
+  onGradePreview(h)  { this.el.gradePreviewBtn.addEventListener('click', () => h(this.el.gradeCsv.value)); }
+  onGradeImport(h)   { this.el.gradeImportBtn.addEventListener('click', () => h(this.el.gradeCsv.value)); }
+  onGradeRefresh(h)  { this.el.gradeRefreshBtn.addEventListener('click', h); }
+  onGradeFile(h) {
+    this.el.gradeFile.addEventListener('change', () => {
+      const f = this.el.gradeFile.files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = () => { this.el.gradeCsv.value = String(r.result); h(String(r.result)); };
+      r.readAsText(f, 'UTF-8');
+    });
+  }
+  setGradesVisible(v) {
+    this.el.gradeBody.hidden = !v;
+    this.el.attReport.hidden = true; this.el.attApplyBtn.disabled = true;
+    this.clearGradeCsvReport();
+  }
+  renderAttendanceReport(rep, written) {
+    const r = rep.rules || {};
+    this.el.attRules.textContent = 'Công thức: ' + r.max_score + ' − ' + r.absent_penalty + '×vắng − ' + r.excused_penalty + '×có phép − ' + r.late_penalty +
+      '×trễ (thấp nhất 0). Cấm thi khi vắng + trễ÷' + r.late_per_absence + ' + phép÷' + r.excused_per_absence + ' ≥ ' + r.ban_threshold +
+      '. Cột "' + r.column_name + '" trọng số ' + r.column_weight + '%.';
+    this.el.attSummary.innerHTML = (written ? '<b class="text-emerald-800">Đã ghi vào bảng điểm.</b> ' : '') +
+      'Tính trên <b>' + rep.sessionsCounted + '</b> buổi đã điểm danh, ' + rep.rows.length + ' sinh viên' +
+      (rep.bannedCount !== undefined ? ', <b class="' + (rep.bannedCount ? 'text-red-700' : '') + '">' + rep.bannedCount + ' cấm thi</b>.' : '.') +
+      (rep.sessionsCounted === 0 ? ' <span class="text-amber-700">Chưa có buổi nào điểm danh — chưa ghi được.</span>' : '');
+    this.el.attTable.innerHTML = rep.rows.map(x => '<tr class="border-t border-slate-100' + (x.banned ? ' bg-red-50' : '') + '">' +
+      '<td class="px-2 py-1 font-mono">' + this._esc(x.mssv) + '</td><td class="px-2 py-1">' + this._esc(x.fullName) + '</td>' +
+      '<td class="px-2 py-1 text-right">' + x.present + '</td><td class="px-2 py-1 text-right">' + x.late + '</td>' +
+      '<td class="px-2 py-1 text-right">' + x.absent + '</td><td class="px-2 py-1 text-right">' + x.excused + '</td>' +
+      '<td class="px-2 py-1 text-right font-semibold">' + this._esc(x.score) + '</td>' +
+      '<td class="px-2 py-1">' + (x.banned ? '<span class="rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">Cấm thi (' + x.equivalentAbsences + ' vắng tđ)</span>' : '<span class="text-xs text-slate-400">' + x.equivalentAbsences + ' vắng tđ</span>') + '</td></tr>').join('');
+    this.el.attReport.hidden = false;
+    this.el.attApplyBtn.disabled = written || rep.sessionsCounted === 0;
+  }
+  clearGradeCsvReport() { this.el.gradeCsvReport.hidden = true; this.el.gradeCsvReport.innerHTML = ''; this.el.gradeImportBtn.disabled = true; }
+  renderGradeCsvReport(rep) {
+    const ok = rep.errors.length === 0;
+    let html = '<div class="rounded-lg ' + (ok ? 'bg-emerald-50 text-emerald-900' : 'bg-amber-50 text-amber-900') + ' p-3">' +
+      (rep.written
+        ? '<b>Đã nhập xong.</b> Cột mới: ' + rep.counts.columnsCreated + ', cột cập nhật: ' + rep.counts.columnsUpdated + ', ô điểm ghi: ' + rep.counts.scoresWritten + '.'
+        : '<b>Kiểm tra:</b> ' + rep.validRows + '/' + rep.totalRows + ' dòng hợp lệ, ' + rep.cells + ' ô điểm sẽ ghi.') +
+      '<div class="mt-1 text-xs">Đầu điểm: ' + this._esc(rep.columns.map(c => c.name + ' (' + c.weight + '%' + (c.exists ? ', đã có' : ', mới') + ')').join('; ')) +
+      ' — tổng ' + this._esc(rep.weightTotal) + '%' + (rep.weightNote ? '. ' + this._esc(rep.weightNote) : '') + '</div></div>';
+    if (rep.errors.length) {
+      html += '<ul class="mt-2 list-disc pl-5 text-red-800">' + rep.errors.slice(0, 20).map(e => '<li>Dòng ' + e.line + ': ' + this._esc(e.error) + '</li>').join('') +
+        (rep.errors.length > 20 ? '<li>… và ' + (rep.errors.length - 20) + ' lỗi khác</li>' : '') + '</ul>' +
+        '<p class="mt-1 text-xs text-slate-600">Sửa file rồi kiểm tra lại. Khi còn lỗi, hệ thống không ghi gì.</p>';
+    }
+    this.el.gradeCsvReport.innerHTML = html;
+    this.el.gradeCsvReport.hidden = false;
+    this.el.gradeImportBtn.disabled = !(ok && !rep.written && rep.cells > 0);
+  }
+  renderGradesReport(rep) {
+    const cols = rep.columns || [];
+    this.el.gradeWeightNote.textContent = cols.length
+      ? 'Tổng trọng số ' + rep.weightTotal + '%' + (rep.weightTotal > 100 ? ' — điểm tổng quy về tối đa 10.' : rep.weightTotal < 100 ? ' — chưa đủ 100%.' : '.')
+      : 'Lớp chưa có đầu điểm nào. Nhập CSV hoặc ghi điểm chuyên cần để tạo.';
+    this.el.gradeThead.innerHTML = '<tr><th class="px-2 py-2">MSSV</th><th class="px-2 py-2">Họ tên</th>' +
+      cols.map(c => '<th class="px-2 py-2 text-right">' + this._esc(c.name) + '<br><span class="font-normal normal-case text-slate-400">' + c.weight + '%</span></th>').join('') +
+      '<th class="px-2 py-2 text-right">Tổng</th><th class="px-2 py-2">TT</th></tr>';
+    this.el.gradeTable.innerHTML = rep.rows.length ? rep.rows.map(r => '<tr class="border-t border-slate-100' + (r.banned ? ' bg-red-50' : '') + '">' +
+      '<td class="px-2 py-1 font-mono">' + this._esc(r.mssv) + '</td><td class="px-2 py-1">' + this._esc(r.fullName) + '</td>' +
+      r.scores.map(v => '<td class="px-2 py-1 text-right' + (v === null ? ' text-slate-300' : '') + '">' + (v === null ? '–' : this._esc(v)) + '</td>').join('') +
+      '<td class="px-2 py-1 text-right font-semibold">' + (r.total === null ? '–' : this._esc(r.total)) +
+        (r.weightDone < r.weightTotal ? '<br><span class="text-xs font-normal text-amber-700">' + r.weightDone + '/' + r.weightTotal + '%</span>' : '') + '</td>' +
+      '<td class="px-2 py-1">' + (r.banned ? '<span class="rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">Cấm thi</span>' : '') + '</td></tr>').join('')
+      : '<tr><td colspan="' + (cols.length + 4) + '" class="px-2 py-4 text-center text-slate-500">Lớp chưa có sinh viên.</td></tr>';
+  }
 
   /* ---- Môn ---- */
   onCourseNew(h)    { this.el.courseNewBtn.addEventListener('click', h); }

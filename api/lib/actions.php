@@ -14,7 +14,7 @@ declare(strict_types=1);
  * khai" nào trong router này.
  */
 
-const API_VERSION = 'php-0.5';
+const API_VERSION = 'php-0.6';
 
 /** action => 'GET' | 'POST', đúng danh sách 13 action + phương thức cũ. */
 const KNOWN_ACTIONS = [
@@ -46,6 +46,14 @@ const KNOWN_ACTIONS = [
     'adminEnroll'        => 'POST',
     'adminUnenroll'      => 'POST',
     'adminImportRoster'  => 'POST',
+
+    // GĐ8 — chuyên cần, nhập điểm CSV, điểm danh tay (api/lib/grading.php, docs/04 mục 17).
+    'adminAttendanceReport'     => 'GET',
+    'adminGradesReport'         => 'GET',
+    'adminSessionAttendance'    => 'GET',
+    'adminApplyAttendanceScore' => 'POST',
+    'adminImportGrades'         => 'POST',
+    'adminSetAttendance'        => 'POST',
 ];
 
 /** Điều hướng theo $action, gọi thẳng api_ok()/api_fail() (hai hàm này tự exit). */
@@ -135,6 +143,13 @@ function api_dispatch(string $action, string $method, array $params): void
         case 'adminEnroll':        action_admin_enroll($params);         return;
         case 'adminUnenroll':      action_admin_unenroll($params);       return;
         case 'adminImportRoster':  action_admin_import_roster($params);  return;
+
+        case 'adminAttendanceReport':     action_admin_attendance_report($params);      return;
+        case 'adminGradesReport':         action_admin_grades_report($params);          return;
+        case 'adminSessionAttendance':    action_admin_session_attendance($params);     return;
+        case 'adminApplyAttendanceScore': action_admin_apply_attendance_score($params); return;
+        case 'adminImportGrades':         action_admin_import_grades($params);          return;
+        case 'adminSetAttendance':        action_admin_set_attendance($params);         return;
     }
 }
 
