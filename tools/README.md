@@ -28,6 +28,11 @@ Quy ước cho mọi script thêm vào đây (từ GĐ6 trở đi theo PLAN):
   `gas/13-ExportJSON.gs` sang MariaDB. `--dry-run` để đối soát số dòng
   trước (không ghi gì); `--yes` để chạy thật. Idempotent (ON DUPLICATE KEY
   UPDATE theo khoá chính có sẵn). Xem docs/04-API-PHP.md mục 15.
+- **`migrate.php`** — chạy `db/migrations/*.sql` theo thứ tự (idempotent).
+  `--dry-run` chỉ liệt kê; `--config=` để trỏ CSDL thử. Dùng khi có migration
+  mới (ví dụ 003 bỏ khoá ngoại `classes.LecturerID`).
+- **`smoke_test.php`** — smoke test 13 + 12 action trên CSDL THỬ với dữ liệu
+  demo (xem `docs/05-GD5-smoke-review.md`). Tự áp migrations trước khi chạy.
 - **`backup.php`** — `mysqldump` + gzip vào `../private/backups/`, tự dọn
   bản cũ (`--keep=N`). Đặt lịch qua hPanel Cron Jobs. Xem docs/04-API-PHP.md
   mục 15.

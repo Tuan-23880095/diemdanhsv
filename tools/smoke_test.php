@@ -83,9 +83,13 @@ $pdo = new PDO(
     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
 );
 
-if ($opts['init_schema']) {
-    echo "Nạp db/schema.sql + db/migrations/*.sql vào CSDL thử…\n";
-    $files = array_merge([$root . '/db/schema.sql'], glob($root . '/db/migrations/*.sql') ?: []);
+// Luôn áp migrations (idempotent) để CSDL thử theo kịp schema mới nhất;
+// --init-schema thì nạp cả db/schema.sql trước.
+{
+    $migs = glob($root . '/db/migrations/*.sql') ?: [];
+    sort($migs);
+    $files = $opts['init_schema'] ? array_merge([$root . '/db/schema.sql'], $migs) : $migs;
+    echo ($opts['init_schema'] ? 'Nạp db/schema.sql + ' : 'Áp ') . "db/migrations/*.sql vào CSDL thử…\n";
     foreach ($files as $f) {
         $pdo->exec((string) file_get_contents($f));
         echo "  - " . basename($f) . "\n";

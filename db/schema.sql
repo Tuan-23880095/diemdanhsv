@@ -63,8 +63,12 @@ CREATE TABLE IF NOT EXISTS classes (
   PRIMARY KEY (ClassID),
   KEY idx_classes_lecturer (LecturerID),
   KEY idx_classes_course (CourseID),
-  CONSTRAINT fk_classes_course   FOREIGN KEY (CourseID)   REFERENCES courses(CourseID),
-  CONSTRAINT fk_classes_lecturer FOREIGN KEY (LecturerID) REFERENCES users(UserID)
+  -- KHÔNG đặt khoá ngoại trên LecturerID: cột này lưu DANH SÁCH UserID cách
+  -- nhau bởi dấu phẩy ("1607,2015" — thiết kế D.9, gas/11-FixRealData.gs,
+  -- docs/04-API-PHP.md mục 4). Khoá ngoại sẽ từ chối mọi lớp có 2 giảng viên.
+  -- Ứng dụng tự kiểm từng UserID khi ghi (api/lib/admin.php adminSaveClass).
+  -- CSDL đã tạo trước đó: chạy db/migrations/003-classes-lecturerid-csv.sql.
+  CONSTRAINT fk_classes_course   FOREIGN KEY (CourseID)   REFERENCES courses(CourseID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 04 — Sinh viên (MSSV lưu dạng CHUỖI để không mất số 0 đầu)
