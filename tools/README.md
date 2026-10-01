@@ -22,5 +22,15 @@ Quy ước cho mọi script thêm vào đây (từ GĐ6 trở đi theo PLAN):
 - Idempotent khi có thể (an toàn khi chạy lại), có chế độ dry-run cho thao
   tác di dời/sửa dữ liệu hàng loạt — xem PLAN GĐ6 (`tools/import.php`).
 
-Chưa có script nào ở GĐ2 — thư mục này chỉ tạo trước để `.htaccess` có chỗ
-chặn, tránh phải sửa `.htaccess` lại ở GĐ6/7/8 (docs/04-API-PHP.md mục 9).
+## Script hiện có (từ GĐ6)
+
+- **`import.php`** — di dời dữ liệu từ file JSON xuất bởi
+  `gas/13-ExportJSON.gs` sang MariaDB. `--dry-run` để đối soát số dòng
+  trước (không ghi gì); `--yes` để chạy thật. Idempotent (ON DUPLICATE KEY
+  UPDATE theo khoá chính có sẵn). Xem docs/04-API-PHP.md mục 15.
+- **`backup.php`** — `mysqldump` + gzip vào `../private/backups/`, tự dọn
+  bản cũ (`--keep=N`). Đặt lịch qua hPanel Cron Jobs. Xem docs/04-API-PHP.md
+  mục 15.
+
+Script thêm sau (GĐ7/8 theo PLAN, ví dụ `create-lecturer.php`,
+`fix-data.php`) theo đúng quy ước ở trên — xem docs/04-API-PHP.md mục 9.

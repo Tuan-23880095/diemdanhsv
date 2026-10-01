@@ -230,18 +230,17 @@ nhận khi viết code GĐ2 (không đoán ở đây).
    dùng stub (ví dụ ghi log thay vì gửi) cho đến khi thầy tạo hộp thư
    `noreply@diemdanhsv.com`.
 
-## 11. Việc tiếp theo (GĐ6)
+## 11. Việc tiếp theo (GĐ8)
 
 GĐ2 (nền PHP + `ping`), GĐ3 (`login`/`logout`/`requestGradeCode`/
 `verifyGradeCode`, mục 12), GĐ4 (`openAttendance`/`closeAttendance`/
-`checkin`/`liveRoster`, mục 13) và GĐ5 (`studentHistory`/`myGrades`/
-`listClasses`/`listSessions`, mục 14) đã xong — **đủ 13/13 action cũ có
-code PHP**, không còn action nào trả "chưa triển khai". GĐ6 (PLAN): script
-di dời dữ liệu (`tools/import.php`, CLI, idempotent, dry-run, đối soát số
-dòng) + hàm xuất JSON từ Apps Script + cron mysqldump sao lưu — THẦY chạy
-qua SSH. Review bảo mật độc lập của GĐ5 (có thể giao Abacus DeepAgent,
-trước 17/10/2026) **chưa thực hiện** trong phiên GĐ5 này — để dành cho một
-phiên riêng hoặc gộp vào trước GĐ9 (checklist staging).
+`checkin`/`liveRoster`, mục 13), GĐ5 (`studentHistory`/`myGrades`/
+`listClasses`/`listSessions`, mục 14), GĐ6 (di dời dữ liệu + sao lưu,
+mục 15) và GĐ7 (quản trị web tối thiểu, mục 16) đã xong — **đủ 13/13 action
+cũ + 12 action quản trị**. Nợ GĐ5 (smoke test 13/13 + review bảo mật độc
+lập bằng Claude Opus, KHÔNG dùng Abacus) đã trả — xem
+`docs/05-GD5-smoke-review.md`. GĐ8 (PLAN): nhập điểm CSV, tính điểm chuyên
+cần, nhập tay điểm danh.
 
 ## 12. Cập nhật GĐ3 — `login`/`logout`/`requestGradeCode`/`verifyGradeCode`
 
@@ -404,6 +403,97 @@ cụ thể, để phiên sau không phải đọc lại code:
   trên host Hostinger hoặc máy có MariaDB, và một phiên riêng cho review,
   trước khi coi GĐ5 hoàn tất đầy đủ theo PLAN.
 
+## 15. Cập nhật GĐ6 — di dời dữ liệu (`tools/import.php`) + sao lưu (`tools/backup.php`) + xuất JSON (`gas/13-ExportJSON.gs`)
+
+Giai đoạn 6/10 của PLAN. Ba phần, đúng mô tả PLAN ("hàm Apps Script xuất
+JSON ra Drive riêng tư; `tools/import.php` CLI idempotent/dry-run/đối soát
+số dòng; cron mysqldump sao lưu — Claude viết, THẦY chạy SSH"):
+
+- **`gas/13-ExportJSON.gs`** (mới) — `exportAllToDriveJSON()`, chạy TAY từ
+  trình soạn thảo Apps Script. Xuất cả 12 sheet vào MỘT file JSON (không
+  phải 12 file rời — tránh lệch nhau nếu có người đang thao tác trên sheet
+  lúc xuất) trong thư mục Drive riêng tư (`CONFIG.EXPORT_FOLDER_ID`, thêm
+  vào `gas/00-Config.gs`, THẦY tự tạo thư mục rồi điền ID — để trống thì
+  hàm báo lỗi rõ ràng thay vì ghi nhầm chỗ). Tên cột trong sheet đã khớp
+  1-1 với tên cột MySQL từ đầu (chú thích đầu `db/schema.sql`) nên không
+  cần ánh xạ lại tên trường, chỉ đổi tên SHEET → tên bảng MySQL (lowercase)
+  theo đúng thứ tự phụ thuộc khoá ngoại. Không xuất `auth_tokens`/
+  `grade_codes` (2 bảng mới của bản PHP, không có sheet nguồn).
+- **`tools/import.php`** (mới) — CLI only. Đọc file JSON xuất ở trên, với
+  mỗi bảng (đúng thứ tự phụ thuộc khoá ngoại): `--dry-run` chỉ SELECT khoá
+  chính hiện có rồi so với file để báo "sẽ thêm mới / sẽ cập nhật" theo
+  từng bảng, cộng cảnh báo tham chiếu khoá ngoại tới ID không có cả trong
+  CSDL lẫn trong file (ví dụ `LecturerID` trỏ tới một `UserID` không tồn
+  tại) — KHÔNG ghi gì. Khi chạy thật (`--yes`, bắt buộc có cờ này mới ghi):
+  một `db_transaction()` DUY NHẤT bọc toàn bộ 12 bảng — INSERT ... ON
+  DUPLICATE KEY UPDATE theo đúng khoá chính (ID đã gán sẵn từ
+  `newId()`/Apps Script, KHÔNG sinh ID mới) nên **idempotent**: chạy lại
+  cùng file nhiều lần không tạo dòng trùng, chỉ cập nhật. Nếu một dòng vi
+  phạm khoá ngoại thật (MySQL từ chối), toàn bộ transaction rollback —
+  "tất cả hoặc không gì cả", không để CSDL ở trạng thái nửa vời. Chuẩn hoá
+  dữ liệu trước khi ghi: ngày/giờ GAS dạng `yyyy-MM-ddTHH:mm:ss` (ký tự
+  `'T'`, xem `gas/02-Repo.gs` `SheetRepo.all()`) → `'Y-m-d H:i:s'` của
+  MySQL; chuỗi rỗng ở cột số/ngày/giờ → `NULL`; chuỗi rỗng ở cột văn bản
+  giữ nguyên `''` (không ép `NULL`, khớp các cột `NOT NULL` như
+  `Username`/`FullName`). `--only=table1,table2` để chạy/kiểm từng phần.
+- **`tools/backup.php`** (mới) — CLI only, `mysqldump --single-transaction
+  --quick --routines --triggers`, nén gzip, lưu vào `../private/backups/`
+  (ngoài `public_html`, rule 4). KHÔNG truyền mật khẩu qua `-p<mk>` trên
+  dòng lệnh (lộ qua `ps aux`) — tự tạo file `--defaults-extra-file` tạm
+  thời quyền `0600`, xoá ngay sau khi dump xong (kể cả khi dump lỗi).
+  `--keep=N` (mặc định 14) tự xoá bản cũ quá hạn giữ theo tên file (có
+  timestamp nên sort tên = sort thời gian). Mọi lần chạy (kể cả lỗi) ghi
+  một dòng vào `../private/backups/backup.log`. Đặt lịch qua hPanel Cron
+  Jobs — đường dẫn `php`/thư mục chính xác trên host thật ghi ở đầu file,
+  **cần thầy xác nhận khi đặt cron**, giống cách `config.php` (mục 8) cần
+  xác nhận cấu trúc thư mục.
+- **`gas/00-Config.gs`** — thêm `CONFIG.EXPORT_FOLDER_ID` (placeholder rỗng).
+
+### Giới hạn kiểm thử trong phiên này — CẦN THẦY XÁC NHẬN LẠI
+
+- `php -l` sạch trên `tools/import.php` và `tools/backup.php`.
+- Sandbox phiên này **vẫn không có MariaDB/MySQL cục bộ** (giống GĐ2–GĐ5)
+  nên **chưa chạy được `tools/import.php` với CSDL MySQL thật**. Đã test
+  tách riêng: (1) các hàm chuẩn hoá dữ liệu thuần (`import_norm_datetime`/
+  `import_norm_date`/`import_norm_number`/`import_norm_text`) với các ca
+  biên (rỗng, có `'T'`, chỉ ngày, `dd/MM/yyyy`) — PASS; (2) logic đối soát
+  dry-run (đếm "sẽ thêm mới/sẽ cập nhật", cảnh báo khoá ngoại lạ, và tính
+  idempotent khi chạy lại cùng dữ liệu) bằng PDO SQLite với dữ liệu demo rõ
+  ràng (`USR_DEMO1`, `STD_DEMO1`...) mô phỏng đúng luồng 5 bảng có phụ
+  thuộc khoá ngoại (`users`→`classes`→`enrollments`) — PASS, kể cả ca cố ý
+  có một `LecturerID` trỏ tới ID không tồn tại (đúng 1 cảnh báo FK, dòng đó
+  bị "chặn" không ghi ở lần mô phỏng ghi, dry-run lần sau vẫn báo đúng còn
+  thiếu). Câu lệnh SQL thật dùng cú pháp riêng MySQL (`ON DUPLICATE KEY
+  UPDATE`) — SQLite không hỗ trợ cú pháp này nên **chỉ kiểm được bằng
+  `php -l` + đọc lại tay**, chưa chạy thật.
+- `tools/backup.php` đã test với một `mysqldump` giả lập (demo, không đụng
+  CSDL/mật khẩu thật) trong thư mục mô phỏng cấu trúc `public_html/`
+  + `private/`: xác nhận nén gzip đúng, file option tạm bị xoá sau mỗi lần
+  chạy (kể cả khi giả lập lỗi), dọn bản cũ theo `--keep=N` hoạt động đúng,
+  và trường hợp `mysqldump` ghi lỗi ra stderr thì KHÔNG để lại file dump
+  rỗng/hỏng. **Chưa chạy được với `mysqldump` thật trên host** (cần xác
+  nhận `mysqldump` có sẵn trong PATH của SSH session trên Hostinger).
+- Vì vậy tiêu chí "Xong khi" của GĐ6 trong PLAN (**"Dry-run trên demo khớp
+  số dòng; có bản sao lưu"**) **chưa được xác nhận trên CSDL thật** — cần
+  thầy chạy `tools/import.php --dry-run` và `tools/backup.php` qua SSH
+  trên host Hostinger (hoặc máy có MariaDB) trước khi coi GĐ6 hoàn tất.
+
+### Test plan
+
+- [ ] Thầy tạo thư mục Drive riêng tư, điền `CONFIG.EXPORT_FOLDER_ID`
+      (`gas/00-Config.gs`), chạy thử `previewExportTable('students')` rồi
+      `exportAllToDriveJSON()` trong trình soạn thảo Apps Script.
+- [ ] Tải file JSON xuất được lên host (SFTP) vào `../private/import/`,
+      SSH vào host chạy `php tools/import.php --file=... --dry-run`, đọc
+      kỹ bảng đối soát + cảnh báo FK trước khi quyết định chạy thật.
+- [ ] Chạy thật (`--yes`) trên CSDL demo/thử trước (KHÔNG chạy thẳng lên
+      CSDL có dữ liệu thật lần đầu) để xác nhận số dòng khớp Google Sheets
+      gốc.
+- [ ] Chạy thử `php tools/backup.php --dry-run` rồi `php tools/backup.php`
+      qua SSH, xác nhận file `.sql.gz` giải nén được và có dữ liệu đúng,
+      rồi mới đặt lịch cron trong hPanel.
+- [ ] Sau khi merge, GĐ7 (quản trị web tối thiểu: CRUD môn/lớp/SV, nhập CSV
+      danh sách lớp) sẽ dựa trên nền này.
 ## 16. Cập nhật GĐ7 — quản trị web tối thiểu (`api/lib/admin.php`, `pages/admin.html`)
 
 Giai đoạn 7/10 của PLAN: "CRUD môn/lớp/SV, nhập CSV danh sách lớp". Hai câu

@@ -29,7 +29,14 @@ const CONFIG = {
   LOCK_TIMEOUT_MS: 30000,
 
   // Cache (thiết kế F)
-  CACHE_TTL_SECONDS: 300
+  CACHE_TTL_SECONDS: 300,
+
+  // GĐ6 (PLAN diemdanhsv) — ID thư mục Drive RIÊNG TƯ (không chia sẻ công khai)
+  // để xuất JSON di dời dữ liệu sang MariaDB. THẦY tạo thư mục riêng (khuyến nghị:
+  // trong Claude-Agent/diemdanhsv/, ví dụ thư mục con "db-export-private") rồi dán
+  // ID vào đây trước khi chạy exportAllToDriveJSON() (gas/13-ExportJSON.gs).
+  // Để trống thì hàm export báo lỗi rõ ràng thay vì ghi nhầm chỗ.
+  EXPORT_FOLDER_ID: ''
 };
 
 /** Trạng thái điểm danh (thiết kế C.3) */
