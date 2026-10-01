@@ -403,3 +403,82 @@ cụ thể, để phiên sau không phải đọc lại code:
   trong PLAN) và **chưa có review bảo mật độc lập** (mục 11) — cần làm
   trên host Hostinger hoặc máy có MariaDB, và một phiên riêng cho review,
   trước khi coi GĐ5 hoàn tất đầy đủ theo PLAN.
+
+## 16. Cập nhật GĐ7 — quản trị web tối thiểu (`api/lib/admin.php`, `pages/admin.html`)
+
+Giai đoạn 7/10 của PLAN: "CRUD môn/lớp/SV, nhập CSV danh sách lớp". Hai câu
+hỏi để ngỏ ở mục 10.2 thầy đã quyết ngày 01/10/2026:
+
+- **Ranh giới rule 3:** tính năng có token LECTURER/ADMIN, kiểm vai trò và
+  giới hạn đúng lớp mình dạy (`assert_class_access`) → được làm trên web.
+  Tạo tài khoản giảng viên, di dời/nhập điểm hàng loạt không ràng buộc lớp,
+  sửa dữ liệu thật một lần → vẫn CLI trong `tools/`.
+- **Phân quyền:** ADMIN tạo/sửa mọi môn, lớp, sinh viên, buổi học và gán
+  giảng viên. LECTURER chỉ lớp mình đứng tên: sửa thông tin lớp (không đổi
+  môn/giảng viên), thêm/bớt sinh viên, nhập CSV, buổi học.
+
+### 12 action mới (ngoài 13 action cũ, cùng phong bì, đều cần `token`)
+
+| Action | Method | Vai trò | Ghi chú |
+|---|---|---|---|
+| `adminListCourses` | GET | LECTURER/ADMIN | Mọi môn, kể cả INACTIVE |
+| `adminListLecturers` | GET | ADMIN | `UserID, Username, FullName, Role, Status` — không trả hash |
+| `adminListClasses` | GET | LECTURER/ADMIN | Cả lớp INACTIVE, kèm `CourseCode/CourseName/LecturerNames`; [D.9] LECTURER chỉ thấy lớp mình |
+| `adminListRoster` | GET | LECTURER/ADMIN | `classId`; ghi danh cả INACTIVE, có `EnrollStatus` |
+| `adminListSessions` | GET | LECTURER/ADMIN | `classId`; cả buổi INACTIVE |
+| `adminSaveCourse` | POST | ADMIN | `courseId` (rỗng = tạo), `courseCode*`, `courseName*`, `credits`, `theoryHours`, `practiceHours`, `status` |
+| `adminSaveClass` | POST | LECTURER/ADMIN | `classId` (rỗng = tạo, chỉ ADMIN), `classCode*`, `semester`, `academicYear`, `roomLat`, `roomLng`, `allowedRadiusM`, `status`; ADMIN thêm `courseId`, `lecturerIds` (nhiều UserID cách dấu phẩy — đúng quy ước `class_has_lecturer()`) |
+| `adminSaveSession` | POST | LECTURER/ADMIN | `classId*`, `sessionId` (rỗng = tạo), `sessionNo*`, `date` (YYYY-MM-DD), `startTime`/`endTime` (HH:MM), `content`, `status`; UPDATE kèm `ClassID` nên không sửa nhầm buổi lớp khác |
+| `adminSaveStudent` | POST | LECTURER/ADMIN | `mssv*`, `fullName`, `email`, `status`; LECTURER chỉ sinh viên đang ghi danh ở lớp mình |
+| `adminEnroll` | POST | LECTURER/ADMIN | `classId*`, `mssv*`, `fullName` (bắt buộc nếu SV chưa có), `email`; trả `student`/`enroll` = INSERTED/UPDATED/UNCHANGED/REACTIVATED |
+| `adminUnenroll` | POST | LECTURER/ADMIN | `classId*`, `mssv*`; đổi `enrollments.Status` → INACTIVE, **không xoá** |
+| `adminImportRoster` | POST | LECTURER/ADMIN | `classId*`, `csv*` (nguyên văn file), `dryRun`; xem dưới |
+
+Mọi thao tác ghi đều ghi `audit_log` (`ADMIN_*`). Không action nào xoá dòng —
+chỉ đổi `Status` (attendance/grades có khoá ngoại; giữ lịch sử để phân xử).
+
+### Nhập CSV danh sách lớp (`adminImportRoster`)
+
+Thay `previewImport()`/`runImport()` của `gas/07-Import.gs`, nhưng cho MỘT
+lớp đã chọn và có xác thực. Hai bước đúng như bản cũ: `dryRun:true` chỉ phân
+tích và trả báo cáo (số dòng hợp lệ, sẽ tạo bao nhiêu SV mới, bao nhiêu ghi
+danh mới, danh sách lỗi theo số dòng, 20 dòng xem trước); `dryRun:false` chỉ
+ghi khi **không còn dòng lỗi**, trong MỘT transaction. Chạy lại cùng file an
+toàn (upsert theo MSSV; ghi danh đã có thì bỏ qua; ghi danh INACTIVE thì bật
+lại). Tiêu đề cột nhận theo bí danh không dấu như `COLUMN_ALIASES` cũ (MSSV |
+Họ tên hoặc Họ đệm + Tên | Email); tự nhận dấu phân cách `,` `;` tab và BOM
+UTF-8 của Excel. Tối đa 1000 dòng/lần.
+
+### Giao diện
+
+`pages/admin.html` + `js/views/AdminView.js` + `js/controllers/AdminController.js`,
+cùng `APIService` và kiểu Tailwind như các trang hiện có. Đăng nhập dùng tài
+khoản giảng viên, dùng chung `sessionStorage` với `pages/lecturer.html` (thêm
+khoá `dd_role` để ẩn/hiện phần chỉ ADMIN — máy chủ vẫn là nơi kiểm quyền
+thật). Bốn tab: Lớp học, Sinh viên của lớp (thêm từng người / gỡ / nhập CSV
+hai bước), Buổi học, Môn học.
+
+### Test đã chạy trong phiên này
+
+- `php -l` sạch; `node --check` sạch cho 3 file JS.
+- `admin_parse_roster_csv()` chạy thật bằng PHP CLI với file có BOM, dấu `;`,
+  cột Họ đệm + Tên, MSSV sai, MSSV lặp, email sai — nhận diện đúng.
+- Trang `admin.html` chạy thật bằng Chromium (Playwright) với API giả lập:
+  đăng nhập ADMIN, tạo lớp (gửi đúng `lecturerIds`), nhập CSV dry-run → nút
+  "Nhập thật" mới bật → nhập thật → báo cáo; không lỗi JS.
+- `tools/smoke_test.php` thêm 40 kiểm tra cho 12 action quản trị (phân
+  quyền, LECTURER không đổi được môn/giảng viên, sửa buổi lớp khác bị từ
+  chối, gỡ/ghi danh lại, CSV dry-run không ghi, có lỗi thì không ghi dòng
+  nào, chạy lại idempotent, audit_log). **Chưa chạy trên MariaDB thật** —
+  sandbox không cài được MariaDB (như GĐ5 nợ). Thầy chạy
+  `php tools/smoke_test.php --config=../private/config.test.php` trên host.
+
+### Chưa làm / chờ thầy
+
+- Nhánh này dựa trên `agent/web-g5b` (PR #7) vì dùng chung
+  `tools/smoke_test.php` — **merge PR #7 trước**, PR GĐ7 sẽ chỉ còn phần của
+  nó.
+- Chưa có nút "tạo nhanh N buổi theo lịch tuần" — mỗi buổi tạo tay (GĐ8 có
+  thể thêm nếu cần).
+- Chữ hướng dẫn giảng viên trên trang quản trị do Claude viết tạm; PLAN ghi
+  Gemini soạn — chưa gửi handoff vì phiên không có việc đủ lớn để tách.

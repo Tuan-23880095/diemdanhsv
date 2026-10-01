@@ -9,7 +9,8 @@ declare(strict_types=1);
  *   - Bắt buộc --config=<file cấu hình CSDL THỬ>, và file đó KHÔNG được là
  *     ../private/config.php (file của CSDL thật) — script tự từ chối.
  *   - Từ chối chạy nếu CSDL đích có BẤT KỲ dòng users/courses/classes/
- *     students nào không phải dữ liệu demo của script này (ID 'SMOKE_…').
+ *     students nào không phải dữ liệu demo của script này (users smoke_*,
+ *     môn DEMO*, MSSV 990000xx).
  *   - Mọi dữ liệu demo đều giả (MSSV 9900000x, email @example.invalid) —
  *     rule 2, không dùng dữ liệu sinh viên thật.
  *
@@ -110,10 +111,13 @@ foreach ($tables as $t) {
 }
 
 $guard = [
-    'users' => 'UserID', 'courses' => 'CourseID', 'classes' => 'ClassID', 'students' => 'StudentID',
+    'users'    => "Username NOT LIKE 'smoke\\_%'",
+    'courses'  => "CourseCode NOT LIKE 'DEMO%'",
+    'classes'  => "CourseID NOT IN (SELECT CourseID FROM courses WHERE CourseCode LIKE 'DEMO%')",
+    'students' => "MSSV NOT LIKE '990000%'",
 ];
-foreach ($guard as $t => $pk) {
-    $n = (int) $pdo->query("SELECT COUNT(*) FROM `$t` WHERE `$pk` NOT LIKE 'SMOKE\\_%'")->fetchColumn();
+foreach ($guard as $t => $where) {
+    $n = (int) $pdo->query("SELECT COUNT(*) FROM `$t` WHERE $where")->fetchColumn();
     if ($n > 0) {
         fwrite(STDERR, "TỪ CHỐI: bảng `$t` có $n dòng KHÔNG phải dữ liệu demo — đây không phải CSDL thử trống.\n");
         exit(2);
@@ -259,21 +263,26 @@ if (!$up) {
 
 function cleanup(PDO $pdo): void
 {
-    $like = "LIKE 'SMOKE\\_%'";
-    $pdo->exec("DELETE FROM audit_log WHERE Actor $like OR TargetID $like");
-    $pdo->exec("DELETE FROM auth_tokens WHERE SubjectID $like");
-    $pdo->exec("DELETE FROM grade_codes WHERE StudentID $like");
-    $pdo->exec("DELETE FROM grades WHERE StudentID $like");
-    $pdo->exec("DELETE FROM grade_columns WHERE ClassID $like");
-    $pdo->exec("DELETE FROM attendance WHERE SessionID $like");
-    $pdo->exec("DELETE FROM attendance_keys WHERE SessionID $like");
-    $pdo->exec("DELETE FROM complaints WHERE StudentID $like");
-    $pdo->exec("DELETE FROM sessions WHERE ClassID $like");
-    $pdo->exec("DELETE FROM enrollments WHERE ClassID $like");
-    $pdo->exec("DELETE FROM classes WHERE ClassID $like");
-    $pdo->exec("DELETE FROM students WHERE StudentID $like");
-    $pdo->exec("DELETE FROM courses WHERE CourseID $like");
-    $pdo->exec("DELETE FROM users WHERE UserID $like");
+    // Dữ liệu demo nhận diện theo QUAN HỆ, không chỉ theo tiền tố ID — các dòng
+    // tạo qua action quản trị GĐ7 có ID thật (CRS_/CLS_/SES_/STD_/ENR_) nhưng
+    // đều treo vào users smoke_*, môn DEMO*, MSSV 990000xx.
+    $demoStudents = "(SELECT StudentID FROM students WHERE MSSV LIKE '990000%')";
+    $demoClasses  = "(SELECT ClassID FROM classes WHERE CourseID IN (SELECT CourseID FROM courses WHERE CourseCode LIKE 'DEMO%'))";
+    $pdo->exec("DELETE FROM audit_log WHERE Actor LIKE 'SMOKE\\_%' OR TargetID LIKE 'SMOKE\\_%' OR Actor IN $demoStudents OR TargetID IN $demoClasses");
+    $pdo->exec("DELETE FROM auth_tokens WHERE SubjectID LIKE 'SMOKE\\_%' OR SubjectID IN $demoStudents");
+    $pdo->exec("DELETE FROM grade_codes WHERE StudentID IN $demoStudents");
+    $pdo->exec("DELETE FROM grades WHERE StudentID IN $demoStudents");
+    $pdo->exec("DELETE FROM grade_columns WHERE ClassID IN $demoClasses");
+    $pdo->exec("DELETE FROM attendance WHERE StudentID IN $demoStudents");
+    $pdo->exec("DELETE FROM attendance_keys WHERE SessionID IN (SELECT SessionID FROM sessions WHERE ClassID IN $demoClasses)");
+    $pdo->exec("DELETE FROM complaints WHERE StudentID IN $demoStudents");
+    $pdo->exec("DELETE FROM sessions WHERE ClassID IN $demoClasses");
+    $pdo->exec("DELETE FROM enrollments WHERE StudentID IN $demoStudents");
+    // Không tự tham chiếu bảng đang xoá (MySQL lỗi 1093) — đi qua courses.
+    $pdo->exec("DELETE FROM classes WHERE CourseID IN (SELECT CourseID FROM courses WHERE CourseCode LIKE 'DEMO%')");
+    $pdo->exec("DELETE FROM students WHERE MSSV LIKE '990000%'");
+    $pdo->exec("DELETE FROM courses WHERE CourseCode LIKE 'DEMO%'");
+    $pdo->exec("DELETE FROM users WHERE Username LIKE 'smoke\\_%'");
 }
 
 cleanup($pdo); // dọn tàn dư lần chạy trước (nếu có)
@@ -466,6 +475,103 @@ check('myGrades S1 → 1 lớp, 2 cột, trung bình tạm 8 trên phần đã c
 check('myGrades không nhận mssv từ tham số (vẫn trả điểm của chủ token)', ok($t = api('GET', ['action' => 'myGrades', 'token' => $gtok, 'mssv' => '99000002']))
     && $t['data']['mssv'] === '99000001', brief($t));
 
+section('Quản trị GĐ7 (api/lib/admin.php)');
+// Thêm một tài khoản ADMIN demo (hash mới) — GV1/GV2 là LECTURER.
+$ins($pdo, 'users', ['UserID' => 'SMOKE_U3', 'Username' => 'smoke_admin', 'FullName' => 'Admin Demo',
+    'Email' => 'admin@example.invalid', 'PasswordHash' => password_hash($PW, PASSWORD_DEFAULT), 'Salt' => null,
+    'Role' => 'ADMIN', 'Status' => 'ACTIVE']);
+$r = api('POST', ['action' => 'login', 'username' => 'smoke_admin', 'password' => $PW]);
+$tokA = (string) ($r['data']['token'] ?? '');
+check('login ADMIN → success, role ADMIN', ok($r) && ($r['data']['role'] ?? '') === 'ADMIN', brief($r));
+
+check('adminListCourses không token → error', err(api('GET', ['action' => 'adminListCourses'])));
+check('adminListLecturers bằng token LECTURER → error (chỉ ADMIN)', err(api('GET', ['action' => 'adminListLecturers', 'token' => $tok2]), 'không có quyền'));
+$r = api('GET', ['action' => 'adminListLecturers', 'token' => $tokA]);
+check('adminListLecturers ADMIN → có 3 tài khoản demo, không lộ PasswordHash', ok($r) && count($r['data']) === 3
+    && !array_key_exists('PasswordHash', $r['data'][0]), brief($r));
+
+check('adminSaveCourse bằng LECTURER → error', err(api('POST', ['action' => 'adminSaveCourse', 'token' => $tok2, 'courseCode' => 'X', 'courseName' => 'Y']), 'không có quyền'));
+$r = api('POST', ['action' => 'adminSaveCourse', 'token' => $tokA, 'courseCode' => 'DEMO102', 'courseName' => 'Môn Demo 2', 'credits' => 2.5]);
+$co2 = (string) ($r['data']['courseId'] ?? '');
+check('adminSaveCourse ADMIN tạo môn → INSERTED', ok($r) && $r['data']['action'] === 'INSERTED' && str_starts_with($co2, 'CRS_'), brief($r));
+$r = api('POST', ['action' => 'adminSaveCourse', 'token' => $tokA, 'courseId' => $co2, 'courseCode' => 'DEMO102', 'courseName' => 'Môn Demo 2 (sửa)', 'status' => 'INACTIVE']);
+check('adminSaveCourse sửa môn → UPDATED', ok($r) && $r['data']['action'] === 'UPDATED', brief($r));
+$r = api('GET', ['action' => 'adminListCourses', 'token' => $tok2]);
+check('adminListCourses LECTURER thấy cả môn INACTIVE (2 môn)', ok($r) && count($r['data']) === 2, brief($r));
+// Dọn: môn demo tạo bằng API (ID không có tiền tố SMOKE_) — ghi nhận để cleanup cuối
+
+check('adminSaveClass LECTURER tạo lớp mới → error', err(api('POST', ['action' => 'adminSaveClass', 'token' => $tok2, 'classCode' => 'X']), 'Chỉ ADMIN'));
+check('adminSaveClass ADMIN thiếu môn/giảng viên → error', err(api('POST', ['action' => 'adminSaveClass', 'token' => $tokA, 'classCode' => 'DEMO101-03'])));
+check('adminSaveClass gán giảng viên không tồn tại → error', err(api('POST', ['action' => 'adminSaveClass', 'token' => $tokA, 'classCode' => 'DEMO101-03',
+    'courseId' => 'SMOKE_CO1', 'lecturerIds' => 'SMOKE_KHONG']), 'Không tìm thấy giảng viên'));
+$r = api('POST', ['action' => 'adminSaveClass', 'token' => $tokA, 'classCode' => 'DEMO101-03', 'courseId' => 'SMOKE_CO1',
+    'lecturerIds' => 'SMOKE_U2, SMOKE_U1', 'semester' => '1', 'academicYear' => '2026-2027', 'roomLat' => 21.0, 'roomLng' => 105.8, 'allowedRadiusM' => 50]);
+$c3 = (string) ($r['data']['classId'] ?? '');
+check('adminSaveClass ADMIN tạo lớp 2 giảng viên → INSERTED', ok($r) && $r['data']['action'] === 'INSERTED' && str_starts_with($c3, 'CLS_'), brief($r));
+$lect = (string) $pdo->query("SELECT LecturerID FROM classes WHERE ClassID = '$c3'")->fetchColumn();
+check('LecturerID lưu dạng danh sách phẩy', $lect === 'SMOKE_U2,SMOKE_U1', $lect);
+$r = api('GET', ['action' => 'adminListClasses', 'token' => $tok1]);
+$ids = ok($r) ? array_column($r['data'], 'ClassID') : [];
+check('adminListClasses GV1 thấy lớp mình + lớp mới được gán (kèm LecturerNames)', in_array('SMOKE_C1', $ids, true) && in_array($c3, $ids, true)
+    && !in_array('SMOKE_C2', $ids, true) && isset($r['data'][0]['LecturerNames']), brief($ids));
+$r = api('POST', ['action' => 'adminSaveClass', 'token' => $tok1, 'classId' => $c3, 'classCode' => 'DEMO101-03B', 'courseId' => 'SMOKE_KHONG',
+    'lecturerIds' => 'SMOKE_U1', 'allowedRadiusM' => 80]);
+$row = $pdo->query("SELECT ClassCode, CourseID, LecturerID, AllowedRadiusM FROM classes WHERE ClassID = '$c3'")->fetch();
+check('adminSaveClass LECTURER sửa lớp mình: đổi mã/bán kính, KHÔNG đổi được môn/giảng viên', ok($r) && $row['ClassCode'] === 'DEMO101-03B'
+    && $row['CourseID'] === 'SMOKE_CO1' && $row['LecturerID'] === 'SMOKE_U2,SMOKE_U1' && (int) $row['AllowedRadiusM'] === 80, brief($row));
+check('adminSaveClass LECTURER sửa lớp người khác → error', err(api('POST', ['action' => 'adminSaveClass', 'token' => $tok1, 'classId' => 'SMOKE_C2', 'classCode' => 'HACK']), 'không có quyền'));
+
+check('adminSaveSession lớp người khác → error', err(api('POST', ['action' => 'adminSaveSession', 'token' => $tok1, 'classId' => 'SMOKE_C2', 'sessionNo' => 1]), 'không có quyền'));
+check('adminSaveSession ngày sai dạng → error', err(api('POST', ['action' => 'adminSaveSession', 'token' => $tok1, 'classId' => $c3, 'sessionNo' => 1, 'date' => '01/10/2026']), 'YYYY-MM-DD'));
+$r = api('POST', ['action' => 'adminSaveSession', 'token' => $tok1, 'classId' => $c3, 'sessionNo' => 1, 'date' => '2026-10-02', 'startTime' => '07:30', 'endTime' => '09:30', 'content' => 'Buổi 1']);
+$ses = (string) ($r['data']['sessionId'] ?? '');
+check('adminSaveSession tạo buổi → INSERTED', ok($r) && $r['data']['action'] === 'INSERTED', brief($r));
+check('adminSaveSession sửa buổi bằng sessionId của lớp khác → error', err(api('POST', ['action' => 'adminSaveSession', 'token' => $tok1, 'classId' => $c3, 'sessionId' => 'SMOKE_SS2', 'sessionNo' => 9]), 'Không tìm thấy buổi'));
+$r = api('GET', ['action' => 'adminListSessions', 'token' => $tok1, 'classId' => $c3]);
+check('adminListSessions → 1 buổi', ok($r) && count($r['data']) === 1 && $r['data'][0]['Content'] === 'Buổi 1', brief($r));
+
+check('adminEnroll lớp người khác → error', err(api('POST', ['action' => 'adminEnroll', 'token' => $tok1, 'classId' => 'SMOKE_C2', 'mssv' => '99000001']), 'không có quyền'));
+check('adminEnroll SV mới thiếu họ tên → error', err(api('POST', ['action' => 'adminEnroll', 'token' => $tok1, 'classId' => $c3, 'mssv' => '99000005']), 'thiếu họ tên'));
+$r = api('POST', ['action' => 'adminEnroll', 'token' => $tok1, 'classId' => $c3, 'mssv' => '99000005', 'fullName' => 'SV Demo 5', 'email' => 'sv5@example.invalid']);
+check('adminEnroll SV mới → student INSERTED + enroll INSERTED', ok($r) && $r['data']['student'] === 'INSERTED' && $r['data']['enroll'] === 'INSERTED', brief($r));
+$r = api('POST', ['action' => 'adminEnroll', 'token' => $tok1, 'classId' => $c3, 'mssv' => '99000001']);
+check('adminEnroll SV đã có (không gửi tên) → student UNCHANGED + enroll INSERTED', ok($r) && $r['data']['student'] === 'UNCHANGED' && $r['data']['enroll'] === 'INSERTED', brief($r));
+$r = api('POST', ['action' => 'adminUnenroll', 'token' => $tok1, 'classId' => $c3, 'mssv' => '99000001']);
+$st = (string) $pdo->query("SELECT Status FROM enrollments WHERE StudentID = 'SMOKE_S1' AND ClassID = '$c3'")->fetchColumn();
+check('adminUnenroll → enrollment INACTIVE (không xoá dòng)', ok($r) && $st === 'INACTIVE', brief($r));
+check('adminUnenroll lần 2 → error (không còn trong danh sách)', err(api('POST', ['action' => 'adminUnenroll', 'token' => $tok1, 'classId' => $c3, 'mssv' => '99000001'])));
+$r = api('POST', ['action' => 'adminEnroll', 'token' => $tok1, 'classId' => $c3, 'mssv' => '99000001']);
+check('adminEnroll lại SV đã gỡ → REACTIVATED', ok($r) && $r['data']['enroll'] === 'REACTIVATED', brief($r));
+$r = api('GET', ['action' => 'adminListRoster', 'token' => $tok1, 'classId' => $c3]);
+check('adminListRoster → 2 SV, có EnrollStatus', ok($r) && count($r['data']) === 2 && isset($r['data'][0]['EnrollStatus']), brief($r));
+
+check('adminSaveStudent LECTURER sửa SV không thuộc lớp mình → error', err(api('POST', ['action' => 'adminSaveStudent', 'token' => $tok2, 'mssv' => '99000004', 'fullName' => 'X']), 'không thuộc lớp'));
+$r = api('POST', ['action' => 'adminSaveStudent', 'token' => $tok1, 'mssv' => '99000001', 'fullName' => 'SV Demo 1 (sửa)']);
+$nm = (string) $pdo->query("SELECT FullName FROM students WHERE MSSV = '99000001'")->fetchColumn();
+check('adminSaveStudent LECTURER sửa SV lớp mình → UPDATED', ok($r) && $nm === 'SV Demo 1 (sửa)', brief($r));
+check('adminSaveStudent email sai → error', err(api('POST', ['action' => 'adminSaveStudent', 'token' => $tokA, 'mssv' => '99000001', 'email' => 'sai']), 'Email'));
+
+$csv = "\xEF\xBB\xBFSTT;Mã số sinh viên;Họ đệm;Tên;E-mail\n1;99000006;Nguyễn Văn;Sáu;sv6@example.invalid\n2;99000001;;;\n3;99000007;;;\n";
+$r = api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => $c3, 'csv' => $csv, 'dryRun' => true]);
+check('adminImportRoster dry-run: nhận cột ; + BOM + Họ đệm/Tên; báo 1 dòng lỗi (SV mới thiếu tên); không ghi',
+    ok($r) && $r['data']['dryRun'] === true && $r['data']['validRows'] === 2 && count($r['data']['errors']) === 1
+    && (int) $pdo->query("SELECT COUNT(*) FROM students WHERE MSSV = '99000006'")->fetchColumn() === 0, brief($r));
+$r = api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => $c3, 'csv' => $csv, 'dryRun' => false]);
+check('adminImportRoster ghi thật khi còn lỗi → error, không ghi dòng nào', err($r, 'dòng lỗi')
+    && (int) $pdo->query("SELECT COUNT(*) FROM students WHERE MSSV = '99000006'")->fetchColumn() === 0, brief($r));
+$csv2 = "MSSV,Ho ten,Email\n99000006,Nguyễn Văn Sáu,sv6@example.invalid\n99000001,,\n";
+$r = api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => $c3, 'csv' => $csv2, 'dryRun' => false]);
+check('adminImportRoster ghi thật → 1 SV mới + 1 ghi danh mới, SV cũ giữ nguyên', ok($r) && $r['data']['written'] === true
+    && $r['data']['counts']['studentsInserted'] === 1 && $r['data']['counts']['enrollmentsInserted'] === 1
+    && $r['data']['counts']['studentsUpdated'] === 0, brief($r));
+$r = api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => $c3, 'csv' => $csv2, 'dryRun' => false]);
+check('adminImportRoster chạy lại cùng file → idempotent (0 mới, 0 ghi danh mới)', ok($r) && $r['data']['counts']['studentsInserted'] === 0
+    && $r['data']['counts']['enrollmentsInserted'] === 0, brief($r));
+check('adminImportRoster không có cột MSSV → error', err(api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => $c3, 'csv' => "STT,Ten\n1,X", 'dryRun' => true]), 'cột MSSV'));
+check('adminImportRoster lớp người khác → error', err(api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => 'SMOKE_C2', 'csv' => $csv2, 'dryRun' => true]), 'không có quyền'));
+$audit = (int) $pdo->query("SELECT COUNT(*) FROM audit_log WHERE Action LIKE 'ADMIN\\_%'")->fetchColumn();
+check('audit_log ghi mọi thao tác quản trị ghi', $audit >= 10, "có $audit dòng");
+
 section('logout');
 $r = api('POST', ['action' => 'logout', 'token' => $tok1]);
 check('logout → {ok:true}', ok($r) && ($r['data']['ok'] ?? false) === true, brief($r));
@@ -475,7 +581,10 @@ check('token đã logout không dùng được nữa', err(api('GET', ['action' 
 
 $covered = ['ping', 'login', 'logout', 'listClasses', 'listSessions', 'openAttendance', 'checkin', 'liveRoster',
     'closeAttendance', 'studentHistory', 'requestGradeCode', 'verifyGradeCode', 'myGrades'];
-echo "\nĐã chạy " . count($covered) . "/13 action: " . implode(', ', $covered) . "\n";
+$coveredAdmin = ['adminListCourses', 'adminListLecturers', 'adminListClasses', 'adminListRoster', 'adminListSessions',
+    'adminSaveCourse', 'adminSaveClass', 'adminSaveSession', 'adminSaveStudent', 'adminEnroll', 'adminUnenroll', 'adminImportRoster'];
+echo "\nĐã chạy " . count($covered) . "/13 action cũ: " . implode(', ', $covered) . "\n";
+echo "Đã chạy " . count($coveredAdmin) . "/12 action quản trị GĐ7: " . implode(', ', $coveredAdmin) . "\n";
 
 if ($opts['keep_data']) {
     echo "--keep-data: GIỮ dữ liệu demo trong CSDL thử.\n";
