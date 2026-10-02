@@ -7,6 +7,11 @@ thì mới sang GĐ10 (đổi `API_URL`, cutover).
 Trang web đang chạy thật **không đổi gì** khi làm checklist này: mặc định vẫn
 gọi Apps Script. Bản PHP chỉ được gọi khi thêm `?api=php` vào địa chỉ.
 
+> **Lưu ý sau GĐ10:** khi PR cutover đã merge, mặc định của trang là **PHP**; phần
+> "Cách bật chế độ chạy thử" dưới đây mô tả trạng thái **trước** cutover (mặc định
+> Apps Script). Sau cutover, `?api=gas` là đường lùi và có băng "ĐANG DÙNG BẢN DỰ
+> PHÒNG"; `?api=php` không còn hiện băng.
+
 ## Cách bật chế độ chạy thử
 
 Thêm `?api=php` vào cuối địa chỉ bất kỳ trang nào:
@@ -138,20 +143,51 @@ Trên `admin.html?api=php`:
   (chạy trên CSDL **thử**, không phải CSDL thật).
 - Thử `php tools/migrate.php` (không có `--yes`) → chỉ in hướng dẫn, không chạy.
 
-## Sau khi 7/7 đạt — chuẩn bị GĐ10
+## Sau khi 7/7 đạt — GĐ10 cutover (PR đã soạn sẵn, CHỈ MERGE KHI 7/7 ĐẠT)
 
-Quản gia sẽ làm, thầy duyệt PR:
+PR GĐ10 (`agent/web-g10-cutover`) chứa đúng 4 thay đổi, không đụng PHP/CSDL:
 
-1. Đổi `API_TARGETS.gas` → URL PHP (hoặc `DEFAULT_API = 'php'`) trong
-   `js/config/config.js`, giữ `?api=gas` trỏ Apps Script thêm ≥ 1 tuần để còn
-   đường lùi. **Đồng thời đổi `?v=` của `config.js` trong 4 trang `pages/*.html`**
-   (ví dụ `?v=20261010`) để mọi máy tải lại cấu hình mới — 02/10 phát hiện
-   host/trình duyệt vẫn trả `config.js` bản cũ dù đã deploy; `.htaccess` nay
-   đặt `Cache-Control: no-cache` cho `config.js` và `*.html` nhưng cache đã có
-   sẵn trên máy sinh viên chỉ bị bỏ khi tên file (query `?v=`) đổi.
-2. Tắt workflow Firebase (chuyển sang `workflow_dispatch`).
-3. Cập nhật `docs/02-BAN-GIAO-TRANG-THAI.md`.
-4. Theo dõi 1 tuần điểm danh thật không sự cố.
+1. `js/config/config.js`: `DEFAULT_API = 'php'`; `?api=gas` vẫn trỏ Apps Script
+   làm **đường lùi ≥ 1 tuần**; dải băng vàng nay hiện khi *không* ở backend mặc
+   định, nội dung theo backend đang gọi (`API_MODE_BANNER`).
+2. 4 trang `pages/*.html` nạp `config.js?v=20261002-php` (đổi `?v=` để mọi máy
+   bỏ cache bản cũ — bắt buộc, xem ghi chú dưới).
+3. `.github/workflows/firebase-hosting.yml`: chỉ còn `workflow_dispatch` (không
+   tự deploy Firebase mỗi lần push `main` nữa).
+4. `docs/02-BAN-GIAO-TRANG-THAI.md` viết lại cho kiến trúc PHP/MariaDB.
+
+### Trình tự ngày cutover (ngoài giờ dạy)
+
+1. Checklist 7 mục ở trên **7/7 đạt** (mục 5 có thể "chưa kiểm được" nếu chưa có
+   hộp thư — khi đó xem điểm 2 bước chưa gửi được mail, cần biết trước).
+2. `php tools/backup.php` → có bản sao lưu ngay trước cutover.
+3. **Merge PR GĐ10** → hPanel tự deploy (1–2 phút) → hPanel → **Hiệu suất →
+   Trình quản lý bộ nhớ đệm → Xóa tất cả** (hoặc nhờ Quản gia xóa qua kết nối
+   Hostinger).
+4. Kiểm: mở `pages/student.html` **không tham số** → KHÔNG có băng vàng và F12 →
+   Network thấy request tới `/api/index.php`; `?api=gas` → có băng "ĐANG DÙNG BẢN
+   DỰ PHÒNG"; `/js/config/config.js?v=20261002-php` có `DEFAULT_API = 'php'`.
+5. Một buổi điểm danh thật đầu tiên: thầy đứng lớp, mở `lecturer.html`, theo dõi
+   `liveRoster`; sau buổi so số liệu với cảm nhận trên lớp.
+
+### Đường lùi
+
+- **Tức thời, không deploy:** bảo giảng viên/sinh viên mở trang với `?api=gas`
+  (Apps Script vẫn chạy song song, dữ liệu Sheets vẫn như trước cutover —
+  những gì đã điểm danh trên PHP sau cutover sẽ KHÔNG có bên Sheets).
+- **Rollback hẳn:** PR đổi `DEFAULT_API = 'gas'` + đổi `?v=` → merge → xóa cache.
+
+### Sau ≥ 1 tuần không sự cố
+
+- PR gỡ `gas` khỏi `API_TARGETS` (giữ thư mục `gas/` làm tham chiếu), đổi `?v=`;
+  dừng deployment Apps Script; cập nhật `docs/02` mục 4.
+
+### Ghi chú cache (02/10/2026)
+
+Host/trình duyệt từng trả `config.js` bản cũ dù đã deploy. `.htaccess` nay đặt
+`Cache-Control: no-cache` cho `config.js` và `*.html`, nhưng cache đã có sẵn trên
+máy sinh viên chỉ bị bỏ khi query `?v=` đổi → **mỗi lần sửa `config.js` phải đổi
+`?v=` trong 4 trang.**
 
 **Nên làm trước cutover** (xem `docs/05-GD5-smoke-review.md`):
 
