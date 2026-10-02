@@ -57,4 +57,8 @@ Script thêm sau (GĐ7/8 theo PLAN, ví dụ `create-lecturer.php`,
   `--set-role --user= --role= --yes`; `--set-status --user= --status= --yes`
   (INACTIVE huỷ token). Không bao giờ hạ/khoá ADMIN đang hoạt động cuối cùng.
   Audit `TOOLS_USER_CREATE/SET_ROLE/SET_STATUS`. Không in họ tên/email.
+- **`mail_test.php`** — gửi MỘT email thử qua cấu hình `smtp` trong
+  `../private/config.php` (`--to=<email>`, `--config=` cho file khác); in
+  ĐÃ GỬI / CHẾ ĐỘ STUB / GỬI THẤT BẠI + lý do. Không chạm CSDL, không in mật
+  khẩu. Chạy trước checklist GĐ9 mục 5 (docs/04 mục 25).
 

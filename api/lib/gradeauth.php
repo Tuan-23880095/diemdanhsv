@@ -11,10 +11,11 @@ declare(strict_types=1);
  * mã hết hạn hay đã dùng — chỉ vô hiệu hoá (invalidate_grade_code) để giữ
  * lại SendCount/WindowStartAt cho giới hạn 5 lần/24h cuộn.
  *
- * SMTP THẬT CHƯA CÓ (docs mục 10.4) — mail_send() (api/lib/mailer.php) là
- * STUB, chỉ ghi log. Không có API kiểm "quota gửi mail còn lại" như
- * MailApp.getRemainingDailyQuota() cũ nên bỏ qua bước đó cho tới khi có
- * SMTP thật.
+ * Email gửi qua mail_send() (api/lib/mailer.php, SMTP PHP thuần — docs mục
+ * 10.4): trả true/false, không ném lỗi. Chưa có hộp thư trong config.php thì
+ * nó ở chế độ stub (chỉ ghi log) và trả false → audit GRADE_CODE_MAIL_FAIL.
+ * Không có API kiểm "quota gửi mail còn lại" như MailApp.getRemainingDailyQuota()
+ * cũ — Hostinger giới hạn theo hộp thư, xem docs mục 10.4.
  */
 
 const GRADE_CODE_TTL_SECONDS    = 600;  // mã sống 10 phút
@@ -140,7 +141,7 @@ function action_request_grade_code(array $params): void
     }
     $code = (string) $outcome['code'];
 
-    mail_send(
+    $mailed = mail_send(
         $email,
         'Mã xác minh xem điểm — Hệ thống điểm danh & xem điểm',
         implode("\n", [
@@ -155,10 +156,13 @@ function action_request_grade_code(array $params): void
         ])
     );
 
+    // Gửi hỏng (SMTP lỗi hoặc còn chế độ stub): vẫn trả phản hồi trung tính —
+    // không lộ MSSV nào có email — nhưng ghi audit GRADE_CODE_MAIL_FAIL để thầy
+    // thấy trong audit_log; chi tiết lỗi ở error_log (api/lib/mailer.php).
     log_audit(
         (string) $student['StudentID'],
         'STUDENT',
-        'GRADE_CODE_SENT',
+        $mailed ? 'GRADE_CODE_SENT' : 'GRADE_CODE_MAIL_FAIL',
         'STUDENT',
         (string) $student['StudentID'],
         ['mssv' => $mssv]

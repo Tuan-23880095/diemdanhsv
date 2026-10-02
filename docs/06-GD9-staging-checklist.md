@@ -121,9 +121,11 @@ vắng phải **giống nhau**.
 
 Trên `diem.html?api=php`, với **một MSSV thật có email thật**:
 
-- Xin mã → nhận được email (mục này cần hộp thư `noreply@diemdanhsv.com` đã
-  tạo và `api/lib/mailer.php` đã thay stub; **chưa có thì ghi "chưa kiểm được"
-  và để lại mục này**, không coi là đạt).
+- Xin mã → nhận được email. Cần hộp thư `noreply@diemdanhsv.com` đã tạo và
+  `smtp.pass` đã điền vào `../private/config.php` (mailer SMTP thật có từ
+  02/10 — docs/04 mục 25; kiểm trước bằng `php tools/mail_test.php
+  --to=<email của thầy>`). **Chưa có hộp thư thì ghi "chưa kiểm được" và để
+  lại mục này**, không coi là đạt.
 - Nhập mã đúng → thấy bảng điểm; nhập sai 5 lần → mã bị huỷ.
 - Điểm tổng và điểm chuyên cần khớp với bảng điểm trên trang quản trị
   (`admin.html?api=php` → tab Điểm & chuyên cần).
