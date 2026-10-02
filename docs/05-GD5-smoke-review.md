@@ -83,6 +83,11 @@ Các phần review xác nhận **đạt**:
 
 Các mục dưới đây đụng tới thiết kế hoặc hành vi, nên không tự sửa.
 
+> **Cập nhật 02/10/2026:** **M4** và **M5** đã sửa trong PR gia cố trước cutover
+> (`api/lib/ratelimit.php`, `db/migrations/005-rate-limits.sql`, kẹp phút trong
+> `action_open_attendance`) — chi tiết `docs/04-API-PHP.md` mục 19. Hai mục
+> đó giữ lại dưới đây làm hồ sơ; M2, L3, L4, L5 vẫn chờ.
+
 - **M2 – D.8 lớp 4 bị ghi đè.** Khi check-in lần 2 cùng MSSV, server UPDATE
   đè `DeviceHash`, `Note`, GPS và `Status`.
   - Hệ quả: gửi lại với `deviceHash:""` là xoá được cảnh báo trùng thiết bị
@@ -91,13 +96,13 @@ Các mục dưới đây đụng tới thiết kế hoặc hành vi, nên không
   - Hành vi này giống y bản GAS cũ.
   - Đề xuất: lần 2 không xoá `DeviceHash` đã có, không hạ PRESENT→LATE, chỉ
     nối thêm vào `Note`. Hoặc từ chối hẳn lần 2.
-- **M4 – Chưa giới hạn tần suất (rate limit).** Thiếu ở `checkin`, `login`
+- ~~**M4 – Chưa giới hạn tần suất (rate limit).**~~ **ĐÃ SỬA 02/10 (docs/04 mục 19).** Thiếu ở `checkin`, `login`
   và theo IP cho mã xem điểm.
   - Thông báo lỗi khác nhau khiến dò được mã đang mở và MSSV nào tồn tại.
   - Đề xuất: thêm một bảng đếm theo IP (cần migration) và trả một thông báo
     lỗi chung.
   - Nên làm trước cutover GĐ10.
-- **M5 – Không có bước kiểm cho `presentMinutes`/`windowMinutes`.**
+- ~~**M5 – Không có bước kiểm cho `presentMinutes`/`windowMinutes`.**~~ **ĐÃ SỬA 02/10 (kẹp 1–60, docs/04 mục 19).**
   Giảng viên có thể mở mã sống rất lâu (chỉ trên lớp của chính mình).
   - Đề xuất: kẹp giá trị trong khoảng 1–60 phút.
 - **L3 – Login để lộ username qua thời gian phản hồi.** Khi user không tồn

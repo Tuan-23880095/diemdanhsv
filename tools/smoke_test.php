@@ -126,7 +126,7 @@ foreach ($guardRules as $t => $where) {
 }
 
 $tables = ['users', 'courses', 'classes', 'students', 'enrollments', 'sessions', 'attendance',
-    'attendance_keys', 'grade_columns', 'grades', 'complaints', 'audit_log', 'auth_tokens', 'grade_codes'];
+    'attendance_keys', 'grade_columns', 'grades', 'complaints', 'audit_log', 'auth_tokens', 'grade_codes', 'rate_limits'];
 foreach ($tables as $t) {
     try {
         $pdo->query("SELECT 1 FROM `$t` LIMIT 1");
@@ -342,7 +342,7 @@ if ($mode === 'inprocess') {
     // → chuyển vào file tạm để kết quả PASS/FAIL dễ đọc.
     $apiLog = sys_get_temp_dir() . '/diemdanhsv-smoke-api.log';
     ini_set('error_log', $apiLog);
-    foreach (['response', 'config', 'db', 'audit', 'mailer', 'auth', 'gradeauth', 'roles', 'attendance', 'queries', 'admin', 'grading', 'actions'] as $lib) {
+    foreach (['response', 'config', 'db', 'audit', 'ratelimit', 'mailer', 'auth', 'gradeauth', 'roles', 'attendance', 'queries', 'admin', 'grading', 'actions'] as $lib) {
         require $root . '/api/lib/' . $lib . '.php';
     }
     echo "CHẾ ĐỘ: in-process (host không cho bật php -S — proc_open/exec bị cấm). " .
@@ -377,6 +377,10 @@ function cleanup(PDO $pdo): void
     $pdo->exec("DELETE FROM students WHERE MSSV LIKE '990000%'");
     $pdo->exec("DELETE FROM courses WHERE CourseCode LIKE 'DEMO%'");
     $pdo->exec("DELETE FROM users WHERE Username LIKE 'smoke\\_%'");
+    // Bộ đếm giới hạn tần suất (M4): mọi request của bộ test đến từ 127.0.0.1
+    // (hoặc '0.0.0.0' ở chế độ in-process khi REMOTE_ADDR trống) — xoá để lần
+    // chạy sau không bị chặn oan vì lần trước đã đếm đủ.
+    $pdo->exec("DELETE FROM rate_limits WHERE ClientKey IN ('127.0.0.1', '::1', '0.0.0.0') OR ClientKey LIKE 'smoke\\_%' OR ClientKey = 'khong_co'");
 }
 
 cleanup($pdo); // dọn tàn dư lần chạy trước (nếu có)
@@ -856,6 +860,106 @@ try {
 }
 check('L6: CSDL chặn hai đầu điểm cùng tên trong một lớp (UNIQUE uq_gcol_class_name)', $dup, 'không bị chặn');
 
+section('M4 — giới hạn tần suất theo IP / tên đăng nhập (api/lib/ratelimit.php) + M5 — kẹp phút mở mã');
+$rlMsg = 'quá nhiều lần';
+$rlHits = static function (PDO $pdo, string $bucket, string $key): int {
+    $st = $pdo->prepare('SELECT Hits FROM rate_limits WHERE Bucket = :b AND ClientKey = :k');
+    $st->execute(['b' => $bucket, 'k' => $key]);
+    $h = $st->fetchColumn();
+    return $h === false ? 0 : (int) $h;
+};
+// Giả lập "đã dùng hết lượt" bằng cách ghi thẳng Hits rất lớn — nhanh hơn bắn
+// 60 request, và không phụ thuộc ngưỡng cấu hình trong config.test.php.
+$rlSeed = static function (PDO $pdo, string $bucket, string $key): void {
+    $pdo->prepare('INSERT INTO rate_limits (Bucket, ClientKey, WindowStart, Hits) VALUES (:b, :k, NOW(), 999999) ' .
+        'ON DUPLICATE KEY UPDATE Hits = 999999, WindowStart = NOW()')->execute(['b' => $bucket, 'k' => $key]);
+};
+$rlClear = static function (PDO $pdo, string ...$buckets): void {
+    foreach ($buckets as $b) {
+        $pdo->prepare('DELETE FROM rate_limits WHERE Bucket = :b')->execute(['b' => $b]);
+    }
+};
+
+// --- checkin: chỉ đếm lần SAI; vượt ngưỡng → thông báo chung ---
+$rlClear($pdo, 'checkin_ip');
+check('M4: checkin mã không mở → vẫn báo "Mã không đúng" như cũ', err(api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => 'Z1Z1']), 'Mã không đúng'));
+// IP theo máy chủ thấy (127.0.0.1 với php -S; REMOTE_ADDR đặt sẵn ở in-process) — đọc từ bảng cho chắc.
+$RL_IP = (string) $pdo->query("SELECT ClientKey FROM rate_limits WHERE Bucket = 'checkin_ip' LIMIT 1")->fetchColumn();
+check('M4: lần mã sai được đếm 1 lượt theo IP máy chủ thấy', $RL_IP !== '' && $rlHits($pdo, 'checkin_ip', $RL_IP) === 1, "key=[$RL_IP]");
+api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => 'ab']);
+check('M4: mã sai định dạng cũng tính lượt (2)', $rlHits($pdo, 'checkin_ip', $RL_IP) === 2, 'hits=' . $rlHits($pdo, 'checkin_ip', $RL_IP));
+$rlSeed($pdo, 'checkin_ip', $RL_IP);
+$r = api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => 'Z1Z1']);
+check('M4: vượt ngưỡng → thông báo CHUNG, không lộ "mã không đúng"', err($r, $rlMsg) && !str_contains((string) $r['message'], 'Mã không đúng'), brief($r));
+$r = api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => 'ab']);
+check('M4: khi bị chặn, lỗi định dạng cũng chỉ thấy thông báo chung', err($r, $rlMsg) && !str_contains((string) $r['message'], 'ký tự'), brief($r));
+$rlClear($pdo, 'checkin_ip');
+check('M4: xoá bộ đếm → nhận request bình thường trở lại', err(api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => 'Z1Z1']), 'Mã không đúng'));
+
+// --- M5: kẹp presentMinutes/windowMinutes 1–60 ---
+$r = api('POST', ['action' => 'openAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS3', 'presentMinutes' => 999, 'windowMinutes' => 99999]);
+$code3 = (string) ($r['data']['code'] ?? '');
+check('M5: openAttendance 999/99999 phút vẫn mở được (kẹp, không từ chối)', ok($r) && preg_match('/^[A-Z0-9]{4}$/', $code3) === 1, brief($r));
+$k3 = $pdo->query("SELECT TIMESTAMPDIFF(MINUTE, StartTime, EndTime) w, TIMESTAMPDIFF(MINUTE, StartTime, LateAfter) p " .
+    "FROM attendance_keys WHERE SessionID = 'SMOKE_SS3' AND Status = 'OPEN'")->fetch();
+check('M5: cửa sổ bị kẹp còn đúng 60 phút, mốc trễ ≤ hết hạn', $k3 && (int) $k3['w'] === 60 && (int) $k3['p'] <= 60, brief($k3));
+$r = api('POST', ['action' => 'openAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS3', 'presentMinutes' => 50, 'windowMinutes' => 10]);
+$k3 = $pdo->query("SELECT TIMESTAMPDIFF(MINUTE, StartTime, EndTime) w, TIMESTAMPDIFF(MINUTE, StartTime, LateAfter) p " .
+    "FROM attendance_keys WHERE SessionID = 'SMOKE_SS3' AND Status = 'OPEN'")->fetch();
+check('M5: presentMinutes 50 > windowMinutes 10 → mốc trễ bị kéo về = hết hạn (10)', ok($r) && $k3 && (int) $k3['w'] === 10 && (int) $k3['p'] === 10, brief($k3));
+$r = api('POST', ['action' => 'openAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS3', 'presentMinutes' => -5, 'windowMinutes' => 0]);
+$code3 = (string) ($r['data']['code'] ?? '');
+$k3 = $pdo->query("SELECT TIMESTAMPDIFF(MINUTE, StartTime, EndTime) w, TIMESTAMPDIFF(MINUTE, StartTime, LateAfter) p " .
+    "FROM attendance_keys WHERE SessionID = 'SMOKE_SS3' AND Status = 'OPEN'")->fetch();
+check('M5: giá trị ≤ 0 → dùng mặc định cấu hình, vẫn trong 1 ≤ trễ ≤ hết hạn ≤ 60', ok($r) && $k3
+    && (int) $k3['p'] >= 1 && (int) $k3['p'] <= (int) $k3['w'] && (int) $k3['w'] <= 60, brief($k3));
+
+// --- checkin ĐÚNG không bị đếm (cả lớp cùng một IP NAT không bị chặn oan) ---
+$rlClear($pdo, 'checkin_ip');
+$r = api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => $code3, 'deviceHash' => 'demo-device-hash-0003']);
+check('M4: checkin ĐÚNG không tính lượt (hits vẫn 0)', ok($r) && $rlHits($pdo, 'checkin_ip', $RL_IP) === 0, brief($r));
+api('POST', ['action' => 'closeAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS3']);
+
+// --- login: đếm lần SAI theo IP và theo tên đăng nhập; đúng không đếm ---
+$rlClear($pdo, 'login_ip', 'login_user');
+api('POST', ['action' => 'login', 'username' => 'smoke_gv2', 'password' => 'sai-mat-khau']);
+check('M4: login sai → đếm theo IP và theo tên đăng nhập', $rlHits($pdo, 'login_ip', $RL_IP) === 1 && $rlHits($pdo, 'login_user', 'smoke_gv2') === 1,
+    'ip=' . $rlHits($pdo, 'login_ip', $RL_IP) . ' user=' . $rlHits($pdo, 'login_user', 'smoke_gv2'));
+api('POST', ['action' => 'login', 'username' => 'SMOKE_GV2', 'password' => 'sai-mat-khau']);
+check('M4: tên đăng nhập viết HOA vẫn gộp chung một bộ đếm', $rlHits($pdo, 'login_user', 'smoke_gv2') === 2, 'user=' . $rlHits($pdo, 'login_user', 'smoke_gv2'));
+$rlSeed($pdo, 'login_user', 'smoke_gv2');
+$r = api('POST', ['action' => 'login', 'username' => 'smoke_gv2', 'password' => $PW]);
+check('M4: tài khoản bị dò quá ngưỡng → chặn cả mật khẩu ĐÚNG, thông báo chung', err($r, $rlMsg), brief($r));
+$rlClear($pdo, 'login_user');
+$r = api('POST', ['action' => 'login', 'username' => 'smoke_gv2', 'password' => $PW]);
+check('M4: hết chặn → login đúng thành công, và KHÔNG bị đếm (ip vẫn 2)', ok($r) && $rlHits($pdo, 'login_ip', $RL_IP) === 2, brief($r));
+$rlSeed($pdo, 'login_ip', $RL_IP);
+check('M4: IP vượt ngưỡng → chặn mọi login từ IP đó', err(api('POST', ['action' => 'login', 'username' => 'smoke_gv1', 'password' => $PW]), $rlMsg));
+$rlClear($pdo, 'login_ip', 'login_user');
+
+// --- requestGradeCode: đếm MỌI lượt (mỗi lượt là một email) ---
+$rlClear($pdo, 'gradecode_req_ip');
+$r = api('POST', ['action' => 'requestGradeCode', 'mssv' => 'abc']);
+check('M4: requestGradeCode đếm MỌI lượt, kể cả MSSV sai (vẫn trả trung tính)', ok($r) && $rlHits($pdo, 'gradecode_req_ip', $RL_IP) === 1, brief($r));
+$rlSeed($pdo, 'gradecode_req_ip', $RL_IP);
+check('M4: xin mã vượt ngưỡng theo IP → error chung (không còn trả success trung tính)', err(api('POST', ['action' => 'requestGradeCode', 'mssv' => '99000001']), $rlMsg));
+$rlClear($pdo, 'gradecode_req_ip');
+
+// --- verifyGradeCode: đếm lần SAI theo IP ---
+$rlClear($pdo, 'gradecode_ver_ip');
+api('POST', ['action' => 'verifyGradeCode', 'mssv' => '99000009', 'code' => 'XXXX']);
+check('M4: verifyGradeCode MSSV không tồn tại → vẫn đếm 1 lượt theo IP', $rlHits($pdo, 'gradecode_ver_ip', $RL_IP) === 1, 'hits=' . $rlHits($pdo, 'gradecode_ver_ip', $RL_IP));
+$rlSeed($pdo, 'gradecode_ver_ip', $RL_IP);
+check('M4: nhập mã vượt ngưỡng theo IP → thông báo chung', err(api('POST', ['action' => 'verifyGradeCode', 'mssv' => '99000001', 'code' => 'XXXX']), $rlMsg));
+$rlClear($pdo, 'gradecode_ver_ip');
+
+// --- cửa sổ hết hạn → lượt kế tiếp đặt lại Hits = 1 (không khoá vĩnh viễn) ---
+$pdo->prepare('INSERT INTO rate_limits (Bucket, ClientKey, WindowStart, Hits) VALUES (:b, :k, NOW() - INTERVAL 1 DAY, 999999) ' .
+    'ON DUPLICATE KEY UPDATE Hits = 999999, WindowStart = NOW() - INTERVAL 1 DAY')->execute(['b' => 'checkin_ip', 'k' => $RL_IP]);
+check('M4: cửa sổ đã hết hạn → không còn chặn', err(api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => 'Z1Z1']), 'Mã không đúng'));
+check('M4: … và bộ đếm được đặt lại về 1 cho cửa sổ mới', $rlHits($pdo, 'checkin_ip', $RL_IP) === 1, 'hits=' . $rlHits($pdo, 'checkin_ip', $RL_IP));
+$rlClear($pdo, 'checkin_ip');
+
 section('logout');
 $r = api('POST', ['action' => 'logout', 'token' => $tok1]);
 check('logout → {ok:true}', ok($r) && ($r['data']['ok'] ?? false) === true, brief($r));
@@ -871,6 +975,7 @@ $coveredAdmin = ['adminListCourses', 'adminListLecturers', 'adminListClasses', '
 echo "\nĐã chạy " . count($covered) . "/13 action cũ: " . implode(', ', $covered) . "\n";
 echo "Đã chạy " . count($coveredAdmin) . "/18 action quản trị GĐ7+GĐ8: " . implode(', ', $coveredAdmin) . "\n";
 echo "Đã kiểm các bản sửa từ review bảo mật độc lập lần 2 (GĐ9): H3, H4, M6, M7, M8, M10, L6, L9, L10.\n";
+echo "Đã kiểm gia cố trước cutover: M4 (giới hạn tần suất theo IP / tên đăng nhập), M5 (kẹp phút mở mã 1–60).\n";
 
 if ($opts['keep_data']) {
     echo "--keep-data: GIỮ dữ liệu demo trong CSDL thử.\n";

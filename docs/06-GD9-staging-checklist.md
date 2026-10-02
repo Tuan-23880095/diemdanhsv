@@ -54,7 +54,8 @@ không ai nghi.
 ### ☐ 1. Hạ tầng và phiên bản đang chạy
 
 - `https://diemdanhsv.com/api/index.php?action=ping` trả
-  `{"status":"success",...,"version":"php-0.6"}` (hoặc mới hơn).
+  `{"status":"success",...,"version":"php-0.7"}` (hoặc mới hơn; `php-0.7` = đã có
+  giới hạn tần suất M4).
 - `https://diemdanhsv.com/api/lib/db.php` trả **403** (không lộ mã nguồn).
 - `https://diemdanhsv.com/tools/smoke_test.php` trả **403**.
 - `https://diemdanhsv.com/db/schema.sql` trả **403**.
@@ -148,13 +149,17 @@ Quản gia sẽ làm, thầy duyệt PR:
 3. Cập nhật `docs/02-BAN-GIAO-TRANG-THAI.md`.
 4. Theo dõi 1 tuần điểm danh thật không sự cố.
 
-**Nên làm trước cutover** (đang chờ thầy quyết, xem `docs/05-GD5-smoke-review.md`):
+**Nên làm trước cutover** (xem `docs/05-GD5-smoke-review.md`):
 
-- **M4 — giới hạn số lần gọi (rate limit)** cho `checkin`, `login`,
-  `requestGradeCode` theo IP. Không có thì mã 4 ký tự có thể bị dò bằng máy, và
-  mật khẩu giảng viên bị thử không giới hạn. Đây là mục đáng làm nhất.
-- **M2 —** check-in lần hai của cùng MSSV ghi đè dấu vết thiết bị và trạng thái.
-- **M5 —** chưa kẹp số phút mở mã điểm danh.
+- ~~**M4 — giới hạn số lần gọi (rate limit)**~~ **ĐÃ LÀM 02/10/2026** (PR gia cố,
+  `docs/04-API-PHP.md` mục 19): `login` (theo IP + theo tên đăng nhập), `checkin`,
+  `requestGradeCode`, `verifyGradeCode` theo IP; chỉ đếm lần sai nên lớp học
+  thật trên WiFi chung không bị chặn oan. **Cần chạy `php tools/migrate.php
+  --yes` (migration 005) trên host** — code fail-open khi chưa có bảng.
+- ~~**M5 —** chưa kẹp số phút mở mã điểm danh.~~ **ĐÃ LÀM 02/10/2026** — kẹp 1–60
+  phút, mốc trễ ≤ mốc hết hạn.
+- **M2 —** check-in lần hai của cùng MSSV ghi đè dấu vết thiết bị và trạng thái
+  (vẫn chờ thầy quyết — đổi hành vi so với bản GAS).
 
 ## Việc chỉ thầy quyết, đã ghi nhận trong GĐ9
 

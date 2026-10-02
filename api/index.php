@@ -27,6 +27,7 @@ require __DIR__ . '/lib/response.php';
 require __DIR__ . '/lib/config.php';
 require __DIR__ . '/lib/db.php';
 require __DIR__ . '/lib/audit.php';
+require __DIR__ . '/lib/ratelimit.php';
 require __DIR__ . '/lib/mailer.php';
 require __DIR__ . '/lib/auth.php';
 require __DIR__ . '/lib/gradeauth.php';

@@ -40,6 +40,18 @@ function action_open_attendance(array $params): void
         $windowMin = (int) ($appCfg['window_minutes'] ?? 15);
     }
 
+    // M5 (docs/05-GD5-smoke-review.md; docs/04 mục 19): kẹp 1–60 phút
+    // (app.max_window_minutes). Trước đây giảng viên gửi windowMinutes=99999 là
+    // mã sống gần như vô hạn — trái với D.8 lớp 1 "mã mới mỗi buổi, hạn giờ
+    // ngắn" và làm vô hiệu giới hạn tần suất M4 (kẻ dò có cả ngày để thử).
+    // Mốc "trễ" không được muộn hơn mốc "hết hạn".
+    $maxMin = (int) ($appCfg['max_window_minutes'] ?? 60);
+    if ($maxMin < 1) {
+        $maxMin = 60;
+    }
+    $windowMin  = max(1, min($maxMin, $windowMin));
+    $presentMin = max(1, min($windowMin, $presentMin));
+
     $alphabet = (string) ($appCfg['code_alphabet'] ?? 'ACDEFGHJKMNPQRTUVWXY34679');
     $length   = (int) ($appCfg['code_length'] ?? 4);
 
@@ -159,7 +171,15 @@ function action_checkin(array $params): void
     $codeLength = (int) ($appCfg['code_length'] ?? 4);
     $code = strtoupper(trim((string) ($params['code'] ?? '')));
 
+    // M4 (api/lib/ratelimit.php, docs/04 mục 19): chặn dò mã 4 ký tự bằng máy
+    // (25^4 ≈ 390 000 khả năng). Chỉ đếm lần mã SAI/không mở — cả lớp điểm
+    // danh ĐÚNG trên WiFi chung (một IP NAT) không bị tính, nên không chặn
+    // oan buổi học thật. Khoá theo IP máy chủ thấy, không nhận IP tự khai (M3).
+    $ip = rate_limit_client_ip();
+    rate_limit_guard('checkin_ip', $ip);
+
     if (!preg_match('/^[A-Z0-9]{' . $codeLength . '}$/', $code)) {
+        rate_limit_record('checkin_ip', $ip);
         api_fail('Mã điểm danh phải gồm ' . $codeLength . ' ký tự chữ và số.');
         return;
     }
@@ -168,6 +188,7 @@ function action_checkin(array $params): void
     $stmt->execute(['code' => $code]);
     $key = $stmt->fetch();
     if (!$key) {
+        rate_limit_record('checkin_ip', $ip);
         api_fail('Mã không đúng hoặc buổi điểm danh đã đóng.');
         return;
     }

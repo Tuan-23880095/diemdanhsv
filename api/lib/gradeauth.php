@@ -37,6 +37,13 @@ function action_request_grade_code(array $params): void
     $mssv = trim((string) ($params['mssv'] ?? ''));
     $neutral = ['message' => GRADE_CODE_NEUTRAL_MESSAGE];
 
+    // M4 (api/lib/ratelimit.php, docs/04 mục 19): đếm MỌI lượt theo IP — mỗi
+    // lượt hợp lệ là một email gửi đi; giới hạn 5 lần/24h theo SV bên dưới
+    // không chặn được một IP quét hàng nghìn MSSV để dội thư cả trường.
+    $ip = rate_limit_client_ip();
+    rate_limit_guard('gradecode_req_ip', $ip);
+    rate_limit_record('gradecode_req_ip', $ip);
+
     if (!preg_match('/^[0-9]{6,10}$/', $mssv)) {
         api_ok($neutral);
         return;
@@ -170,10 +177,17 @@ function action_verify_grade_code(array $params): void
     $code = strtoupper(trim((string) ($params['code'] ?? '')));
     $expiredMsg = 'Mã đã hết hạn hoặc chưa được gửi. Hãy xin mã mới.';
 
+    // M4 (api/lib/ratelimit.php, docs/04 mục 19): theo IP, chỉ đếm lần THẤT
+    // BẠI. Giới hạn 5 lần đoán/SV đã có, nhưng một IP vẫn đổi MSSV liên tục để
+    // dò xem MSSV nào đang có mã (hoặc em nào tồn tại) — lớp này chặn việc đó.
+    $ip = rate_limit_client_ip();
+    rate_limit_guard('gradecode_ver_ip', $ip);
+
     $stmt = db()->prepare("SELECT StudentID, FullName, MSSV FROM students WHERE MSSV = :m AND Status = 'ACTIVE' LIMIT 1");
     $stmt->execute(['m' => $mssv]);
     $student = $stmt->fetch();
     if (!$student) {
+        rate_limit_record('gradecode_ver_ip', $ip);
         api_fail($expiredMsg);
         return;
     }
@@ -218,6 +232,10 @@ function action_verify_grade_code(array $params): void
         return ['kind' => 'ok'];
     });
 
+    if ($result['kind'] !== 'ok') {
+        // Mọi nhánh thất bại đều tính một lượt theo IP (M4) — ghi SAU commit.
+        rate_limit_record('gradecode_ver_ip', $ip);
+    }
     if ($result['kind'] === 'expired') {
         api_fail($expiredMsg);
         return;
