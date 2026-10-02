@@ -51,4 +51,10 @@ Script thêm sau (GĐ7/8 theo PLAN, ví dụ `create-lecturer.php`,
   sha256(salt|plain) + in Salt/PasswordHash để dán vào sheet 01_USERS cho Apps
   Script dự phòng; PHP tự rehash lần đăng nhập đầu), `--dry-run`, bắt buộc
   `--yes` để ghi. Huỷ token đăng nhập cũ, ghi audit `TOOLS_SET_PASSWORD`.
+- **`user.php`** — quản lý tài khoản `users` (thay `createLecturerAccounts()` của
+  Apps Script, docs/04 mục 9): `--list`; `--create --username= --fullname=
+  [--email=] [--role=ADMIN|LECTURER] [--id=] --generate|STDIN [--legacy] --yes`;
+  `--set-role --user= --role= --yes`; `--set-status --user= --status= --yes`
+  (INACTIVE huỷ token). Không bao giờ hạ/khoá ADMIN đang hoạt động cuối cùng.
+  Audit `TOOLS_USER_CREATE/SET_ROLE/SET_STATUS`. Không in họ tên/email.
 

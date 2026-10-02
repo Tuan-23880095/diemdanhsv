@@ -188,7 +188,7 @@ nhận khi viết code GĐ2 (không đoán ở đây).
 | Hàm/Script GAS | Việc làm | Nơi chuyển tới (theo PLAN) |
 |---|---|---|
 | `initializeSpreadsheet()`, `verifySchema()` (`01-Schema.gs`) | Tạo/kiểm schema | **Không cần port** — `db/schema.sql` đã chạy thật, xác nhận đủ 14 bảng |
-| `createLecturerAccounts()` (`03-Auth.gs`) | Tạo tài khoản giảng viên/admin hàng loạt, chạy tay từ trình soạn thảo | `tools/create-lecturer.php` — **CLI only** (`php_sapi_name()==='cli'`), không lộ ra web (rule 3) |
+| `createLecturerAccounts()` (`03-Auth.gs`) | Tạo tài khoản giảng viên/admin hàng loạt, chạy tay từ trình soạn thảo | `tools/user.php` (02/10/2026; tên dự kiến `create-lecturer.php`, gộp thêm `--set-role`/`--set-status`) — **CLI only** (`php_sapi_name()==='cli'`), không lộ ra web (rule 3) |
 | `07-Import.gs` (`runImport`/`previewImport`) | Di dời dữ liệu từ Sheets sang CSDL mới | `tools/import.php` — CLI, idempotent, dry-run, đối soát số dòng (GĐ6, THẦY chạy qua SSH) |
 | `09-GradeImport.gs`, `10-AttendanceScore.gs` | Nhập điểm CSV hàng loạt, tính điểm chuyên cần | Xem ghi chú **mục 10** — cần thầy xác nhận CLI hay web có xác thực vai trò |
 | `11-FixRealData.gs` | Sửa dữ liệu thật một lần (định dạng `LecturerID`…) | `tools/fix-data.php` — CLI only, chạy một lần rồi bỏ (giống bản gốc) |
