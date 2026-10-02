@@ -36,7 +36,7 @@ const CONFIG = {
   // trong Claude-Agent/diemdanhsv/, ví dụ thư mục con "db-export-private") rồi dán
   // ID vào đây trước khi chạy exportAllToDriveJSON() (gas/13-ExportJSON.gs).
   // Để trống thì hàm export báo lỗi rõ ràng thay vì ghi nhầm chỗ.
-  EXPORT_FOLDER_ID: ''
+  EXPORT_FOLDER_ID: '11Ni5AwonZcChnUHU8a97b2M_4K9iMPhD'
 };
 
 /** Trạng thái điểm danh (thiết kế C.3) */
