@@ -144,7 +144,11 @@ Quản gia sẽ làm, thầy duyệt PR:
 
 1. Đổi `API_TARGETS.gas` → URL PHP (hoặc `DEFAULT_API = 'php'`) trong
    `js/config/config.js`, giữ `?api=gas` trỏ Apps Script thêm ≥ 1 tuần để còn
-   đường lùi.
+   đường lùi. **Đồng thời đổi `?v=` của `config.js` trong 4 trang `pages/*.html`**
+   (ví dụ `?v=20261010`) để mọi máy tải lại cấu hình mới — 02/10 phát hiện
+   host/trình duyệt vẫn trả `config.js` bản cũ dù đã deploy; `.htaccess` nay
+   đặt `Cache-Control: no-cache` cho `config.js` và `*.html` nhưng cache đã có
+   sẵn trên máy sinh viên chỉ bị bỏ khi tên file (query `?v=`) đổi.
 2. Tắt workflow Firebase (chuyển sang `workflow_dispatch`).
 3. Cập nhật `docs/02-BAN-GIAO-TRANG-THAI.md`.
 4. Theo dõi 1 tuần điểm danh thật không sự cố.
