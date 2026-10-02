@@ -51,20 +51,22 @@ không ai nghi.
 Đánh dấu khi đạt. Mục nào không đạt thì ghi lại nguyên văn lỗi và gửi Quản gia
 — **không sang GĐ10 khi còn mục chưa đạt**.
 
-> **Tiến độ (cập nhật 02/10/2026, 22:40):** chuẩn bị 1–4 **xong** (xuất
+> **Tiến độ (cập nhật 02/10/2026, 22:55):** chuẩn bị 1–4 **xong** (xuất
 > `diemdanhsv-export-20261002-133752.json` từ dự án Apps Script gắn Sheet
 > "diemdanh"; nạp bằng bản `.clean.json` bỏ 3 `attendance_keys` mồ côi; sao
 > lưu `diemdanhsv-backup-20261002-074308.sql.gz`). **Mục 2 ĐẠT** (`KẾT LUẬN:
 > KHỚP`, sau hai lần sửa `import.php`/`compare` — docs/04 mục 23). **Mục 3
 > ĐẠT** (22:35 — sau khi đặt lại mật khẩu 1607 bằng `tools/set_password.php
 > --legacy`, PR #23; đăng nhập/sai mật khẩu/đăng xuất-đăng nhập lại/chỉ thấy lớp
-> mình đều đúng; PHP đã rehash). **Mục 7** đạt phần sao lưu + smoke **204/204**
-> trên CSDL thử (sau PR #24); còn `gunzip -t`, cron, `migrate.php` không
-> `--yes`. Mục 1, 4, 6 chưa làm. Mục 5 **"chưa kiểm được"** (chưa có hộp thư
+> mình đều đúng; PHP đã rehash). **Mục 1 ĐẠT** (22:50 — ping `php-0.7`; ba
+> địa chỉ `api/lib/db.php`, `tools/smoke_test.php`, `db/schema.sql` đều 403).
+> **Mục 7** đạt 4/5 dòng: sao lưu OK, `gunzip -t` OK, smoke **204/204** trên
+> CSDL thử (sau PR #24), `migrate.php` không `--yes` từ chối đúng; **còn đặt
+> cron** sao lưu trong hPanel. Mục 4, 6 chưa làm. Mục 5 **"chưa kiểm được"** (chưa có hộp thư
 > `noreply@`). Sau checklist, nhớ xoá file JSON dữ liệu thật trong
 > `../private/import/` và trong thư mục Drive xuất.
 
-### ☐ 1. Hạ tầng và phiên bản đang chạy
+### ☑ 1. Hạ tầng và phiên bản đang chạy — ĐẠT 02/10/2026
 
 - `https://diemdanhsv.com/api/index.php?action=ping` trả
   `{"status":"success",...,"version":"php-0.7"}` (hoặc mới hơn; `php-0.7` = đã có
@@ -143,16 +145,17 @@ Trên `admin.html?api=php`:
   không đổi được môn/giảng viên của lớp, không thấy lớp người khác.
 - Xoá dữ liệu demo sau khi xong (hoặc đặt trạng thái Ngưng).
 
-### ☐ 7. Sao lưu, phục hồi và rào an toàn
+### ☐ 7. Sao lưu, phục hồi và rào an toàn — 4/5 (02/10/2026), còn cron
 
 - `php tools/backup.php` → dòng `OK (...)`, file trong `../private/backups/`.
-- Giải nén thử: `gunzip -t ../private/backups/<file>.sql.gz` không báo lỗi.
+- Giải nén thử: `gunzip -t ../private/backups/<file>.sql.gz` không báo lỗi. ✓ 02/10
 - Đã đặt cron sao lưu hằng ngày trong hPanel (Advanced → Cron Jobs), lệnh mẫu ở
-  đầu `tools/backup.php`.
+  đầu `tools/backup.php`. (Từ PR #24 cron này cũng dọn `auth_tokens` hết hạn.) **☐ chưa**
 - `php tools/smoke_test.php --config=../private/config.test.php` → **0 FAIL**
   (chạy trên CSDL **thử**, không phải CSDL thật). 02/10: 193/193 trước PR #24;
   **204/204** sau PR #24 (22:20) — dòng này ĐẠT.
-- Thử `php tools/migrate.php` (không có `--yes`) → chỉ in hướng dẫn, không chạy.
+- Thử `php tools/migrate.php` (không có `--yes`) → chỉ in hướng dẫn, không chạy. ✓ 02/10
+  (nhận đúng CSDL thật, in "thiếu --yes — KHÔNG chạy gì").
 
 ## Sau khi 7/7 đạt — chuẩn bị GĐ10
 
