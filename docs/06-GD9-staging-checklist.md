@@ -175,30 +175,48 @@ Trên `admin.html?api=php`:
 
 ## Sau khi 7/7 đạt — GĐ10 cutover (PR đã soạn sẵn, CHỈ MERGE KHI 7/7 ĐẠT)
 
-PR GĐ10 (`agent/web-g10-cutover`) chứa đúng 4 thay đổi, không đụng PHP/CSDL:
+PR GĐ10 (`agent/web-g10-cutover`, PR #20) chứa đúng 4 thay đổi, không đụng PHP/CSDL:
 
 1. `js/config/config.js`: `DEFAULT_API = 'php'`; `?api=gas` vẫn trỏ Apps Script
    làm **đường lùi ≥ 1 tuần**; dải băng vàng nay hiện khi *không* ở backend mặc
    định, nội dung theo backend đang gọi (`API_MODE_BANNER`).
-2. 4 trang `pages/*.html` nạp `config.js?v=20261002-php` (đổi `?v=` để mọi máy
-   bỏ cache bản cũ — bắt buộc, xem ghi chú dưới).
+2. `index.html` + 4 trang `pages/*.html` nạp mọi JS/CSS với `?v=20261003-php`
+   (đổi `?v=` để mọi máy bỏ cache bản cũ — bắt buộc, xem ghi chú dưới).
 3. `.github/workflows/firebase-hosting.yml`: chỉ còn `workflow_dispatch` (không
    tự deploy Firebase mỗi lần push `main` nữa).
 4. `docs/02-BAN-GIAO-TRANG-THAI.md` viết lại cho kiến trúc PHP/MariaDB.
 
-### Trình tự ngày cutover (ngoài giờ dạy)
+### Trình tự ngày cutover (ngoài giờ dạy, ~30 phút)
 
-1. Checklist 7 mục ở trên **7/7 đạt** (mục 5 có thể "chưa kiểm được" nếu chưa có
-   hộp thư — khi đó xem điểm 2 bước chưa gửi được mail, cần biết trước).
-2. `php tools/backup.php` → có bản sao lưu ngay trước cutover.
-3. **Merge PR GĐ10** → hPanel tự deploy (1–2 phút) → hPanel → **Hiệu suất →
-   Trình quản lý bộ nhớ đệm → Xóa tất cả** (hoặc nhờ Quản gia xóa qua kết nối
-   Hostinger).
-4. Kiểm: mở `pages/student.html` **không tham số** → KHÔNG có băng vàng và F12 →
-   Network thấy request tới `/api/index.php`; `?api=gas` → có băng "ĐANG DÙNG BẢN
-   DỰ PHÒNG"; `/js/config/config.js?v=20261002-php` có `DEFAULT_API = 'php'`.
-5. Một buổi điểm danh thật đầu tiên: thầy đứng lớp, mở `lecturer.html`, theo dõi
-   `liveRoster`; sau buổi so số liệu với cảm nhận trên lớp.
+> **Vì sao có bước 2:** dữ liệu thật nạp vào MariaDB ngày 02/10 13:37. Từ đó tới
+> ngày cutover, web thật vẫn gọi Apps Script nên **mọi điểm danh thật mới chỉ nằm
+> trong Google Sheet**. Không nạp lại thì các buổi đó biến mất khỏi hệ thống mới.
+
+1. Checklist 7 mục ở trên **7/7 đạt** (03/10/2026 ✓).
+2. **NẠP LẠI DỮ LIỆU từ Sheet** (lặp lại phần "Chuẩn bị" 1–3, ~10 phút):
+   - Apps Script (dự án gắn Sheet "diemdanh") → chạy `exportAllToDriveJSON()` →
+     tải file JSON mới từ thư mục Drive xuất lên `../private/import/`.
+   - `php tools/import.php --file=../private/import/<file mới>.json --dry-run` →
+     đọc bảng đối soát (số dòng attendance/sessions/attendance_keys phải ≥ lần
+     trước; cảnh báo FK `classes.LecturerID` bỏ qua được; FK khác → dừng, hỏi
+     Quản gia).
+   - `php tools/import.php --file=... --yes` (idempotent — chỉ thêm/cập nhật
+     dòng khác).
+   - `php tools/compare_gas_php.php --file=...` → **`KẾT LUẬN: KHỚP`** (các dòng
+     "thừa" trong CSDL là dữ liệu demo DEMO101 + audit import — mong đợi).
+   - Xoá file JSON trong `../private/import/` và trên Drive ngay sau khi KHỚP.
+3. `php tools/backup.php` → có bản sao lưu ngay trước cutover.
+4. **Merge PR #20** → hPanel tự deploy (1–2 phút) → Quản gia xoá cache Hostinger
+   qua kết nối (thầy ra lệnh "xoá cache"), hoặc hPanel → Performance → Cache
+   Manager → Purge.
+5. Kiểm: mở `pages/student.html` **không tham số** (Ctrl+F5) → KHÔNG có băng vàng
+   và F12 → Network thấy request tới `/api/index.php`; `?api=gas` → có băng "ĐANG
+   DÙNG BẢN DỰ PHÒNG"; `/js/config/config.js?v=20261003-php` có `DEFAULT_API = 'php'`.
+   Đăng nhập `lecturer.html` (không tham số) bằng 1607 → thấy lớp thật.
+6. Buổi điểm danh thật đầu tiên: thầy đứng lớp, mở `lecturer.html`, theo dõi
+   `liveRoster`; sau buổi so số liệu với cảm nhận trên lớp. Tuần đầu, mỗi tối liếc
+   `audit_log` (admin) xem có `GRADE_CODE_MAIL_FAIL` hay lỗi lạ.
+7. Báo sinh viên: địa chỉ không đổi; nếu trang hiện khác lạ thì Ctrl+F5.
 
 ### Đường lùi
 
@@ -214,10 +232,11 @@ PR GĐ10 (`agent/web-g10-cutover`) chứa đúng 4 thay đổi, không đụng P
 
 ### Ghi chú cache (02/10/2026)
 
-Host/trình duyệt từng trả `config.js` bản cũ dù đã deploy. `.htaccess` nay đặt
-`Cache-Control: no-cache` cho `config.js` và `*.html`, nhưng cache đã có sẵn trên
-máy sinh viên chỉ bị bỏ khi query `?v=` đổi → **mỗi lần sửa `config.js` phải đổi
-`?v=` trong 4 trang.**
+Host/trình duyệt từng trả `config.js` (02/10 trưa) rồi `APIService.js` (02/10
+tối) bản cũ dù đã deploy. `.htaccess` nay đặt `Cache-Control: no-cache,
+must-revalidate` cho mọi `.js/.css/.html` (PR #28), nhưng cache đã có sẵn trên
+máy sinh viên chỉ bị bỏ khi query `?v=` đổi → **mỗi lần sửa JS/CSS phải đổi
+`?v=` trong `index.html` + 4 trang.**
 
 **Nên làm trước cutover** (xem `docs/05-GD5-smoke-review.md`):
 
