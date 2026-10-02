@@ -59,6 +59,14 @@ function action_login(array $params): void
     $password = (string) ($params['password'] ?? '');
     $fail = 'Sai tên đăng nhập hoặc mật khẩu.';
 
+    // M4 (api/lib/ratelimit.php, docs/04 mục 19): chặn dò mật khẩu — theo IP
+    // (một máy thử nhiều tài khoản) VÀ theo tên đăng nhập (nhiều máy thử một
+    // tài khoản). Chỉ đếm lần SAI (xem bên dưới); đăng nhập đúng không tính.
+    $ip      = rate_limit_client_ip();
+    $userKey = rate_limit_key($username);
+    rate_limit_guard('login_ip', $ip);
+    rate_limit_guard('login_user', $userKey);
+
     $stmt = db()->prepare(
         "SELECT * FROM users WHERE Username = :u AND Status = 'ACTIVE' LIMIT 1"
     );
@@ -66,6 +74,8 @@ function action_login(array $params): void
     $user = $stmt->fetch();
 
     if (!$user) {
+        rate_limit_record('login_ip', $ip);
+        rate_limit_record('login_user', $userKey);
         api_fail($fail);
         return;
     }
@@ -94,6 +104,8 @@ function action_login(array $params): void
     }
 
     if (!$verified) {
+        rate_limit_record('login_ip', $ip);
+        rate_limit_record('login_user', $userKey);
         api_fail($fail);
         return;
     }

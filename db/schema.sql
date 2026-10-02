@@ -260,3 +260,17 @@ CREATE TABLE IF NOT EXISTS grade_codes (
   CreatedAt     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (StudentID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Bộ đếm giới hạn tần suất theo IP / tên đăng nhập (M4 — review bảo mật,
+-- docs/05-GD5-smoke-review.md; code api/lib/ratelimit.php; docs/04 mục 19).
+-- Bảng thứ 15, thêm sau GĐ9 — CSDL đã chạy schema cũ dùng
+-- db/migrations/005-rate-limits.sql. Không chứa dữ liệu sinh viên; dòng cũ
+-- hơn 1 ngày được code tự dọn.
+CREATE TABLE IF NOT EXISTS rate_limits (
+  Bucket      VARCHAR(32) NOT NULL,            -- login_ip | login_user | checkin_ip | gradecode_req_ip | gradecode_ver_ip
+  ClientKey   VARCHAR(64) NOT NULL,            -- IP hoặc tên đăng nhập (chữ thường)
+  WindowStart DATETIME    NOT NULL,            -- mốc mở cửa sổ hiện tại
+  Hits        INT         NOT NULL DEFAULT 0,  -- số lượt trong cửa sổ
+  PRIMARY KEY (Bucket, ClientKey),
+  KEY idx_rl_window (WindowStart)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

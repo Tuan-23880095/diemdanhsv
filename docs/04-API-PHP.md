@@ -701,10 +701,9 @@ sinh viên không với được action quản trị; hai bộ nhập CSV đều
 không ghi gì khi còn lỗi, chạy lại an toàn; `API_INPROCESS` không thể kích hoạt
 từ web; `backup.php` không gọi shell, tự kiểm file.
 
-**Chưa sửa — chờ thầy quyết** (ghi trong `docs/06`, mục cuối): M4 rate limit (nên
-làm trước cutover), M2, M5, L8 (thông báo "không tìm thấy" vs "không có quyền"),
-L11 (SV ghi danh muộn bị tính vắng các buổi trước; điểm tổng giữa kỳ hiển thị
-nhỏ), L13 (`import.php` chạy lại với export thiếu cột sẽ làm trắng cột đó).
+**Chưa sửa — chờ thầy quyết** (ghi trong `docs/06`, mục cuối): L11 (SV ghi danh
+muộn bị tính vắng các buổi trước; điểm tổng giữa kỳ hiển thị nhỏ).
+~~M4, M5~~ → mục 19; ~~M2~~ → mục 20; ~~L8, L13~~ → mục 21 (đều 02/10/2026).
 
 ### Test đã chạy
 
@@ -717,3 +716,169 @@ nhỏ), L13 (`import.php` chạy lại với export thiếu cột sẽ làm tr�
 - `tools/smoke_test.php` thêm 17 kiểm tra (tổng 152) cho đúng các mục H3, H4,
   M6, M7, M8, M10, L6, L9, L10 ở trên.
 - `tools/migrate.php --dry-run` tách đúng `CREATE PROCEDURE` của migration 004.
+
+## 19. Gia cố trước cutover (02/10/2026) — M4 giới hạn tần suất, M5 kẹp phút mở mã
+
+PR riêng, **không tính giai đoạn mới** (STATE 02/10 01:06 mục "Việc tiếp theo"
+số 3). Đóng hai mục mà review lần 1 (`docs/05`) và lần 2 (mục 18) đều khuyên làm
+trước khi đổi `API_URL`. `API_VERSION` → `php-0.7`. Hai thay đổi đều **giữ
+nguyên khuôn phong bì và mọi thông điệp cũ**; frontend không phải sửa gì.
+
+### M4 — giới hạn tần suất theo IP / tên đăng nhập (`api/lib/ratelimit.php`)
+
+Vì sao: mã điểm danh và mã xem điểm chỉ có 25^4 ≈ 390 000 khả năng; mật khẩu
+giảng viên trước đây thử được không giới hạn. Một máy bắn request liên tục dò
+ra mã đang mở trong vài phút — khi đó sáu lớp bù D.8 chỉ còn là hình thức.
+
+Cách làm — bảng đếm `rate_limits` (`db/migrations/005-rate-limits.sql`, cũng
+có trong `db/schema.sql` — bảng thứ 15): khoá `(Bucket, ClientKey)`, cửa sổ
+**cố định** `WindowStart` + `Hits`. Một câu `INSERT … ON DUPLICATE KEY UPDATE`
+nguyên tử nên request song song không đếm sót; dòng cũ hơn 1 ngày được code tự
+dọn (≈ 1/50 lượt ghi), không cần cron. `ClientKey` là IP máy chủ thấy
+(`REMOTE_ADDR` — không nhận IP tự khai, cùng tinh thần M3) hoặc tên đăng nhập
+chữ thường; **không chứa dữ liệu sinh viên**.
+
+| Bucket | Áp cho | Đếm gì | Mặc định |
+|---|---|---|---|
+| `login_ip` | `login` | lần **sai** / IP | 20 lần / 15 phút |
+| `login_user` | `login` | lần **sai** / tên đăng nhập (chặn dò phân tán từ nhiều IP vào một tài khoản) | 10 lần / 15 phút |
+| `checkin_ip` | `checkin` | mã **sai hoặc không mở** / IP (sai định dạng cũng tính) | 60 lần / 10 phút |
+| `gradecode_req_ip` | `requestGradeCode` | **mọi** lượt / IP — mỗi lượt hợp lệ là một email | 30 lần / 15 phút |
+| `gradecode_ver_ip` | `verifyGradeCode` | lần **sai** / IP (MSSV không có, mã hết hạn, mã sai, bị khoá) | 50 lần / 15 phút |
+
+Quyết định thiết kế cần biết khi đọc số liệu:
+
+- **Chỉ đếm thất bại** ở `login`/`checkin`/`verifyGradeCode`: cả lớp 100 em
+  điểm danh **đúng** qua WiFi của trường (một IP NAT) không bị tính, nên không
+  chặn oan buổi học thật; 60 lần gõ sai trong 10 phút từ một phòng là nhiều hơn
+  mọi lớp thật nhưng chỉ cho kẻ dò 0,015 % không gian mã.
+- **Thông báo chung** khi bị chặn: `Thao tác quá nhiều lần. Vui lòng đợi vài
+  phút rồi thử lại.` — không nói là chặn vì mã sai hay vì MSSV sai, nên không
+  dùng được để dò (đúng đề xuất trong `docs/05`).
+- **Fail-open có chủ ý**: bảng chưa có (quên chạy migration 005) hay CSDL lỗi
+  → ghi `error_log` và cho qua. Lớp gia cố không được làm sập đăng nhập/điểm
+  danh của cả trường. Vì vậy **vẫn phải chạy migration 005 trên host** để lớp
+  này có hiệu lực; `tools/smoke_test.php` kiểm bảng tồn tại.
+- Ngưỡng ghi đè trong `../private/config.php` mục `app.rate_limits`
+  (`db/config.sample.php`), `limit = 0` là tắt bucket đó. Hostinger không qua
+  proxy nên `REMOTE_ADDR` là IP thật; nếu sau này đặt Cloudflare phía trước
+  thì phải đổi nguồn IP — **không** đọc `X-Forwarded-For` khi không có proxy
+  (client tự đặt được header này để né giới hạn).
+- Giới hạn 5 lần đoán/SV và 5 lần gửi/24h/SV của GĐ3 **giữ nguyên**, lớp này
+  nằm **thêm** phía trước theo IP.
+
+### M5 — kẹp `presentMinutes`/`windowMinutes` trong 1–60 phút (`action_open_attendance`)
+
+Trước đây chỉ `≤ 0` mới về mặc định; `windowMinutes = 99999` được chấp nhận →
+mã sống gần như vô hạn, trái D.8 lớp 1 ("mã mới mỗi buổi, hạn giờ ngắn") và
+cho kẻ dò cả ngày để vượt M4. Nay: kẹp cả hai vào `1…app.max_window_minutes`
+(mặc định 60), và mốc "trễ" không muộn hơn mốc "hết hạn"
+(`presentMin = min(presentMin, windowMin)`). Kẹp âm thầm, không từ chối — giao
+diện giảng viên không đổi.
+
+### Chạy trên host (thầy làm, SSH từ `public_html`)
+
+```
+php tools/migrate.php --dry-run                       # thấy 005-rate-limits.sql
+php tools/migrate.php --yes                           # tạo bảng rate_limits trên CSDL thật
+php tools/smoke_test.php --config=../private/config.test.php   # phải 0 FAIL
+```
+
+Sau đó `?action=ping` phải trả `version: php-0.7`.
+
+### Test đã chạy
+
+- `php -l` sạch trên mọi file đổi (`api/index.php`, `api/lib/*.php`,
+  `tools/smoke_test.php`, `db/config.sample.php`).
+- `tools/smoke_test.php` thêm **22 kiểm tra** (mục "M4 … + M5 …", tổng 174 nếu các mục cũ vẫn 152 PASS): đếm đúng lần
+  sai/không đếm lần đúng cho cả 4 action; vượt ngưỡng → thông báo chung không
+  lộ lý do; tên đăng nhập HOA/thường gộp một bộ đếm; cửa sổ hết hạn → đặt lại
+  về 1 (không khoá vĩnh viễn); kẹp 999/99999 → 60 phút, 50/10 → trễ = hết hạn,
+  ≤ 0 → mặc định. **Phiên này không có MySQL để chạy** (sandbox cloud không
+  cài được MariaDB) — kết quả thật chờ thầy chạy trên host như bảng trên; các
+  phiên trước đều kiểm theo cách này.
+
+## 20. Gia cố trước cutover (02/10/2026) — M2 gửi lại không ghi đè bản ghi đầu
+
+PR riêng, **không tính giai đoạn mới** — thầy chọn làm M2 sau PR #15 (M4, M5).
+Đóng mục M2 của review lần 1 (`docs/05`): **đổi hành vi so với bản GAS** (bản
+cũ `SheetRepo.upsert` ghi đè toàn bộ dòng khi cùng MSSV gửi lần 2).
+
+### Vấn đề
+
+`checkin` lần 2 của cùng MSSV trong cùng buổi UPDATE **mọi cột** từ request
+mới: `DeviceHash`, `Status`, `CheckInTime`, GPS, `Note`. Hệ quả:
+
+- Gửi lại với `deviceHash` rỗng → dấu vết thiết bị của lần đầu bị xoá, cảnh báo
+  "trùng thiết bị" biến mất khỏi `liveRoster` (D.8 lớp 4 chỉ còn trong
+  `audit_log`, giảng viên trên lớp không thấy).
+- Ai biết MSSV của bạn cùng lớp và mã đang mở là gửi lại được sau mốc "trễ" →
+  PRESENT của người khác bị hạ thành LATE.
+
+### Cách sửa (`action_checkin` + `checkin_merge_resend()`)
+
+Khi đã có bản ghi (SELECT … FOR UPDATE, hoặc bắt lỗi trùng khoá 23000 khi hai
+request song song): **giữ bản ghi đầu**, chỉ gộp:
+
+| Cột | Lần 2+ |
+|---|---|
+| `CheckInTime`, GPS (`GpsLat/Lng/Accuracy`, `DistanceM`, `GpsFlag`), `IP`, `OS`, `Browser`, `DeviceType` | **giữ nguyên** lần đầu |
+| `DeviceHash` | giữ lần đầu; chỉ điền khi lần đầu trống |
+| `Status` | chỉ **nâng** (ABSENT < EXCUSED < LATE < PRESENT), không hạ |
+| `Note` | **nối** `Gửi lại lúc HH:MM[, lần này LATE, giữ PRESENT][, thiết bị khác lần đầu][, trùng thiết bị với N MSSV khác]`, cắt 500 ký tự |
+
+Phản hồi cho sinh viên trả `status`/`checkInTime` **đang lưu** (không phải của
+lần gửi lại) nên em thấy đúng những gì giảng viên thấy; `action` vẫn là
+`UPDATED` như cũ. `audit_log` ghi thêm `attemptStatus` (trạng thái tính cho lần
+gửi này) bên cạnh `status` (đang lưu) để tra lại được khi có khiếu nại.
+
+Không cần migration. Khuôn phong bì, thông điệp, `liveRoster`,
+`adminSetAttendance` (L10 — cũng nối Note) không đổi.
+
+### Test đã chạy
+
+- `php -l` sạch. `tools/smoke_test.php` thêm **7 kiểm tra** trong mục `checkin`:
+  gửi lại với hash rỗng giữ hash đầu; giờ/GPS/IP giữ nguyên; Note nối "Gửi lại
+  lúc"; phản hồi trả giờ đang lưu; gửi từ thiết bị khác → giữ hash đầu + Note
+  "thiết bị khác"; quá mốc trễ → PRESENT không bị hạ; vẫn đúng 1 dòng sau 4 lần
+  gửi. **Chưa chạy được trong sandbox (không có MySQL)** — thầy chạy trên host
+  cùng lượt với PR #15 (nhánh này xây trên nhánh của #15).
+
+## 21. Gia cố trước cutover (02/10/2026) — L8 một thông báo lỗi, L13 import không ghi trắng cột
+
+PR riêng thứ 3, **không tính giai đoạn mới**; thầy bảo "làm tiếp" sau M2 nên
+Quản gia chọn hai mục nhỏ, không đổi hành vi với người dùng thật.
+
+### L8 — LECTURER không dò được buổi/lớp của người khác
+
+Trước: `openAttendance`/`closeAttendance`/`liveRoster`/`adminSessionAttendance`
+trả "Không tìm thấy buổi học X." khi ID không có, nhưng "Bạn không có quyền
+thao tác trên lớp này." khi ID có mà thuộc lớp người khác → giảng viên đổi
+tham số là biết SessionID/ClassID nào tồn tại. Nay (`api/lib/roles.php`
+`not_found_message()` + hằng `CLASS_ACCESS_DENIED_MESSAGE`): với **LECTURER**
+cả hai trường hợp trả đúng **một** câu `Không tìm thấy buổi học/lớp này, hoặc
+bạn không có quyền thao tác.`; **ADMIN** (có quyền mọi lớp, không có gì để lộ)
+vẫn nhận câu cụ thể "Không tìm thấy buổi học X." để dễ sửa dữ liệu. Áp cho
+`attendance.php` (3 chỗ), `admin_load_class()`, `grading_load_session()`,
+`adminSaveSession`. Câu chung chứa cả "Không tìm thấy buổi" và "không có quyền"
+nên frontend/smoke test cũ dò chuỗi vẫn khớp.
+
+### L13 — `tools/import.php` chỉ ghi cột có trong file
+
+Trước: mọi cột của `IMPORT_TABLES` đều vào `INSERT … ON DUPLICATE KEY UPDATE`;
+chạy lại với một bản export thiếu cột (sheet bớt cột, export cũ) là cột đó bị
+ghi `''`/NULL cho **mọi dòng đã có**. Nay: cột được coi là "có" khi xuất hiện ở
+bất kỳ dòng nào của bảng trong file (khoá chính luôn có); cột thiếu **không**
+vào câu INSERT/UPDATE và dry-run in dòng `(!) <bảng>: file không có cột … — giữ
+nguyên giá trị đang có trong CSDL`. Một ô trống trong một dòng vẫn ghi `''` như
+trước (đúng nghĩa ô trống trên Sheets).
+
+### Test đã chạy
+
+- `php -l` sạch. `tools/smoke_test.php` thêm **7 kiểm tra** L8 (5 action: ID
+  không tồn tại vs ID lớp người khác → cùng thông báo; ADMIN vẫn nhận câu cụ
+  thể cho buổi và lớp). L13 không kiểm được bằng smoke test (import.php là
+  script, host cấm `exec`) — logic lọc cột đã chạy thử tách riêng bằng PHP CLI;
+  thầy xác nhận thật khi `--dry-run` trên host (xem dòng `(!)` nếu file thiếu
+  cột). Sandbox không có MySQL — smoke test chờ host, cùng lượt với #15, #16.
+

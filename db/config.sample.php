@@ -25,6 +25,18 @@ return [
         'code_alphabet'        => 'ACDEFGHJKMNPQRTUVWXY34679', // bỏ 0/O,1/I/L,2/Z,5/S,8/B — giữ nguyên bộ ký tự cũ
         'present_minutes'      => 5,
         'window_minutes'       => 15,
+        // M5: trần số phút mở mã điểm danh (presentMinutes/windowMinutes bị kẹp 1–trần).
+        'max_window_minutes'   => 60,
+        // M4 — giới hạn tần suất theo IP / tên đăng nhập (api/lib/ratelimit.php,
+        // docs/04-API-PHP.md mục 19). Bỏ mục này thì dùng đúng các mặc định dưới;
+        // limit = 0 là tắt bucket đó. Cửa sổ cố định tính bằng giây.
+        'rate_limits' => [
+            'login_ip'         => ['limit' => 20, 'window_sec' => 900],  // login SAI / IP
+            'login_user'       => ['limit' => 10, 'window_sec' => 900],  // login SAI / tên đăng nhập
+            'checkin_ip'       => ['limit' => 60, 'window_sec' => 600],  // mã điểm danh SAI / IP
+            'gradecode_req_ip' => ['limit' => 30, 'window_sec' => 900],  // xin mã xem điểm (mọi lượt) / IP
+            'gradecode_ver_ip' => ['limit' => 50, 'window_sec' => 900],  // nhập mã xem điểm SAI / IP
+        ],
         'gps_accuracy_limit_m' => 150,
         'default_radius_m'     => 100,
         // Stub mail (GĐ3): true = ghi cả thân email (có mã xem điểm) vào error_log.

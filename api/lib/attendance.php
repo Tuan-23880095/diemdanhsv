@@ -22,7 +22,7 @@ function action_open_attendance(array $params): void
     $stmt->execute(['id' => $sessionId]);
     $session = $stmt->fetch();
     if (!$session) {
-        api_fail('Không tìm thấy buổi học ' . $sessionId . '.');
+        api_fail(not_found_message($me, 'buổi học', $sessionId)); // L8
         return;
     }
 
@@ -39,6 +39,18 @@ function action_open_attendance(array $params): void
     if ($windowMin <= 0) {
         $windowMin = (int) ($appCfg['window_minutes'] ?? 15);
     }
+
+    // M5 (docs/05-GD5-smoke-review.md; docs/04 mục 19): kẹp 1–60 phút
+    // (app.max_window_minutes). Trước đây giảng viên gửi windowMinutes=99999 là
+    // mã sống gần như vô hạn — trái với D.8 lớp 1 "mã mới mỗi buổi, hạn giờ
+    // ngắn" và làm vô hiệu giới hạn tần suất M4 (kẻ dò có cả ngày để thử).
+    // Mốc "trễ" không được muộn hơn mốc "hết hạn".
+    $maxMin = (int) ($appCfg['max_window_minutes'] ?? 60);
+    if ($maxMin < 1) {
+        $maxMin = 60;
+    }
+    $windowMin  = max(1, min($maxMin, $windowMin));
+    $presentMin = max(1, min($windowMin, $presentMin));
 
     $alphabet = (string) ($appCfg['code_alphabet'] ?? 'ACDEFGHJKMNPQRTUVWXY34679');
     $length   = (int) ($appCfg['code_length'] ?? 4);
@@ -101,7 +113,7 @@ function action_close_attendance(array $params): void
     $stmt->execute(['id' => $sessionId]);
     $session = $stmt->fetch();
     if (!$session) {
-        api_fail('Không tìm thấy buổi học ' . $sessionId . '.');
+        api_fail(not_found_message($me, 'buổi học', $sessionId)); // L8
         return;
     }
 
@@ -159,7 +171,15 @@ function action_checkin(array $params): void
     $codeLength = (int) ($appCfg['code_length'] ?? 4);
     $code = strtoupper(trim((string) ($params['code'] ?? '')));
 
+    // M4 (api/lib/ratelimit.php, docs/04 mục 19): chặn dò mã 4 ký tự bằng máy
+    // (25^4 ≈ 390 000 khả năng). Chỉ đếm lần mã SAI/không mở — cả lớp điểm
+    // danh ĐÚNG trên WiFi chung (một IP NAT) không bị tính, nên không chặn
+    // oan buổi học thật. Khoá theo IP máy chủ thấy, không nhận IP tự khai (M3).
+    $ip = rate_limit_client_ip();
+    rate_limit_guard('checkin_ip', $ip);
+
     if (!preg_match('/^[A-Z0-9]{' . $codeLength . '}$/', $code)) {
+        rate_limit_record('checkin_ip', $ip);
         api_fail('Mã điểm danh phải gồm ' . $codeLength . ' ký tự chữ và số.');
         return;
     }
@@ -168,6 +188,7 @@ function action_checkin(array $params): void
     $stmt->execute(['code' => $code]);
     $key = $stmt->fetch();
     if (!$key) {
+        rate_limit_record('checkin_ip', $ip);
         api_fail('Mã không đúng hoặc buổi điểm danh đã đóng.');
         return;
     }
@@ -244,17 +265,22 @@ function action_checkin(array $params): void
     // đây chỉ để quyết định action trả về; nếu hai request cùng MSSV/buổi
     // lọt qua đồng thời (đụng độ hiếm), bắt lỗi trùng khoá rồi coi như
     // UPDATED — thay withLock_() cũ (xem api/lib/db.php db_transaction()).
-    $action = db_transaction(function (PDO $pdo) use ($mutable, $student, $key): string {
-        $updateSql = 'UPDATE attendance SET ' .
-            implode(', ', array_map(static fn ($k) => "$k = :$k", array_keys($mutable))) .
-            ' WHERE AttendanceID = :id';
-
-        $sel = $pdo->prepare('SELECT AttendanceID FROM attendance WHERE StudentID = :sid AND SessionID = :ssid');
+    //
+    // M2 (docs/05-GD5-smoke-review.md; docs/04 mục 20): gửi LẦN 2 của cùng
+    // MSSV KHÔNG ghi đè bản ghi đầu. Trước đây lần 2 UPDATE mọi cột → gửi lại
+    // với deviceHash rỗng là xoá được dấu vết thiết bị (D.8 lớp 4 mất tác
+    // dụng trên liveRoster), và bạn cùng lớp biết MSSV là hạ được PRESENT của
+    // người khác xuống LATE. Nay: giữ bản ghi đầu (giờ, GPS, thiết bị, IP),
+    // trạng thái không hạ, chỉ NỐI vào Note — xem checkin_merge_resend().
+    $kept = $status;
+    $keptTime = $now;
+    $action = db_transaction(function (PDO $pdo) use ($mutable, $student, $key, $now, $status, $deviceHash, $conflicts, &$kept, &$keptTime): string {
+        $sel = $pdo->prepare('SELECT * FROM attendance WHERE StudentID = :sid AND SessionID = :ssid FOR UPDATE');
         $sel->execute(['sid' => $student['StudentID'], 'ssid' => $key['SessionID']]);
         $existing = $sel->fetch();
 
         if ($existing) {
-            $pdo->prepare($updateSql)->execute($mutable + ['id' => $existing['AttendanceID']]);
+            [$kept, $keptTime] = checkin_merge_resend($pdo, $existing, $now, $status, $deviceHash, $conflicts);
             return 'UPDATED';
         }
 
@@ -273,19 +299,24 @@ function action_checkin(array $params): void
             if ($e->getCode() !== '23000') {
                 throw $e;
             }
-            $updateByKeySql = 'UPDATE attendance SET ' .
-                implode(', ', array_map(static fn ($k) => "$k = :$k", array_keys($mutable))) .
-                ' WHERE StudentID = :sid AND SessionID = :ssid';
-            $pdo->prepare($updateByKeySql)
-                ->execute($mutable + ['sid' => $student['StudentID'], 'ssid' => $key['SessionID']]);
+            // Đụng độ: request song song đã chèn trước — đọc lại rồi gộp như lần 2.
+            $sel->execute(['sid' => $student['StudentID'], 'ssid' => $key['SessionID']]);
+            $existing = $sel->fetch();
+            if ($existing) {
+                [$kept, $keptTime] = checkin_merge_resend($pdo, $existing, $now, $status, $deviceHash, $conflicts);
+            }
             return 'UPDATED';
         }
     });
+    $attempt = $status;   // trạng thái tính cho LẦN GỬI này (ghi audit)
+    $status = $kept;      // trạng thái đang lưu — phản hồi cho sinh viên
+    $now = $keptTime;     // giờ check-in đang lưu, không phải giờ gửi lại
 
     // [D.8-6] Nhật ký cho MỌI lần điểm danh.
     log_audit((string) $student['StudentID'], 'STUDENT', 'CHECKIN_' . $action, 'SESSION', (string) $key['SessionID'], [
         'mssv'            => $student['MSSV'],
         'status'          => $status,
+        'attemptStatus'   => $attempt,
         'gpsFlag'         => $gps['flag'],
         'distance'        => $gps['distance'],
         'deviceConflicts' => $conflicts,
@@ -319,7 +350,7 @@ function action_live_roster(array $params): void
     $stmt->execute(['id' => $sessionId]);
     $session = $stmt->fetch();
     if (!$session) {
-        api_fail('Không tìm thấy buổi học ' . $sessionId . '.');
+        api_fail(not_found_message($me, 'buổi học', $sessionId)); // L8
         return;
     }
 
@@ -413,6 +444,47 @@ function action_live_roster(array $params): void
 /* ------------------------------------------------------------------ */
 /*  HÀM PHỤ                                                            */
 /* ------------------------------------------------------------------ */
+
+/**
+ * M2 — gộp lần gửi thứ 2+ của cùng MSSV vào bản ghi đầu (docs/04 mục 20).
+ * Giữ nguyên giờ check-in, GPS, IP, OS/Browser và DeviceHash của lần đầu;
+ * trạng thái chỉ được NÂNG (ABSENT < EXCUSED < LATE < PRESENT), không hạ;
+ * DeviceHash chỉ điền khi lần đầu còn trống; mọi thứ khác NỐI vào Note để
+ * giảng viên vẫn thấy có gửi lại (và gửi từ thiết bị khác nếu có).
+ * Trả về [trạng thái giữ, giờ check-in giữ] để phản hồi cho sinh viên đúng với CSDL.
+ *
+ * @return array{0:string,1:string}
+ */
+function checkin_merge_resend(PDO $pdo, array $existing, string $now, string $newStatus, string $newDeviceHash, int $conflicts): array
+{
+    $rank = ['ABSENT' => 0, 'EXCUSED' => 1, 'LATE' => 2, 'PRESENT' => 3];
+    $oldStatus = (string) ($existing['Status'] ?? '');
+    $kept = ($rank[$newStatus] ?? -1) > ($rank[$oldStatus] ?? -1) ? $newStatus : $oldStatus;
+
+    $oldHash = trim((string) ($existing['DeviceHash'] ?? ''));
+    $hash = $oldHash !== '' ? $oldHash : $newDeviceHash;
+
+    $parts = ['Gửi lại lúc ' . substr($now, 11, 5)];
+    if ($newStatus !== $kept) {
+        $parts[] = 'lần này ' . $newStatus . ', giữ ' . $kept;
+    } elseif ($kept !== $oldStatus) {
+        $parts[] = 'nâng ' . $oldStatus . ' → ' . $kept;
+    }
+    if ($oldHash !== '' && $newDeviceHash !== '' && $newDeviceHash !== $oldHash) {
+        $parts[] = 'thiết bị khác lần đầu';
+    }
+    if ($conflicts > 0) {
+        $parts[] = 'trùng thiết bị với ' . $conflicts . ' MSSV khác';
+    }
+    $oldNote = trim((string) ($existing['Note'] ?? ''));
+    $note = ($oldNote !== '' ? $oldNote . '; ' : '') . implode(', ', $parts);
+    $note = mb_substr($note, 0, 500); // VARCHAR(500) — không để câu UPDATE lỗi vì Note quá dài
+
+    $pdo->prepare('UPDATE attendance SET Status = :st, DeviceHash = :dh, Note = :note WHERE AttendanceID = :id')
+        ->execute(['st' => $kept, 'dh' => $hash !== '' ? $hash : null, 'note' => $note, 'id' => $existing['AttendanceID']]);
+    $keptTime = trim((string) ($existing['CheckInTime'] ?? ''));
+    return [$kept, $keptTime !== '' ? $keptTime : $now];
+}
 
 /** generateUniqueCode_ (gas/04-AttendanceService.gs dòng 316-330) — mã không trùng với bất kỳ mã nào đang mở. */
 function generate_unique_code(PDO $pdo, string $alphabet, int $length): string

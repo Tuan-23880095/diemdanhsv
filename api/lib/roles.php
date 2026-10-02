@@ -75,8 +75,28 @@ function assert_class_access(array $me, string $classId): void
     $cls = $stmt->fetch();
 
     if (!$cls || !class_has_lecturer((string) $cls['LecturerID'], $me['userId'])) {
-        throw new RuntimeException('Bạn không có quyền thao tác trên lớp này.');
+        throw new RuntimeException(CLASS_ACCESS_DENIED_MESSAGE);
     }
+}
+
+/**
+ * L8 (review lần 2, docs/04 mục 21): MỘT thông báo cho cả "không tồn tại" và
+ * "không có quyền" khi người gọi là LECTURER. Trước đây "Không tìm thấy buổi
+ * học X" ≠ "Bạn không có quyền…" → giảng viên dò được SessionID/ClassID nào
+ * tồn tại (của lớp người khác) chỉ bằng cách đổi tham số. ADMIN có quyền trên
+ * mọi lớp nên không có gì để lộ — vẫn nhận thông báo cụ thể để dễ sửa dữ liệu.
+ * Thông báo chứa cả "Không tìm thấy buổi" và "không có quyền" để frontend/
+ * smoke test cũ dò chuỗi vẫn khớp.
+ */
+const CLASS_ACCESS_DENIED_MESSAGE = 'Không tìm thấy buổi học/lớp này, hoặc bạn không có quyền thao tác.';
+
+/** Thông báo "không tìm thấy <what> <id>" cho ADMIN; thông báo chung cho LECTURER. */
+function not_found_message(array $me, string $what, string $id): string
+{
+    if (($me['role'] ?? '') === 'ADMIN') {
+        return 'Không tìm thấy ' . $what . ' ' . $id . '.';
+    }
+    return CLASS_ACCESS_DENIED_MESSAGE;
 }
 
 /**

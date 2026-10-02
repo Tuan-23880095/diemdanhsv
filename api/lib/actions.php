@@ -14,7 +14,7 @@ declare(strict_types=1);
  * khai" nào trong router này.
  */
 
-const API_VERSION = 'php-0.6';
+const API_VERSION = 'php-0.7';
 
 /** action => 'GET' | 'POST', đúng danh sách 13 action + phương thức cũ. */
 const KNOWN_ACTIONS = [
