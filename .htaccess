@@ -32,13 +32,23 @@ RewriteRule ^firebase\.json$ - [F,L]
 # hiện khi thầy thử ?api=php: host/CDN/trình duyệt vẫn trả config.js bản cũ dù
 # code mới đã deploy — ping PHP mới nhưng JS cũ). Trước cutover GĐ10 (đổi
 # API_URL) điều này là BẮT BUỘC: nếu không, sinh viên vẫn chạy config cũ trỏ
-# Apps Script sau khi đã chuyển sang PHP. Các file JS khác vẫn được cache bình
-# thường; trang HTML nạp config.js?v=... nên đổi phiên bản là mọi máy tải lại.
+# Apps Script sau khi đã chuyển sang PHP.
+#
+# 02/10 (tối, checklist mục 6): CÙNG LỖI với các file JS khác — trình duyệt/CDN
+# giữ APIService.js cũ nên trang quản trị báo "adminSessionAttendance is not a
+# function" dù code mới đã deploy. Nên: mọi .js/.css đều "no-cache, must-
+# revalidate" (trình duyệt vẫn giữ bản sao nhưng phải hỏi lại máy chủ bằng
+# ETag/If-Modified-Since → 304 nếu không đổi; site nhỏ, chi phí không đáng kể),
+# và mọi <script>/<link> trong HTML đều có ?v=<ngày> — đổi phiên bản là mọi
+# máy tải lại kể cả CDN bỏ qua header. Khi sửa JS/CSS: ĐỔI ?v= trong các trang.
 <IfModule mod_headers.c>
   <FilesMatch "^config\.js$">
     Header set Cache-Control "no-cache, no-store, must-revalidate"
     Header set Pragma "no-cache"
     Header set Expires "0"
+  </FilesMatch>
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
   <FilesMatch "\.html$">
     Header set Cache-Control "no-cache, must-revalidate"
