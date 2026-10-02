@@ -56,16 +56,39 @@ không ai nghi.
 Đánh dấu khi đạt. Mục nào không đạt thì ghi lại nguyên văn lỗi và gửi Quản gia
 — **không sang GĐ10 khi còn mục chưa đạt**.
 
-### ☐ 1. Hạ tầng và phiên bản đang chạy
+> **Tiến độ (cập nhật 03/10/2026, 01:40): 7/7 ĐẠT.** chuẩn bị 1–4 **xong** (xuất
+> `diemdanhsv-export-20261002-133752.json` từ dự án Apps Script gắn Sheet
+> "diemdanh"; nạp bằng bản `.clean.json` bỏ 3 `attendance_keys` mồ côi; sao
+> lưu `diemdanhsv-backup-20261002-074308.sql.gz`). **Mục 2 ĐẠT** (`KẾT LUẬN:
+> KHỚP`, sau hai lần sửa `import.php`/`compare` — docs/04 mục 23). **Mục 3
+> ĐẠT** (22:35 — sau khi đặt lại mật khẩu 1607 bằng `tools/set_password.php
+> --legacy`, PR #23; đăng nhập/sai mật khẩu/đăng xuất-đăng nhập lại/chỉ thấy lớp
+> mình đều đúng; PHP đã rehash). **Mục 1 ĐẠT** (22:50 — ping `php-0.7`; ba
+> địa chỉ `api/lib/db.php`, `tools/smoke_test.php`, `db/schema.sql` đều 403).
+> **Mục 7 ĐẠT** (03/10 01:35 — cron sao lưu 03:00 hằng ngày đã đặt trong
+> hPanel; trước đó: sao lưu OK, `gunzip -t` OK, smoke 204/204, `migrate.php`
+> guard OK). **Mục 6 ĐẠT** (03/10 00:30 — môn/lớp demo, CSV lớp, CSV điểm, chuyên
+> cần ghi 2 lần không cột đôi, điểm danh tay, tài khoản admin riêng bằng
+> `tools/user.php`; lỗi "adminSessionAttendance is not a function" là cache JS
+> cũ → PR #28). **Mục 5 ĐẠT** (03/10 01:10 — hộp thư `noreply@diemdanhsv.com`,
+> `mail_test.php` ĐÃ GỬI, SV demo nhận mã qua Gmail, nhập đúng thấy bảng điểm,
+> sai 5 lần mã huỷ; PR #29). **Mục 4 ĐẠT** (03/10 01:35 — buổi điểm danh thử
+> trên lớp demo DEMO101-01 với điện thoại: có mặt, cảnh báo trùng thiết bị, MSSV
+> lạ bị từ chối, đóng → vắng, thử lại bị từ chối; dòng "so với Apps Script cùng
+> buổi" coi như mục 2 đã phủ vì lớp demo không có bên Sheets). **→ Sang GĐ10 theo
+> trình tự bên dưới — nhớ bước NẠP LẠI DỮ LIỆU trước khi merge PR #20.** Sau cùng,
+> xoá file JSON dữ liệu thật trong `../private/import/` và trong thư mục Drive xuất.
+
+### ☑ 1. Hạ tầng và phiên bản đang chạy — ĐẠT 02/10/2026
 
 - `https://diemdanhsv.com/api/index.php?action=ping` trả
   `{"status":"success",...,"version":"php-0.7"}` (hoặc mới hơn; `php-0.7` = đã có
-  giới hạn tần suất M4).
+  giới hạn tần suất M4). Mở trong trình duyệt là đủ.
 - `https://diemdanhsv.com/api/lib/db.php` trả **403** (không lộ mã nguồn).
 - `https://diemdanhsv.com/tools/smoke_test.php` trả **403**.
 - `https://diemdanhsv.com/db/schema.sql` trả **403**.
 
-### ☐ 2. Dữ liệu khớp từng bảng
+### ☑ 2. Dữ liệu khớp từng bảng — ĐẠT 02/10/2026
 
 ```
 php tools/compare_gas_php.php --file=../private/import/<tên file>.json
@@ -76,10 +99,12 @@ từng bảng khớp con số đã chụp ở bước chuẩn bị 1. Cột "Th�
 thầy đã tự nhập thêm trên trang quản trị sau khi xuất — khi đó xem danh sách ID
 in ra để chắc đúng là dòng mình vừa thêm.
 
-### ☐ 3. Đăng nhập giảng viên và mật khẩu cũ
+### ☑ 3. Đăng nhập giảng viên và mật khẩu cũ — ĐẠT 02/10/2026
 
 Mở `pages/lecturer.html?api=php`, đăng nhập bằng **mật khẩu cũ** đang dùng với
-Apps Script.
+Apps Script. (Quên mật khẩu → `php tools/set_password.php --user=<id> --generate
+--legacy --yes`, dán Salt/PasswordHash vào sheet 01_USERS để Apps Script cũng
+nhận — rồi kiểm mục này với mật khẩu mới; luồng rehash vẫn đúng như dưới.)
 
 - Đăng nhập được, hiện đúng tên.
 - Chỉ thấy đúng các lớp mình đứng tên (giảng viên khác không hiện).
@@ -87,7 +112,7 @@ Apps Script.
 - Sau lần đăng nhập đầu, mật khẩu đã được chuyển sang dạng mã hoá mới; đăng
   xuất rồi đăng nhập lại vẫn vào được (và Apps Script vẫn dùng được như cũ).
 
-### ☐ 4. Một buổi điểm danh thật, so với Apps Script
+### ☑ 4. Một buổi điểm danh thật, so với Apps Script — ĐẠT 03/10/2026 (trên lớp demo)
 
 Chọn **một buổi học thật** (hoặc một buổi thử ngoài giờ dạy):
 
@@ -105,19 +130,21 @@ Chọn **một buổi học thật** (hoặc một buổi thử ngoài giờ d�
 So số liệu buổi này với Apps Script (mở bản thật, cùng buổi): số có mặt, trễ,
 vắng phải **giống nhau**.
 
-### ☐ 5. Xem điểm hai bước và điểm chuyên cần
+### ☑ 5. Xem điểm hai bước và điểm chuyên cần — ĐẠT 03/10/2026
 
 Trên `diem.html?api=php`, với **một MSSV thật có email thật**:
 
-- Xin mã → nhận được email (mục này cần hộp thư `noreply@diemdanhsv.com` đã
-  tạo và `api/lib/mailer.php` đã thay stub; **chưa có thì ghi "chưa kiểm được"
-  và để lại mục này**, không coi là đạt).
+- Xin mã → nhận được email. Cần hộp thư `noreply@diemdanhsv.com` đã tạo và
+  `smtp.pass` đã điền vào `../private/config.php` (mailer SMTP thật có từ
+  02/10 — docs/04 mục 25; kiểm trước bằng `php tools/mail_test.php
+  --to=<email của thầy>`). **Chưa có hộp thư thì ghi "chưa kiểm được" và để
+  lại mục này**, không coi là đạt.
 - Nhập mã đúng → thấy bảng điểm; nhập sai 5 lần → mã bị huỷ.
 - Điểm tổng và điểm chuyên cần khớp với bảng điểm trên trang quản trị
   (`admin.html?api=php` → tab Điểm & chuyên cần).
 - Em nào đủ ngưỡng cấm thi thì cả hai trang đều báo cấm thi.
 
-### ☐ 6. Quản trị và nhập liệu hàng loạt
+### ☑ 6. Quản trị và nhập liệu hàng loạt — ĐẠT 03/10/2026
 
 Trên `admin.html?api=php`:
 
@@ -133,15 +160,18 @@ Trên `admin.html?api=php`:
   không đổi được môn/giảng viên của lớp, không thấy lớp người khác.
 - Xoá dữ liệu demo sau khi xong (hoặc đặt trạng thái Ngưng).
 
-### ☐ 7. Sao lưu, phục hồi và rào an toàn
+### ☑ 7. Sao lưu, phục hồi và rào an toàn — ĐẠT 03/10/2026
 
 - `php tools/backup.php` → dòng `OK (...)`, file trong `../private/backups/`.
-- Giải nén thử: `gunzip -t ../private/backups/<file>.sql.gz` không báo lỗi.
+- Giải nén thử: `gunzip -t ../private/backups/<file>.sql.gz` không báo lỗi. ✓ 02/10
 - Đã đặt cron sao lưu hằng ngày trong hPanel (Advanced → Cron Jobs), lệnh mẫu ở
-  đầu `tools/backup.php`.
+  đầu `tools/backup.php`. (Từ PR #24 cron này cũng dọn `auth_tokens` hết hạn.) ✓ 03/10 01:35
+  — kiểm sáng hôm sau: `tail -3 ../private/backups/backup.log` có dòng `OK (…)`.
 - `php tools/smoke_test.php --config=../private/config.test.php` → **0 FAIL**
-  (chạy trên CSDL **thử**, không phải CSDL thật).
-- Thử `php tools/migrate.php` (không có `--yes`) → chỉ in hướng dẫn, không chạy.
+  (chạy trên CSDL **thử**, không phải CSDL thật). 02/10: 193/193 trước PR #24;
+  **204/204** sau PR #24 (22:20) — dòng này ĐẠT.
+- Thử `php tools/migrate.php` (không có `--yes`) → chỉ in hướng dẫn, không chạy. ✓ 02/10
+  (nhận đúng CSDL thật, in "thiếu --yes — KHÔNG chạy gì").
 
 ## Sau khi 7/7 đạt — GĐ10 cutover (PR đã soạn sẵn, CHỈ MERGE KHI 7/7 ĐẠT)
 

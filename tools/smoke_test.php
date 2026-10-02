@@ -1036,6 +1036,64 @@ check('M4: cửa sổ đã hết hạn → không còn chặn', err(api('POST', 
 check('M4: … và bộ đếm được đặt lại về 1 cho cửa sổ mới', $rlHits($pdo, 'checkin_ip', $RL_IP) === 1, 'hits=' . $rlHits($pdo, 'checkin_ip', $RL_IP));
 $rlClear($pdo, 'checkin_ip');
 
+section('L3 — login không lộ username qua thời gian phản hồi + L4 — dọn auth_tokens hết hạn');
+if (!function_exists('auth_tokens_cleanup')) {
+    require_once __DIR__ . '/../api/lib/auth.php'; // chế độ HTTP: chỉ cần hằng/hàm, không gọi db()
+}
+$dummyInfo = password_get_info(AUTH_DUMMY_HASH);
+check('L3: AUTH_DUMMY_HASH là bcrypt hợp lệ (cost 10)', ($dummyInfo['algoName'] ?? '') === 'bcrypt' && (int) ($dummyInfo['options']['cost'] ?? 0) === 10, json_encode($dummyInfo));
+check('L3: hash mồi không khớp mật khẩu rỗng hay mật khẩu demo', !password_verify('', AUTH_DUMMY_HASH) && !password_verify($PW, AUTH_DUMMY_HASH));
+
+// --- cùng một thông báo, và ca "không có tài khoản" KHÔNG nhanh hơn rõ rệt ca "sai mật khẩu" ---
+$rlClear($pdo, 'login_ip', 'login_user');
+$timeLogin = static function (string $username) use (&$lastResp): float {
+    $t0 = hrtime(true);
+    $lastResp = api('POST', ['action' => 'login', 'username' => $username, 'password' => 'sai-mat-khau-l3']);
+    return (hrtime(true) - $t0) / 1e6; // ms
+};
+$tMissing = [];
+$tWrong = [];
+$msgMissing = null;
+$msgWrong = null;
+for ($i = 0; $i < 5; $i++) {
+    $tMissing[] = $timeLogin('smoke_khong_ton_tai');
+    $msgMissing = $lastResp['message'] ?? null;
+    $tWrong[] = $timeLogin('smoke_gv1'); // smoke_gv1 đã rehash sang bcrypt ở phần login/logout
+    $msgWrong = $lastResp['message'] ?? null;
+}
+sort($tMissing);
+sort($tWrong);
+$medMissing = $tMissing[2];
+$medWrong = $tWrong[2];
+check('L3: "không có tài khoản" và "sai mật khẩu" trả CÙNG một thông báo', $msgMissing !== null && $msgMissing === $msgWrong, "[$msgMissing] vs [$msgWrong]");
+check('L3: ca không có tài khoản không nhanh hơn 1/2 ca sai mật khẩu (median 5 lượt)', $medMissing >= 0.5 * $medWrong,
+    sprintf('missing=%.1fms wrong=%.1fms', $medMissing, $medWrong));
+check('L3: login sai vẫn bị đếm giới hạn tần suất như trước (ip=10)', $rlHits($pdo, 'login_ip', $RL_IP) === 10, 'ip=' . $rlHits($pdo, 'login_ip', $RL_IP));
+$rlClear($pdo, 'login_ip', 'login_user');
+
+// --- L4: auth_tokens_cleanup() xoá token quá hạn (cả LECTURER lẫn GRADE), giữ token sống ---
+$insTok = static function (PDO $pdo, string $kind, string $subject, string $expiresExpr): string {
+    $t = bin2hex(random_bytes(32));
+    $pdo->prepare("INSERT INTO auth_tokens (Token, Kind, SubjectID, ExpiresAt) VALUES (:t, :k, :s, $expiresExpr)")
+        ->execute(['t' => $t, 'k' => $kind, 's' => $subject]);
+    return $t;
+};
+$hasTok = static function (PDO $pdo, string $t): bool {
+    $st = $pdo->prepare('SELECT 1 FROM auth_tokens WHERE Token = :t');
+    $st->execute(['t' => $t]);
+    return $st->fetchColumn() !== false;
+};
+$tokExpL = $insTok($pdo, 'LECTURER', 'SMOKE_U2', 'NOW() - INTERVAL 1 HOUR');
+$tokExpG = $insTok($pdo, 'GRADE', 'SMOKE_S1', 'NOW() - INTERVAL 1 SECOND');
+$tokLive = $insTok($pdo, 'LECTURER', 'SMOKE_U2', 'NOW() + INTERVAL 1 HOUR');
+check('L4: token hết hạn bị API từ chối TRƯỚC khi dọn (hành vi cũ không đổi)', err(api('GET', ['action' => 'listClasses', 'token' => $tokExpL]), 'hết hạn'));
+$deleted = auth_tokens_cleanup($pdo);
+check('L4: auth_tokens_cleanup() xoá ≥ 2 dòng quá hạn', $deleted >= 2, "deleted=$deleted");
+check('L4: token LECTURER và GRADE quá hạn đã mất', !$hasTok($pdo, $tokExpL) && !$hasTok($pdo, $tokExpG));
+check('L4: token còn hạn và token đang dùng ($tok1) vẫn còn', $hasTok($pdo, $tokLive) && $hasTok($pdo, $tok1));
+check('L4: gọi lại khi không còn gì để dọn → 0 dòng, không lỗi', auth_tokens_cleanup($pdo) === 0);
+check('L4: token đang dùng vẫn gọi API được sau khi dọn', ok(api('GET', ['action' => 'listClasses', 'token' => $tok1])));
+
 section('logout');
 $r = api('POST', ['action' => 'logout', 'token' => $tok1]);
 check('logout → {ok:true}', ok($r) && ($r['data']['ok'] ?? false) === true, brief($r));
@@ -1051,7 +1109,7 @@ $coveredAdmin = ['adminListCourses', 'adminListLecturers', 'adminListClasses', '
 echo "\nĐã chạy " . count($covered) . "/13 action cũ: " . implode(', ', $covered) . "\n";
 echo "Đã chạy " . count($coveredAdmin) . "/18 action quản trị GĐ7+GĐ8: " . implode(', ', $coveredAdmin) . "\n";
 echo "Đã kiểm các bản sửa từ review bảo mật độc lập lần 2 (GĐ9): H3, H4, M6, M7, M8, M10, L6, L9, L10.\n";
-echo "Đã kiểm gia cố trước cutover: M4 (giới hạn tần suất theo IP / tên đăng nhập), M5 (kẹp phút mở mã 1–60), M2 (gửi lại không ghi đè bản ghi đầu), L8 (một thông báo cho không-tồn-tại/không-có-quyền), L11 (SV ghi danh muộn không bị tính vắng buổi trước ngày ghi danh).\n";
+echo "Đã kiểm gia cố trước cutover: M4 (giới hạn tần suất theo IP / tên đăng nhập), M5 (kẹp phút mở mã 1–60), M2 (gửi lại không ghi đè bản ghi đầu), L8 (một thông báo cho không-tồn-tại/không-có-quyền), L11 (SV ghi danh muộn không bị tính vắng buổi trước ngày ghi danh), L3 (login không lộ username qua thời gian phản hồi), L4 (dọn auth_tokens hết hạn).\n";
 
 if ($opts['keep_data']) {
     echo "--keep-data: GIỮ dữ liệu demo trong CSDL thử.\n";

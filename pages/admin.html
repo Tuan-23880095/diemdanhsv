@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quản trị — Môn, lớp, sinh viên</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/main.css?v=20261003-php">
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
@@ -343,10 +343,10 @@
 
 <div id="toast" class="toast fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-slate-900 px-4 py-2 text-sm text-white shadow-lg" hidden></div>
 
-<script src="../js/config/config.js?v=20261002-php"></script>
-<script src="../js/services/APIService.js"></script>
-<script src="../js/views/AdminView.js"></script>
-<script src="../js/controllers/AdminController.js"></script>
+<script src="../js/config/config.js?v=20261003-php"></script>
+<script src="../js/services/APIService.js?v=20261003-php"></script>
+<script src="../js/views/AdminView.js?v=20261003-php"></script>
+<script src="../js/controllers/AdminController.js?v=20261003-php"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     new AdminController(new APIService(CONFIG.API_URL), new AdminView()).init();

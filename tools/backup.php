@@ -24,6 +24,11 @@ declare(strict_types=1);
  *   php tools/backup.php --keep=30      # đổi số bản giữ lại
  *   php tools/backup.php --dry-run      # chỉ kiểm kết nối/thư mục/số dòng, không ghi file
  *   php tools/backup.php --config=../private/config.test.php   # sao lưu CSDL THỬ
+ *   php tools/backup.php --no-clean-tokens                      # không dọn auth_tokens hết hạn (L4)
+ *
+ * Sau mỗi lần sao lưu THÀNH CÔNG, script dọn token đăng nhập/xem điểm đã hết
+ * hạn trong auth_tokens (L4, docs/05) — nhờ vậy cron sao lưu hằng ngày cũng
+ * là cron dọn dẹp, không cần đặt thêm lịch.
  *
  * Đặt lịch cron trong hPanel (Advanced → Cron Jobs), ví dụ 03:00 hằng ngày:
  *   0 3 * * *  /opt/alt/php83/usr/bin/php /home/u464424582/domains/diemdanhsv.com/public_html/tools/backup.php >> /home/u464424582/domains/diemdanhsv.com/private/backups/cron.log 2>&1
@@ -44,9 +49,10 @@ const BACKUP_ROWS_PER_INSERT = 200;
 
 function backup_args(array $argv): array
 {
-    $out = ['keep' => 14, 'dry_run' => false, 'config' => null];
+    $out = ['keep' => 14, 'dry_run' => false, 'config' => null, 'no_clean_tokens' => false];
     foreach (array_slice($argv, 1) as $arg) {
         if ($arg === '--dry-run') { $out['dry_run'] = true; continue; }
+        if ($arg === '--no-clean-tokens') { $out['no_clean_tokens'] = true; continue; }
         if (str_starts_with($arg, '--keep=')) { $out['keep'] = max(1, (int) substr($arg, 7)); continue; }
         if (str_starts_with($arg, '--config=')) { $out['config'] = substr($arg, 9); continue; }
         fwrite(STDERR, "Tham số không rõ: $arg\n");
@@ -73,6 +79,7 @@ if ($args['config'] !== null) {
 
 require __DIR__ . '/../api/lib/config.php';
 require __DIR__ . '/../api/lib/db.php';
+require __DIR__ . '/../api/lib/auth.php'; // chỉ để dùng auth_tokens_cleanup() (L4)
 
 if (!function_exists('gzopen')) {
     fwrite(STDERR, "PHP trên host thiếu extension zlib (gzopen) — không nén được. Báo Quản gia.\n");
@@ -232,6 +239,19 @@ if (trim($lastLine) !== '-- Hết.') {
 
 backup_log($logFile, sprintf('OK (%ss, %s KB, %d bảng, %d dòng): %s',
     $duration, number_format($size / 1024, 1), count($tables), $totalRows, basename($outFile)));
+
+// L4 (docs/05): dọn token đăng nhập/xem điểm đã hết hạn — SAU khi file sao
+// lưu đã an toàn, nên bản sao lưu vẫn còn nguyên các dòng vừa xoá. Bỏ qua
+// (chỉ ghi log) nếu lỗi, không ảnh hưởng kết quả sao lưu. Chỉ xoá dòng
+// `ExpiresAt <= NOW()` — token sống không bị đụng. Không bật với --no-clean-tokens.
+if (!$args['no_clean_tokens']) {
+    try {
+        $deleted = auth_tokens_cleanup($pdo);
+        backup_log($logFile, "Đã dọn $deleted token hết hạn (auth_tokens).");
+    } catch (Throwable $e) {
+        backup_log($logFile, 'CẢNH BÁO: dọn auth_tokens thất bại — ' . $e->getMessage());
+    }
+}
 
 // Dọn bản cũ — giữ $keep bản gần nhất theo tên file (có timestamp nên sort tên = sort thời gian).
 $existing = glob($backupDir . '/diemdanhsv-backup-*.sql.gz') ?: [];

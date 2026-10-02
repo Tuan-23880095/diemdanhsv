@@ -188,7 +188,7 @@ nhận khi viết code GĐ2 (không đoán ở đây).
 | Hàm/Script GAS | Việc làm | Nơi chuyển tới (theo PLAN) |
 |---|---|---|
 | `initializeSpreadsheet()`, `verifySchema()` (`01-Schema.gs`) | Tạo/kiểm schema | **Không cần port** — `db/schema.sql` đã chạy thật, xác nhận đủ 14 bảng |
-| `createLecturerAccounts()` (`03-Auth.gs`) | Tạo tài khoản giảng viên/admin hàng loạt, chạy tay từ trình soạn thảo | `tools/create-lecturer.php` — **CLI only** (`php_sapi_name()==='cli'`), không lộ ra web (rule 3) |
+| `createLecturerAccounts()` (`03-Auth.gs`) | Tạo tài khoản giảng viên/admin hàng loạt, chạy tay từ trình soạn thảo | `tools/user.php` (02/10/2026; tên dự kiến `create-lecturer.php`, gộp thêm `--set-role`/`--set-status`) — **CLI only** (`php_sapi_name()==='cli'`), không lộ ra web (rule 3) |
 | `07-Import.gs` (`runImport`/`previewImport`) | Di dời dữ liệu từ Sheets sang CSDL mới | `tools/import.php` — CLI, idempotent, dry-run, đối soát số dòng (GĐ6, THẦY chạy qua SSH) |
 | `09-GradeImport.gs`, `10-AttendanceScore.gs` | Nhập điểm CSV hàng loạt, tính điểm chuyên cần | Xem ghi chú **mục 10** — cần thầy xác nhận CLI hay web có xác thực vai trò |
 | `11-FixRealData.gs` | Sửa dữ liệu thật một lần (định dạng `LecturerID`…) | `tools/fix-data.php` — CLI only, chạy một lần rồi bỏ (giống bản gốc) |
@@ -226,9 +226,10 @@ nhận khi viết code GĐ2 (không đoán ở đây).
    "sinh viên... lựa chọn khiếu nại, nhập nội dung khiếu nại". Không có
    trong phạm vi 13 action port lần này — nếu cần, đây là action **thứ 14**,
    ngoài phạm vi GĐ1–GĐ5 hiện tại, để dành cho giai đoạn sau nếu thầy muốn.
-4. **SMTP thật.** `requestGradeCode` cần gửi mail thật; theo PLAN GĐ3 vẫn
-   dùng stub (ví dụ ghi log thay vì gửi) cho đến khi thầy tạo hộp thư
-   `noreply@diemdanhsv.com`.
+4. **SMTP thật.** ~~theo PLAN GĐ3 vẫn dùng stub~~ **ĐÃ LÀM 02/10/2026 (mục
+   25):** `api/lib/mailer.php` gửi qua SMTP bằng PHP thuần; tự về chế độ stub
+   khi `config.php` chưa có `smtp.pass`. Thầy chỉ còn tạo hộp thư
+   `noreply@diemdanhsv.com` và điền mật khẩu.
 
 ## 11. Việc tiếp theo (GĐ10)
 
@@ -261,11 +262,10 @@ Port đúng theo mục 6 (rehash mật khẩu qua 2 bước) và mục 10.1 (b�
 - **Cooldown 60s và giới hạn 5 lần/24h dùng `db_now()`** (giờ CSDL, không
   phải giờ PHP) để tránh lệch giờ giữa host PHP và MariaDB khi so sánh
   `LastSentAt`/`WindowStartAt`.
-- **SMTP vẫn là stub** (`api/lib/mailer.php` → `mail_send()`, chỉ
-  `error_log()`) — bỏ qua bước kiểm "quota gửi mail còn lại"
-  (`MailApp.getRemainingDailyQuota()` cũ không có tương đương chờ SMTP
-  thật). Thay thân `mail_send()` khi có hộp thư `noreply@diemdanhsv.com`
-  thật, không cần đổi nơi gọi.
+- ~~**SMTP vẫn là stub**~~ → SMTP thật từ 02/10/2026 (mục 25); stub chỉ còn
+  là chế độ dự phòng khi chưa cấu hình. Vẫn không có bước kiểm "quota gửi
+  mail còn lại" (`MailApp.getRemainingDailyQuota()` cũ) — Hostinger giới hạn
+  theo hộp thư, lỗi vượt hạn sẽ hiện ở `error_log` + audit `GRADE_CODE_MAIL_FAIL`.
 - **Test đã chạy trong phiên này:** `php -l` sạch trên toàn bộ file mới/sửa.
   Sandbox phiên này KHÔNG có MariaDB/MySQL cục bộ (không có mạng ra ngoài
   để cài) nên chỉ test được các hàm THUẦN không đụng CSDL (`is_modern_hash`,
@@ -938,4 +938,145 @@ Không cần migration; khuôn phong bì giữ nguyên (chỉ thêm trường).
   L11): em ghi danh hôm nay bỏ qua buổi hôm qua; tổng đếm = số buổi tính; em
   ghi danh từ đầu tính đủ; có dòng nhập tay cho buổi cũ → tính lại; cả lớp cùng
   ngày ghi danh → không ai muộn. Sandbox không có MySQL — chạy trên host.
+
+## 23. Nạp dữ liệu thật (02/10/2026) — sửa `import.php`/`compare_gas_php.php` sau lần nạp đầu
+
+Lần nạp thật đầu tiên (export `gas-export-1` lúc 13:37, 621 dòng/12 bảng, CSDL trống):
+`import.php --yes` ghi xong một transaction, `compare` báo **thiếu 0, lệch 38**.
+Soi chi tiết ra ba việc, một việc là lỗi thật:
+
+- **Lỗi thật — `sessions.StartTime/EndTime` thành `"1899-"` cho cả 33 buổi.**
+  Google Sheets lưu ô "chỉ giờ" thành ngày giờ trên mốc `1899-12-30T08:00:00`;
+  `import.php` để kiểu `text` → MariaDB cắt chuỗi vào `VARCHAR(5)`. Sửa: kiểu
+  mới `time` (`import_norm_time()`): nhận `…T08:00:00`, `08:00:00`, `8:00` → `HH:MM`;
+  không hiểu → NULL (không ghi rác). Chạy lại `--yes` với cùng file là tự sửa
+  (ON DUPLICATE KEY UPDATE).
+- **Giả — `sessions.Date`**: `2026-09-07T00:00:00` (file) ↔ `2026-09-07` (cột DATE).
+  `cmp_norm()` nay coi nửa đêm đúng bằng ngày.
+- **Giả — `attendance.GpsLat`** (5 dòng): `10.762711472899` ↔ `10.7627115`
+  (DECIMAL(10,7) làm tròn; so chuỗi 6 chữ số vẫn lệch ở biên). Thêm `cmp_equal()`:
+  hai số chênh ≤ 0,000001 là khớp. Chênh lớn hơn (vd `12.345` ↔ `12.3`) vẫn báo
+  lệch — đúng, vì đó là mất độ chính xác thật.
+- `audit_log` **thừa 1**: chính dòng `TOOLS_IMPORT_GD6` do `import.php` ghi — mong đợi.
+- **`sessions.SessionNo = "END"`** (5 buổi tổng kết thầy ghi tay trong Sheets) → cột INT
+  ép thành 0 → buổi tổng kết nhảy lên đầu danh sách. Thầy chọn (02/10): kiểu
+  `sessionno` trong `import.php` — không phải số → **99** (xếp cuối); `compare`
+  coi `END` ↔ `99` là khớp. Sửa lại số buổi trên trang quản trị bất cứ lúc nào.
+
+Ngoài ra 3 `attendance_keys` trỏ tới buổi `SES_066837BB60AF` không còn trong
+sheet SESSIONS (buổi đã xoá, không có bản ghi điểm danh nào) được **bỏ có chủ ý**
+bằng bản `.clean.json` trước khi nạp — khoá ngoại `fk_keys_session` sẽ từ chối
+nếu giữ. 5 cảnh báo FK của `classes.LecturerID` là danh sách nhiều giảng viên
+(mục 4), không có khoá ngoại trong CSDL, bỏ qua được.
+
+---
+
+## 24. Gia cố sau nạp dữ liệu (02/10/2026, tối) — L3 thời gian phản hồi login, L4 dọn `auth_tokens`
+
+Hai mục THẤP còn lại của review bảo mật độc lập lần 1 (`docs/05`), sửa trong
+một PR nhỏ trong lúc chờ thầy chạy checklist GĐ9 trên host. Không có
+migration, không đổi khuôn API, frontend không phải đổi gì.
+
+### L3 — login không lộ username qua độ trễ
+
+**Vấn đề.** `action_login` trả cùng một thông báo cho "sai tên" và "sai mật
+khẩu" (đúng bản GAS cũ), nhưng khi tên đăng nhập KHÔNG tồn tại thì không có
+bcrypt nào chạy → trả lời nhanh hơn ≈ 70 ms. Đo độ trễ là biết tài khoản nào
+có thật, rồi tập trung dò mật khẩu vào đó (M4 đã chặn 10 lần sai / 15 phút,
+nhưng vẫn không nên để lộ).
+
+**Cách sửa (`api/lib/auth.php`).** Hằng `AUTH_DUMMY_HASH` là một hash bcrypt
+cost 10 (cùng `PASSWORD_DEFAULT` đang dùng), không ứng với mật khẩu nào —
+chỉ để đốt thời gian, không phải bí mật. Hai chỗ gọi
+`password_verify($password, AUTH_DUMMY_HASH)` và bỏ qua kết quả:
+
+- khi `SELECT users` không ra dòng nào (tên không tồn tại hoặc không ACTIVE);
+- khi tài khoản còn hash **sha256 cũ** và mật khẩu SAI — vì kiểm sha256 rất
+  nhanh, ca này sẽ nhanh hơn ca đã rehash nếu không bù.
+
+Ca "còn hash cũ, mật khẩu ĐÚNG" vốn đã chậm (chạy `password_hash()` để
+rehash) nên không cần bù. Sau lần đăng nhập đầu, mọi tài khoản đều là bcrypt
+và ba ca sai/đúng/không-tồn-tại đều mất đúng một lần bcrypt.
+
+### L4 — dọn token hết hạn
+
+**Vấn đề.** `auth_tokens` (token giảng viên 6 giờ, token xem điểm 30 phút)
+chỉ có INSERT và DELETE khi logout; token hết hạn nằm mãi. `roles.php` luôn
+lọc `ExpiresAt > NOW()` nên không sai về bảo mật, nhưng bảng phình vô hạn
+(mỗi lần sinh viên xem điểm là một dòng).
+
+**Cách sửa.** Hàm mới `auth_tokens_cleanup(PDO $pdo): int` —
+`DELETE FROM auth_tokens WHERE ExpiresAt <= NOW()` (dùng chỉ mục
+`idx_tokens_exp`, xoá cả LECTURER lẫn GRADE), trả số dòng. Hai nơi gọi:
+
+| Nơi gọi | Khi nào | Ghi chú |
+|---|---|---|
+| `issue_token()` | ≈ 1/`AUTH_TOKEN_CLEANUP_EVERY` (= 50) lượt cấp token | FAIL-OPEN: lỗi chỉ `error_log`, không hỏng lượt đăng nhập/xem điểm vừa thành công — cùng kiểu với `rate_limits` (mục 19) |
+| `tools/backup.php` | sau mỗi lần sao lưu **thành công**, trước khi dọn file cũ | bản sao lưu vẫn còn nguyên các dòng vừa xoá; ghi `Đã dọn N token hết hạn` vào `backup.log`; tắt bằng `--no-clean-tokens`; `--dry-run` không dọn |
+
+Nhờ vậy cron sao lưu hằng ngày (GĐ6) đồng thời là cron dọn dẹp — không cần
+đặt thêm lịch nào trong hPanel.
+
+### Test đã chạy
+
+`tools/smoke_test.php` thêm mục **L3 + L4** (11 check): hash mồi là bcrypt
+cost 10 và không khớp mật khẩu rỗng/demo; "không có tài khoản" và "sai mật
+khẩu" trả cùng thông báo và **median 5 lượt** của ca không-có-tài-khoản không
+nhanh hơn 1/2 ca sai-mật-khẩu; login sai vẫn bị đếm giới hạn tần suất; token
+hết hạn bị API từ chối trước khi dọn; `auth_tokens_cleanup()` xoá đúng dòng
+quá hạn (LECTURER lẫn GRADE), giữ token sống và token đang dùng; gọi lại
+→ 0 dòng không lỗi. Tổng **204 check** (193 + 11). `php -l` sạch ba file.
+
+---
+
+## 25. SMTP thật cho mã xem điểm (02/10/2026, tối) — `api/lib/mailer.php`
+
+Checklist GĐ9 mục 5 "chưa kiểm được" vì `mail_send()` là stub. Bản này gửi
+thật qua SMTP của hộp thư Hostinger, bằng PHP thuần — không PHPMailer/Composer
+(host không có `vendor/`, cấm `exec`), không migration, không đổi API.
+
+### Cấu hình (`../private/config.php`, mục `smtp` — mẫu ở `db/config.sample.php`)
+
+| Khoá | Bắt buộc | Ý nghĩa |
+|---|---|---|
+| `host` | có | `smtp.hostinger.com` |
+| `port` | có | `465` (TLS ngầm, khuyên dùng) hoặc `587` (STARTTLS) |
+| `user` | có | địa chỉ hộp thư, vd `noreply@diemdanhsv.com` |
+| `pass` | có | mật khẩu hộp thư — **còn trống/`CHANGE_ME` = chế độ stub** |
+| `from`, `from_name` | không | mặc định `= user` và "Hệ thống điểm danh & xem điểm" |
+| `tls` | không | `implicit` / `starttls` — mặc định theo cổng |
+| `cafile` | không | CA bundle riêng nếu PHP trên host không xác minh được chứng chỉ |
+| `timeout` | không | giây, mặc định 15 |
+
+### Hành vi
+
+- `mail_send(to, subject, body): bool` — **không bao giờ ném lỗi**. `true` khi
+  máy chủ SMTP đã nhận thư (250 sau DATA); `false` khi ở chế độ stub hoặc gửi
+  hỏng (lỗi ghi `error_log`, không kèm mật khẩu/thân thư).
+- Luồng: kết nối TLS (xác minh chứng chỉ, SNI) → EHLO → (STARTTLS nếu 587) →
+  `AUTH LOGIN` → MAIL FROM/RCPT TO/DATA → QUIT. Thư `text/plain; charset=UTF-8`,
+  header UTF-8 theo RFC 2047, thân base64 (an toàn mọi máy chủ), dot-stuffing,
+  `Message-ID`, `Auto-Submitted: auto-generated`.
+- `requestGradeCode` (gradeauth.php): gửi hỏng vẫn trả **phản hồi trung tính**
+  (không lộ MSSV nào có email) nhưng ghi audit **`GRADE_CODE_MAIL_FAIL`** thay
+  vì `GRADE_CODE_SENT` — thầy lọc audit_log là thấy ngay sinh viên nào không
+  nhận được mã. Chi tiết lỗi ở `error_log` của PHP.
+- Stub (chưa cấu hình) giữ nguyên hành vi cũ, kể cả cờ `app.mail_stub_log_body`.
+
+### Kiểm thử
+
+- `tools/mail_test.php --to=<email của thầy>` — gửi một thư thử, in ĐÃ GỬI /
+  CHẾ ĐỘ STUB / GỬI THẤT BẠI kèm lý do (không in mật khẩu). Chạy trước khi làm
+  checklist mục 5.
+- Sandbox: `mail_send()` chạy đúng với máy chủ SMTP giả ba ca — TLS ngầm 465,
+  STARTTLS, sai mật khẩu (→ `false`, log "SMTP từ chối ở bước AUTH mật khẩu:
+  535 …"); thư nhận được giải mã đúng tiếng Việt ở Subject/From/thân.
+  `smoke_test.php` không phụ thuộc mail (tự chèn hash mã) nên vẫn 204.
+
+### Việc còn lại của thầy
+
+1. hPanel → Emails → tạo hộp thư `noreply@diemdanhsv.com` (mật khẩu mạnh).
+2. Điền `smtp.pass` (và kiểm `host/port/user`) vào `../private/config.php`.
+3. `php tools/mail_test.php --to=<email của thầy>` → ĐÃ GỬI → kiểm hộp thư (cả Spam).
+4. Checklist mục 5 trên `diem.html?api=php` với một MSSV có email thật.
 

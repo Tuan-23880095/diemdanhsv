@@ -39,7 +39,26 @@ Quy ước cho mọi script thêm vào đây (từ GĐ6 trở đi theo PLAN):
 - **`backup.php`** — sao lưu CSDL bằng PHP thuần (PDO + gzip, KHÔNG dùng
   `mysqldump`/shell vì host cấm `exec`), vào `../private/backups/`, tự dọn
   bản cũ (`--keep=N`), `--dry-run` liệt kê bảng + số dòng, `--config=` cho
-  CSDL thử. Đặt lịch qua hPanel Cron Jobs (lệnh mẫu ở đầu file).
+  CSDL thử. Đặt lịch qua hPanel Cron Jobs (lệnh mẫu ở đầu file). Sau mỗi lần
+  sao lưu thành công còn dọn token đăng nhập/xem điểm đã hết hạn trong
+  `auth_tokens` (L4, docs/04 mục 24) — tắt bằng `--no-clean-tokens`.
 
 Script thêm sau (GĐ7/8 theo PLAN, ví dụ `create-lecturer.php`,
 `fix-data.php`) theo đúng quy ước ở trên — xem docs/04-API-PHP.md mục 9.
+- **`set_password.php`** — đặt lại mật khẩu một tài khoản `users` (quên mật
+  khẩu — hash không khôi phục được). `--user=<UserID|Username>`, `--generate`
+  (sinh 12 ký tự, in một lần) hoặc nhập từ STDIN, `--legacy` (ghi
+  sha256(salt|plain) + in Salt/PasswordHash để dán vào sheet 01_USERS cho Apps
+  Script dự phòng; PHP tự rehash lần đăng nhập đầu), `--dry-run`, bắt buộc
+  `--yes` để ghi. Huỷ token đăng nhập cũ, ghi audit `TOOLS_SET_PASSWORD`.
+- **`user.php`** — quản lý tài khoản `users` (thay `createLecturerAccounts()` của
+  Apps Script, docs/04 mục 9): `--list`; `--create --username= --fullname=
+  [--email=] [--role=ADMIN|LECTURER] [--id=] --generate|STDIN [--legacy] --yes`;
+  `--set-role --user= --role= --yes`; `--set-status --user= --status= --yes`
+  (INACTIVE huỷ token). Không bao giờ hạ/khoá ADMIN đang hoạt động cuối cùng.
+  Audit `TOOLS_USER_CREATE/SET_ROLE/SET_STATUS`. Không in họ tên/email.
+- **`mail_test.php`** — gửi MỘT email thử qua cấu hình `smtp` trong
+  `../private/config.php` (`--to=<email>`, `--config=` cho file khác); in
+  ĐÃ GỬI / CHẾ ĐỘ STUB / GỬI THẤT BẠI + lý do. Không chạm CSDL, không in mật
+  khẩu. Chạy trước checklist GĐ9 mục 5 (docs/04 mục 25).
+
