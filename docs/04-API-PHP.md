@@ -701,9 +701,9 @@ sinh viên không với được action quản trị; hai bộ nhập CSV đều
 không ghi gì khi còn lỗi, chạy lại an toàn; `API_INPROCESS` không thể kích hoạt
 từ web; `backup.php` không gọi shell, tự kiểm file.
 
-**Chưa sửa — chờ thầy quyết** (ghi trong `docs/06`, mục cuối): L11 (SV ghi danh
-muộn bị tính vắng các buổi trước; điểm tổng giữa kỳ hiển thị nhỏ).
-~~M4, M5~~ → mục 19; ~~M2~~ → mục 20; ~~L8, L13~~ → mục 21 (đều 02/10/2026).
+**Review lần 2 — đã đóng hết:** ~~M4, M5~~ → mục 19; ~~M2~~ → mục 20; ~~L8, L13~~ →
+mục 21; ~~L11~~ → mục 22 (đều 02/10/2026). Còn lại chỉ các mục "ghi nhận, không
+sửa" của review lần 1 (`docs/05`: L3, L4, L5).
 
 ### Test đã chạy
 
@@ -881,4 +881,61 @@ trước (đúng nghĩa ô trống trên Sheets).
   script, host cấm `exec`) — logic lọc cột đã chạy thử tách riêng bằng PHP CLI;
   thầy xác nhận thật khi `--dry-run` trên host (xem dòng `(!)` nếu file thiếu
   cột). Sandbox không có MySQL — smoke test chờ host, cùng lượt với #15, #16.
+
+## 22. Gia cố trước cutover (02/10/2026) — L11 sinh viên ghi danh muộn + điểm trên phần đã chấm
+
+PR riêng thứ 4, **không tính giai đoạn mới**; thầy chọn L11 qua AskUserQuestion
+sau khi host xác nhận 188 PASS cho #15–#17. **Đổi hành vi so với bản GAS.**
+
+### Vấn đề
+
+`attendance_stats()` coi "không có dòng điểm danh" là **vắng không phép** cho
+MỌI buổi đã điểm danh của lớp (giống `runAttendanceScore` cũ). Một em vào lớp
+giữa kỳ, sau 3 buổi, lập tức có 3 vắng tương đương → **cấm thi oan**, điểm
+chuyên cần 1,0/10 — trong khi em chưa có nghĩa vụ đi học những buổi đó.
+
+Ngoài ra trang xem điểm hiển thị điểm tổng = Σ điểm×trọng số/100 trên phần đã
+chấm; khi mới chấm chuyên cần 10 % thì em thấy "1,0" dù chuyên cần 10/10 —
+đã có dòng "Mới chấm 10/110 % trọng số" nhưng vẫn dễ hoảng.
+
+### Cách sửa
+
+**Backend (`api/lib/grading.php` `attendance_stats()`, `attendance_rules()`):**
+
+- "Ngày buổi" = `sessions.Date`; không có thì ngày của bản check-in đầu tiên
+  (`DATE(MIN(attendance.CreatedAt))`).
+- Buổi có ngày **trước** ngày ghi danh (`enrollments.CreatedAt`) mà em **không
+  có dòng** điểm danh → **bỏ qua** cho em đó: không vắng, không vào mẫu số.
+  Cùng ngày vẫn tính. Có dòng (giảng viên nhập tay/đánh có phép) → tính như
+  thường.
+- **Rào chống nhận nhầm sau `import.php`:** chỉ coi là "ghi danh muộn" khi ngày
+  ghi danh của em đó **muộn hơn ngày ghi danh sớm nhất của lớp**. Cả lớp được
+  nạp cùng một ngày (dữ liệu thật di dời từ Sheets) → không ai muộn, các buổi
+  cũ vẫn tính đủ như bản GAS. Không có rào này, ngày import mà sau các buổi đã
+  học thì cả lớp "sạch vắng".
+- Tắt được bằng `app.attendance_rules.count_from_enrollment = false`
+  (`db/config.sample.php`) để về đúng hành vi GAS.
+- Mỗi dòng trả thêm `sessionsCounted` (số buổi tính cho em đó),
+  `skippedBeforeEnrollment`, `enrolledAt`; `sessionsCounted` mức lớp giữ nguyên
+  nghĩa cũ (số buổi lớp đã điểm danh). `adminApplyAttendanceScore`,
+  `adminGradesReport`, `myGrades` dùng chung hàm này nên nhất quán.
+
+**`myGrades` (`api/lib/queries.php`):** `attendance.sessionsCounted` nay là số
+buổi tính cho **em đó**; thêm `sessionsInClass`, `skippedBeforeEnrollment`.
+`average` (điểm quy về 10 trên phần đã chấm) đã có từ GĐ8, giữ nguyên.
+
+**Giao diện:** `js/views/GradeView.js` — dòng chuyên cần đổi thành "N buổi tính
+cho bạn…", thêm "Lớp đã điểm danh M buổi; K buổi trước ngày bạn ghi danh không
+tính" khi K > 0; khi điểm còn tạm tính thêm dòng **"Tính riêng trên phần đã chấm
+(x %): 9,0/10"** (dùng `average`). `js/views/AdminView.js` — bảng chuyên cần ghi
+"ghi danh muộn, tính a/b buổi" (tooltip ngày ghi danh) cho em có buổi bị bỏ qua.
+
+Không cần migration; khuôn phong bì giữ nguyên (chỉ thêm trường).
+
+### Test đã chạy
+
+- `php -l`, `node --check` sạch. `tools/smoke_test.php` thêm **5 kiểm tra** (mục
+  L11): em ghi danh hôm nay bỏ qua buổi hôm qua; tổng đếm = số buổi tính; em
+  ghi danh từ đầu tính đủ; có dòng nhập tay cho buổi cũ → tính lại; cả lớp cùng
+  ngày ghi danh → không ai muộn. Sandbox không có MySQL — chạy trên host.
 

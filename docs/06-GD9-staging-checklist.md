@@ -163,16 +163,15 @@ Quản gia sẽ làm, thầy duyệt PR:
   ghi đầu, trạng thái không hạ, chỉ nối Note. Không cần migration.
 - ~~**L8 —** thông báo "không tìm thấy" vs "không có quyền" lộ ID tồn tại; **L13 —**
   `import.php` chạy lại với export thiếu cột làm trắng cột.~~ **ĐÃ LÀM 02/10/2026**
-  (`docs/04` mục 21). Còn chờ thầy: **L11** (SV ghi danh muộn bị tính vắng các
-  buổi trước → cấm thi oan; điểm tổng giữa kỳ hiển thị nhỏ).
+  (`docs/04` mục 21).
+- ~~**L11 —** SV ghi danh muộn bị tính vắng các buổi trước → cấm thi oan; điểm
+  tổng giữa kỳ hiển thị nhỏ.~~ **ĐÃ LÀM 02/10/2026** (thầy chọn; `docs/04` mục 22):
+  bỏ qua buổi trước ngày ghi danh (có rào cho dữ liệu import cùng ngày); trang
+  xem điểm thêm "Tính riêng trên phần đã chấm". Hết mục chờ quyết trước cutover.
 
 ## Việc chỉ thầy quyết, đã ghi nhận trong GĐ9
 
-- **Sinh viên ghi danh muộn bị tính vắng các buổi đã điểm danh trước đó.** Hiện
-  `attendance_stats()` coi "không có bản ghi" là vắng không phép (giống bản
-  GAS), nên một em vào lớp giữa kỳ có thể bị cấm thi ngay. Cách sửa gợi ý: chỉ
-  tính từ buổi đầu tiên sau ngày ghi danh (`enrollments.CreatedAt`), hoặc cho
-  giảng viên đánh "Vắng có phép" hàng loạt cho các buổi trước đó.
-- **Điểm tổng giữa kỳ hiển thị nhỏ** (ví dụ mới chấm chuyên cần 10% → tổng
-  1,0/10). Trang xem điểm có ghi "Điểm tạm tính" và "Mới chấm 10/110% trọng
-  số", nhưng nếu thầy muốn hiện "9,0 trên phần đã chấm" thì nói để Quản gia đổi.
+- ~~Sinh viên ghi danh muộn bị tính vắng các buổi đã điểm danh trước đó.~~ **ĐÃ
+  SỬA 02/10/2026** — chỉ tính từ ngày ghi danh (`docs/04` mục 22).
+- ~~Điểm tổng giữa kỳ hiển thị nhỏ.~~ **ĐÃ SỬA 02/10/2026** — trang xem điểm thêm
+  dòng "Tính riêng trên phần đã chấm (x%): …/10".

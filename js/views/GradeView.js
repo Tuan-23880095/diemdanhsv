@@ -175,7 +175,12 @@ class GradeView {
             this._esc(final) + '</p>' +
           (partial
             ? '<p class="mt-1 text-xs text-amber-700">Mới chấm ' + done + '/' + total +
-              '% trọng số — điểm sẽ đổi khi chấm nốt phần còn lại.</p>'
+              '% trọng số — điểm sẽ đổi khi chấm nốt phần còn lại.</p>' +
+              // L11: điểm quy về thang 10 trên phần ĐÃ chấm, để không hiểu nhầm
+              // "1,0/10" khi mới có chuyên cần 10% (c.average do server tính).
+              (c.average !== null && c.average !== undefined
+                ? '<p class="mt-1 text-xs text-slate-600">Tính riêng trên phần đã chấm (' + done + '%): <b>' + this._esc(c.average) + '</b>/10.</p>'
+                : '')
             : '');
 
       // Chuyên cần tính trực tiếp từ điểm danh (GĐ8)
@@ -183,8 +188,13 @@ class GradeView {
       const attBlock = !a ? '' :
         '<div class="mt-3 rounded-xl border ' + (a.banned ? 'border-red-200 bg-red-50' : 'border-slate-200 bg-slate-50') + ' p-3 text-sm">' +
           '<p class="font-semibold">Chuyên cần' + (a.banned ? ' — <span class="text-red-700">Cấm thi</span>' : '') + '</p>' +
-          '<p class="text-slate-600">' + a.sessionsCounted + ' buổi đã điểm danh: có mặt ' + a.present + ', trễ ' + a.late +
+          '<p class="text-slate-600">' + a.sessionsCounted + ' buổi tính cho bạn: có mặt ' + a.present + ', trễ ' + a.late +
             ', vắng ' + a.absent + ', vắng có phép ' + a.excused + '. Điểm chuyên cần: <b>' + this._esc(a.score) + '</b>/10.</p>' +
+          // L11: SV ghi danh muộn — nói rõ số buổi trước ngày ghi danh không bị tính vắng.
+          (Number(a.skippedBeforeEnrollment) > 0
+            ? '<p class="mt-1 text-xs text-slate-500">Lớp đã điểm danh ' + a.sessionsInClass + ' buổi; ' + a.skippedBeforeEnrollment +
+              ' buổi trước ngày bạn ghi danh không tính vào chuyên cần.</p>'
+            : '') +
           (a.banned
             ? '<p class="mt-1 text-xs text-red-700">Vắng không phép tương đương ' + a.equivalentAbsences + ' buổi (3 trễ = 1 vắng, 2 có phép = 1 vắng) — đủ ngưỡng cấm thi. Liên hệ giảng viên nếu có nhầm lẫn.</p>'
             : '<p class="mt-1 text-xs text-slate-500">Vắng không phép tương đương: ' + a.equivalentAbsences + ' buổi (từ 3 buổi là cấm thi).</p>') +

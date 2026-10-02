@@ -53,6 +53,10 @@ return [
             'ban_threshold'       => 3,     // ≥ 3 vắng tương đương → cấm thi
             'column_name'         => 'Chuyên cần',
             'column_weight'       => 10,    // % tổng điểm
+            // L11: SV ghi danh MUỘN không bị tính vắng các buổi trước ngày ghi danh
+            // (chỉ khi ngày ghi danh muộn hơn ngày ghi danh sớm nhất của lớp — cả lớp
+            // nạp cùng ngày thì không ai muộn). false = tính như bản GAS cũ.
+            'count_from_enrollment' => true,
         ],
     ],
 ];

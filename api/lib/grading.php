@@ -44,6 +44,8 @@ function attendance_rules(): array
             'max_score'           => 10.0,
             'column_name'         => 'Chuyên cần',
             'column_weight'       => 10.0,  // %
+            // L11: không tính vắng các buổi TRƯỚC ngày ghi danh cho SV ghi danh muộn.
+            'count_from_enrollment' => true,
         ];
         $cfg = app_config()['app']['attendance_rules'] ?? [];
         $rules = is_array($cfg) ? array_merge($defaults, $cfg) : $defaults;
@@ -54,30 +56,61 @@ function attendance_rules(): array
 /**
  * Thống kê chuyên cần của MỌI sinh viên ACTIVE trong lớp (chỉ buổi đã điểm danh).
  *
+ * L11 (review lần 2, docs/04 mục 22): sinh viên GHI DANH MUỘN không bị tính
+ * vắng các buổi diễn ra TRƯỚC ngày ghi danh. Bản GAS coi "không có dòng" là
+ * vắng không phép cho mọi buổi → em vào lớp giữa kỳ bị cấm thi oan ngay.
+ * Quy tắc (attendance_rules()['count_from_enrollment'], mặc định true):
+ *   - "Ngày buổi" = sessions.Date, không có thì ngày của bản check-in đầu tiên.
+ *   - Buổi có ngày < ngày ghi danh (enrollments.CreatedAt) → KHÔNG tính cho
+ *     em đó (không vắng, không vào mẫu số). Cùng ngày vẫn tính.
+ *   - Rào chống nhận nhầm khi nạp dữ liệu hàng loạt: chỉ coi là "ghi danh
+ *     muộn" khi ngày ghi danh của em đó MUỘN HƠN ngày ghi danh sớm nhất của
+ *     lớp. Nếu cả lớp được nạp cùng một ngày (import.php) thì không ai muộn
+ *     cả, và các buổi cũ vẫn tính đủ như trước.
+ *
  * @return array{sessionsCounted:int, sessionIds:string[], rows:array<string,array>} rows theo StudentID:
- *   {studentId, mssv, fullName, present, late, absent, excused, score, equivalentAbsences, banned}
+ *   {studentId, mssv, fullName, present, late, absent, excused, sessionsCounted,
+ *    skippedBeforeEnrollment, enrolledAt, score, equivalentAbsences, banned}
+ *   sessionsCounted ở mức lớp = số buổi đã điểm danh; ở từng dòng = số buổi tính cho em đó.
  */
 function attendance_stats(string $classId): array
 {
     $r = attendance_rules();
+    $fromEnrollment = ($r['count_from_enrollment'] ?? true) !== false;
 
     // Buổi ACTIVE của lớp có ít nhất một bản ghi attendance = "đã điểm danh".
+    // Kèm "ngày buổi" để so với ngày ghi danh (L11).
     $stmt = db()->prepare(
-        "SELECT DISTINCT s.SessionID FROM sessions s " .
+        "SELECT s.SessionID, COALESCE(MIN(s.`Date`), DATE(MIN(a.CreatedAt))) AS Day FROM sessions s " .
         "JOIN attendance a ON a.SessionID = s.SessionID " .
-        "WHERE s.ClassID = :cid AND s.Status = 'ACTIVE'"
+        "WHERE s.ClassID = :cid AND s.Status = 'ACTIVE' GROUP BY s.SessionID"
     );
     $stmt->execute(['cid' => $classId]);
-    $sessionIds = array_map(static fn ($x) => (string) $x['SessionID'], $stmt->fetchAll());
+    $sessionIds = [];
+    $sessionDay = [];
+    foreach ($stmt->fetchAll() as $x) {
+        $id = (string) $x['SessionID'];
+        $sessionIds[] = $id;
+        $sessionDay[$id] = $x['Day'] === null ? '' : substr((string) $x['Day'], 0, 10);
+    }
     $n = count($sessionIds);
 
     $stmt = db()->prepare(
-        "SELECT s.StudentID, s.MSSV, s.FullName FROM enrollments en " .
+        "SELECT s.StudentID, s.MSSV, s.FullName, en.CreatedAt AS EnrolledAt FROM enrollments en " .
         "JOIN students s ON s.StudentID = en.StudentID " .
         "WHERE en.ClassID = :cid AND en.Status = 'ACTIVE' ORDER BY s.MSSV"
     );
     $stmt->execute(['cid' => $classId]);
     $students = $stmt->fetchAll();
+
+    // Ngày ghi danh sớm nhất của lớp — mốc để nhận ra ai ghi danh MUỘN.
+    $firstEnrollDay = '';
+    foreach ($students as $st) {
+        $d = substr((string) ($st['EnrolledAt'] ?? ''), 0, 10);
+        if ($d !== '' && ($firstEnrollDay === '' || $d < $firstEnrollDay)) {
+            $firstEnrollDay = $d;
+        }
+    }
 
     $marks = [];
     if ($n > 0 && $students) {
@@ -92,16 +125,29 @@ function attendance_stats(string $classId): array
     $rows = [];
     foreach ($students as $st) {
         $sid = (string) $st['StudentID'];
+        $enrollDay = substr((string) ($st['EnrolledAt'] ?? ''), 0, 10);
+        $isLate = $fromEnrollment && $enrollDay !== '' && $firstEnrollDay !== '' && $enrollDay > $firstEnrollDay;
+
         $c = ['present' => 0, 'late' => 0, 'absent' => 0, 'excused' => 0];
+        $skipped = 0;
         foreach ($sessionIds as $ses) {
-            $status = $marks[$sid][$ses] ?? 'ABSENT'; // không có dòng = vắng không phép
+            $status = $marks[$sid][$ses] ?? null;
+            // L11: buổi trước ngày ghi danh, em không có dòng điểm danh → bỏ qua.
+            // Có dòng (vd giảng viên nhập tay) thì vẫn tính như bình thường.
+            if ($status === null && $isLate && $sessionDay[$ses] !== '' && $sessionDay[$ses] < $enrollDay) {
+                $skipped++;
+                continue;
+            }
+            $status = $status ?? 'ABSENT'; // không có dòng = vắng không phép
             if ($status === 'PRESENT') $c['present']++;
             elseif ($status === 'LATE') $c['late']++;
             elseif ($status === 'EXCUSED') $c['excused']++;
             else $c['absent']++;
         }
         $rows[$sid] = ['studentId' => $sid, 'mssv' => (string) $st['MSSV'], 'fullName' => (string) $st['FullName']]
-            + $c + attendance_score($c, $r);
+            + $c
+            + ['sessionsCounted' => $n - $skipped, 'skippedBeforeEnrollment' => $skipped, 'enrolledAt' => $enrollDay]
+            + attendance_score($c, $r);
     }
 
     return ['sessionsCounted' => $n, 'sessionIds' => $sessionIds, 'rows' => $rows];

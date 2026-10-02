@@ -880,6 +880,41 @@ try {
 }
 check('L6: CSDL chặn hai đầu điểm cùng tên trong một lớp (UNIQUE uq_gcol_class_name)', $dup, 'không bị chặn');
 
+section('L11 — SV ghi danh muộn không bị tính vắng các buổi trước ngày ghi danh (attendance_stats)');
+// Dựng tình huống: cả lớp C1 ghi danh 2 ngày trước, buổi SS1 diễn ra hôm qua, S3 ghi danh HÔM NAY.
+$pdo->exec("UPDATE enrollments SET CreatedAt = NOW() - INTERVAL 2 DAY WHERE ClassID = 'SMOKE_C1'");
+$pdo->exec("UPDATE sessions SET `Date` = CURDATE() - INTERVAL 1 DAY WHERE SessionID = 'SMOKE_SS1'");
+$pdo->exec("INSERT INTO enrollments (EnrollmentID, StudentID, ClassID, Status, CreatedAt) VALUES ('SMOKE_E3_1', 'SMOKE_S3', 'SMOKE_C1', 'ACTIVE', NOW())");
+$attRep = static function () use ($tok1): array {
+    $r = api('GET', ['action' => 'adminAttendanceReport', 'token' => $tok1, 'classId' => 'SMOKE_C1']);
+    return ok($r) ? ['n' => (int) $r['data']['sessionsCounted'], 'rows' => array_column($r['data']['rows'], null, 'mssv')] : ['n' => -1, 'rows' => []];
+};
+$rep = $attRep();
+$s3 = $rep['rows']['99000003'] ?? null;
+$s4 = $rep['rows']['99000004'] ?? null;
+check('L11: S3 (ghi danh hôm nay) được bỏ qua ≥ 1 buổi trước ngày ghi danh (SS1 hôm qua)', $s3 && (int) $s3['skippedBeforeEnrollment'] >= 1, brief($s3));
+check('L11: số buổi tính cho S3 = buổi của lớp − buổi bỏ qua; vắng+có mặt+trễ+phép = số buổi tính', $s3
+    && (int) $s3['sessionsCounted'] === $rep['n'] - (int) $s3['skippedBeforeEnrollment']
+    && (int) $s3['present'] + (int) $s3['late'] + (int) $s3['absent'] + (int) $s3['excused'] === (int) $s3['sessionsCounted'], brief($s3));
+check('L11: S4 (ghi danh từ đầu) không bị bỏ qua buổi nào, vẫn tính đủ ' . $rep['n'] . ' buổi', $s4 && (int) $s4['skippedBeforeEnrollment'] === 0 && (int) $s4['sessionsCounted'] === $rep['n'], brief($s4));
+// Giảng viên nhập tay cho S3 ở SS1 → buổi đó CÓ dòng → tính như thường (không bỏ qua nữa).
+$pdo->exec("INSERT INTO attendance (AttendanceID, StudentID, SessionID, Status, Note) VALUES ('SMOKE_A_S3_SS1', 'SMOKE_S3', 'SMOKE_SS1', 'EXCUSED', 'Nhập tay (test L11)')");
+$rep2 = $attRep();
+$s3b = $rep2['rows']['99000003'] ?? null;
+check('L11: có dòng điểm danh (nhập tay) cho buổi trước ngày ghi danh → buổi đó được tính (bỏ qua −1, có phép +1)', $s3 && $s3b
+    && (int) $s3b['skippedBeforeEnrollment'] === (int) $s3['skippedBeforeEnrollment'] - 1
+    && (int) $s3b['excused'] === (int) $s3['excused'] + 1, brief($s3b));
+// Rào nạp hàng loạt: cả lớp (kể cả S3) cùng một ngày ghi danh → không ai là "muộn", buổi cũ tính đủ như trước.
+$pdo->exec("DELETE FROM attendance WHERE AttendanceID = 'SMOKE_A_S3_SS1'");
+$pdo->exec("UPDATE enrollments SET CreatedAt = NOW() WHERE ClassID = 'SMOKE_C1'");
+$rep3 = $attRep();
+$s3c = $rep3['rows']['99000003'] ?? null;
+check('L11: cả lớp cùng ngày ghi danh (như sau import.php) → S3 không bị coi là muộn, buổi cũ vẫn tính vắng như bản GAS', $s3c
+    && (int) $s3c['skippedBeforeEnrollment'] === 0 && (int) $s3c['sessionsCounted'] === $rep3['n'], brief($s3c));
+// Trả lại hiện trường cho các mục sau.
+$pdo->exec("DELETE FROM enrollments WHERE EnrollmentID = 'SMOKE_E3_1'");
+$pdo->exec("UPDATE sessions SET `Date` = CURDATE() WHERE SessionID = 'SMOKE_SS1'");
+
 section('L8 — LECTURER không dò được buổi/lớp người khác qua thông báo lỗi');
 $msgOf = static fn ($r): string => (string) ($r['message'] ?? '');
 $pairs = [
@@ -1016,7 +1051,7 @@ $coveredAdmin = ['adminListCourses', 'adminListLecturers', 'adminListClasses', '
 echo "\nĐã chạy " . count($covered) . "/13 action cũ: " . implode(', ', $covered) . "\n";
 echo "Đã chạy " . count($coveredAdmin) . "/18 action quản trị GĐ7+GĐ8: " . implode(', ', $coveredAdmin) . "\n";
 echo "Đã kiểm các bản sửa từ review bảo mật độc lập lần 2 (GĐ9): H3, H4, M6, M7, M8, M10, L6, L9, L10.\n";
-echo "Đã kiểm gia cố trước cutover: M4 (giới hạn tần suất theo IP / tên đăng nhập), M5 (kẹp phút mở mã 1–60), M2 (gửi lại không ghi đè bản ghi đầu), L8 (một thông báo cho không-tồn-tại/không-có-quyền).\n";
+echo "Đã kiểm gia cố trước cutover: M4 (giới hạn tần suất theo IP / tên đăng nhập), M5 (kẹp phút mở mã 1–60), M2 (gửi lại không ghi đè bản ghi đầu), L8 (một thông báo cho không-tồn-tại/không-có-quyền), L11 (SV ghi danh muộn không bị tính vắng buổi trước ngày ghi danh).\n";
 
 if ($opts['keep_data']) {
     echo "--keep-data: GIỮ dữ liệu demo trong CSDL thử.\n";
