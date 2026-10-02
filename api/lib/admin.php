@@ -63,7 +63,7 @@ function admin_load_class(array $me, string $classId): array
     $stmt->execute(['id' => $classId]);
     $cls = $stmt->fetch();
     if (!$cls) {
-        throw new RuntimeException('Không tìm thấy lớp ' . $classId . '.');
+        throw new RuntimeException(not_found_message($me, 'lớp', $classId)); // L8
     }
     assert_class_access($me, $classId);
     return $cls;
@@ -380,7 +380,7 @@ function action_admin_save_session(array $params): void
         $st->execute(['id' => $sessionId, 'cid' => $classId]);
         $old = $st->fetch() ?: null;
         if (!$old) {
-            api_fail('Không tìm thấy buổi học ' . $sessionId . ' trong lớp này.');
+            api_fail(not_found_message($me, 'buổi học', $sessionId . ' trong lớp này')); // L8
             return;
         }
     }

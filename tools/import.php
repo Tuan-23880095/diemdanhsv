@@ -290,7 +290,27 @@ foreach ($tableNames as $table) {
     if (!is_array($rowsRaw)) $rowsRaw = [];
 
     $pkCol = $def['pk'][0]; // cả 12 bảng GĐ6 đều khoá chính 1 cột (VARCHAR ID)
-    $rows = array_map(fn($r) => import_norm_row($r, $def['cols']), $rowsRaw);
+
+    // L13 (review lần 2): chỉ ghi những cột THẬT SỰ có trong file. Trước đây
+    // mọi cột của IMPORT_TABLES đều vào INSERT … ON DUPLICATE KEY UPDATE, nên
+    // chạy lại với một bản export thiếu cột (sheet bớt cột, hoặc export cũ)
+    // là cột đó trong CSDL bị ghi trắng cho mọi dòng đã có. Cột xuất hiện ở
+    // bất kỳ dòng nào của bảng → coi là có; khoá chính luôn có.
+    $presentCols = [];
+    foreach ($rowsRaw as $r) {
+        if (!is_array($r)) continue;
+        foreach ($def['cols'] as $col => $_type) {
+            if (array_key_exists($col, $r)) $presentCols[$col] = true;
+        }
+    }
+    foreach ($def['pk'] as $pc) $presentCols[$pc] = true;
+    $colDefs = array_intersect_key($def['cols'], $presentCols);
+    $missingCols = array_keys(array_diff_key($def['cols'], $presentCols));
+    if ($rowsRaw && $missingCols) {
+        echo "  (!) $table: file không có cột " . implode(', ', $missingCols) . " — giữ nguyên giá trị đang có trong CSDL, không ghi trắng.\n";
+    }
+
+    $rows = array_map(fn($r) => import_norm_row($r, $colDefs), $rowsRaw);
 
     $fileIds = array_map(fn($r) => $r[$pkCol], $rows);
     $fileIdSet = array_fill_keys($fileIds, true);
@@ -323,7 +343,7 @@ foreach ($tableNames as $table) {
     }
 
     printf("%-16s %10d %10d %10d %10d %10d\n", $table, count($rows), count($existingIds), $willInsert, $willUpdate, $fkWarnings);
-    $summary[$table] = ['rows' => $rows, 'def' => $def, 'willInsert' => $willInsert, 'willUpdate' => $willUpdate, 'fkWarnings' => $fkWarnings];
+    $summary[$table] = ['rows' => $rows, 'def' => $def, 'cols' => array_keys($colDefs), 'willInsert' => $willInsert, 'willUpdate' => $willUpdate, 'fkWarnings' => $fkWarnings];
 }
 
 echo str_repeat('-', 92) . "\n";
@@ -348,7 +368,7 @@ try {
     db_transaction(function (PDO $pdo) use ($summary) {
         foreach ($summary as $table => $info) {
             $def = $info['def'];
-            $cols = array_keys($def['cols']);
+            $cols = $info['cols']; // L13: chỉ cột có trong file (khoá chính luôn có)
             $colList = implode(', ', array_map(fn($c) => "`$c`", $cols));
             $placeholders = implode(', ', array_map(fn($c) => ":$c", $cols));
             $updateList = implode(', ', array_map(fn($c) => "`$c` = VALUES(`$c`)", array_diff($cols, $def['pk'])));

@@ -22,7 +22,7 @@ function action_open_attendance(array $params): void
     $stmt->execute(['id' => $sessionId]);
     $session = $stmt->fetch();
     if (!$session) {
-        api_fail('Không tìm thấy buổi học ' . $sessionId . '.');
+        api_fail(not_found_message($me, 'buổi học', $sessionId)); // L8
         return;
     }
 
@@ -113,7 +113,7 @@ function action_close_attendance(array $params): void
     $stmt->execute(['id' => $sessionId]);
     $session = $stmt->fetch();
     if (!$session) {
-        api_fail('Không tìm thấy buổi học ' . $sessionId . '.');
+        api_fail(not_found_message($me, 'buổi học', $sessionId)); // L8
         return;
     }
 
@@ -350,7 +350,7 @@ function action_live_roster(array $params): void
     $stmt->execute(['id' => $sessionId]);
     $session = $stmt->fetch();
     if (!$session) {
-        api_fail('Không tìm thấy buổi học ' . $sessionId . '.');
+        api_fail(not_found_message($me, 'buổi học', $sessionId)); // L8
         return;
     }
 

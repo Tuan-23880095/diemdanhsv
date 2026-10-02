@@ -880,6 +880,27 @@ try {
 }
 check('L6: CSDL chặn hai đầu điểm cùng tên trong một lớp (UNIQUE uq_gcol_class_name)', $dup, 'không bị chặn');
 
+section('L8 — LECTURER không dò được buổi/lớp người khác qua thông báo lỗi');
+$msgOf = static fn ($r): string => (string) ($r['message'] ?? '');
+$pairs = [
+    'openAttendance'         => [['action' => 'openAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_KHONG'], ['action' => 'openAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS2'], 'POST'],
+    'closeAttendance'        => [['action' => 'closeAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_KHONG'], ['action' => 'closeAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS2'], 'POST'],
+    'liveRoster'             => [['action' => 'liveRoster', 'token' => $tok1, 'sessionId' => 'SMOKE_KHONG'], ['action' => 'liveRoster', 'token' => $tok1, 'sessionId' => 'SMOKE_SS2'], 'GET'],
+    'adminSessionAttendance' => [['action' => 'adminSessionAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_KHONG'], ['action' => 'adminSessionAttendance', 'token' => $tok1, 'sessionId' => 'SMOKE_SS2'], 'GET'],
+    'adminListRoster'        => [['action' => 'adminListRoster', 'token' => $tok1, 'classId' => 'SMOKE_KHONG'], ['action' => 'adminListRoster', 'token' => $tok1, 'classId' => 'SMOKE_C2'], 'GET'],
+];
+foreach ($pairs as $name => [$pNo, $pOther, $method]) {
+    $a = api($method, $pNo);
+    $b = api($method, $pOther);
+    check("L8: $name — ID không tồn tại và ID của lớp người khác → CÙNG một thông báo lỗi",
+        err($a) && err($b) && $msgOf($a) === $msgOf($b) && str_contains($msgOf($a), 'không có quyền'),
+        '[' . $msgOf($a) . '] vs [' . $msgOf($b) . ']');
+}
+$r = api('POST', ['action' => 'openAttendance', 'token' => $tokA, 'sessionId' => 'SMOKE_KHONG']);
+check('L8: ADMIN vẫn nhận thông báo cụ thể "Không tìm thấy buổi học SMOKE_KHONG"', err($r, 'Không tìm thấy buổi học SMOKE_KHONG'), brief($r));
+$r = api('GET', ['action' => 'adminListRoster', 'token' => $tokA, 'classId' => 'SMOKE_KHONG']);
+check('L8: ADMIN — lớp không tồn tại → "Không tìm thấy lớp SMOKE_KHONG"', err($r, 'Không tìm thấy lớp SMOKE_KHONG'), brief($r));
+
 section('M4 — giới hạn tần suất theo IP / tên đăng nhập (api/lib/ratelimit.php) + M5 — kẹp phút mở mã');
 $rlMsg = 'quá nhiều lần';
 $rlHits = static function (PDO $pdo, string $bucket, string $key): int {
@@ -995,7 +1016,7 @@ $coveredAdmin = ['adminListCourses', 'adminListLecturers', 'adminListClasses', '
 echo "\nĐã chạy " . count($covered) . "/13 action cũ: " . implode(', ', $covered) . "\n";
 echo "Đã chạy " . count($coveredAdmin) . "/18 action quản trị GĐ7+GĐ8: " . implode(', ', $coveredAdmin) . "\n";
 echo "Đã kiểm các bản sửa từ review bảo mật độc lập lần 2 (GĐ9): H3, H4, M6, M7, M8, M10, L6, L9, L10.\n";
-echo "Đã kiểm gia cố trước cutover: M4 (giới hạn tần suất theo IP / tên đăng nhập), M5 (kẹp phút mở mã 1–60), M2 (gửi lại không ghi đè bản ghi đầu).\n";
+echo "Đã kiểm gia cố trước cutover: M4 (giới hạn tần suất theo IP / tên đăng nhập), M5 (kẹp phút mở mã 1–60), M2 (gửi lại không ghi đè bản ghi đầu), L8 (một thông báo cho không-tồn-tại/không-có-quyền).\n";
 
 if ($opts['keep_data']) {
     echo "--keep-data: GIỮ dữ liệu demo trong CSDL thử.\n";

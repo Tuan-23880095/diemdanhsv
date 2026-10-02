@@ -667,7 +667,7 @@ function grading_load_session(array $me, string $sessionId): array
     $stmt->execute(['id' => $sessionId]);
     $session = $stmt->fetch();
     if (!$session) {
-        throw new RuntimeException('Không tìm thấy buổi học ' . $sessionId . '.');
+        throw new RuntimeException(not_found_message($me, 'buổi học', $sessionId)); // L8
     }
     assert_class_access($me, (string) $session['ClassID']);
     return $session;

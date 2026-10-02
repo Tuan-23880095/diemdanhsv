@@ -161,6 +161,10 @@ Quản gia sẽ làm, thầy duyệt PR:
 - ~~**M2 —** check-in lần hai của cùng MSSV ghi đè dấu vết thiết bị và trạng thái.~~
   **ĐÃ LÀM 02/10/2026** (thầy duyệt; PR riêng, `docs/04` mục 20): lần 2+ giữ bản
   ghi đầu, trạng thái không hạ, chỉ nối Note. Không cần migration.
+- ~~**L8 —** thông báo "không tìm thấy" vs "không có quyền" lộ ID tồn tại; **L13 —**
+  `import.php` chạy lại với export thiếu cột làm trắng cột.~~ **ĐÃ LÀM 02/10/2026**
+  (`docs/04` mục 21). Còn chờ thầy: **L11** (SV ghi danh muộn bị tính vắng các
+  buổi trước → cấm thi oan; điểm tổng giữa kỳ hiển thị nhỏ).
 
 ## Việc chỉ thầy quyết, đã ghi nhận trong GĐ9
 

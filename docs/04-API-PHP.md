@@ -701,10 +701,9 @@ sinh viên không với được action quản trị; hai bộ nhập CSV đều
 không ghi gì khi còn lỗi, chạy lại an toàn; `API_INPROCESS` không thể kích hoạt
 từ web; `backup.php` không gọi shell, tự kiểm file.
 
-**Chưa sửa — chờ thầy quyết** (ghi trong `docs/06`, mục cuối): M2, L8 (thông
-báo "không tìm thấy" vs "không có quyền"), L11 (SV ghi danh muộn bị tính vắng
-các buổi trước; điểm tổng giữa kỳ hiển thị nhỏ), L13 (`import.php` chạy lại với
-export thiếu cột sẽ làm trắng cột đó). ~~M4, M5~~ → **đã sửa ở mục 19** (02/10/2026).
+**Chưa sửa — chờ thầy quyết** (ghi trong `docs/06`, mục cuối): L11 (SV ghi danh
+muộn bị tính vắng các buổi trước; điểm tổng giữa kỳ hiển thị nhỏ).
+~~M4, M5~~ → mục 19; ~~M2~~ → mục 20; ~~L8, L13~~ → mục 21 (đều 02/10/2026).
 
 ### Test đã chạy
 
@@ -844,4 +843,42 @@ Không cần migration. Khuôn phong bì, thông điệp, `liveRoster`,
   "thiết bị khác"; quá mốc trễ → PRESENT không bị hạ; vẫn đúng 1 dòng sau 4 lần
   gửi. **Chưa chạy được trong sandbox (không có MySQL)** — thầy chạy trên host
   cùng lượt với PR #15 (nhánh này xây trên nhánh của #15).
+
+## 21. Gia cố trước cutover (02/10/2026) — L8 một thông báo lỗi, L13 import không ghi trắng cột
+
+PR riêng thứ 3, **không tính giai đoạn mới**; thầy bảo "làm tiếp" sau M2 nên
+Quản gia chọn hai mục nhỏ, không đổi hành vi với người dùng thật.
+
+### L8 — LECTURER không dò được buổi/lớp của người khác
+
+Trước: `openAttendance`/`closeAttendance`/`liveRoster`/`adminSessionAttendance`
+trả "Không tìm thấy buổi học X." khi ID không có, nhưng "Bạn không có quyền
+thao tác trên lớp này." khi ID có mà thuộc lớp người khác → giảng viên đổi
+tham số là biết SessionID/ClassID nào tồn tại. Nay (`api/lib/roles.php`
+`not_found_message()` + hằng `CLASS_ACCESS_DENIED_MESSAGE`): với **LECTURER**
+cả hai trường hợp trả đúng **một** câu `Không tìm thấy buổi học/lớp này, hoặc
+bạn không có quyền thao tác.`; **ADMIN** (có quyền mọi lớp, không có gì để lộ)
+vẫn nhận câu cụ thể "Không tìm thấy buổi học X." để dễ sửa dữ liệu. Áp cho
+`attendance.php` (3 chỗ), `admin_load_class()`, `grading_load_session()`,
+`adminSaveSession`. Câu chung chứa cả "Không tìm thấy buổi" và "không có quyền"
+nên frontend/smoke test cũ dò chuỗi vẫn khớp.
+
+### L13 — `tools/import.php` chỉ ghi cột có trong file
+
+Trước: mọi cột của `IMPORT_TABLES` đều vào `INSERT … ON DUPLICATE KEY UPDATE`;
+chạy lại với một bản export thiếu cột (sheet bớt cột, export cũ) là cột đó bị
+ghi `''`/NULL cho **mọi dòng đã có**. Nay: cột được coi là "có" khi xuất hiện ở
+bất kỳ dòng nào của bảng trong file (khoá chính luôn có); cột thiếu **không**
+vào câu INSERT/UPDATE và dry-run in dòng `(!) <bảng>: file không có cột … — giữ
+nguyên giá trị đang có trong CSDL`. Một ô trống trong một dòng vẫn ghi `''` như
+trước (đúng nghĩa ô trống trên Sheets).
+
+### Test đã chạy
+
+- `php -l` sạch. `tools/smoke_test.php` thêm **7 kiểm tra** L8 (5 action: ID
+  không tồn tại vs ID lớp người khác → cùng thông báo; ADMIN vẫn nhận câu cụ
+  thể cho buổi và lớp). L13 không kiểm được bằng smoke test (import.php là
+  script, host cấm `exec`) — logic lọc cột đã chạy thử tách riêng bằng PHP CLI;
+  thầy xác nhận thật khi `--dry-run` trên host (xem dòng `(!)` nếu file thiếu
+  cột). Sandbox không có MySQL — smoke test chờ host, cùng lượt với #15, #16.
 
