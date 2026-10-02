@@ -483,6 +483,26 @@ check('IP lưu là IP máy chủ thấy, KHÔNG phải ip client tự khai (M3)'
 $r = api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => $code, 'deviceHash' => $dev]);
 $n = (int) $pdo->query("SELECT COUNT(*) FROM attendance WHERE StudentID = 'SMOKE_S1' AND SessionID = 'SMOKE_SS1'")->fetchColumn();
 check('checkin S1 lần 2 → UPDATED, vẫn đúng 1 dòng (D.8-3)', ok($r) && $r['data']['action'] === 'UPDATED' && $n === 1, brief($r));
+
+// M2 — gửi lại KHÔNG ghi đè bản ghi đầu (docs/04 mục 20)
+$first = $pdo->query("SELECT CheckInTime, DeviceHash, GpsFlag, IP FROM attendance WHERE StudentID = 'SMOKE_S1' AND SessionID = 'SMOKE_SS1'")->fetch();
+$r = api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => $code, 'deviceHash' => '']);
+$after = $pdo->query("SELECT Status, CheckInTime, DeviceHash, GpsFlag, IP, Note FROM attendance WHERE StudentID = 'SMOKE_S1' AND SessionID = 'SMOKE_SS1'")->fetch();
+check('M2: gửi lại với deviceHash RỖNG → DeviceHash lần đầu được GIỮ (D.8-4 không bị xoá)', ok($r) && $after['DeviceHash'] === $dev, brief($after));
+check('M2: giờ check-in, GPS, IP lần đầu được giữ nguyên', $after['CheckInTime'] === $first['CheckInTime'] && $after['GpsFlag'] === $first['GpsFlag'] && $after['IP'] === $first['IP'], brief($after));
+check('M2: Note nối thêm "Gửi lại lúc …"', str_contains((string) $after['Note'], 'Gửi lại lúc'), (string) $after['Note']);
+check('M2: phản hồi trả giờ check-in ĐANG LƯU (không phải giờ gửi lại)', str_replace('T', ' ', (string) ($r['data']['checkInTime'] ?? '')) === $first['CheckInTime'], brief($r));
+$r = api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => $code, 'deviceHash' => 'demo-device-hash-KHAC']);
+$after = $pdo->query("SELECT DeviceHash, Note FROM attendance WHERE StudentID = 'SMOKE_S1' AND SessionID = 'SMOKE_SS1'")->fetch();
+check('M2: gửi lại từ thiết bị KHÁC → vẫn giữ hash đầu, Note ghi "thiết bị khác"', ok($r) && $after['DeviceHash'] === $dev && str_contains((string) $after['Note'], 'thiết bị khác'), brief($after));
+// Đẩy mốc "trễ" về quá khứ: lần gửi này tính ra LATE nhưng PRESENT đã lưu không được hạ.
+$pdo->exec("UPDATE attendance_keys SET LateAfter = NOW() - INTERVAL 1 MINUTE WHERE Code = " . $pdo->quote($code) . " AND Status = 'OPEN'");
+$r = api('POST', ['action' => 'checkin', 'mssv' => '99000001', 'code' => $code, 'deviceHash' => $dev]);
+$st1 = (string) $pdo->query("SELECT Status FROM attendance WHERE StudentID = 'SMOKE_S1' AND SessionID = 'SMOKE_SS1'")->fetchColumn();
+check('M2: gửi lại khi đã quá mốc trễ → PRESENT KHÔNG bị hạ xuống LATE, phản hồi vẫn PRESENT', ok($r) && $st1 === 'PRESENT' && ($r['data']['status'] ?? '') === 'PRESENT', brief($r) . " db=$st1");
+$pdo->exec("UPDATE attendance_keys SET LateAfter = DATE_ADD(StartTime, INTERVAL 5 MINUTE) WHERE Code = " . $pdo->quote($code) . " AND Status = 'OPEN'");
+$n = (int) $pdo->query("SELECT COUNT(*) FROM attendance WHERE StudentID = 'SMOKE_S1' AND SessionID = 'SMOKE_SS1'")->fetchColumn();
+check('M2: sau 4 lần gửi vẫn đúng 1 dòng (D.8-3)', $n === 1, "n=$n");
 $r = api('POST', ['action' => 'checkin', 'mssv' => '99000002', 'code' => $code, 'lat' => 21.05, 'lng' => 105.85, 'accuracy' => 10, 'deviceHash' => $dev]);
 check('checkin S2 xa phòng → OUT_OF_RANGE (chỉ gắn cờ, không loại)', ok($r) && $r['data']['gpsFlag'] === 'OUT_OF_RANGE', brief($r));
 $note = (string) $pdo->query("SELECT Note FROM attendance WHERE StudentID = 'SMOKE_S2' AND SessionID = 'SMOKE_SS1'")->fetchColumn();
@@ -975,7 +995,7 @@ $coveredAdmin = ['adminListCourses', 'adminListLecturers', 'adminListClasses', '
 echo "\nĐã chạy " . count($covered) . "/13 action cũ: " . implode(', ', $covered) . "\n";
 echo "Đã chạy " . count($coveredAdmin) . "/18 action quản trị GĐ7+GĐ8: " . implode(', ', $coveredAdmin) . "\n";
 echo "Đã kiểm các bản sửa từ review bảo mật độc lập lần 2 (GĐ9): H3, H4, M6, M7, M8, M10, L6, L9, L10.\n";
-echo "Đã kiểm gia cố trước cutover: M4 (giới hạn tần suất theo IP / tên đăng nhập), M5 (kẹp phút mở mã 1–60).\n";
+echo "Đã kiểm gia cố trước cutover: M4 (giới hạn tần suất theo IP / tên đăng nhập), M5 (kẹp phút mở mã 1–60), M2 (gửi lại không ghi đè bản ghi đầu).\n";
 
 if ($opts['keep_data']) {
     echo "--keep-data: GIỮ dữ liệu demo trong CSDL thử.\n";

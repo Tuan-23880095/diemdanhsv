@@ -86,9 +86,10 @@ Các mục dưới đây đụng tới thiết kế hoặc hành vi, nên không
 > **Cập nhật 02/10/2026:** **M4** và **M5** đã sửa trong PR gia cố trước cutover
 > (`api/lib/ratelimit.php`, `db/migrations/005-rate-limits.sql`, kẹp phút trong
 > `action_open_attendance`) — chi tiết `docs/04-API-PHP.md` mục 19. Hai mục
-> đó giữ lại dưới đây làm hồ sơ; M2, L3, L4, L5 vẫn chờ.
+> đó giữ lại dưới đây làm hồ sơ. **M2** cũng đã sửa cùng ngày (PR riêng, docs/04
+> mục 20). L3, L4, L5 vẫn chờ.
 
-- **M2 – D.8 lớp 4 bị ghi đè.** Khi check-in lần 2 cùng MSSV, server UPDATE
+- ~~**M2 – D.8 lớp 4 bị ghi đè.**~~ **ĐÃ SỬA 02/10 (docs/04 mục 20).** Khi check-in lần 2 cùng MSSV, server UPDATE
   đè `DeviceHash`, `Note`, GPS và `Status`.
   - Hệ quả: gửi lại với `deviceHash:""` là xoá được cảnh báo trùng thiết bị
     trên `liveRoster` (chỉ còn lại trong `audit_log`). Bạn cùng lớp cũng có

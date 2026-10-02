@@ -799,3 +799,49 @@ Sau đó `?action=ping` phải trả `version: php-0.7`.
   cài được MariaDB) — kết quả thật chờ thầy chạy trên host như bảng trên; các
   phiên trước đều kiểm theo cách này.
 
+## 20. Gia cố trước cutover (02/10/2026) — M2 gửi lại không ghi đè bản ghi đầu
+
+PR riêng, **không tính giai đoạn mới** — thầy chọn làm M2 sau PR #15 (M4, M5).
+Đóng mục M2 của review lần 1 (`docs/05`): **đổi hành vi so với bản GAS** (bản
+cũ `SheetRepo.upsert` ghi đè toàn bộ dòng khi cùng MSSV gửi lần 2).
+
+### Vấn đề
+
+`checkin` lần 2 của cùng MSSV trong cùng buổi UPDATE **mọi cột** từ request
+mới: `DeviceHash`, `Status`, `CheckInTime`, GPS, `Note`. Hệ quả:
+
+- Gửi lại với `deviceHash` rỗng → dấu vết thiết bị của lần đầu bị xoá, cảnh báo
+  "trùng thiết bị" biến mất khỏi `liveRoster` (D.8 lớp 4 chỉ còn trong
+  `audit_log`, giảng viên trên lớp không thấy).
+- Ai biết MSSV của bạn cùng lớp và mã đang mở là gửi lại được sau mốc "trễ" →
+  PRESENT của người khác bị hạ thành LATE.
+
+### Cách sửa (`action_checkin` + `checkin_merge_resend()`)
+
+Khi đã có bản ghi (SELECT … FOR UPDATE, hoặc bắt lỗi trùng khoá 23000 khi hai
+request song song): **giữ bản ghi đầu**, chỉ gộp:
+
+| Cột | Lần 2+ |
+|---|---|
+| `CheckInTime`, GPS (`GpsLat/Lng/Accuracy`, `DistanceM`, `GpsFlag`), `IP`, `OS`, `Browser`, `DeviceType` | **giữ nguyên** lần đầu |
+| `DeviceHash` | giữ lần đầu; chỉ điền khi lần đầu trống |
+| `Status` | chỉ **nâng** (ABSENT < EXCUSED < LATE < PRESENT), không hạ |
+| `Note` | **nối** `Gửi lại lúc HH:MM[, lần này LATE, giữ PRESENT][, thiết bị khác lần đầu][, trùng thiết bị với N MSSV khác]`, cắt 500 ký tự |
+
+Phản hồi cho sinh viên trả `status`/`checkInTime` **đang lưu** (không phải của
+lần gửi lại) nên em thấy đúng những gì giảng viên thấy; `action` vẫn là
+`UPDATED` như cũ. `audit_log` ghi thêm `attemptStatus` (trạng thái tính cho lần
+gửi này) bên cạnh `status` (đang lưu) để tra lại được khi có khiếu nại.
+
+Không cần migration. Khuôn phong bì, thông điệp, `liveRoster`,
+`adminSetAttendance` (L10 — cũng nối Note) không đổi.
+
+### Test đã chạy
+
+- `php -l` sạch. `tools/smoke_test.php` thêm **7 kiểm tra** trong mục `checkin`:
+  gửi lại với hash rỗng giữ hash đầu; giờ/GPS/IP giữ nguyên; Note nối "Gửi lại
+  lúc"; phản hồi trả giờ đang lưu; gửi từ thiết bị khác → giữ hash đầu + Note
+  "thiết bị khác"; quá mốc trễ → PRESENT không bị hạ; vẫn đúng 1 dòng sau 4 lần
+  gửi. **Chưa chạy được trong sandbox (không có MySQL)** — thầy chạy trên host
+  cùng lượt với PR #15 (nhánh này xây trên nhánh của #15).
+

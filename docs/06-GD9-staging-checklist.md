@@ -158,8 +158,9 @@ Quản gia sẽ làm, thầy duyệt PR:
   --yes` (migration 005) trên host** — code fail-open khi chưa có bảng.
 - ~~**M5 —** chưa kẹp số phút mở mã điểm danh.~~ **ĐÃ LÀM 02/10/2026** — kẹp 1–60
   phút, mốc trễ ≤ mốc hết hạn.
-- **M2 —** check-in lần hai của cùng MSSV ghi đè dấu vết thiết bị và trạng thái
-  (vẫn chờ thầy quyết — đổi hành vi so với bản GAS).
+- ~~**M2 —** check-in lần hai của cùng MSSV ghi đè dấu vết thiết bị và trạng thái.~~
+  **ĐÃ LÀM 02/10/2026** (thầy duyệt; PR riêng, `docs/04` mục 20): lần 2+ giữ bản
+  ghi đầu, trạng thái không hạ, chỉ nối Note. Không cần migration.
 
 ## Việc chỉ thầy quyết, đã ghi nhận trong GĐ9
 
