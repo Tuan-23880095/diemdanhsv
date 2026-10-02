@@ -39,7 +39,9 @@ Quy ước cho mọi script thêm vào đây (từ GĐ6 trở đi theo PLAN):
 - **`backup.php`** — sao lưu CSDL bằng PHP thuần (PDO + gzip, KHÔNG dùng
   `mysqldump`/shell vì host cấm `exec`), vào `../private/backups/`, tự dọn
   bản cũ (`--keep=N`), `--dry-run` liệt kê bảng + số dòng, `--config=` cho
-  CSDL thử. Đặt lịch qua hPanel Cron Jobs (lệnh mẫu ở đầu file).
+  CSDL thử. Đặt lịch qua hPanel Cron Jobs (lệnh mẫu ở đầu file). Sau mỗi lần
+  sao lưu thành công còn dọn token đăng nhập/xem điểm đã hết hạn trong
+  `auth_tokens` (L4, docs/04 mục 24) — tắt bằng `--no-clean-tokens`.
 
 Script thêm sau (GĐ7/8 theo PLAN, ví dụ `create-lecturer.php`,
 `fix-data.php`) theo đúng quy ước ở trên — xem docs/04-API-PHP.md mục 9.

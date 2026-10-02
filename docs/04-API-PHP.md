@@ -969,3 +969,61 @@ bằng bản `.clean.json` trước khi nạp — khoá ngoại `fk_keys_session
 nếu giữ. 5 cảnh báo FK của `classes.LecturerID` là danh sách nhiều giảng viên
 (mục 4), không có khoá ngoại trong CSDL, bỏ qua được.
 
+---
+
+## 24. Gia cố sau nạp dữ liệu (02/10/2026, tối) — L3 thời gian phản hồi login, L4 dọn `auth_tokens`
+
+Hai mục THẤP còn lại của review bảo mật độc lập lần 1 (`docs/05`), sửa trong
+một PR nhỏ trong lúc chờ thầy chạy checklist GĐ9 trên host. Không có
+migration, không đổi khuôn API, frontend không phải đổi gì.
+
+### L3 — login không lộ username qua độ trễ
+
+**Vấn đề.** `action_login` trả cùng một thông báo cho "sai tên" và "sai mật
+khẩu" (đúng bản GAS cũ), nhưng khi tên đăng nhập KHÔNG tồn tại thì không có
+bcrypt nào chạy → trả lời nhanh hơn ≈ 70 ms. Đo độ trễ là biết tài khoản nào
+có thật, rồi tập trung dò mật khẩu vào đó (M4 đã chặn 10 lần sai / 15 phút,
+nhưng vẫn không nên để lộ).
+
+**Cách sửa (`api/lib/auth.php`).** Hằng `AUTH_DUMMY_HASH` là một hash bcrypt
+cost 10 (cùng `PASSWORD_DEFAULT` đang dùng), không ứng với mật khẩu nào —
+chỉ để đốt thời gian, không phải bí mật. Hai chỗ gọi
+`password_verify($password, AUTH_DUMMY_HASH)` và bỏ qua kết quả:
+
+- khi `SELECT users` không ra dòng nào (tên không tồn tại hoặc không ACTIVE);
+- khi tài khoản còn hash **sha256 cũ** và mật khẩu SAI — vì kiểm sha256 rất
+  nhanh, ca này sẽ nhanh hơn ca đã rehash nếu không bù.
+
+Ca "còn hash cũ, mật khẩu ĐÚNG" vốn đã chậm (chạy `password_hash()` để
+rehash) nên không cần bù. Sau lần đăng nhập đầu, mọi tài khoản đều là bcrypt
+và ba ca sai/đúng/không-tồn-tại đều mất đúng một lần bcrypt.
+
+### L4 — dọn token hết hạn
+
+**Vấn đề.** `auth_tokens` (token giảng viên 6 giờ, token xem điểm 30 phút)
+chỉ có INSERT và DELETE khi logout; token hết hạn nằm mãi. `roles.php` luôn
+lọc `ExpiresAt > NOW()` nên không sai về bảo mật, nhưng bảng phình vô hạn
+(mỗi lần sinh viên xem điểm là một dòng).
+
+**Cách sửa.** Hàm mới `auth_tokens_cleanup(PDO $pdo): int` —
+`DELETE FROM auth_tokens WHERE ExpiresAt <= NOW()` (dùng chỉ mục
+`idx_tokens_exp`, xoá cả LECTURER lẫn GRADE), trả số dòng. Hai nơi gọi:
+
+| Nơi gọi | Khi nào | Ghi chú |
+|---|---|---|
+| `issue_token()` | ≈ 1/`AUTH_TOKEN_CLEANUP_EVERY` (= 50) lượt cấp token | FAIL-OPEN: lỗi chỉ `error_log`, không hỏng lượt đăng nhập/xem điểm vừa thành công — cùng kiểu với `rate_limits` (mục 19) |
+| `tools/backup.php` | sau mỗi lần sao lưu **thành công**, trước khi dọn file cũ | bản sao lưu vẫn còn nguyên các dòng vừa xoá; ghi `Đã dọn N token hết hạn` vào `backup.log`; tắt bằng `--no-clean-tokens`; `--dry-run` không dọn |
+
+Nhờ vậy cron sao lưu hằng ngày (GĐ6) đồng thời là cron dọn dẹp — không cần
+đặt thêm lịch nào trong hPanel.
+
+### Test đã chạy
+
+`tools/smoke_test.php` thêm mục **L3 + L4** (11 check): hash mồi là bcrypt
+cost 10 và không khớp mật khẩu rỗng/demo; "không có tài khoản" và "sai mật
+khẩu" trả cùng thông báo và **median 5 lượt** của ca không-có-tài-khoản không
+nhanh hơn 1/2 ca sai-mật-khẩu; login sai vẫn bị đếm giới hạn tần suất; token
+hết hạn bị API từ chối trước khi dọn; `auth_tokens_cleanup()` xoá đúng dòng
+quá hạn (LECTURER lẫn GRADE), giữ token sống và token đang dùng; gọi lại
+→ 0 dòng không lỗi. Tổng **204 check** (193 + 11). `php -l` sạch ba file.
+

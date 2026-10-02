@@ -15,6 +15,32 @@ declare(strict_types=1);
 const AUTH_TOKEN_TTL_LECTURER = 6 * 3600; // 6 giờ, đúng CacheService cũ
 
 /**
+ * L3 (docs/05 — login để lộ username qua thời gian phản hồi): khi tên đăng
+ * nhập KHÔNG tồn tại, server vẫn chạy một lần password_verify() trên hash
+ * bcrypt "mồi" này (cost 10, cùng PASSWORD_DEFAULT) để thời gian trả lời
+ * xấp xỉ ca "có tài khoản, sai mật khẩu". Hash mồi KHÔNG ứng với mật khẩu
+ * nào được dùng ở đâu cả — chỉ để đốt thời gian; không phải bí mật.
+ */
+const AUTH_DUMMY_HASH = '$2y$10$neKGKFysV6YZtYjp/BsUjOwSabs12ACaEt.62BWwhTdJS0UUwEtEa';
+
+/** L4: dọn token hết hạn ≈ 1/N lượt cấp token mới (bảng không phình, không phụ thuộc cron). */
+const AUTH_TOKEN_CLEANUP_EVERY = 50;
+
+/**
+ * L4 (docs/05 — auth_tokens hết hạn không bao giờ bị dọn): xoá mọi token
+ * (LECTURER lẫn GRADE) đã quá ExpiresAt. Token quá hạn vốn vô dụng — roles.php
+ * luôn lọc `ExpiresAt > NOW()` — nên xoá không đổi hành vi nào. Dùng chỉ mục
+ * idx_tokens_exp. Trả số dòng đã xoá. Gọi từ issue_token() (xác suất) và
+ * từ tools/backup.php (mỗi lần cron sao lưu).
+ */
+function auth_tokens_cleanup(PDO $pdo): int
+{
+    $stmt = $pdo->prepare('DELETE FROM auth_tokens WHERE ExpiresAt <= NOW()');
+    $stmt->execute();
+    return $stmt->rowCount();
+}
+
+/**
  * Sinh token ngẫu nhiên (64 hex, bin2hex(random_bytes(32))) và lưu vào
  * auth_tokens — thay CacheService.put('tok_'/'gtok_' + uuid, ...) cũ.
  */
@@ -31,6 +57,15 @@ function issue_token(string $kind, string $subjectId, int $ttlSeconds): string
         'subject' => $subjectId,
         'ttl'     => $ttlSeconds,
     ]);
+    // L4: thỉnh thoảng dọn token hết hạn. FAIL-OPEN — lỗi dọn không được làm
+    // hỏng lượt đăng nhập/xem điểm vừa thành công.
+    if (random_int(1, AUTH_TOKEN_CLEANUP_EVERY) === 1) {
+        try {
+            auth_tokens_cleanup(db());
+        } catch (PDOException $e) {
+            error_log('auth_tokens_cleanup: ' . $e->getMessage());
+        }
+    }
     return $token;
 }
 
@@ -74,6 +109,10 @@ function action_login(array $params): void
     $user = $stmt->fetch();
 
     if (!$user) {
+        // L3: đốt thời gian tương đương một lần kiểm bcrypt để không phân biệt
+        // được "không có tài khoản" với "sai mật khẩu" qua độ trễ phản hồi.
+        // Kết quả bị bỏ qua có chủ đích (luôn false).
+        password_verify($password, AUTH_DUMMY_HASH);
         rate_limit_record('login_ip', $ip);
         rate_limit_record('login_user', $userKey);
         api_fail($fail);
@@ -100,6 +139,10 @@ function action_login(array $params): void
                     'id'   => $user['UserID'],
                 ]);
             });
+        } else {
+            // L3: sha256 cũ kiểm rất nhanh — đốt thêm một bcrypt để ca "còn
+            // hash cũ, sai mật khẩu" không nhanh hơn ca đã rehash.
+            password_verify($password, AUTH_DUMMY_HASH);
         }
     }
 
