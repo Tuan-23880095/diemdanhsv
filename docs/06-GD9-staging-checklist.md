@@ -51,18 +51,18 @@ không ai nghi.
 Đánh dấu khi đạt. Mục nào không đạt thì ghi lại nguyên văn lỗi và gửi Quản gia
 — **không sang GĐ10 khi còn mục chưa đạt**.
 
-> **Tiến độ (cập nhật 02/10/2026, tối):** chuẩn bị 1–4 **xong** (xuất
+> **Tiến độ (cập nhật 02/10/2026, 22:40):** chuẩn bị 1–4 **xong** (xuất
 > `diemdanhsv-export-20261002-133752.json` từ dự án Apps Script gắn Sheet
 > "diemdanh"; nạp bằng bản `.clean.json` bỏ 3 `attendance_keys` mồ côi; sao
 > lưu `diemdanhsv-backup-20261002-074308.sql.gz`). **Mục 2 ĐẠT** (`KẾT LUẬN:
-> KHỚP`, sau hai lần sửa `import.php`/`compare` — docs/04 mục 23). **Mục 7**
-> mới đạt phần sao lưu + smoke 193/193 trên CSDL thử; còn `gunzip -t`, cron,
-> `migrate.php` không `--yes`. **Mục 3** đang chờ: thầy quên mật khẩu 1607 →
-> `tools/set_password.php --user=1607 --generate --legacy --yes` (PR #23 đã
-> merge), dán Salt/PasswordHash vào sheet 01_USERS rồi mới kiểm. Mục 1, 4, 6
-> chưa làm. Mục 5 **"chưa kiểm được"** (chưa có hộp thư `noreply@`). Sau checklist,
-> nhớ xoá file JSON dữ liệu thật trong `../private/import/` và trong thư mục
-> Drive xuất.
+> KHỚP`, sau hai lần sửa `import.php`/`compare` — docs/04 mục 23). **Mục 3
+> ĐẠT** (22:35 — sau khi đặt lại mật khẩu 1607 bằng `tools/set_password.php
+> --legacy`, PR #23; đăng nhập/sai mật khẩu/đăng xuất-đăng nhập lại/chỉ thấy lớp
+> mình đều đúng; PHP đã rehash). **Mục 7** đạt phần sao lưu + smoke **204/204**
+> trên CSDL thử (sau PR #24); còn `gunzip -t`, cron, `migrate.php` không
+> `--yes`. Mục 1, 4, 6 chưa làm. Mục 5 **"chưa kiểm được"** (chưa có hộp thư
+> `noreply@`). Sau checklist, nhớ xoá file JSON dữ liệu thật trong
+> `../private/import/` và trong thư mục Drive xuất.
 
 ### ☐ 1. Hạ tầng và phiên bản đang chạy
 
@@ -84,7 +84,7 @@ từng bảng khớp con số đã chụp ở bước chuẩn bị 1. Cột "Th�
 thầy đã tự nhập thêm trên trang quản trị sau khi xuất — khi đó xem danh sách ID
 in ra để chắc đúng là dòng mình vừa thêm.
 
-### ☐ 3. Đăng nhập giảng viên và mật khẩu cũ
+### ☑ 3. Đăng nhập giảng viên và mật khẩu cũ — ĐẠT 02/10/2026
 
 Mở `pages/lecturer.html?api=php`, đăng nhập bằng **mật khẩu cũ** đang dùng với
 Apps Script. (Quên mật khẩu → `php tools/set_password.php --user=<id> --generate
@@ -151,7 +151,7 @@ Trên `admin.html?api=php`:
   đầu `tools/backup.php`.
 - `php tools/smoke_test.php --config=../private/config.test.php` → **0 FAIL**
   (chạy trên CSDL **thử**, không phải CSDL thật). 02/10: 193/193 trước PR #24;
-  sau PR #24 mong **204**.
+  **204/204** sau PR #24 (22:20) — dòng này ĐẠT.
 - Thử `php tools/migrate.php` (không có `--yes`) → chỉ in hướng dẫn, không chạy.
 
 ## Sau khi 7/7 đạt — chuẩn bị GĐ10
