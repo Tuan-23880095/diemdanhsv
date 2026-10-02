@@ -939,3 +939,29 @@ Không cần migration; khuôn phong bì giữ nguyên (chỉ thêm trường).
   ghi danh từ đầu tính đủ; có dòng nhập tay cho buổi cũ → tính lại; cả lớp cùng
   ngày ghi danh → không ai muộn. Sandbox không có MySQL — chạy trên host.
 
+## 23. Nạp dữ liệu thật (02/10/2026) — sửa `import.php`/`compare_gas_php.php` sau lần nạp đầu
+
+Lần nạp thật đầu tiên (export `gas-export-1` lúc 13:37, 621 dòng/12 bảng, CSDL trống):
+`import.php --yes` ghi xong một transaction, `compare` báo **thiếu 0, lệch 38**.
+Soi chi tiết ra ba việc, một việc là lỗi thật:
+
+- **Lỗi thật — `sessions.StartTime/EndTime` thành `"1899-"` cho cả 33 buổi.**
+  Google Sheets lưu ô "chỉ giờ" thành ngày giờ trên mốc `1899-12-30T08:00:00`;
+  `import.php` để kiểu `text` → MariaDB cắt chuỗi vào `VARCHAR(5)`. Sửa: kiểu
+  mới `time` (`import_norm_time()`): nhận `…T08:00:00`, `08:00:00`, `8:00` → `HH:MM`;
+  không hiểu → NULL (không ghi rác). Chạy lại `--yes` với cùng file là tự sửa
+  (ON DUPLICATE KEY UPDATE).
+- **Giả — `sessions.Date`**: `2026-09-07T00:00:00` (file) ↔ `2026-09-07` (cột DATE).
+  `cmp_norm()` nay coi nửa đêm đúng bằng ngày.
+- **Giả — `attendance.GpsLat`** (5 dòng): `10.762711472899` ↔ `10.7627115`
+  (DECIMAL(10,7) làm tròn; so chuỗi 6 chữ số vẫn lệch ở biên). Thêm `cmp_equal()`:
+  hai số chênh ≤ 0,000001 là khớp. Chênh lớn hơn (vd `12.345` ↔ `12.3`) vẫn báo
+  lệch — đúng, vì đó là mất độ chính xác thật.
+- `audit_log` **thừa 1**: chính dòng `TOOLS_IMPORT_GD6` do `import.php` ghi — mong đợi.
+
+Ngoài ra 3 `attendance_keys` trỏ tới buổi `SES_066837BB60AF` không còn trong
+sheet SESSIONS (buổi đã xoá, không có bản ghi điểm danh nào) được **bỏ có chủ ý**
+bằng bản `.clean.json` trước khi nạp — khoá ngoại `fk_keys_session` sẽ từ chối
+nếu giữ. 5 cảnh báo FK của `classes.LecturerID` là danh sách nhiều giảng viên
+(mục 4), không có khoá ngoại trong CSDL, bỏ qua được.
+

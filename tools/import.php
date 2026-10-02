@@ -93,8 +93,8 @@ const IMPORT_TABLES = [
         'pk' => ['SessionID'],
         'cols' => [
             'SessionID' => 'text', 'ClassID' => 'text', 'SessionNo' => 'number',
-            'Date' => 'date', 'DayOfWeek' => 'text', 'StartTime' => 'text',
-            'EndTime' => 'text', 'Content' => 'text', 'Status' => 'text',
+            'Date' => 'date', 'DayOfWeek' => 'text', 'StartTime' => 'time',
+            'EndTime' => 'time', 'Content' => 'text', 'Status' => 'text',
             'CreatedAt' => 'datetime',
         ],
         'fk' => ['ClassID' => 'classes'],
@@ -210,6 +210,29 @@ function import_norm_date($v): ?string
     return $v; // không khớp mẫu nào — để nguyên, MySQL sẽ báo lỗi rõ ràng nếu sai
 }
 
+/**
+ * Giờ 'HH:MM' cho cột VARCHAR(5) (sessions.StartTime/EndTime). Google Sheets lưu
+ * ô "chỉ giờ" thành ngày giờ trên mốc 1899-12-30 ("1899-12-30T08:00:00") — phát
+ * hiện khi nạp dữ liệu thật 02/10/2026: để kiểu 'text' thì MariaDB cắt còn
+ * "1899-" cho CẢ 33 buổi. Nhận: "1899-12-30T08:00:00", "2026-09-07T08:00:00",
+ * "08:00:00", "8:00", "08:00". Không hiểu được → NULL (cột cho phép NULL), không
+ * ghi rác.
+ */
+function import_norm_time($v): ?string
+{
+    if ($v === null) return null;
+    $v = trim((string) $v);
+    if ($v === '') return null;
+    if (preg_match('/T(\d{1,2}):(\d{2})/', $v, $m) || preg_match('/^(\d{1,2}):(\d{2})(?::\d{2})?$/', $v, $m)) {
+        $h = (int) $m[1];
+        $i = (int) $m[2];
+        if ($h >= 0 && $h <= 23 && $i >= 0 && $i <= 59) {
+            return sprintf('%02d:%02d', $h, $i);
+        }
+    }
+    return null;
+}
+
 function import_norm_number($v): ?string
 {
     if ($v === null) return null;
@@ -232,6 +255,7 @@ function import_norm_row(array $row, array $colDefs): array
             'number' => import_norm_number($v),
             'date' => import_norm_date($v),
             'datetime' => import_norm_datetime($v),
+            'time' => import_norm_time($v),
             default => import_norm_text($v),
         };
     }

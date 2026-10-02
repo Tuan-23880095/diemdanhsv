@@ -116,17 +116,45 @@ function cmp_norm($v): string
     if ($s === '') {
         return '';
     }
-    // Ngày giờ: 2026-10-02T07:30:00 ↔ 2026-10-02 07:30:00 (bỏ phần giây .000)
+    // Ô "chỉ giờ" của Google Sheets: 1899-12-30T08:00:00 ↔ cột VARCHAR(5) '08:00'
+    // (sessions.StartTime/EndTime — phát hiện khi so khớp dữ liệu thật 02/10/2026).
+    if (preg_match('/^1899-12-30[T ](\d{1,2}):(\d{2})/', $s, $m)) {
+        return sprintf('%02d:%02d', (int) $m[1], (int) $m[2]);
+    }
+    if (preg_match('/^(\d{1,2}):(\d{2})(?::\d{2})?$/', $s, $m)) {
+        return sprintf('%02d:%02d', (int) $m[1], (int) $m[2]);
+    }
+    // Ngày giờ: 2026-10-02T07:30:00 ↔ 2026-10-02 07:30:00 (bỏ phần giây .000).
+    // Nửa đêm đúng ↔ cột DATE: 2026-09-07T00:00:00 ↔ 2026-09-07.
     if (preg_match('/^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2}(?::\d{2})?)/', $s, $m)) {
         $time = strlen($m[2]) === 5 ? $m[2] . ':00' : $m[2];
-        return $m[1] . ' ' . $time;
+        return $time === '00:00:00' ? $m[1] : $m[1] . ' ' . $time;
     }
-    // Số: 8 ↔ 8.00 ↔ "8,0"
+    // Số: 8 ↔ 8.00 ↔ "8,0". So ở 6 chữ số thập phân; sai khác do làm tròn theo
+    // DECIMAL của CSDL (GpsLat 10.762711472899 ↔ 10.7627115) xử lý ở cmp_equal().
     $num = str_replace(',', '.', $s);
     if (is_numeric($num)) {
         return rtrim(rtrim(number_format((float) $num, 6, '.', ''), '0'), '.');
     }
     return $s;
+}
+
+/**
+ * Hai giá trị coi là khớp khi chuẩn hoá bằng nhau, hoặc cả hai là số và chênh
+ * lệch ≤ 0,000001 (CSDL lưu DECIMAL(10,7)/(8,1)/(9,1) nên làm tròn khác file;
+ * so chuỗi sau khi làm tròn 6 chữ số vẫn lệch ở biên — 10.7627114|7 ↔ 10.7627115).
+ */
+function cmp_equal($a, $b): bool
+{
+    $na = cmp_norm($a);
+    $nb = cmp_norm($b);
+    if ($na === $nb) {
+        return true;
+    }
+    if ($na !== '' && $nb !== '' && is_numeric($na) && is_numeric($nb)) {
+        return abs((float) $na - (float) $nb) <= 0.000001 + 1e-9;
+    }
+    return false;
 }
 
 function skipped_columns(string $table): array
@@ -188,7 +216,7 @@ foreach ($tables as $table) {
         foreach ($dbRow as $col => $dbVal) {
             if (in_array($col, $skip, true)) continue;
             if (!array_key_exists($col, $fileRow)) continue; // cột mới của bản PHP
-            if (cmp_norm($fileRow[$col]) !== cmp_norm($dbVal)) {
+            if (!cmp_equal($fileRow[$col], $dbVal)) {
                 $bad[] = $col . ': GAS="' . mb_substr(trim((string) $fileRow[$col]), 0, 40) .
                     '" ≠ CSDL="' . mb_substr(trim((string) $dbVal), 0, 40) . '"';
             }
