@@ -958,6 +958,10 @@ Soi chi tiết ra ba việc, một việc là lỗi thật:
   hai số chênh ≤ 0,000001 là khớp. Chênh lớn hơn (vd `12.345` ↔ `12.3`) vẫn báo
   lệch — đúng, vì đó là mất độ chính xác thật.
 - `audit_log` **thừa 1**: chính dòng `TOOLS_IMPORT_GD6` do `import.php` ghi — mong đợi.
+- **`sessions.SessionNo = "END"`** (5 buổi tổng kết thầy ghi tay trong Sheets) → cột INT
+  ép thành 0 → buổi tổng kết nhảy lên đầu danh sách. Thầy chọn (02/10): kiểu
+  `sessionno` trong `import.php` — không phải số → **99** (xếp cuối); `compare`
+  coi `END` ↔ `99` là khớp. Sửa lại số buổi trên trang quản trị bất cứ lúc nào.
 
 Ngoài ra 3 `attendance_keys` trỏ tới buổi `SES_066837BB60AF` không còn trong
 sheet SESSIONS (buổi đã xoá, không có bản ghi điểm danh nào) được **bỏ có chủ ý**
