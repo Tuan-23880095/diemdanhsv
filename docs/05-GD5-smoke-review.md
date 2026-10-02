@@ -106,10 +106,12 @@ Các mục dưới đây đụng tới thiết kế hoặc hành vi, nên không
 - ~~**M5 – Không có bước kiểm cho `presentMinutes`/`windowMinutes`.**~~ **ĐÃ SỬA 02/10 (kẹp 1–60, docs/04 mục 19).**
   Giảng viên có thể mở mã sống rất lâu (chỉ trên lớp của chính mình).
   - Đề xuất: kẹp giá trị trong khoảng 1–60 phút.
-- **L3 – Login để lộ username qua thời gian phản hồi.** Khi user không tồn
-  tại, server trả về nhanh hơn vì không chạy bcrypt.
-- **L4 – `auth_tokens` hết hạn không bao giờ bị dọn.** Có thể gộp vào cron
-  `tools/backup.php` của GĐ6.
+- ~~**L3 – Login để lộ username qua thời gian phản hồi.**~~ **ĐÃ SỬA 02/10 (docs/04 mục 24).** Khi user không tồn
+  tại, server trả về nhanh hơn vì không chạy bcrypt. → Nay luôn chạy một
+  `password_verify()` trên hash mồi `AUTH_DUMMY_HASH`.
+- ~~**L4 – `auth_tokens` hết hạn không bao giờ bị dọn.**~~ **ĐÃ SỬA 02/10 (docs/04 mục 24).** Có thể gộp vào cron
+  `tools/backup.php` của GĐ6. → `auth_tokens_cleanup()`: gọi từ `tools/backup.php`
+  sau mỗi lần sao lưu và ≈ 1/50 lượt cấp token.
 - **L5 – Token đi qua query string GET** (theo thiết kế cũ). Chỉ ghi nhận,
   chưa sửa.
 

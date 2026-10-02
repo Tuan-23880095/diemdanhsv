@@ -51,16 +51,29 @@ không ai nghi.
 Đánh dấu khi đạt. Mục nào không đạt thì ghi lại nguyên văn lỗi và gửi Quản gia
 — **không sang GĐ10 khi còn mục chưa đạt**.
 
+> **Tiến độ (cập nhật 02/10/2026, tối):** chuẩn bị 1–4 **xong** (xuất
+> `diemdanhsv-export-20261002-133752.json` từ dự án Apps Script gắn Sheet
+> "diemdanh"; nạp bằng bản `.clean.json` bỏ 3 `attendance_keys` mồ côi; sao
+> lưu `diemdanhsv-backup-20261002-074308.sql.gz`). **Mục 2 ĐẠT** (`KẾT LUẬN:
+> KHỚP`, sau hai lần sửa `import.php`/`compare` — docs/04 mục 23). **Mục 7**
+> mới đạt phần sao lưu + smoke 193/193 trên CSDL thử; còn `gunzip -t`, cron,
+> `migrate.php` không `--yes`. **Mục 3** đang chờ: thầy quên mật khẩu 1607 →
+> `tools/set_password.php --user=1607 --generate --legacy --yes` (PR #23 đã
+> merge), dán Salt/PasswordHash vào sheet 01_USERS rồi mới kiểm. Mục 1, 4, 6
+> chưa làm. Mục 5 **"chưa kiểm được"** (chưa có hộp thư `noreply@`). Sau checklist,
+> nhớ xoá file JSON dữ liệu thật trong `../private/import/` và trong thư mục
+> Drive xuất.
+
 ### ☐ 1. Hạ tầng và phiên bản đang chạy
 
 - `https://diemdanhsv.com/api/index.php?action=ping` trả
   `{"status":"success",...,"version":"php-0.7"}` (hoặc mới hơn; `php-0.7` = đã có
-  giới hạn tần suất M4).
+  giới hạn tần suất M4). Mở trong trình duyệt là đủ.
 - `https://diemdanhsv.com/api/lib/db.php` trả **403** (không lộ mã nguồn).
 - `https://diemdanhsv.com/tools/smoke_test.php` trả **403**.
 - `https://diemdanhsv.com/db/schema.sql` trả **403**.
 
-### ☐ 2. Dữ liệu khớp từng bảng
+### ☑ 2. Dữ liệu khớp từng bảng — ĐẠT 02/10/2026
 
 ```
 php tools/compare_gas_php.php --file=../private/import/<tên file>.json
@@ -74,7 +87,9 @@ in ra để chắc đúng là dòng mình vừa thêm.
 ### ☐ 3. Đăng nhập giảng viên và mật khẩu cũ
 
 Mở `pages/lecturer.html?api=php`, đăng nhập bằng **mật khẩu cũ** đang dùng với
-Apps Script.
+Apps Script. (Quên mật khẩu → `php tools/set_password.php --user=<id> --generate
+--legacy --yes`, dán Salt/PasswordHash vào sheet 01_USERS để Apps Script cũng
+nhận — rồi kiểm mục này với mật khẩu mới; luồng rehash vẫn đúng như dưới.)
 
 - Đăng nhập được, hiện đúng tên.
 - Chỉ thấy đúng các lớp mình đứng tên (giảng viên khác không hiện).
@@ -135,7 +150,8 @@ Trên `admin.html?api=php`:
 - Đã đặt cron sao lưu hằng ngày trong hPanel (Advanced → Cron Jobs), lệnh mẫu ở
   đầu `tools/backup.php`.
 - `php tools/smoke_test.php --config=../private/config.test.php` → **0 FAIL**
-  (chạy trên CSDL **thử**, không phải CSDL thật).
+  (chạy trên CSDL **thử**, không phải CSDL thật). 02/10: 193/193 trước PR #24;
+  sau PR #24 mong **204**.
 - Thử `php tools/migrate.php` (không có `--yes`) → chỉ in hướng dẫn, không chạy.
 
 ## Sau khi 7/7 đạt — chuẩn bị GĐ10
