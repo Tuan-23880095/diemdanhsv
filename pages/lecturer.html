@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bảng điều khiển — Giảng viên</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css">
-<link rel="stylesheet" href="../css/print.css">
+<link rel="stylesheet" href="../css/main.css?v=20261002b">
+<link rel="stylesheet" href="../css/print.css?v=20261002b">
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
@@ -142,14 +142,14 @@
 
 <div id="toast" class="toast fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-slate-900 px-4 py-2 text-sm text-white shadow-lg" hidden></div>
 
-<script src="../js/config/config.js?v=20261002"></script>
-<script src="../js/models/Student.js"></script>
-<script src="../js/models/AcademicClass.js"></script>
-<script src="../js/models/ClassSession.js"></script>
-<script src="../js/models/Attendance.js"></script>
-<script src="../js/services/APIService.js"></script>
-<script src="../js/views/RosterView.js"></script>
-<script src="../js/controllers/LecturerController.js"></script>
+<script src="../js/config/config.js?v=20261002b"></script>
+<script src="../js/models/Student.js?v=20261002b"></script>
+<script src="../js/models/AcademicClass.js?v=20261002b"></script>
+<script src="../js/models/ClassSession.js?v=20261002b"></script>
+<script src="../js/models/Attendance.js?v=20261002b"></script>
+<script src="../js/services/APIService.js?v=20261002b"></script>
+<script src="../js/views/RosterView.js?v=20261002b"></script>
+<script src="../js/controllers/LecturerController.js?v=20261002b"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     new LecturerController(new APIService(CONFIG.API_URL), new RosterView()).init();
