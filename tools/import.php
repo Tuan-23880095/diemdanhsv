@@ -92,7 +92,7 @@ const IMPORT_TABLES = [
     'sessions' => [
         'pk' => ['SessionID'],
         'cols' => [
-            'SessionID' => 'text', 'ClassID' => 'text', 'SessionNo' => 'number',
+            'SessionID' => 'text', 'ClassID' => 'text', 'SessionNo' => 'sessionno',
             'Date' => 'date', 'DayOfWeek' => 'text', 'StartTime' => 'time',
             'EndTime' => 'time', 'Content' => 'text', 'Status' => 'text',
             'CreatedAt' => 'datetime',
@@ -233,6 +233,25 @@ function import_norm_time($v): ?string
     return null;
 }
 
+/** Số buổi "END" (buổi tổng kết, thầy ghi tay trong Sheets) → 99 để xếp CUỐI danh sách. */
+const IMPORT_SESSIONNO_END = 99;
+
+/**
+ * sessions.SessionNo là INT. Trong Sheets thầy ghi "END" cho buổi tổng kết →
+ * ép kiểu thành 0 và buổi đó nhảy lên ĐẦU danh sách (ORDER BY SessionNo).
+ * Nay: số → giữ; không phải số (END, trống…) → IMPORT_SESSIONNO_END. Thầy chọn
+ * cách này 02/10/2026 (thay vì sửa Sheet); sửa lại số buổi trên trang quản trị
+ * bất cứ lúc nào.
+ */
+function import_norm_sessionno($v): string
+{
+    $v = trim((string) ($v ?? ''));
+    if ($v !== '' && is_numeric($v)) {
+        return (string) (int) $v;
+    }
+    return (string) IMPORT_SESSIONNO_END;
+}
+
 function import_norm_number($v): ?string
 {
     if ($v === null) return null;
@@ -256,6 +275,7 @@ function import_norm_row(array $row, array $colDefs): array
             'date' => import_norm_date($v),
             'datetime' => import_norm_datetime($v),
             'time' => import_norm_time($v),
+            'sessionno' => import_norm_sessionno($v),
             default => import_norm_text($v),
         };
     }

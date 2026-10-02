@@ -151,6 +151,11 @@ function cmp_equal($a, $b): bool
     if ($na === $nb) {
         return true;
     }
+    // sessions.SessionNo "END" trong Sheets ↔ 99 trong CSDL (tools/import.php
+    // import_norm_sessionno — thầy chọn 02/10/2026).
+    if (($na === 'END' && $nb === '99') || ($na === '99' && $nb === 'END')) {
+        return true;
+    }
     if ($na !== '' && $nb !== '' && is_numeric($na) && is_numeric($nb)) {
         return abs((float) $na - (float) $nb) <= 0.000001 + 1e-9;
     }
