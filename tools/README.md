@@ -43,3 +43,10 @@ Quy ước cho mọi script thêm vào đây (từ GĐ6 trở đi theo PLAN):
 
 Script thêm sau (GĐ7/8 theo PLAN, ví dụ `create-lecturer.php`,
 `fix-data.php`) theo đúng quy ước ở trên — xem docs/04-API-PHP.md mục 9.
+- **`set_password.php`** — đặt lại mật khẩu một tài khoản `users` (quên mật
+  khẩu — hash không khôi phục được). `--user=<UserID|Username>`, `--generate`
+  (sinh 12 ký tự, in một lần) hoặc nhập từ STDIN, `--legacy` (ghi
+  sha256(salt|plain) + in Salt/PasswordHash để dán vào sheet 01_USERS cho Apps
+  Script dự phòng; PHP tự rehash lần đăng nhập đầu), `--dry-run`, bắt buộc
+  `--yes` để ghi. Huỷ token đăng nhập cũ, ghi audit `TOOLS_SET_PASSWORD`.
+
