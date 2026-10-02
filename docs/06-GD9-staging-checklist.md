@@ -51,7 +51,7 @@ không ai nghi.
 Đánh dấu khi đạt. Mục nào không đạt thì ghi lại nguyên văn lỗi và gửi Quản gia
 — **không sang GĐ10 khi còn mục chưa đạt**.
 
-> **Tiến độ (cập nhật 02/10/2026, 22:55):** chuẩn bị 1–4 **xong** (xuất
+> **Tiến độ (cập nhật 03/10/2026, 01:15):** chuẩn bị 1–4 **xong** (xuất
 > `diemdanhsv-export-20261002-133752.json` từ dự án Apps Script gắn Sheet
 > "diemdanh"; nạp bằng bản `.clean.json` bỏ 3 `attendance_keys` mồ côi; sao
 > lưu `diemdanhsv-backup-20261002-074308.sql.gz`). **Mục 2 ĐẠT** (`KẾT LUẬN:
@@ -62,9 +62,16 @@ không ai nghi.
 > địa chỉ `api/lib/db.php`, `tools/smoke_test.php`, `db/schema.sql` đều 403).
 > **Mục 7** đạt 4/5 dòng: sao lưu OK, `gunzip -t` OK, smoke **204/204** trên
 > CSDL thử (sau PR #24), `migrate.php` không `--yes` từ chối đúng; **còn đặt
-> cron** sao lưu trong hPanel. Mục 4, 6 chưa làm. Mục 5 **"chưa kiểm được"** (chưa có hộp thư
-> `noreply@`). Sau checklist, nhớ xoá file JSON dữ liệu thật trong
-> `../private/import/` và trong thư mục Drive xuất.
+> cron** sao lưu trong hPanel. **Mục 6 ĐẠT** (03/10 00:30 — môn/lớp demo, CSV
+> lớp, CSV điểm, chuyên cần ghi 2 lần không cột đôi, điểm danh tay, tài khoản
+> admin riêng tạo bằng `tools/user.php`; lỗi "adminSessionAttendance is not a
+> function" là cache JS cũ → PR #28 chống cache mọi JS/CSS). **Mục 5 ĐẠT**
+> (03/10 01:10 — hộp thư `noreply@diemdanhsv.com` đã tạo, `smtp.pass` đã điền,
+> `mail_test.php` ĐÃ GỬI 2,3 s, sinh viên demo nhận mã qua Gmail, nhập đúng
+> thấy bảng điểm, sai 5 lần mã huỷ; PR #29 mailer SMTP thật). **Chỉ còn mục 4**
+> (buổi điểm danh thử 2–3 điện thoại) và dòng cron của mục 7. Sau checklist,
+> nhớ xoá file JSON dữ liệu thật trong `../private/import/` và trong thư mục
+> Drive xuất.
 
 ### ☑ 1. Hạ tầng và phiên bản đang chạy — ĐẠT 02/10/2026
 
@@ -117,7 +124,7 @@ Chọn **một buổi học thật** (hoặc một buổi thử ngoài giờ d�
 So số liệu buổi này với Apps Script (mở bản thật, cùng buổi): số có mặt, trễ,
 vắng phải **giống nhau**.
 
-### ☐ 5. Xem điểm hai bước và điểm chuyên cần
+### ☑ 5. Xem điểm hai bước và điểm chuyên cần — ĐẠT 03/10/2026
 
 Trên `diem.html?api=php`, với **một MSSV thật có email thật**:
 
@@ -131,7 +138,7 @@ Trên `diem.html?api=php`, với **một MSSV thật có email thật**:
   (`admin.html?api=php` → tab Điểm & chuyên cần).
 - Em nào đủ ngưỡng cấm thi thì cả hai trang đều báo cấm thi.
 
-### ☐ 6. Quản trị và nhập liệu hàng loạt
+### ☑ 6. Quản trị và nhập liệu hàng loạt — ĐẠT 03/10/2026
 
 Trên `admin.html?api=php`:
 
