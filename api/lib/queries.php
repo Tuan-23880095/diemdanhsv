@@ -152,7 +152,10 @@ function action_my_grades(array $params): void
             'weightDone'  => $totals['weightDone'],
             'weightTotal' => $totals['weightTotal'],
             'attendance'  => $mine === null ? null : [
-                'sessionsCounted'    => $stats['sessionsCounted'],
+                // L11: số buổi TÍNH CHO EM NÀY (bỏ buổi trước ngày ghi danh), kèm số buổi bỏ qua.
+                'sessionsCounted'         => $mine['sessionsCounted'],
+                'sessionsInClass'         => $stats['sessionsCounted'],
+                'skippedBeforeEnrollment' => $mine['skippedBeforeEnrollment'],
                 'present'            => $mine['present'],
                 'late'               => $mine['late'],
                 'absent'             => $mine['absent'],

@@ -299,7 +299,12 @@ class AdminView {
       '<td class="px-2 py-1 text-right">' + x.present + '</td><td class="px-2 py-1 text-right">' + x.late + '</td>' +
       '<td class="px-2 py-1 text-right">' + x.absent + '</td><td class="px-2 py-1 text-right">' + x.excused + '</td>' +
       '<td class="px-2 py-1 text-right font-semibold">' + this._esc(x.score) + '</td>' +
-      '<td class="px-2 py-1">' + (x.banned ? '<span class="rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">Cấm thi (' + x.equivalentAbsences + ' vắng tđ)</span>' : '<span class="text-xs text-slate-400">' + x.equivalentAbsences + ' vắng tđ</span>') + '</td></tr>').join('');
+      '<td class="px-2 py-1">' + (x.banned ? '<span class="rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">Cấm thi (' + x.equivalentAbsences + ' vắng tđ)</span>' : '<span class="text-xs text-slate-400">' + x.equivalentAbsences + ' vắng tđ</span>') +
+      // L11: SV ghi danh muộn — ghi rõ số buổi trước ngày ghi danh đã bỏ qua.
+      (Number(x.skippedBeforeEnrollment) > 0
+        ? ' <span class="text-xs text-sky-700" title="Ghi danh ' + this._esc(x.enrolledAt) + '">ghi danh muộn, tính ' + x.sessionsCounted + '/' + rep.sessionsCounted + ' buổi</span>'
+        : '') +
+      '</td></tr>').join('');
     this.el.attReport.hidden = false;
     this.el.attApplyBtn.disabled = written || rep.sessionsCounted === 0;
   }
