@@ -226,9 +226,10 @@ nhận khi viết code GĐ2 (không đoán ở đây).
    "sinh viên... lựa chọn khiếu nại, nhập nội dung khiếu nại". Không có
    trong phạm vi 13 action port lần này — nếu cần, đây là action **thứ 14**,
    ngoài phạm vi GĐ1–GĐ5 hiện tại, để dành cho giai đoạn sau nếu thầy muốn.
-4. **SMTP thật.** `requestGradeCode` cần gửi mail thật; theo PLAN GĐ3 vẫn
-   dùng stub (ví dụ ghi log thay vì gửi) cho đến khi thầy tạo hộp thư
-   `noreply@diemdanhsv.com`.
+4. **SMTP thật.** ~~theo PLAN GĐ3 vẫn dùng stub~~ **ĐÃ LÀM 02/10/2026 (mục
+   25):** `api/lib/mailer.php` gửi qua SMTP bằng PHP thuần; tự về chế độ stub
+   khi `config.php` chưa có `smtp.pass`. Thầy chỉ còn tạo hộp thư
+   `noreply@diemdanhsv.com` và điền mật khẩu.
 
 ## 11. Việc tiếp theo (GĐ10)
 
@@ -261,11 +262,10 @@ Port đúng theo mục 6 (rehash mật khẩu qua 2 bước) và mục 10.1 (b�
 - **Cooldown 60s và giới hạn 5 lần/24h dùng `db_now()`** (giờ CSDL, không
   phải giờ PHP) để tránh lệch giờ giữa host PHP và MariaDB khi so sánh
   `LastSentAt`/`WindowStartAt`.
-- **SMTP vẫn là stub** (`api/lib/mailer.php` → `mail_send()`, chỉ
-  `error_log()`) — bỏ qua bước kiểm "quota gửi mail còn lại"
-  (`MailApp.getRemainingDailyQuota()` cũ không có tương đương chờ SMTP
-  thật). Thay thân `mail_send()` khi có hộp thư `noreply@diemdanhsv.com`
-  thật, không cần đổi nơi gọi.
+- ~~**SMTP vẫn là stub**~~ → SMTP thật từ 02/10/2026 (mục 25); stub chỉ còn
+  là chế độ dự phòng khi chưa cấu hình. Vẫn không có bước kiểm "quota gửi
+  mail còn lại" (`MailApp.getRemainingDailyQuota()` cũ) — Hostinger giới hạn
+  theo hộp thư, lỗi vượt hạn sẽ hiện ở `error_log` + audit `GRADE_CODE_MAIL_FAIL`.
 - **Test đã chạy trong phiên này:** `php -l` sạch trên toàn bộ file mới/sửa.
   Sandbox phiên này KHÔNG có MariaDB/MySQL cục bộ (không có mạng ra ngoài
   để cài) nên chỉ test được các hàm THUẦN không đụng CSDL (`is_modern_hash`,
@@ -1026,4 +1026,57 @@ nhanh hơn 1/2 ca sai-mật-khẩu; login sai vẫn bị đếm giới hạn t�
 hết hạn bị API từ chối trước khi dọn; `auth_tokens_cleanup()` xoá đúng dòng
 quá hạn (LECTURER lẫn GRADE), giữ token sống và token đang dùng; gọi lại
 → 0 dòng không lỗi. Tổng **204 check** (193 + 11). `php -l` sạch ba file.
+
+---
+
+## 25. SMTP thật cho mã xem điểm (02/10/2026, tối) — `api/lib/mailer.php`
+
+Checklist GĐ9 mục 5 "chưa kiểm được" vì `mail_send()` là stub. Bản này gửi
+thật qua SMTP của hộp thư Hostinger, bằng PHP thuần — không PHPMailer/Composer
+(host không có `vendor/`, cấm `exec`), không migration, không đổi API.
+
+### Cấu hình (`../private/config.php`, mục `smtp` — mẫu ở `db/config.sample.php`)
+
+| Khoá | Bắt buộc | Ý nghĩa |
+|---|---|---|
+| `host` | có | `smtp.hostinger.com` |
+| `port` | có | `465` (TLS ngầm, khuyên dùng) hoặc `587` (STARTTLS) |
+| `user` | có | địa chỉ hộp thư, vd `noreply@diemdanhsv.com` |
+| `pass` | có | mật khẩu hộp thư — **còn trống/`CHANGE_ME` = chế độ stub** |
+| `from`, `from_name` | không | mặc định `= user` và "Hệ thống điểm danh & xem điểm" |
+| `tls` | không | `implicit` / `starttls` — mặc định theo cổng |
+| `cafile` | không | CA bundle riêng nếu PHP trên host không xác minh được chứng chỉ |
+| `timeout` | không | giây, mặc định 15 |
+
+### Hành vi
+
+- `mail_send(to, subject, body): bool` — **không bao giờ ném lỗi**. `true` khi
+  máy chủ SMTP đã nhận thư (250 sau DATA); `false` khi ở chế độ stub hoặc gửi
+  hỏng (lỗi ghi `error_log`, không kèm mật khẩu/thân thư).
+- Luồng: kết nối TLS (xác minh chứng chỉ, SNI) → EHLO → (STARTTLS nếu 587) →
+  `AUTH LOGIN` → MAIL FROM/RCPT TO/DATA → QUIT. Thư `text/plain; charset=UTF-8`,
+  header UTF-8 theo RFC 2047, thân base64 (an toàn mọi máy chủ), dot-stuffing,
+  `Message-ID`, `Auto-Submitted: auto-generated`.
+- `requestGradeCode` (gradeauth.php): gửi hỏng vẫn trả **phản hồi trung tính**
+  (không lộ MSSV nào có email) nhưng ghi audit **`GRADE_CODE_MAIL_FAIL`** thay
+  vì `GRADE_CODE_SENT` — thầy lọc audit_log là thấy ngay sinh viên nào không
+  nhận được mã. Chi tiết lỗi ở `error_log` của PHP.
+- Stub (chưa cấu hình) giữ nguyên hành vi cũ, kể cả cờ `app.mail_stub_log_body`.
+
+### Kiểm thử
+
+- `tools/mail_test.php --to=<email của thầy>` — gửi một thư thử, in ĐÃ GỬI /
+  CHẾ ĐỘ STUB / GỬI THẤT BẠI kèm lý do (không in mật khẩu). Chạy trước khi làm
+  checklist mục 5.
+- Sandbox: `mail_send()` chạy đúng với máy chủ SMTP giả ba ca — TLS ngầm 465,
+  STARTTLS, sai mật khẩu (→ `false`, log "SMTP từ chối ở bước AUTH mật khẩu:
+  535 …"); thư nhận được giải mã đúng tiếng Việt ở Subject/From/thân.
+  `smoke_test.php` không phụ thuộc mail (tự chèn hash mã) nên vẫn 204.
+
+### Việc còn lại của thầy
+
+1. hPanel → Emails → tạo hộp thư `noreply@diemdanhsv.com` (mật khẩu mạnh).
+2. Điền `smtp.pass` (và kiểm `host/port/user`) vào `../private/config.php`.
+3. `php tools/mail_test.php --to=<email của thầy>` → ĐÃ GỬI → kiểm hộp thư (cả Spam).
+4. Checklist mục 5 trên `diem.html?api=php` với một MSSV có email thật.
 

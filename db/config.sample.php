@@ -13,11 +13,18 @@ return [
         'pass'    => 'CHANGE_ME',
         'charset' => 'utf8mb4',
     ],
+    // SMTP gửi mã xem điểm (api/lib/mailer.php, docs/04 mục 25). pass còn
+    // 'CHANGE_ME'/trống = chế độ STUB (không gửi, chỉ ghi error_log).
+    // Thử: php tools/mail_test.php --to=<email của thầy>
     'smtp' => [
-        'host' => 'smtp.hostinger.com',
-        'port' => 465,
-        'user' => 'noreply@diemdanhsv.com', // GĐ3: dùng stub cho đến khi thầy tạo hộp thư thật
-        'pass' => 'CHANGE_ME',
+        'host'      => 'smtp.hostinger.com',
+        'port'      => 465,                      // 465 TLS ngầm (khuyên dùng) | 587 STARTTLS
+        'user'      => 'noreply@diemdanhsv.com', // = địa chỉ hộp thư tạo trong hPanel → Emails
+        'pass'      => 'CHANGE_ME',
+        // 'from'      => 'noreply@diemdanhsv.com', // mặc định = user
+        // 'from_name' => 'Hệ thống điểm danh & xem điểm',
+        // 'tls'       => 'implicit',             // hoặc 'starttls'; mặc định theo cổng
+        // 'cafile'    => '/path/ca-bundle.crt',  // chỉ khi host không xác minh được chứng chỉ
     ],
     'app' => [
         'timezone'             => 'Asia/Ho_Chi_Minh',
