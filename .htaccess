@@ -27,3 +27,21 @@ RewriteRule (^|/)error_log$ - [F,L]
 # Chặn tài liệu và script không phục vụ web
 RewriteRule \.(md|ps1|sql|gs|yml|yaml|log|bak)$ - [F,L]
 RewriteRule ^firebase\.json$ - [F,L]
+
+# Chống cache cho file cấu hình frontend và các trang HTML (02/10/2026, phát
+# hiện khi thầy thử ?api=php: host/CDN/trình duyệt vẫn trả config.js bản cũ dù
+# code mới đã deploy — ping PHP mới nhưng JS cũ). Trước cutover GĐ10 (đổi
+# API_URL) điều này là BẮT BUỘC: nếu không, sinh viên vẫn chạy config cũ trỏ
+# Apps Script sau khi đã chuyển sang PHP. Các file JS khác vẫn được cache bình
+# thường; trang HTML nạp config.js?v=... nên đổi phiên bản là mọi máy tải lại.
+<IfModule mod_headers.c>
+  <FilesMatch "^config\.js$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
