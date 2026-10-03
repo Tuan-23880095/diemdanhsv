@@ -173,7 +173,17 @@ Trên `admin.html?api=php`:
 - Thử `php tools/migrate.php` (không có `--yes`) → chỉ in hướng dẫn, không chạy. ✓ 02/10
   (nhận đúng CSDL thật, in "thiếu --yes — KHÔNG chạy gì").
 
-## Sau khi 7/7 đạt — GĐ10 cutover (PR đã soạn sẵn, CHỈ MERGE KHI 7/7 ĐẠT)
+## Sau khi 7/7 đạt — GĐ10 cutover
+
+> **✅ ĐÃ CUTOVER 03/10/2026 07:45 (giờ VN).** Trình tự 7 bước dưới đây đã chạy
+> đúng thứ tự: nạp lại dữ liệu từ Sheet (export 07:02 → `import.php --yes --only=…
+> --drop-orphans`, +50 lượt điểm danh, +3 key, bỏ 3 key mồ côi; `compare`: mọi
+> bảng nghiệp vụ không thiếu/không lệch — khác biệt chỉ ở `users` (vai trò 1607,
+> tên tài khoản admin) và `audit_log` (hai sổ nhật ký, không nạp), thừa = demo) →
+> `backup.php` OK (1134 dòng) → merge PR #20 → xoá cache Hostinger → kiểm 5 điểm
+> ĐẠT. **Từ giờ MariaDB là nguồn thật; Google Sheet đứng yên, `?api=gas` là đường
+> lùi đến hết 10/10/2026.** PR #32 (`import.php --only` kiểm FK đúng, `--drop-orphans`)
+> sinh ra từ chính bước 2.
 
 PR GĐ10 (`agent/web-g10-cutover`, PR #20) chứa đúng 4 thay đổi, không đụng PHP/CSDL:
 
