@@ -1,6 +1,6 @@
 # 02 — Bàn giao trạng thái dự án
 
-Cập nhật: 02/10/2026 (GĐ10 — cutover sang PHP/MariaDB trên Hostinger).
+Cập nhật: 03/10/2026 — **ĐÃ CUTOVER 07:45 giờ VN** sang PHP/MariaDB trên Hostinger (PR #20); theo dõi đến 10/10/2026.
 Bản trước (12/09/2026, kiến trúc Apps Script + Google Sheets) nằm trong lịch
 sử git của file này.
 
@@ -88,11 +88,13 @@ gia cố). Migration 002–005 đã áp trên CSDL thật.
    (hPanel → Hiệu suất → Trình quản lý bộ nhớ đệm → Xóa tất cả).
 3. **Sau ≥ 1 tuần ổn**: gỡ `gas` khỏi `API_TARGETS` (giữ `gas/` trong repo làm
    tham chiếu), dừng deployment Apps Script, đổi `?v=`.
-4. **Việc còn mở** (ghi ở `docs/06` mục cuối và STATE): hộp thư
-   `noreply@diemdanhsv.com` + thay stub SMTP (`api/lib/mailer.php`) để xem điểm
-   2 bước gửi mail thật; cron sao lưu hằng ngày (`tools/backup.php`, hPanel →
-   Cron Jobs); ẩn/hiện link "Quản trị" trên trang chủ; xuất bảng điểm CSV/Excel;
-   dọn `auth_tokens` hết hạn (L4).
+4. **Việc còn mở**: ~~hộp thư noreply@ + SMTP thật~~ **xong 03/10** (`api/lib/mailer.php`
+   SMTP PHP thuần, `tools/mail_test.php`); ~~cron sao lưu~~ **xong 03/10** (chạy
+   hằng ngày, cũng dọn `auth_tokens` — L4 **xong**); ~~tạo tài khoản admin~~ **xong**
+   (`tools/user.php`). Còn: ẩn/hiện link "Quản trị" trên trang chủ; xuất bảng điểm
+   CSV/Excel; L5 token qua query string (ghi nhận); đặt lại vai trò 1607 → ADMIN
+   nếu thầy muốn (`tools/user.php --set-role`). Dữ liệu demo DEMO101 (lớp/môn đã
+   Ngưng) có thể giữ hoặc xoá sau.
 5. **Phase sau** (chưa lên lịch): khiếu nại (`complaints`, action thứ 14), QR,
    Google Login (Mức 3 — chỉ sửa `identify_student()`), dashboard phân tích.
 
