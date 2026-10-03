@@ -19,10 +19,13 @@ const CONFIG = {
 };
 
 /*
- * GĐ9 — CHẠY THỬ SONG SONG hai backend trên cùng trang web.
+ * GĐ10 — CUTOVER (02/10/2026): mặc định gọi backend PHP trên cùng domain.
  *
- *   ?api=gas  (hoặc không có tham số)  → Apps Script, tức bản ĐANG CHẠY THẬT
- *   ?api=php                           → backend PHP mới trên cùng domain
+ *   ?api=php  (hoặc không có tham số)  → backend PHP (MariaDB, Hostinger) — BẢN THẬT
+ *   ?api=gas                           → Apps Script cũ, giữ làm ĐƯỜNG LÙI ≥ 1 tuần
+ *                                        sau cutover; sau đó mới gỡ (xem docs/06).
+ *
+ * Nguồn gốc cơ chế (GĐ9 — chạy thử song song hai backend trên cùng trang web):
  *
  * CHỈ nhận hai giá trị trên. KHÔNG nhận URL tuỳ ý (?api=https://...): nếu nhận,
  * ai gửi cho sinh viên/giảng viên một đường link có URL lạ là lấy được MSSV, mã
@@ -30,17 +33,23 @@ const CONFIG = {
  * nghi. Thêm backend mới thì thêm vào API_TARGETS ở đây, không nhận từ URL.
  *
  * Lựa chọn được GHI NHỚ trong sessionStorage để còn giữ khi bấm qua trang khác
- * (student.html → diem.html…); mở tab mới là về mặc định Apps Script. Đang ở
- * chế độ PHP thì có dải băng vàng trên cùng mọi trang để không ai lẫn với thật.
+ * (student.html → diem.html…); mở tab mới là về mặc định (PHP). Không ở backend
+ * mặc định thì có dải băng vàng trên cùng mọi trang để không ai lẫn với thật.
  *
- * GĐ10 (cutover): đổi API_TARGETS.gas thành URL PHP, hoặc đổi DEFAULT_API sang
- * 'php' — xem docs/06-GD9-staging-checklist.md.
+ * Mỗi lần sửa file này PHẢI đổi ?v= của config.js trong 4 trang pages/*.html,
+ * nếu không máy sinh viên vẫn chạy bản cũ trong cache (docs/06, bước GĐ10).
  */
 const API_TARGETS = {
   gas: CONFIG.API_URL,
   php: 'https://diemdanhsv.com/api/index.php'
 };
-const DEFAULT_API = 'gas';
+const DEFAULT_API = 'php';
+
+/* Dải băng cảnh báo khi KHÔNG ở backend mặc định — nội dung theo backend đang gọi. */
+const API_MODE_BANNER = {
+  gas: 'ĐANG DÙNG BẢN DỰ PHÒNG (Apps Script cũ, ?api=gas). Dữ liệu nhập ở đây KHÔNG vào hệ thống mới.',
+  php: 'CHẾ ĐỘ CHẠY THỬ — đang gọi backend PHP (?api=php). Dữ liệu nhập ở đây KHÔNG vào hệ thống đang dùng thật.'
+};
 
 (function applyApiChoice() {
   let choice = DEFAULT_API;
@@ -70,10 +79,9 @@ const DEFAULT_API = 'gas';
     bar.setAttribute('role', 'status');
     bar.style.cssText = 'position:sticky;top:0;z-index:50;background:#b45309;color:#fff;' +
       'padding:6px 12px;font-size:13px;text-align:center;font-weight:600';
-    bar.textContent = 'CHẾ ĐỘ CHẠY THỬ — đang gọi backend PHP mới (?api=php). ' +
-      'Dữ liệu nhập ở đây KHÔNG vào hệ thống đang dùng thật.';
+    bar.textContent = API_MODE_BANNER[choice] || ('Đang gọi backend "' + choice + '" (không phải mặc định).');
     const back = document.createElement('a');
-    back.href = window.location.pathname + '?api=gas';
+    back.href = window.location.pathname + '?api=' + DEFAULT_API;
     back.textContent = ' Quay lại bản thật';
     back.style.cssText = 'color:#fff;text-decoration:underline;margin-left:8px';
     bar.appendChild(back);

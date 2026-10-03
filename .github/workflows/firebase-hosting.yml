@@ -1,11 +1,12 @@
-# Tự deploy lên Firebase Hosting mỗi khi push lên nhánh main.
-# Cần GitHub Secret tên FIREBASE_SERVICE_ACCOUNT (nội dung file khoá JSON của
-# service account github-deploy trong project diemdanh-hcmus).
-name: Deploy len Firebase Hosting
+# Deploy lên Firebase Hosting — CHỈ CHẠY TAY (workflow_dispatch) từ GĐ10
+# (02/10/2026): trang thật nay chạy trên Hostinger (diemdanhsv.com, PHP +
+# MariaDB, hPanel Git auto-deploy từ main). Firebase Hosting chỉ còn là bản
+# tĩnh dự phòng; không tự deploy mỗi lần push main nữa để không có hai bản
+# "thật" lệch nhau. Cần GitHub Secret FIREBASE_SERVICE_ACCOUNT (khoá JSON của
+# service account github-deploy trong project diemdanh-hcmus) nếu chạy tay.
+name: Deploy len Firebase Hosting (chay tay)
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
