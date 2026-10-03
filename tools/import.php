@@ -12,6 +12,17 @@ declare(strict_types=1);
  *   php tools/import.php --file=../private/import/diemdanhsv-export-....json --dry-run
  *   php tools/import.php --file=../private/import/diemdanhsv-export-....json --yes
  *   php tools/import.php --file=... --dry-run --only=students,enrollments
+ *   php tools/import.php --file=... --yes --only=... --drop-orphans
+ *
+ * --only=a,b,c: chỉ nạp các bảng kể tên (vd ngày cutover bỏ users, audit_log
+ *   để không ghi đè mật khẩu đã đặt lại trên PHP). Kiểm khoá ngoại vẫn đối
+ *   chiếu với ID ĐANG CÓ trong CSDL của bảng bị bỏ (sửa 03/10/2026 — trước
+ *   đó bảng ngoài --only bị coi là rỗng → cảnh báo FK giả).
+ * --drop-orphans: dòng tham chiếu tới ID không tồn tại (cả CSDL lẫn file) bị
+ *   BỎ QUA thay vì làm hỏng cả transaction — in ra từng dòng bị bỏ. Dùng cho
+ *   attendance_keys mồ côi của buổi đã xoá trong Sheets (03/10: 3 dòng
+ *   SES_066837BB60AF, không có bản ghi điểm danh nào). Cảnh báo FK của
+ *   classes.LecturerID (danh sách nhiều GV, không có FK thật) KHÔNG bị bỏ.
  *
  * Idempotent: mỗi bảng dùng INSERT ... ON DUPLICATE KEY UPDATE theo khoá
  * chính (đúng ID đã gán từ Apps Script, không sinh ID mới) — chạy lại cùng
@@ -165,9 +176,10 @@ const IMPORT_TABLES = [
 
 function import_args(array $argv): array
 {
-    $out = ['file' => null, 'dry_run' => false, 'yes' => false, 'only' => null];
+    $out = ['file' => null, 'dry_run' => false, 'yes' => false, 'only' => null, 'drop_orphans' => false];
     foreach (array_slice($argv, 1) as $arg) {
         if ($arg === '--dry-run') { $out['dry_run'] = true; continue; }
+        if ($arg === '--drop-orphans') { $out['drop_orphans'] = true; continue; }
         if ($arg === '--yes') { $out['yes'] = true; continue; }
         if (str_starts_with($arg, '--file=')) { $out['file'] = substr($arg, 7); continue; }
         if (str_starts_with($arg, '--only=')) {
@@ -375,27 +387,61 @@ foreach ($tableNames as $table) {
     // Cộng dồn tập ID đã biết (CSDL hiện có ∪ file) để bảng sau kiểm FK
     $knownIds[$table] = $existingIds + $fileIdSet;
 
-    // Kiểm tham chiếu khoá ngoại lạ (không có cả trong CSDL lẫn trong file các bảng đã xử lý trước)
+    // Kiểm tham chiếu khoá ngoại lạ (không có cả trong CSDL lẫn trong file các
+    // bảng đã xử lý trước). Bảng tham chiếu KHÔNG nằm trong --only (vd users)
+    // → đọc ID đang có trong CSDL một lần, kẻo coi là rỗng rồi báo FK giả.
     $fkWarnings = 0;
+    $orphanIdx = [];
     foreach ($def['fk'] as $col => $refTable) {
-        $refSet = $knownIds[$refTable] ?? [];
-        foreach ($rows as $r) {
+        if (!isset($knownIds[$refTable])) {
+            $refPk = IMPORT_TABLES[$refTable]['pk'][0];
+            $knownIds[$refTable] = array_fill_keys($pdo->query("SELECT `$refPk` FROM `$refTable`")->fetchAll(PDO::FETCH_COLUMN), true);
+        }
+        $refSet = $knownIds[$refTable];
+        foreach ($rows as $i => $r) {
             $v = $r[$col] ?? null;
             if ($v === null || $v === '') continue; // FK rỗng cho phép (cột nullable)
-            if (!isset($refSet[$v])) $fkWarnings++;
+            if (!isset($refSet[$v])) {
+                $fkWarnings++;
+                // classes.LecturerID là DANH SÁCH UserID cách dấu phẩy, không có FK thật → chỉ cảnh báo, không bỏ.
+                if ($table !== 'classes') $orphanIdx[$i] = "$col=$v";
+            }
         }
     }
 
-    printf("%-16s %10d %10d %10d %10d %10d\n", $table, count($rows), count($existingIds), $willInsert, $willUpdate, $fkWarnings);
-    $summary[$table] = ['rows' => $rows, 'def' => $def, 'cols' => array_keys($colDefs), 'willInsert' => $willInsert, 'willUpdate' => $willUpdate, 'fkWarnings' => $fkWarnings];
+    $dropped = 0;
+    if ($args['drop_orphans'] && $orphanIdx) {
+        foreach ($orphanIdx as $i => $why) {
+            echo "  (bỏ) $table {$rows[$i][$pkCol]} — $why không tồn tại\n";
+            unset($rows[$i]);
+        }
+        $rows = array_values($rows);
+        $dropped = count($orphanIdx);
+        $fileIdSet = array_fill_keys(array_map(fn($r) => $r[$pkCol], $rows), true);
+        $knownIds[$table] = $existingIds + $fileIdSet;
+        $willInsert = count(array_diff_key($fileIdSet, $existingIds));
+        $willUpdate = count(array_intersect_key($fileIdSet, $existingIds));
+    }
+
+    printf("%-16s %10d %10d %10d %10d %10d%s\n", $table, count($rows), count($existingIds), $willInsert, $willUpdate, $fkWarnings,
+        $dropped ? "  (đã bỏ $dropped dòng mồ côi)" : '');
+    $summary[$table] = ['rows' => $rows, 'def' => $def, 'cols' => array_keys($colDefs), 'willInsert' => $willInsert, 'willUpdate' => $willUpdate,
+        'fkWarnings' => $fkWarnings - $dropped, 'dropped' => $dropped];
 }
 
 echo str_repeat('-', 92) . "\n";
 
 $totalFkWarnings = array_sum(array_column($summary, 'fkWarnings'));
+$totalDropped = array_sum(array_column($summary, 'dropped'));
+if ($totalDropped > 0) {
+    echo "Đã bỏ $totalDropped dòng mồ côi theo --drop-orphans (liệt kê ở trên) — không nạp các dòng này.\n";
+}
 if ($totalFkWarnings > 0) {
+    $onlyClasses = ($summary['classes']['fkWarnings'] ?? 0) === $totalFkWarnings;
     echo "CẢNH BÁO: có $totalFkWarnings dòng tham chiếu tới ID không thấy trong CSDL lẫn trong file này.\n";
-    echo "Xem lại trước khi chạy thật — nếu chạy thật, CSDL sẽ TỪ CHỐI (lỗi khoá ngoại) và KHÔNG ghi dòng nào (cả file nằm trong một transaction).\n";
+    echo $onlyClasses
+        ? "(Tất cả thuộc classes.LecturerID — danh sách nhiều giảng viên, không có khoá ngoại thật → bỏ qua được.)\n"
+        : "Xem lại trước khi chạy thật — nếu chạy thật, CSDL sẽ TỪ CHỐI (lỗi khoá ngoại) và KHÔNG ghi dòng nào (cả file nằm trong một transaction). Dòng mồ côi thật (vd attendance_keys của buổi đã xoá) → thêm --drop-orphans.\n";
 }
 
 if ($args['dry_run']) {
@@ -427,7 +473,7 @@ try {
         }
 
         log_audit('cli:import.php', 'ADMIN', 'TOOLS_IMPORT_GD6', 'SYSTEM', null, [
-            'tables' => array_map(fn($t, $i) => ['table' => $t, 'rows' => count($i['rows'])], array_keys($summary), $summary),
+            'tables' => array_map(fn($t, $i) => ['table' => $t, 'rows' => count($i['rows']), 'dropped' => $i['dropped']], array_keys($summary), $summary),
         ]);
     });
 } catch (Throwable $e) {
