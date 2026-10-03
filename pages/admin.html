@@ -5,17 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quản trị — Môn, lớp, sinh viên</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css?v=20261003-php">
+<link rel="stylesheet" href="../css/main.css?v=20261003-ui">
+<script src="../js/ui/logo-fallback.js?v=20261003-ui"></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
 <header class="brand-bar text-white">
-  <div class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
-    <div class="flex items-center gap-3">
+  <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+    <div class="flex min-w-0 items-center gap-3">
+      <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738"
+           alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM"
+           class="logo-img h-10 w-auto max-w-[110px] shrink-0 rounded bg-white/90 p-1 object-contain">
       <a href="../index.html" class="text-white/80 hover:text-white">&larr;</a>
-      <h1 class="text-base font-bold">Quản trị môn, lớp, sinh viên</h1>
+      <h1 class="min-w-0 truncate text-base font-bold">Quản trị môn, lớp, sinh viên</h1>
     </div>
-    <div id="dash-user" class="flex items-center gap-3 text-sm">
+    <div id="dash-user" class="flex shrink-0 flex-wrap items-center gap-3 text-sm">
       <span id="who" class="opacity-90"></span>
       <a href="lecturer.html" class="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Điểm danh</a>
       <button id="logout-btn" class="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Đăng xuất</button>
@@ -341,12 +345,18 @@
   </section>
 </main>
 
+<footer class="border-t border-slate-200 bg-white">
+  <div class="mx-auto max-w-5xl px-4 py-4 text-center text-xs text-slate-400">
+    © Bản quyền thuộc ThS. Đinh Quốc Tuấn - Mục đích phi lợi nhuận - Vì giáo dục.
+  </div>
+</footer>
+
 <div id="toast" class="toast fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-slate-900 px-4 py-2 text-sm text-white shadow-lg" hidden></div>
 
-<script src="../js/config/config.js?v=20261003-php"></script>
-<script src="../js/services/APIService.js?v=20261003-php"></script>
-<script src="../js/views/AdminView.js?v=20261003-php"></script>
-<script src="../js/controllers/AdminController.js?v=20261003-php"></script>
+<script src="../js/config/config.js?v=20261003-ui"></script>
+<script src="../js/services/APIService.js?v=20261003-ui"></script>
+<script src="../js/views/AdminView.js?v=20261003-ui"></script>
+<script src="../js/controllers/AdminController.js?v=20261003-ui"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     new AdminController(new APIService(CONFIG.API_URL), new AdminView()).init();

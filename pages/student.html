@@ -5,14 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Điểm danh — Sinh viên</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css?v=20261003-php">
+<link rel="stylesheet" href="../css/main.css?v=20261003-ui">
+<script src="../js/ui/logo-fallback.js?v=20261003-ui"></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
 <header class="brand-bar text-white">
   <div class="mx-auto flex max-w-lg items-center gap-3 px-4 py-3">
+    <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738"
+         alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM"
+         class="logo-img h-10 w-auto max-w-[110px] shrink-0 rounded bg-white/90 p-1 object-contain">
     <a href="../index.html" class="text-white/80 hover:text-white">&larr;</a>
-    <h1 class="text-base font-bold">Điểm danh sinh viên</h1>
+    <h1 class="min-w-0 truncate text-base font-bold">Điểm danh sinh viên</h1>
   </div>
 </header>
 
@@ -65,14 +69,20 @@
   </p>
 </main>
 
-<script src="../js/config/config.js?v=20261003-php"></script>
-<script src="../js/models/Student.js?v=20261003-php"></script>
-<script src="../js/models/ClassSession.js?v=20261003-php"></script>
-<script src="../js/models/Attendance.js?v=20261003-php"></script>
-<script src="../js/services/APIService.js?v=20261003-php"></script>
-<script src="../js/services/DeviceService.js?v=20261003-php"></script>
-<script src="../js/views/StudentView.js?v=20261003-php"></script>
-<script src="../js/controllers/StudentController.js?v=20261003-php"></script>
+<footer class="border-t border-slate-200 bg-white">
+  <div class="mx-auto max-w-lg px-4 py-4 text-center text-xs text-slate-400">
+    © Bản quyền thuộc ThS. Đinh Quốc Tuấn - Mục đích phi lợi nhuận - Vì giáo dục.
+  </div>
+</footer>
+
+<script src="../js/config/config.js?v=20261003-ui"></script>
+<script src="../js/models/Student.js?v=20261003-ui"></script>
+<script src="../js/models/ClassSession.js?v=20261003-ui"></script>
+<script src="../js/models/Attendance.js?v=20261003-ui"></script>
+<script src="../js/services/APIService.js?v=20261003-ui"></script>
+<script src="../js/services/DeviceService.js?v=20261003-ui"></script>
+<script src="../js/views/StudentView.js?v=20261003-ui"></script>
+<script src="../js/controllers/StudentController.js?v=20261003-ui"></script>
 <script>
   // Không có logic nghiệp vụ trong HTML — chỉ nối dây (thiết kế B.3)
   document.addEventListener('DOMContentLoaded', function () {
