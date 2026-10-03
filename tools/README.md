@@ -28,6 +28,9 @@ Quy ước cho mọi script thêm vào đây (từ GĐ6 trở đi theo PLAN):
   `gas/13-ExportJSON.gs` sang MariaDB. `--dry-run` để đối soát số dòng
   trước (không ghi gì); `--yes` để chạy thật. Idempotent (ON DUPLICATE KEY
   UPDATE theo khoá chính có sẵn). Xem docs/04-API-PHP.md mục 15.
+  `--only=` nạp một số bảng (kiểm FK vẫn đối chiếu CSDL của bảng bị bỏ);
+  `--drop-orphans` bỏ qua dòng mồ côi (vd attendance_keys của buổi đã xoá) thay
+  vì hỏng cả transaction — 03/10/2026.
 - **`migrate.php`** — chạy `db/migrations/*.sql` theo thứ tự (idempotent).
   `--dry-run` chỉ liệt kê; `--config=` để trỏ CSDL thử. Dùng khi có migration
   mới (ví dụ 003 bỏ khoá ngoại `classes.LecturerID`).
