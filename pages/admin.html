@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quản trị — Môn, lớp, sinh viên</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css?v=20261003-ui">
-<script src="../js/ui/logo-fallback.js?v=20261003-ui"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261004-print">
+<link rel="stylesheet" href="../css/print.css?v=20261004-print">
+<script src="../js/ui/logo-fallback.js?v=20261004-print"></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
@@ -28,6 +29,17 @@
 </header>
 
 <main class="mx-auto max-w-5xl px-4 py-6">
+
+  <!-- ĐẦU TRANG IN (chỉ hiện khi in — css/print.css) -->
+  <div class="print-header" aria-hidden="true">
+    <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="" class="logo-img">
+    <div>
+      <div class="ph-school">Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM</div>
+      <div class="ph-title">BẢN IN QUẢN TRỊ — LỚP, SINH VIÊN, ĐIỂM</div>
+      <div class="ph-sub">Lớp đang chọn và tên bảng ghi ngay bên dưới.</div>
+    </div>
+  </div>
+
 
   <!-- ĐĂNG NHẬP (cùng tài khoản giảng viên) -->
   <section id="login-box" class="mx-auto max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -150,7 +162,7 @@
             <button type="submit" class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">Thêm vào lớp</button>
           </form>
 
-          <div class="rounded-2xl border border-slate-200 bg-white p-4 space-y-2">
+          <div class="rounded-2xl border border-slate-200 bg-white p-4 space-y-2 no-print">
             <h2 class="font-semibold">Nhập danh sách từ file CSV</h2>
             <p class="text-xs text-slate-500">File cần dòng tiêu đề có cột <b>MSSV</b> và <b>Họ tên</b> (hoặc Họ đệm + Tên), có thể thêm <b>Email</b>. Xuất từ Excel: Lưu dạng CSV UTF-8.</p>
             <input id="csv-file" type="file" accept=".csv,text/csv,text/plain" class="block w-full text-sm">
@@ -268,7 +280,7 @@
         </div>
 
         <div class="grid gap-4 lg:grid-cols-5">
-          <div class="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 space-y-2">
+          <div class="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-4 space-y-2 no-print">
             <h2 class="font-semibold">Nhập điểm từ CSV</h2>
             <p class="text-xs text-slate-500">Cột đầu là <b>MSSV</b>, các cột sau là đầu điểm kèm trọng số trong ngoặc. Ô trống = chưa chấm (không ghi). Điểm 0–10. Tổng trọng số có thể vượt 100% (điểm cộng) — điểm tổng quy về tối đa 10.</p>
             <pre id="grade-template" class="overflow-x-auto rounded-lg bg-slate-50 p-2 text-xs">MSSV,Thường xuyên (20%),Giữa kỳ (20%),Cuối kỳ (50%),Điểm cộng (10%)
@@ -353,10 +365,10 @@
 
 <div id="toast" class="toast fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-slate-900 px-4 py-2 text-sm text-white shadow-lg" hidden></div>
 
-<script src="../js/config/config.js?v=20261003-ui"></script>
-<script src="../js/services/APIService.js?v=20261003-ui"></script>
-<script src="../js/views/AdminView.js?v=20261003-ui"></script>
-<script src="../js/controllers/AdminController.js?v=20261003-ui"></script>
+<script src="../js/config/config.js?v=20261004-print"></script>
+<script src="../js/services/APIService.js?v=20261004-print"></script>
+<script src="../js/views/AdminView.js?v=20261004-print"></script>
+<script src="../js/controllers/AdminController.js?v=20261004-print"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     new AdminController(new APIService(CONFIG.API_URL), new AdminView()).init();

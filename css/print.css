@@ -1,22 +1,219 @@
-/* css/print.css — dùng cho các trang báo cáo (thiết kế PHẦN E)
-   Luồng: render HTML -> bấm In -> trình duyệt Save as PDF */
+/* css/print.css — bản in A4 (WEB-UI GĐ2, 04/10/2026)
+   Khuôn theo skill tuan-md-to-a4-html: A4 dọc, chữ serif, logo HCMUS + tên trường
+   ở đầu, chân trang bản quyền + số trang. Chỉ CSS + khối HTML tĩnh .print-header;
+   không có JS mới. Nạp bởi: pages/diem.html, pages/lecturer.html, pages/admin.html.
+
+   Ghi chú trình duyệt:
+   - Chân trang + "Trang x / y" dùng ô lề @page (margin boxes) — Chrome/Edge ≥ 131
+     in đúng trên MỌI trang. Safari/Firefox chưa hỗ trợ → không có chân trang in
+     (trang vẫn in đủ nội dung). Không dùng position:fixed để tránh in trùng hai lần
+     và đè lên dòng cuối của bảng trên Chromium.
+   - Bảng > 10 cột (vd. bảng điểm nhiều đầu điểm) tự sang trang A4 NGANG nhờ
+     :has() + trang tên "ngang"; cũng có thể gắn tay class .print-landscape.  */
 
 @media screen {
-  .print-only { display: none; }
+  .print-only, .print-header { display: none !important; }
+}
+
+/* ---------- Khổ giấy ---------- */
+@page {
+  size: A4 portrait;
+  margin: 16mm 15mm 18mm 15mm;
+
+  @bottom-left {
+    content: "© Bản quyền thuộc ThS. Đinh Quốc Tuấn - Mục đích phi lợi nhuận - Vì giáo dục.";
+    font-family: "Times New Roman", Times, serif;
+    font-size: 8.5pt;
+    color: #444;
+    vertical-align: top;
+    padding-top: 3mm;
+  }
+  @bottom-right {
+    content: "Trang " counter(page) " / " counter(pages);
+    font-family: "Times New Roman", Times, serif;
+    font-size: 8.5pt;
+    color: #444;
+    vertical-align: top;
+    padding-top: 3mm;
+  }
+}
+
+@page ngang {
+  size: A4 landscape;
+  margin: 14mm 14mm 16mm 14mm;
 }
 
 @media print {
-  .no-print, nav, header button, footer, .toast { display: none !important; }
-  .print-only { display: block; }
 
-  @page { size: A4; margin: 15mm 12mm; }
+  /* ---------- Nền chung ---------- */
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+    font-family: "Times New Roman", Times, "Noto Serif", serif;
+    font-size: 11.5pt;
+    line-height: 1.35;
+    min-height: 0 !important;
+  }
+  * { box-shadow: none !important; text-shadow: none !important; }
+  main { max-width: none !important; padding: 0 !important; margin: 0 !important; }
 
-  body { background: #fff; color: #000; font-size: 11pt; }
+  /* ---------- Ẩn khi in ---------- */
+  .no-print,
+  body > header,
+  body > footer,
+  nav,
+  button,
+  input,
+  textarea,
+  form,
+  .toast, #toast,
+  #api-mode-banner,
+  #message,
+  #code-box,
+  #alerts,
+  #grade-template,
+  #grade-csv-report,
+  #csv-report,
+  #step-mssv, #step-code, #login-box {
+    display: none !important;
+  }
 
-  table { width: 100%; border-collapse: collapse; }
-  th, td { border: 1px solid #999; padding: 4pt 6pt; }
-  thead { display: table-header-group; }   /* lặp lại tiêu đề ở mỗi trang */
-  tr { break-inside: avoid; }
+  /* Ô chọn lớp/buổi đang chọn → in như dòng chữ (không viền, không mũi tên) */
+  select {
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    border: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font: inherit;
+    font-weight: bold;
+    color: #000 !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+  select[multiple] { display: none !important; }
+  label { display: inline !important; font-weight: normal; color: #000 !important; margin-right: 4pt; }
+  label + select { display: inline !important; }
+
+  /* Bỏ khung thẻ, màu nền của giao diện web */
+  .rounded-2xl, .rounded-xl {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  .grid { display: block !important; }
+  .grid > * + * { margin-top: 8pt; }
+  [class*="bg-"] { background: transparent !important; }
+  [class*="text-slate-"], [class*="text-blue-"], [class*="text-emerald-"],
+  [class*="text-amber-"], [class*="text-red-"] { color: #000 !important; }
+  .truncate { overflow: visible !important; white-space: normal !important; }
+
+  /* ---------- Đầu trang in: logo + tên trường + tiêu đề ---------- */
+  .print-header {
+    display: flex !important;
+    align-items: center;
+    gap: 10pt;
+    padding-bottom: 6pt;
+    margin-bottom: 10pt;
+    border-bottom: 1.2pt solid #0b4f9e;
+  }
+  .print-header img {
+    height: 15mm;
+    width: auto;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .print-header .ph-school {
+    font-size: 11pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    color: #0b4f9e !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .print-header .ph-title {
+    font-size: 15pt;
+    font-weight: bold;
+    margin-top: 2pt;
+  }
+  .print-header .ph-sub { font-size: 10pt; font-style: italic; margin-top: 1pt; }
+
+  h1, h2, h3 {
+    color: #000 !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  h2 { font-size: 12.5pt; font-weight: bold; margin: 8pt 0 4pt; }
+
+  /* ---------- Bảng ---------- */
+  .table-wrap { overflow: visible !important; }
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 10.5pt !important;
+  }
+  th, td {
+    border: 0.6pt solid #555 !important;
+    padding: 2.5pt 5pt !important;
+    vertical-align: top;
+    color: #000 !important;
+  }
+  thead { display: table-header-group; }      /* lặp tiêu đề cột ở mỗi trang */
+  tfoot { display: table-footer-group; }
+  thead th {
+    background: #e8eef7 !important;
+    font-weight: bold;
+    text-transform: none !important;
+    font-size: 9.5pt !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  tr, td, th { break-inside: avoid; page-break-inside: avoid; }
+  .font-mono { font-family: "Courier New", Courier, monospace !important; font-size: 10pt; }
+
+  /* Cột chỉ chứa nút (Sửa/Gỡ/Điểm danh tay) → thu hẹp, bỏ viền thừa */
+  th:empty { width: 0 !important; padding: 0 !important; border: 0 !important; }
+  td:not(:has(:not(button))):has(button) { width: 0 !important; padding: 0 !important; border: 0 !important; }
+
+  /* Bảng nhiều cột (≥ 8): chữ nhỏ lại cho vừa khổ dọc */
+  table:has(thead th:nth-child(8)) { font-size: 9.5pt !important; }
+  table:has(thead th:nth-child(8)) th,
+  table:has(thead th:nth-child(8)) td { padding: 2pt 3pt !important; }
+
+  /* Bảng > 10 cột: tự sang trang A4 ngang, chữ 9pt */
+  /* Cả khung chứa bảng (gồm tiêu đề h2) sang trang ngang — tránh tiêu đề bị
+     bỏ lại một mình cuối trang dọc trước đó */
+  .print-landscape,
+  div:has(> .table-wrap thead th:nth-child(11)) {
+    page: ngang;
+  }
+  .print-landscape table,
+  .table-wrap:has(thead th:nth-child(11)) table { font-size: 9pt !important; }
+
+  /* Khối không được cắt ngang trang */
+  section > .border-t, .keep { break-inside: avoid; page-break-inside: avoid; }
+
+  /* Bảng điểm sinh viên: mỗi môn là một khối, giữ tiêu đề với bảng */
+  #classes > section { break-inside: auto; margin-bottom: 12pt; }
+  #classes > section > h2 { font-size: 13pt; margin-top: 0; }
+  #classes .text-3xl { font-size: 16pt !important; }
+
+  /* Ô đếm Sĩ số/Có mặt/Trễ/Vắng của giảng viên → một hàng gọn */
+  #dashboard > .grid.grid-cols-2 {
+    display: flex !important;
+    gap: 14pt;
+    margin: 6pt 0 !important;
+  }
+  #dashboard > .grid.grid-cols-2 > * { margin: 0 !important; }
+  #dashboard > .grid.grid-cols-2 p { display: inline; font-size: 10.5pt !important; }
+  #dashboard > .grid.grid-cols-2 p + p { margin-left: 3pt; font-weight: bold; }
+
+  /* Phần tử đang ẩn trên web (tab khác, form đóng) vẫn ẩn khi in —
+     đặt cuối và tăng độ ưu tiên để thắng .grid { display:block } ở trên */
+  [hidden][hidden], .grid[hidden] { display: none !important; }
 
   a[href]::after { content: ''; }          /* không in URL sau link */
+  a { color: #000 !important; text-decoration: none !important; }
 }
