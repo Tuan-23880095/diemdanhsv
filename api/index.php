@@ -36,6 +36,7 @@ require __DIR__ . '/lib/attendance.php';
 require __DIR__ . '/lib/queries.php';
 require __DIR__ . '/lib/admin.php';
 require __DIR__ . '/lib/grading.php';
+require __DIR__ . '/lib/khtd.php';
 require __DIR__ . '/lib/actions.php';
 
 // Khớp CONFIG.TIMEZONE cũ (Asia/Ho_Chi_Minh) — đặt sớm, không phụ thuộc

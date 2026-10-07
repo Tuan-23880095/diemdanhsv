@@ -1080,3 +1080,34 @@ thật qua SMTP của hộp thư Hostinger, bằng PHP thuần — không PHPMai
 3. `php tools/mail_test.php --to=<email của thầy>` → ĐÃ GỬI → kiểm hộp thư (cả Spam).
 4. Checklist mục 5 trên `diem.html?api=php` với một MSSV có email thật.
 
+
+
+## 26. GĐ11 — Phiếu học tập online thực tập KHTĐ (08/10/2026) — `api/lib/khtd.php`, `khtd/online.html`, `khtd/quanly.html`
+
+Mục đích: sinh viên làm 6 phiếu học tập thực tập Khoa học Trái đất trực tuyến; trợ lý AI (Gemini) chấm theo Rubric R2 và gửi email kết quả tạm tính; giảng viên duyệt điểm chính thức, xuất CSV.
+
+**CSDL** — migration `006-khtd-worksheets.sql`: `auth_tokens.Kind` thêm `KHTD`; bảng `khtd_worksheets` (SchemaJSON: sections/rubric/answer_hints), `khtd_submissions` (AnswersJSON, AiScore/AiJSON, FinalScore, EmailSentAt). Chạy `php tools/migrate.php`.
+
+**Cấu hình** `../private/config.php`: mục `gemini` (`api_key`, `model` mặc định `gemini-2.0-flash`); rate limit `khtd_login_ip`, `khtd_submit_ip` (mặc định 30/10 phút). Không có key → bài nộp ở trạng thái SUBMITTED, GV chấm tay.
+
+**Đăng nhập SV**: `khtdLogin` POST {mssv, code} — `code` là mã 4 ký tự của phiên điểm danh đang OPEN (bảng `attendance_keys`), SV phải ghi danh lớp đó (`identify_student`). Cấp token Kind KHTD hạn 3 giờ. Token GRADE (mã qua email, mục 10) cũng được chấp nhận ở mọi action SV.
+
+| Action | Method | Ai | Tham số | Ghi chú |
+|---|---|---|---|---|
+| khtdLogin | POST | SV | mssv, code | rate limit khtd_login_ip |
+| khtdListWorksheets | GET | SV | token | phiếu các lớp đang ghi danh + trạng thái bài |
+| khtdGetWorksheet | GET | SV | token, worksheetId | schema (bỏ answer_hints) + bài làm |
+| khtdSaveDraft | POST | SV | token, worksheetId, answers | chỉ khi DRAFT và phiếu OPEN |
+| khtdSubmit | POST | SV | token, worksheetId, answers | nộp 1 lần → gọi Gemini (fail-open) → email tạm tính |
+| khtdSeedWorksheets | POST | GV | token, classId | tạo 6 phiếu mặc định (`khtd_default_worksheets()`) |
+| khtdSetWorksheetStatus | POST | GV | token, worksheetId, status, closeAt | OPEN/CLOSED/HIDDEN |
+| khtdLecturerList | GET | GV | token, classId | phiếu + bài nộp cả lớp |
+| khtdLecturerSubmission | GET | GV | token, submissionId | bài làm đầy đủ + chấm AI |
+| khtdLecturerGrade | POST | GV | token, submissionId, finalScore, note, sendEmail | FINAL + email chính thức |
+| khtdExportCsv | GET | GV | token, classId | MSSV, Họ tên, Phieu1..6 |
+
+**Chấm AI**: `khtd_gemini_grade()` gửi cấu trúc phiếu + rubric + gợi ý đáp án + bài làm, yêu cầu JSON `{criteria[{id,score,comment}], feedback, flags}`; điểm từng tiêu chí kẹp 0..max, làm tròn 0,25; tổng quy về /10. Lỗi API không làm hỏng lượt nộp (ghi error_log).
+
+**Email**: `khtd_send_result_mail()` dùng `mail_send()` (mục 25); gửi tới `students.Email`; tiêu đề `[KHTĐ] Kết quả Phiếu học tập số n (tạm tính|chính thức)`.
+
+**Frontend**: `js/services/APIService.js` (12 method `khtd*`), `js/views/KhtdView.js`, `js/controllers/KhtdController.js` (mode student/lecturer). Trang GV dùng token `dd_token` trong sessionStorage (đăng nhập ở `pages/lecturer.html`).

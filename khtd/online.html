@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phiếu học tập online — Thực tập Khoa học Trái đất</title>
+<link rel="icon" type="image/png" href="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738">
+<meta name="theme-color" content="#0b4f9e">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261008-khtd">
+<script src="../js/ui/logo-fallback.js?v=20261008-khtd"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+
+<header class="brand-bar text-white">
+  <div class="mx-auto flex max-w-4xl items-center gap-3 px-4 py-3">
+    <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738"
+         alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM" class="logo-img h-10 w-auto max-w-[110px] shrink-0 rounded bg-white/90 p-1 object-contain">
+    <a href="index.html" class="text-white/80 hover:text-white">&larr;</a>
+    <div class="min-w-0"><h1 class="truncate text-base font-bold">Phiếu học tập online — Thực tập Khoa học Trái đất</h1><p id="who" class="truncate text-xs text-white/80"></p></div>
+    <button id="btn-logout" class="ml-auto rounded border border-white/40 px-2 py-1 text-xs hover:bg-white/10">Thoát</button>
+  </div>
+</header>
+
+<main class="mx-auto max-w-4xl px-4 py-6">
+  <div id="msg" class="hidden"></div>
+
+  <!-- Đăng nhập -->
+  <section id="login" class="hidden mx-auto max-w-lg">
+    <form id="login-form" class="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p class="text-sm text-slate-600">Đăng nhập bằng <b>MSSV</b> và <b>mã 4 ký tự</b> giảng viên công bố ở buổi thực tập (cùng mã điểm danh). Phiên làm việc 3 giờ; bài làm tự lưu nháp.</p>
+      <div><label for="mssv" class="block text-sm font-medium text-slate-700">Mã số sinh viên</label>
+        <input id="mssv" type="text" inputmode="numeric" maxlength="10" required autocomplete="off" placeholder="25160053" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"></div>
+      <div><label for="code" class="block text-sm font-medium text-slate-700">Mã buổi học (4 ký tự)</label>
+        <input id="code" type="text" maxlength="4" required autocomplete="off" placeholder="ABCD" class="code-input mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-center text-2xl uppercase tracking-[0.5em] focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"></div>
+      <button class="w-full rounded-lg bg-blue-700 py-3 font-semibold text-white hover:bg-blue-800">Vào làm phiếu</button>
+    </form>
+  </section>
+
+  <!-- Danh sách phiếu -->
+  <section id="list" class="hidden">
+    <h2 class="mb-3 text-lg font-bold">Phiếu học tập của bạn</h2>
+    <div id="ws-list" class="space-y-2"></div>
+    <p class="mt-4 text-xs text-slate-500">Bản in A4 của các phiếu: <a class="underline" href="index.html">trang lớp học</a>. Kết quả chấm (tạm tính bởi trợ lý AI theo Rubric R2, giảng viên duyệt lại) được gửi về email sinh viên.</p>
+  </section>
+
+  <!-- Làm phiếu -->
+  <section id="ws-panel" class="hidden">
+    <div class="flex flex-wrap items-center gap-2">
+      <button id="btn-back" class="rounded border px-3 py-1.5 text-sm hover:bg-white">&larr; Danh sách</button>
+      <h2 id="ws-title" class="text-lg font-bold"></h2>
+      <span id="save-state" class="ml-auto text-xs text-slate-500"></span>
+    </div>
+    <div id="ws-result" class="hidden mt-3 rounded-xl border border-green-200 bg-green-50 p-4"></div>
+    <div id="ws-body" class="mt-2 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"></div>
+    <div class="sticky bottom-0 mt-3 flex gap-2 border-t bg-slate-50/95 py-3 backdrop-blur">
+      <button id="btn-save" class="rounded-lg border border-blue-700 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50">Lưu nháp</button>
+      <button id="btn-submit" class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">Nộp phiếu</button>
+    </div>
+  </section>
+</main>
+
+<script src="../js/config/config.js?v=20261008-khtd"></script>
+<script src="../js/services/APIService.js?v=20261008-khtd"></script>
+<script src="../js/views/KhtdView.js?v=20261008-khtd"></script>
+<script src="../js/controllers/KhtdController.js?v=20261008-khtd"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    new KhtdController(new APIService(CONFIG.API_URL), new KhtdView(), 'student').init();
+  });
+</script>
+</body>
+</html>
