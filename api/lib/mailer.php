@@ -44,7 +44,11 @@ function mail_is_configured(array $smtp): bool
  * Gửi một email text/plain UTF-8. Trả true nếu máy chủ SMTP đã NHẬN thư
  * (250 sau DATA), false nếu đang ở chế độ stub hoặc gửi lỗi.
  */
-function mail_send(string $to, string $subject, string $body): bool
+/**
+ * @param array $attachments Danh sách [['name' => 'KetQua.html', 'mime' => 'text/html', 'data' => '<bytes>'], ...]
+ *                           (rỗng = thư text/plain như trước). Tổng ≤ ~2 MB.
+ */
+function mail_send(string $to, string $subject, string $body, array $attachments = []): bool
 {
     $cfg  = app_config();
     $smtp = is_array($cfg['smtp'] ?? null) ? $cfg['smtp'] : [];
@@ -70,7 +74,7 @@ function mail_send(string $to, string $subject, string $body): bool
     }
 
     try {
-        return smtp_deliver($smtp, $to, $subject, $body);
+        return smtp_deliver($smtp, $to, $subject, $body, $attachments);
     } catch (Throwable $e) {
         // Không in mật khẩu, không in thân email.
         error_log('[mail_send] gửi thất bại tới ' . $to . ': ' . $e->getMessage());
@@ -86,7 +90,7 @@ function mail_send(string $to, string $subject, string $body): bool
  * Nối tới máy chủ SMTP, xác thực AUTH LOGIN, gửi một thư. Ném RuntimeException
  * khi máy chủ trả mã lỗi hoặc mất kết nối (mail_send() bắt và ghi log).
  */
-function smtp_deliver(array $smtp, string $to, string $subject, string $body): bool
+function smtp_deliver(array $smtp, string $to, string $subject, string $body, array $attachments = []): bool
 {
     $host     = trim((string) $smtp['host']);
     $port     = (int) ($smtp['port'] ?? 465);
@@ -134,7 +138,7 @@ function smtp_deliver(array $smtp, string $to, string $subject, string $body): b
         smtp_cmd($fp, 'RCPT TO:<' . $to . '>', [250, 251], 'RCPT TO');
         smtp_cmd($fp, 'DATA', [354], 'DATA');
 
-        $message = smtp_build_message($from, $fromName, $to, $subject, $body, $host);
+        $message = smtp_build_message($from, $fromName, $to, $subject, $body, $host, $attachments);
         // Dot-stuffing: dòng bắt đầu bằng "." phải thành ".."; kết thúc bằng CRLF.CRLF
         $message = preg_replace('/^\./m', '..', $message);
         smtp_write($fp, $message . "\r\n.\r\n");
@@ -155,7 +159,7 @@ function smtp_ehlo_host(): string
 }
 
 /** Dựng thư RFC 5322 text/plain UTF-8, header UTF-8 mã hoá RFC 2047, thân base64. */
-function smtp_build_message(string $from, string $fromName, string $to, string $subject, string $body, string $host): string
+function smtp_build_message(string $from, string $fromName, string $to, string $subject, string $body, string $host, array $attachments = []): string
 {
     $enc = static fn (string $s): string => '=?UTF-8?B?' . base64_encode($s) . '?=';
     $domain = substr($from, (int) strpos($from, '@') + 1) ?: $host;
@@ -166,13 +170,28 @@ function smtp_build_message(string $from, string $fromName, string $to, string $
         'Subject: ' . $enc($subject),
         'Message-ID: <' . bin2hex(random_bytes(12)) . '@' . $domain . '>',
         'MIME-Version: 1.0',
-        'Content-Type: text/plain; charset=UTF-8',
-        'Content-Transfer-Encoding: base64',
         'Auto-Submitted: auto-generated',
     ];
     // Thân thư base64 chia dòng 76 ký tự — an toàn với mọi máy chủ, không lo 8bit/độ dài dòng.
-    $bodyB64 = chunk_split(base64_encode(str_replace(["\r\n", "\r"], "\n", $body)), 76, "\r\n");
-    return implode("\r\n", $headers) . "\r\n\r\n" . rtrim($bodyB64, "\r\n");
+    $bodyB64 = rtrim(chunk_split(base64_encode(str_replace(["\r\n", "\r"], "\n", $body)), 76, "\r\n"), "\r\n");
+    if (!$attachments) {
+        $headers[] = 'Content-Type: text/plain; charset=UTF-8';
+        $headers[] = 'Content-Transfer-Encoding: base64';
+        return implode("\r\n", $headers) . "\r\n\r\n" . $bodyB64;
+    }
+    // multipart/mixed: phần 1 text/plain, các phần sau là tệp đính kèm (RFC 2046/2183).
+    $boundary = '=_dd_' . bin2hex(random_bytes(12));
+    $headers[] = 'Content-Type: multipart/mixed; boundary="' . $boundary . '"';
+    $parts = [];
+    $parts[] = "--$boundary\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . $bodyB64;
+    foreach ($attachments as $a) {
+        $name = preg_replace('/[^A-Za-z0-9._-]/', '_', (string) ($a['name'] ?? 'tep-dinh-kem'));
+        $mime = preg_match('#^[a-z]+/[a-z0-9.+-]+$#i', (string) ($a['mime'] ?? '')) ? $a['mime'] : 'application/octet-stream';
+        $data = rtrim(chunk_split(base64_encode((string) ($a['data'] ?? '')), 76, "\r\n"), "\r\n");
+        $parts[] = "--$boundary\r\nContent-Type: $mime; name=\"$name\"\r\nContent-Transfer-Encoding: base64\r\n" .
+                   "Content-Disposition: attachment; filename=\"$name\"\r\n\r\n" . $data;
+    }
+    return implode("\r\n", $headers) . "\r\n\r\n" . implode("\r\n", $parts) . "\r\n--$boundary--";
 }
 
 /** Gửi một lệnh, chờ mã trả lời mong đợi. $strict=false: không ném lỗi (dùng cho QUIT). */

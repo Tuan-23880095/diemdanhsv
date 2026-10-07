@@ -159,7 +159,7 @@ class KhtdView {
       <form id="grade-form" class="mt-4 grid gap-2 rounded-lg border p-3 sm:grid-cols-[120px_1fr_auto]">
         <label class="text-sm">Điểm chính thức<input id="grade-score" type="number" min="0" max="10" step="0.25" value="${row.FinalScore != null ? this._esc(row.FinalScore) : (ai ? this._esc(ai.total) : '')}" class="mt-1 w-full rounded border px-2 py-1" required/></label>
         <label class="text-sm">Nhận xét của GV (kèm vào email)<textarea id="grade-note" rows="2" class="mt-1 w-full rounded border px-2 py-1">${this._esc(row.FinalNote || '')}</textarea></label>
-        <div class="flex flex-col justify-end gap-1 text-sm"><label><input id="grade-mail" type="checkbox" checked ${row.Email ? '' : 'disabled'}/> Gửi email</label><button class="rounded bg-blue-700 px-3 py-1.5 text-white hover:bg-blue-800">Duyệt điểm</button><button type="button" id="btn-regrade" class="rounded border px-3 py-1 text-xs hover:bg-slate-50">Chấm lại bằng AI</button></div>
+        <div class="flex flex-col justify-end gap-1 text-sm"><label><input id="grade-mail" type="checkbox" checked ${row.Email ? '' : 'disabled'}/> Gửi email</label><button class="rounded bg-blue-700 px-3 py-1.5 text-white hover:bg-blue-800">Duyệt điểm</button><button type="button" id="btn-regrade" class="rounded border px-3 py-1 text-xs hover:bg-slate-50">Chấm lại bằng AI</button> <button type="button" id="btn-preview" class="rounded border px-3 py-1 text-xs hover:bg-slate-50">Xem phiếu kết quả (bản gửi SV)</button></div>
       </form>`;
     box.dataset.sub = row.SubmissionID;
   }

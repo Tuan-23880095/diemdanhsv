@@ -90,7 +90,7 @@ function action_khtd_login(array $params): void
 
 function khtd_worksheet(string $id): array
 {
-    $stmt = db()->prepare('SELECT * FROM khtd_worksheets WHERE WorksheetID = :id LIMIT 1');
+    $stmt = db()->prepare('SELECT w.*, c.ClassCode FROM khtd_worksheets w LEFT JOIN classes c ON c.ClassID = w.ClassID WHERE w.WorksheetID = :id LIMIT 1');
     $stmt->execute(['id' => $id]);
     $ws = $stmt->fetch();
     if (!$ws) throw new RuntimeException('Không tìm thấy phiếu.');
@@ -448,6 +448,70 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
 /* Email                                                                */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Phiếu kết quả A4 (HTML tự chứa) đính kèm email — cùng phong cách phiếu học tập in:
+ * logo Trường, ba dòng đầu phiếu, thông tin sinh viên, bảng điểm theo tiêu chí, bảng đối chiếu
+ * với đáp án (nếu có), nhận xét, chữ ký giảng viên. Mở bằng trình duyệt; Ctrl+P → PDF.
+ */
+function khtd_result_sheet_html(array $student, array $ws, ?array $ai, ?float $final, ?string $note, string $classCode = ''): string
+{
+    $h = static fn ($v): string => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+    $n = static fn ($v): string => is_numeric($v) ? rtrim(rtrim(number_format((float) $v, 2, ',', '.'), '0'), ',') : (string) $v;
+    $logo = 'https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738';
+    $loai = $final !== null ? 'KẾT QUẢ CHÍNH THỨC' : 'KẾT QUẢ TẠM TÍNH';
+    $diem = $final !== null ? $final : ($ai ? (float) $ai['total'] : null);
+    $rows = '';
+    if ($ai) {
+        foreach ($ai['criteria'] as $c) {
+            $rows .= '<tr><td>' . $h($c['name']) . '</td><td class="c">' . $h($c['max']) . '</td><td class="c"><b>' . $h($c['score']) . '</b></td><td>' . $h($c['comment'] ?? '') . '</td></tr>';
+        }
+    }
+    $dc = '';
+    if ($ai && !empty($ai['doi_chieu']) && is_array($ai['doi_chieu'])) {
+        foreach ($ai['doi_chieu'] as $d) {
+            $dc .= '<tr><td>' . $h($d['muc'] ?? $d['id'] ?? '') . '</td><td>' . $h($d['bai_lam'] ?? '') . '</td><td>' . $h($d['dap_an'] ?? '') . '</td><td class="c">' . $h($d['ket_qua'] ?? '') . '</td></tr>';
+        }
+    }
+    $ngay = date('d/m/Y');
+    return '<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>Kết quả Phiếu học tập số ' . $h($ws['No']) . ' – ' . $h($student['mssv']) . '</title>
+<style>
+@page{size:A4;margin:18mm 20mm}
+body{font-family:"Times New Roman",Times,serif;font-size:13pt;color:#000;max-width:170mm;margin:12mm auto;line-height:1.35}
+.banner{display:flex;gap:6mm;align-items:center;border-bottom:1.5px solid #000;padding-bottom:3mm}
+.banner img{height:22mm;width:auto}
+.banner .k{font-size:12pt}
+.banner h1{font-size:15pt;margin:1mm 0 0;text-transform:uppercase;letter-spacing:.2px}
+.sub{margin:3mm 0 5mm;font-size:12pt}
+.stu{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm 8mm;margin:4mm 0;border:1px solid #000;padding:3mm 4mm}
+h2{font-size:13pt;margin:6mm 0 2mm;text-transform:uppercase}
+table{width:100%;border-collapse:collapse;font-size:12pt}
+th,td{border:1px solid #000;padding:1.5mm 2mm;vertical-align:top}
+th{background:#eee;text-align:left}
+td.c,th.c{text-align:center}
+.score{font-size:15pt;margin:4mm 0}
+.note{border:1px solid #000;padding:3mm 4mm;margin:3mm 0;min-height:14mm}
+.sign{display:flex;justify-content:space-between;margin-top:10mm}
+.sign div{text-align:center;width:45%}
+.small{font-size:11pt;color:#333;margin-top:8mm;border-top:1px solid #999;padding-top:2mm}
+@media print{body{margin:0;max-width:none}}
+</style></head><body>
+<div class="banner"><img src="' . $logo . '" alt=""><div>
+<div class="k">Khoa học Trái đất (LEC10002) · Thực tập</div>
+<div class="k">Lớp ' . $h($classCode ?: 'LEC10002_25KTE1B_TT') . ' · Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM</div>
+<h1>' . $loai . ' – PHIẾU HỌC TẬP SỐ ' . $h($ws['No']) . '</h1></div></div>
+<p class="sub">' . $h($ws['Title']) . ' · Chấm theo Rubric R2 (phiếu học tập) · Ngày lập: ' . $ngay . '</p>
+<div class="stu"><div>Họ tên sinh viên: <b>' . $h($student['fullName']) . '</b></div><div>MSSV: <b>' . $h($student['mssv']) . '</b></div>
+<div>Hình thức: phiếu học tập làm trên web</div><div>Trạng thái: ' . ($final !== null ? 'giảng viên đã duyệt' : 'tạm tính, chờ giảng viên duyệt') . '</div></div>
+' . ($diem !== null ? '<p class="score">Điểm phiếu: <b>' . number_format($diem, 2, ',', '.') . '/10</b>' . ($final === null ? ' <span style="font-size:12pt">(tạm tính)</span>' : '') . '</p>' : '<p class="score">Chưa có điểm — giảng viên sẽ chấm tay.</p>') . '
+' . ($rows ? '<h2>Điểm theo tiêu chí</h2><table><thead><tr><th>Tiêu chí</th><th class="c" style="width:14mm">Tối đa</th><th class="c" style="width:14mm">Đạt</th><th>Nhận xét</th></tr></thead><tbody>' . $rows . '</tbody></table>' : '') . '
+' . ($dc ? '<h2>Đối chiếu với đáp án</h2><table><thead><tr><th style="width:22%">Mục</th><th>Bài làm</th><th>Đáp án</th><th class="c" style="width:16%">Kết quả</th></tr></thead><tbody>' . $dc . '</tbody></table>' : '') . '
+' . (($ai && !empty($ai['feedback'])) ? '<h2>Nhận xét chung</h2><div class="note">' . $h($ai['feedback']) . '</div>' : '') . '
+' . ($note ? '<h2>Nhận xét của giảng viên</h2><div class="note">' . $h($note) . '</div>' : '') . '
+<div class="sign"><div>Sinh viên<br><br><br><br>' . $h($student['fullName']) . '</div><div>Giảng viên<br><br><br><br>ThS. Đinh Quốc Tuấn</div></div>
+<p class="small">' . ($final !== null ? 'Điểm chính thức do giảng viên duyệt.' : 'Điểm tạm tính do trợ lý AI đề xuất theo rubric và đáp án; giảng viên sẽ duyệt lại và gửi bản chính thức.') . ' Thắc mắc về điểm: phản hồi với giảng viên trong 7 ngày. Hệ thống diemdanhsv.com.</p>
+</body></html>';
+}
+
 function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $final, ?string $note): bool
 {
     $to = trim((string) $student['email']);
@@ -469,12 +533,15 @@ function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $fi
         if (!empty($ai['feedback'])) { $lines[] = ''; $lines[] = 'Nhận xét chung: ' . $ai['feedback']; }
     }
     $lines[] = '';
+    $lines[] = 'Phiếu kết quả bản in (A4) đính kèm thư này — mở bằng trình duyệt, Ctrl+P để lưu PDF.';
     $lines[] = 'Bạn có thể xem lại bài làm tại https://diemdanhsv.com/khtd/online.html (đăng nhập bằng MSSV + mã buổi học). Thắc mắc về điểm: phản hồi trong 7 ngày với giảng viên.';
     $lines[] = '';
     $lines[] = 'ThS. Đinh Quốc Tuấn – Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM';
     $lines[] = '(Email tự động từ hệ thống diemdanhsv.com — vui lòng không trả lời thư này.)';
     $subject = '[KHTĐ] Kết quả Phiếu học tập số ' . $ws['No'] . ($final !== null ? ' (chính thức)' : ' (tạm tính)');
-    return mail_send($to, $subject, implode("\n", $lines));
+    $tep = 'KetQua_Phieu' . (int) $ws['No'] . '_' . preg_replace('/\D/', '', (string) $student['mssv']) . ($final !== null ? '_ChinhThuc' : '_TamTinh') . '.html';
+    $html = khtd_result_sheet_html($student, $ws, $ai, $final, $note, (string) ($ws['ClassCode'] ?? ''));
+    return mail_send($to, $subject, implode("\n", $lines), [['name' => $tep, 'mime' => 'text/html', 'data' => $html]]);
 }
 
 /* ------------------------------------------------------------------ */
@@ -575,7 +642,7 @@ function action_khtd_lecturer_submission(array $params): void
 function action_khtd_lecturer_grade(array $params): void
 {
     $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
-    $stmt = db()->prepare('SELECT sub.*, s.MSSV, s.FullName, s.Email, w.ClassID, w.No, w.Title FROM khtd_submissions sub JOIN students s ON s.StudentID = sub.StudentID JOIN khtd_worksheets w ON w.WorksheetID = sub.WorksheetID WHERE sub.SubmissionID = :id LIMIT 1');
+    $stmt = db()->prepare('SELECT sub.*, s.MSSV, s.FullName, s.Email, w.ClassID, w.No, w.Title, c.ClassCode FROM khtd_submissions sub JOIN students s ON s.StudentID = sub.StudentID JOIN khtd_worksheets w ON w.WorksheetID = sub.WorksheetID LEFT JOIN classes c ON c.ClassID = w.ClassID WHERE sub.SubmissionID = :id LIMIT 1');
     $stmt->execute(['id' => trim((string) ($params['submissionId'] ?? ''))]);
     $row = $stmt->fetch();
     if (!$row) { api_fail('Không tìm thấy bài nộp.'); return; }
@@ -691,6 +758,22 @@ function action_khtd_regrade(array $params): void
         ->execute(['st' => $newStatus, 'sc' => $ai['total'], 'j' => json_encode($ai, JSON_UNESCAPED_UNICODE), 'm' => $ai['model'], 'id' => $row['SubmissionID']]);
     log_audit((string) ($me['userId'] ?? ''), 'LECTURER', 'khtdRegrade', 'submission', $row['SubmissionID'], ['model' => $ai['model']]);
     api_ok(['submissionId' => $row['SubmissionID'], 'ai' => $ai]);
+}
+
+/** GET khtdResultPreview {token, submissionId} — GV xem trước phiếu kết quả A4 sẽ đính kèm email cho sinh viên. */
+function action_khtd_result_preview(array $params): void
+{
+    $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
+    $stmt = db()->prepare('SELECT sub.*, s.MSSV, s.FullName, s.Email, w.ClassID, w.No, w.Title, c.ClassCode FROM khtd_submissions sub JOIN students s ON s.StudentID = sub.StudentID JOIN khtd_worksheets w ON w.WorksheetID = sub.WorksheetID LEFT JOIN classes c ON c.ClassID = w.ClassID WHERE sub.SubmissionID = :id LIMIT 1');
+    $stmt->execute(['id' => trim((string) ($params['submissionId'] ?? ''))]);
+    $row = $stmt->fetch();
+    if (!$row) { api_fail('Không tìm thấy bài nộp.'); return; }
+    assert_class_access($me, (string) $row['ClassID']);
+    $ai = $row['AiJSON'] ? json_decode((string) $row['AiJSON'], true) : null;
+    if (is_array($ai) && !isset($ai['criteria'])) $ai = null;
+    $student = ['email' => $row['Email'], 'fullName' => $row['FullName'], 'mssv' => $row['MSSV']];
+    $final = $row['FinalScore'] !== null ? (float) $row['FinalScore'] : null;
+    api_ok(['html' => khtd_result_sheet_html($student, $row, $ai, $final, $row['FinalNote'] ?: null, (string) ($row['ClassCode'] ?? ''))]);
 }
 
 /** GET khtdExportCsv {token, classId} — MSSV, Họ tên, Phiếu 1..6 (điểm chính thức, hoặc AI nếu chưa duyệt). */

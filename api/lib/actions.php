@@ -70,6 +70,7 @@ const KNOWN_ACTIONS = [
     'khtdRegrade'            => 'POST',
     'khtdAiTest'             => 'GET',
     'khtdActiveCode'         => 'GET',
+    'khtdResultPreview'      => 'GET',
 ];
 
 /** Điều hướng theo $action, gọi thẳng api_ok()/api_fail() (hai hàm này tự exit). */
@@ -181,6 +182,7 @@ function api_dispatch(string $action, string $method, array $params): void
         case 'khtdRegrade':            action_khtd_regrade($params);              return;
         case 'khtdAiTest':             action_khtd_ai_test($params);              return;
         case 'khtdActiveCode':         action_khtd_active_code($params);          return;
+        case 'khtdResultPreview':      action_khtd_result_preview($params);       return;
     }
 }
 

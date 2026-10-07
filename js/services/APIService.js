@@ -114,4 +114,5 @@ class APIService {
   khtdRegrade(token, submissionId)            { return this.post('khtdRegrade', { token, submissionId }); }
   khtdAiTest(token, fresh)                    { return this.get('khtdAiTest', { token, fresh: fresh ? 1 : '' }); }
   khtdActiveCode(token, classId)              { return this.get('khtdActiveCode', { token, classId }); }
+  khtdResultPreview(token, submissionId)      { return this.get('khtdResultPreview', { token, submissionId }); }
 }

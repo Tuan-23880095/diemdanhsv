@@ -1142,3 +1142,10 @@ Trước đây mọi tài liệu nằm công khai trong `khtd/`, kể cả hồ 
 - Không thêm bảng/migration mới.
 
 **Chẩn đoán chấm AI (cùng ngày)**: `khtdAiTest` sau khi gọi thử “OK” sẽ **chấm thử thật** phiếu mặc định số 1 với bài làm mẫu (`khtd_sample_answers`) và trả `cham_thu {ok, model, diem, giay, loi}` cùng `php_max_execution_time`. `khtdSubmit`, `khtdRegrade`, `khtdAiTest` gọi `khtd_long_request()` (`set_time_limit(170)`, `ignore_user_abort`) vì hosting mặc định cắt PHP ở 30 s trong khi một lượt chấm có thể 20–60 s. Khi chấm thất bại lúc nộp, `AiJSON` lưu `{"error","at"}` (không có `criteria`): `khtdLecturerList` trả `AiError` (cột AI hiện “lỗi AI”, rê chuột xem lý do), `khtdLecturerSubmission` trả `aiError`; `khtdGetWorksheet`/`khtdLecturerSubmission` không coi bản ghi lỗi là kết quả chấm.
+
+## 29. GĐ11d — Phiếu kết quả A4 đính kèm email (08/10/2026)
+
+- `mail_send($to, $subject, $body, $attachments = [])` nhận thêm danh sách tệp `[['name','mime','data']]`; có tệp thì `smtp_build_message()` dựng `multipart/mixed` (phần text/plain + các phần `Content-Disposition: attachment`, base64). Không tệp → thư text/plain như cũ.
+- `khtd_result_sheet_html()` dựng phiếu kết quả A4 tự chứa (Times New Roman, logo Trường, ba dòng đầu phiếu, thông tin SV, bảng điểm theo tiêu chí, bảng đối chiếu đáp án, nhận xét, chữ ký) — cùng phong cách phiếu học tập in. `khtd_send_result_mail()` đính kèm tệp `KetQua_Phieu<n>_<MSSV>_(TamTinh|ChinhThuc).html` cho cả thư tạm tính (lúc nộp) và thư chính thức (GV duyệt). Sinh viên mở bằng trình duyệt, Ctrl+P → PDF. (Hosting không có công cụ sinh PDF; nếu cần PDF thật phải thêm thư viện dompdf.)
+- `khtdResultPreview` (GET, LECTURER/ADMIN, `submissionId`) trả `{html}` — nút “Xem phiếu kết quả (bản gửi SV)” trong chi tiết bài nộp ở `quanly.html`.
+- `khtd_worksheet()` và truy vấn bài nộp lấy thêm `classes.ClassCode` để in mã lớp lên phiếu.

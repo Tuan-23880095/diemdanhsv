@@ -107,6 +107,7 @@ class KhtdController {
     document.getElementById('sub-detail').addEventListener('click', (e) => {
       if (e.target.id === 'sub-close') document.getElementById('sub-detail').classList.add('hidden');
       if (e.target.id === 'btn-regrade') this.regrade();
+      if (e.target.id === 'btn-preview') this.previewSheet();
     });
     document.getElementById('sub-detail').addEventListener('submit', (e) => { if (e.target.id === 'grade-form') { e.preventDefault(); this.grade(); } });
     this.loadClasses();
@@ -183,6 +184,13 @@ class KhtdController {
       this.view.msg(d.ket_luan || 'Đã kiểm tra.', d.goi_thu && d.goi_thu.ok ? 'ok' : 'err');
     } catch (err) { box.textContent = 'Lỗi: ' + err.message; this.view.msg(err.message, 'err'); }
     finally { btn.disabled = false; btn.textContent = 'Kiểm tra Gemini'; }
+  }
+
+  async previewSheet() {
+    const id = document.getElementById('sub-detail').dataset.sub; if (!id) return;
+    const w = window.open('', '_blank');
+    try { const d = await this.api.khtdResultPreview(this.token, id); w.document.open(); w.document.write(d.html); w.document.close(); }
+    catch (err) { if (w) w.close(); this.view.msg(err.message, 'err'); }
   }
 
   async regrade() {
