@@ -130,7 +130,7 @@ function action_khtd_get_worksheet(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     $schema = $ws['schema'];
-    unset($schema['answer_hints']);                       // không lộ gợi ý đáp án
+    unset($schema['answer_hints'], $schema['answer_key'], $schema['reference']);   // không lộ đáp án cho SV
     $stmt = db()->prepare('SELECT SubmissionID, AnswersJSON, Status, SubmittedAt, AiScore, AiJSON, FinalScore, FinalNote FROM khtd_submissions WHERE WorksheetID = :w AND StudentID = :s LIMIT 1');
     $stmt->execute(['w' => $ws['WorksheetID'], 's' => $me['studentId']]);
     $sub = $stmt->fetch() ?: null;
@@ -248,7 +248,7 @@ function khtd_gemini_config(): array
  */
 function khtd_gemini_list_models(string $key, bool $fresh = false): array
 {
-    $cacheFile = sys_get_temp_dir() . '/khtd_gemini_models_' . substr(sha1($key), 0, 12) . '.json';
+    $cacheFile = sys_get_temp_dir() . '/khtd_gemini_models_v2_' . substr(sha1($key), 0, 12) . '.json';
     if (!$fresh && is_file($cacheFile) && (time() - (int) filemtime($cacheFile)) < 6 * 3600) {
         $c = json_decode((string) @file_get_contents($cacheFile), true);
         if (is_array($c['models'] ?? null) && $c['models']) return ['ok' => true, 'models' => $c['models'], 'cache' => true];
@@ -271,7 +271,7 @@ function khtd_gemini_list_models(string $key, bool $fresh = false): array
     foreach ((array) ($d['models'] ?? []) as $m) {
         if (!in_array('generateContent', (array) ($m['supportedGenerationMethods'] ?? []), true)) continue;
         $id = preg_replace('#^models/#', '', (string) ($m['name'] ?? ''));
-        if ($id === '' || preg_match('/embedding|aqa|tts|imagen|veo|audio|live|vision/i', $id)) continue;
+        if ($id === '' || preg_match('/embedding|aqa|tts|imagen|veo|audio|live|vision|image/i', $id)) continue;
         $names[] = $id;
     }
     // Ưu tiên bản flash (nhanh, rẻ), phiên bản mới hơn, tránh bản preview/exp và lite.
@@ -299,6 +299,25 @@ function khtd_gemini_candidates(array $g, bool $fresh = false): array
     return ['models' => array_slice($list, 0, 6), 'discover' => $disc];
 }
 
+/** Gọi một model. Trả ['http'=>int,'data'=>array|null,'msg'=>string]. */
+function khtd_gemini_call(string $key, string $model, array $body): array
+{
+    $ch = curl_init('https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($model) . ':generateContent');
+    curl_setopt_array($ch, [
+        CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 90,
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $key],
+        CURLOPT_POSTFIELDS => json_encode($body, JSON_UNESCAPED_UNICODE),
+    ]);
+    $resp = curl_exec($ch);
+    $http = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $cerr = curl_error($ch);
+    curl_close($ch);
+    if ($resp === false) return ['http' => 0, 'data' => null, 'msg' => 'curl: ' . $cerr];
+    $d = json_decode((string) $resp, true);
+    return ['http' => $http, 'data' => is_array($d) ? $d : null,
+            'msg' => substr((string) ($d['error']['message'] ?? $resp), 0, 250)];
+}
+
 /** Trả về null nếu chưa cấu hình; ném RuntimeException nếu gọi lỗi. */
 function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
 {
@@ -313,43 +332,56 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
     $rubric = $schema['rubric'] ?? ['criteria' => []];
     $max = 0; foreach ($rubric['criteria'] as $c) $max += (float) $c['max'];
 
-    $system = "Bạn là trợ giảng môn Khoa học Trái đất (ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu học tập thực tập của sinh viên ngành Kinh tế đất đai (không chuyên địa chất). "
-            . "Chấm theo đúng rubric, công bằng, khuyến khích; nhận xét ngắn gọn bằng tiếng Việt, chỉ ra 1–2 điểm tốt và 1–2 điểm cần sửa cụ thể, không viết lại đáp án đầy đủ. "
-            . "Nếu ô để trống hoặc sao chép nguyên văn gợi ý thì trừ điểm theo rubric. Điểm từng tiêu chí là bội số của 0,25 và không vượt mức tối đa. "
-            . "Chỉ trả về JSON hợp lệ theo mẫu: {\"criteria\":[{\"id\":\"...\",\"score\":0,\"comment\":\"...\"}],\"feedback\":\"...\",\"flags\":[\"...\"]}.";
+    $system = "Bạn là trợ giảng môn Khoa học Trái đất (ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu học tập thực tập của sinh viên ngành Kinh tế đất đai (không chuyên địa chất).\n"
+            . "QUY TẮC CHẤM — PHẢI ĐỐI CHIẾU VỚI ĐÁP ÁN, KHÔNG chấm theo cảm tính:\n"
+            . "1. Với mỗi câu trong 'dap_an': so sánh bài làm với đáp án, xác định ý đúng / ý thiếu / ý sai. Điểm tỉ lệ với số ý đúng.\n"
+            . "2. Với bảng mô tả mẫu vật: KHÔNG có đáp án cố định theo số mẫu (mỗi trạm một mẫu khác nhau). Hãy đối chiếu với 'du_lieu_chuan': "
+            . "(a) các tính chất sinh viên ghi có đúng với dữ liệu chuẩn của mẫu mà họ gọi tên không; (b) tên gọi có mâu thuẫn với mô tả không "
+            . "(ví dụ gọi calcit nhưng ghi độ cứng 7 và không sủi HCl, hoặc gọi granit nhưng ghi kiến trúc ẩn tinh). Mâu thuẫn thì trừ điểm và chỉ rõ mâu thuẫn.\n"
+            . "3. Ô để trống, chép lại đề bài, hoặc viết dài mà không có ý đúng theo đáp án → 0 điểm cho phần đó.\n"
+            . "4. Điểm từng tiêu chí là bội số của 0,25 và không vượt mức tối đa.\n"
+            . "5. Nhận xét ngắn gọn bằng tiếng Việt, nêu 1–2 điểm tốt và 1–2 điểm cần sửa CỤ THỂ (dẫn đúng ý sai và ý đúng tương ứng trong đáp án), không chép nguyên đáp án.\n"
+            . "Chỉ trả về JSON hợp lệ theo mẫu: {\"doi_chieu\":[{\"muc\":\"...\",\"bai_lam\":\"...\",\"dap_an\":\"...\",\"ket_qua\":\"đúng|đúng một phần|thiếu|sai|trống\"}],"
+            . "\"criteria\":[{\"id\":\"...\",\"score\":0,\"comment\":\"...\"}],\"feedback\":\"...\",\"flags\":[\"...\"]}";
     $user = [
         'phieu' => ['so' => (int) $ws['No'], 'tieu_de' => $ws['Title'], 'cau_truc' => array_map(function ($s) {
             return ['id' => $s['id'], 'type' => $s['type'], 'title' => $s['title'] ?? '', 'columns' => $s['columns'] ?? null, 'items' => $s['items'] ?? null, 'prompt' => $s['prompt'] ?? null];
         }, $schema['sections'] ?? [])],
         'rubric' => $rubric,
-        'goi_y_dap_an_cho_nguoi_cham' => $schema['answer_hints'] ?? '',
+        'dap_an' => $schema['answer_key'] ?? [],
+        'dap_an_tong_quat' => $schema['answer_hints'] ?? '',
+        'du_lieu_chuan' => $schema['reference'] ?? '',
         'bai_lam_cua_sinh_vien' => $answers,
     ];
     $body = [
         'systemInstruction' => ['parts' => [['text' => $system]]],
         'contents' => [['role' => 'user', 'parts' => [['text' => json_encode($user, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)]]]],
-        'generationConfig' => ['temperature' => 0.2, 'responseMimeType' => 'application/json', 'maxOutputTokens' => 2048],
+        'generationConfig' => ['temperature' => 0.2, 'responseMimeType' => 'application/json', 'maxOutputTokens' => 8192],
     ];
-    // Thử lần lượt các model: 404 (model không tồn tại), 429 (hết hạn mức), 5xx → chuyển model kế tiếp;
-    // 400/401/403 (key sai, bị khoá, thiếu quyền) → dừng ngay, báo rõ để GV sửa cấu hình.
+
+    // Thử lần lượt các model. Model 2.5+ mặc định "suy nghĩ" và có thể tiêu hết hạn mức token
+    // trước khi kịp xuất JSON → gửi kèm thinkingBudget = 0; model nào không hiểu tham số này
+    // (HTTP 400) thì gọi lại không kèm. 404/429/5xx → model kế tiếp; 401/403 → dừng (lỗi key).
     $data = null; $used = null; $lastErr = '';
     foreach ($cand['models'] as $model) {
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($model) . ':generateContent';
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 60,
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $g['key']],
-            CURLOPT_POSTFIELDS => json_encode($body, JSON_UNESCAPED_UNICODE),
-        ]);
-        $resp = curl_exec($ch);
-        $http = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $cerr = curl_error($ch);
-        curl_close($ch);
-        if ($resp === false) { $lastErr = 'Không gọi được Gemini: ' . $cerr; continue; }
-        $d = json_decode((string) $resp, true);
-        if ($http === 200) { $data = $d; $used = $model; break; }
-        $lastErr = 'Gemini ' . $model . ' HTTP ' . $http . ': ' . substr((string) ($d['error']['message'] ?? $resp), 0, 200);
-        if (in_array($http, [400, 401, 403], true)) break;   // lỗi cấu hình key — đổi model cũng vô ích
+        foreach ([true, false] as $noThink) {
+            $b = $body;
+            if ($noThink) $b['generationConfig']['thinkingConfig'] = ['thinkingBudget' => 0];
+            $r = khtd_gemini_call($g['key'], $model, $b);
+            if ($r['http'] === 200) {
+                $t = (string) ($r['data']['candidates'][0]['content']['parts'][0]['text'] ?? '');
+                if (trim($t) === '') {
+                    $fr = (string) ($r['data']['candidates'][0]['finishReason'] ?? '?');
+                    $lastErr = 'Gemini ' . $model . ' trả về rỗng (finishReason=' . $fr . ').';
+                    break;                                  // model này không dùng được → model kế
+                }
+                $data = $r['data']; $used = $model; break 2;
+            }
+            $lastErr = 'Gemini ' . $model . ' HTTP ' . $r['http'] . ': ' . $r['msg'];
+            if ($noThink && $r['http'] === 400) continue;    // có thể do thinkingConfig → thử lại không kèm
+            if (in_array($r['http'], [401, 403], true)) break 2;
+            break;
+        }
     }
     if ($data === null) throw new RuntimeException($lastErr ?: 'Gemini không phản hồi.');
     $text = (string) ($data['candidates'][0]['content']['parts'][0]['text'] ?? '');
@@ -370,7 +402,14 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
         if (!in_array($id, array_column($crit, 'id'), true)) $crit[] = ['id' => $id, 'name' => $c['name'], 'max' => (float) $c['max'], 'score' => 0, 'comment' => 'Chưa chấm được — GV xem lại.'];
     }
     $total10 = $max > 0 ? round($total / $max * 10 * 4) / 4 : 0;
-    return ['model' => $used, 'criteria' => $crit, 'raw_total' => $total, 'max' => $max, 'total' => $total10,
+    $dc = [];
+    foreach ((array) ($out['doi_chieu'] ?? []) as $x) {
+        if (!is_array($x)) continue;
+        $dc[] = ['muc' => mb_substr((string) ($x['muc'] ?? ''), 0, 200), 'bai_lam' => mb_substr((string) ($x['bai_lam'] ?? ''), 0, 400),
+                 'dap_an' => mb_substr((string) ($x['dap_an'] ?? ''), 0, 400), 'ket_qua' => mb_substr((string) ($x['ket_qua'] ?? ''), 0, 30)];
+        if (count($dc) >= 40) break;
+    }
+    return ['model' => $used, 'doi_chieu' => $dc, 'criteria' => $crit, 'raw_total' => $total, 'max' => $max, 'total' => $total10,
             'feedback' => mb_substr((string) ($out['feedback'] ?? ''), 0, 2000), 'flags' => array_slice((array) ($out['flags'] ?? []), 0, 5)];
 }
 
@@ -529,7 +568,7 @@ function action_khtd_ai_test(array $params): void
     $out['se_thu_lan_luot'] = $cand['models'];
     foreach ($cand['models'] as $model) {
         $body = ['contents' => [['role' => 'user', 'parts' => [['text' => 'Trả lời đúng một từ: OK']]]],
-                 'generationConfig' => ['temperature' => 0, 'maxOutputTokens' => 16]];
+                 'generationConfig' => ['temperature' => 0, 'maxOutputTokens' => 256, 'thinkingConfig' => ['thinkingBudget' => 0]]];
         $ch = curl_init('https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($model) . ':generateContent');
         curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 45,
             CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $g['key']],
@@ -539,8 +578,13 @@ function action_khtd_ai_test(array $params): void
         curl_close($ch);
         $r = json_decode((string) $resp, true);
         if ($http === 200) {
-            $out['goi_thu'] = ['ok' => true, 'model' => $model,
-                               'tra_loi' => trim((string) ($r['candidates'][0]['content']['parts'][0]['text'] ?? ''))];
+            $tl = trim((string) ($r['candidates'][0]['content']['parts'][0]['text'] ?? ''));
+            if ($tl === '') {
+                $out['thu_that_bai'][] = ['model' => $model, 'http' => 200,
+                                          'loi' => 'trả về rỗng, finishReason=' . (string) ($r['candidates'][0]['finishReason'] ?? '?')];
+                continue;
+            }
+            $out['goi_thu'] = ['ok' => true, 'model' => $model, 'tra_loi' => $tl];
             $out['ket_luan'] = 'Gemini chạy được. Phiếu nộp sẽ được chấm bằng model: ' . $model;
             api_ok($out); return;
         }
@@ -628,6 +672,8 @@ function khtd_default_worksheets(): array
                 $sdg('Olivin và silicat Mg phản ứng với CO₂ tạo carbonat bền (khoáng hóa carbon). Tính chất nào của khoáng vật quyết định tốc độ phản ứng này?'),
                 $self(['Thực hiện phép thử độ cứng đúng cách', 'Phân biệt cát khai với vết vỡ', 'Gọi tên 8 khoáng vật với 2 dấu hiệu', 'Giải thích vì sao màu không đủ để nhận diện'])],
             'rubric' => $R,
+            'answer_key' => ['q1' => 'X = thạch anh (độ cứng 7, vạch được kính, vết vỡ vỏ sò, không cát khai); Y = calcit (độ cứng 3, bị đồng xu vạch, cát khai 3 hướng khối thoi). Phép thử quyết định: nhỏ HCl 10 phần trăm — calcit sủi bọt mạnh, thạch anh không phản ứng; kết hợp thử độ cứng bằng mảnh kính.', 'q2' => 'Mica có cấu trúc lớp silicat, liên kết giữa các lớp yếu nên tách theo một hướng thành lá mỏng dẻo đàn hồi (cát khai hoàn toàn 1 hướng). Thạch anh có khung silicat ba chiều, liên kết bền đều mọi hướng nên không có cát khai, chỉ vỡ theo vết vỡ vỏ sò.', 'q3' => 'Nhiều khả năng là orthoclase vì màu hồng xám thịt. Cần quan sát thêm mặt cát khai: plagioclase có sọc song sinh song song mảnh như sợi tóc, orthoclase không có. Góc cát khai cũng khác nhẹ: orthoclase đúng 90 độ, plagioclase khoảng 86 đến 88 độ.', 'q4' => 'Màu: olivin lục oliu đặc trưng, thạch anh trong suốt đến trắng xám. Vết vỡ: thạch anh vỏ sò rõ, olivin dạng hạt và cát khai kém. Ánh: thạch anh ánh thủy tinh, olivin ánh thủy tinh đến ánh mỡ. Bối cảnh: olivin trong đá mafic và siêu mafic, thạch anh trong đá felsic.', 'sdg' => 'Yếu tố quyết định tốc độ khoáng hóa carbon: diện tích bề mặt tiếp xúc (hạt càng mịn càng nhanh), hàm lượng cation Mg và Ca, độ bền hóa học của khoáng vật (olivin phong hóa nhanh nên phản ứng nhanh), cùng nhiệt độ, áp suất CO2 và pH dung dịch.'],
+            'reference' => 'Dữ liệu chuẩn 8 khoáng vật tạo đá. Thạch anh: không màu hoặc trắng, tím, ánh thủy tinh, độ cứng 7, không cát khai, vết vỡ vỏ sò, không sủi HCl. Orthoclase: hồng hoặc xám thịt, độ cứng 6, cát khai 2 hướng 90 độ, không sọc song sinh. Plagioclase: trắng xám, độ cứng 6, cát khai 2 hướng gần 90 độ, có sọc song sinh. Pyroxen: lục sẫm đến đen, độ cứng 5,5 đến 6, cát khai 2 hướng gần vuông góc, dạng trụ ngắn. Olivin: lục oliu, độ cứng 6,5 đến 7, cát khai kém, dạng hạt. Biotit: đen nâu, cát khai hoàn toàn 1 hướng, lá dẻo đàn hồi, độ cứng 2,5 đến 3. Muscovit: trong suốt đến vàng nhạt, cát khai 1 hướng, độ cứng 2 đến 2,5. Calcit: trắng trong, độ cứng 3, cát khai 3 hướng khối thoi, sủi bọt mạnh với HCl 10 phần trăm. Vật thử: móng tay 2,5; đồng xu 3,5; đinh sắt và mảnh kính 5,5; dũa thép 6,5.',
             'answer_hints' => 'X = thạch anh (H7, vạch kính, vết vỡ vỏ sò); Y = calcit (H3, sủi HCl, cát khai khối thoi). Mica: cấu trúc lớp silicat, liên kết yếu giữa lớp → cát khai 1 hướng hoàn hảo; thạch anh khung 3 chiều → không cát khai. Hồng + 2 cát khai 90° + H6 → orthoclase; cần kiểm tra không có sọc song sinh (plagioclase có sọc). Thạch anh vs olivin: thạch anh vết vỡ vỏ sò, không cát khai, thường trong/trắng, tinh thể lăng trụ; olivin lục oliu, dạng hạt, ánh mỡ, trong đá mafic. SDG: diện tích bề mặt/độ hạt, hàm lượng Mg–Fe, độ bền hóa học (olivin phong hóa nhanh), nhiệt độ – pH.'],
         2 => ['title' => 'Đá magma – kiến trúc, thành phần, 8 mẫu phổ biến',
             'sections' => [
@@ -640,6 +686,8 @@ function khtd_default_worksheets(): array
                 $sdg('Basalt được dùng khoáng hóa CO₂ (CarbFix, Iceland). Vì sao basalt phù hợp hơn granit?'),
                 $self(['Phân biệt 5 kiểu kiến trúc', 'Ước lượng chỉ số màu', 'Định danh 8 mẫu đá magma', 'Liên hệ kiến trúc với tốc độ nguội'])],
             'rubric' => $R,
+            'answer_key' => ['q1' => 'Mẫu ẩn tinh nặng là basalt (mafic, phun trào). Mẫu thủy tinh đen bóng vết vỡ vỏ sò là obsidian (giàu silic, phun trào). Cùng màu đen nhưng khác nhóm vì màu obsidian do trạng thái thủy tinh và tạp chất, không phản ánh thành phần hóa học; phải dựa vào kiến trúc, tỷ trọng và bối cảnh thành tạo.', 'q2' => 'Magma giàu SiO2 có độ nhớt cao nên khí hòa tan khó thoát, tích áp rồi phun nổ tạo rhyolit, đá bọt, tro. Magma bazơ nghèo SiO2 độ nhớt thấp, khí thoát dễ, dung nham chảy tràn tạo dòng basalt và núi lửa dạng khiên sườn thoải.', 'q3' => 'Hai giai đoạn nguội: đầu tiên nguội chậm dưới sâu tạo ban tinh feldspar lớn, sau đó magma phun lên bề mặt nguội nhanh tạo nền hạt mịn. Gọi tên: rhyolit ban trạng (porphyr) nếu nền sáng màu.', 'q4' => 'Chu trình đá: magma kết tinh thành đá magma; đá lộ ra bị phong hóa, vận chuyển, lắng đọng, nén ép và xi măng hóa thành đá trầm tích; chôn vùi sâu chịu nhiệt độ và áp suất cao thành đá biến chất; nóng chảy trở lại thành magma. Granit ở nhánh xâm nhập (nguội chậm dưới sâu), basalt ở nhánh phun trào (nguội nhanh trên bề mặt).', 'sdg' => 'Basalt phù hợp hơn granit vì giàu cation Ca, Mg, Fe cần cho phản ứng tạo carbonat; thủy tinh núi lửa và khoáng vật mafic phong hóa nhanh; basalt nhiều lỗ hổng và khe nứt nên độ thấm tốt. Granit nghèo Ca và Mg, chủ yếu thạch anh và feldspar bền hóa học.'],
+            'reference' => 'Dữ liệu chuẩn đá magma. Granit: xâm nhập, felsic, hiển tinh hạt thô, sáng màu, có thạch anh, K-feldspar hồng, mica. Rhyolit: phun trào, felsic, ẩn tinh hoặc ban trạng, sáng màu. Diorit: xâm nhập, trung tính, hiển tinh, đốm muối tiêu, plagioclase trắng và amphibol đen, hầu như không có thạch anh. Andesit: phun trào, trung tính, ẩn tinh hoặc ban trạng, xám. Gabro: xâm nhập, mafic, hiển tinh hạt thô, sẫm màu, nặng. Basalt: phun trào, mafic, ẩn tinh, đen xám, chắc, có thể có lỗ hổng. Obsidian: phun trào, thủy tinh, đen bóng, vết vỡ vỏ sò. Đá bọt: phun trào, nhiều bọt khí, rất nhẹ, nổi trên nước, sáng màu. Chỉ số màu: felsic dưới 15 phần trăm, trung tính 15 đến 40, mafic 40 đến 70, siêu mafic trên 70.',
             'answer_hints' => 'Basalt (mafic, ẩn tinh, nặng) vs obsidian (felsic, thủy tinh): màu đen của obsidian do tạp chất/thủy tinh, không phản ánh thành phần. SiO₂ cao → độ nhớt cao → khí khó thoát → phun nổ; bazơ ít nhớt → chảy tràn. Ban trạng: 2 giai đoạn (nguội chậm dưới sâu tạo ban tinh, rồi phun trào nguội nhanh) → rhyolit porphyr. Chu trình đá: magma→kết tinh→đá magma→phong hóa, vận chuyển, lắng, thành đá→trầm tích→biến chất (T,P)→nóng chảy→magma; granit xâm nhập, basalt phun trào. Basalt giàu Ca, Mg, Fe và có lỗ hổng/thấm tốt → kết tủa carbonat nhanh; granit nghèo cation hóa trị 2.'],
         3 => ['title' => 'Đá trầm tích – vụn cơ học, hóa học, sinh hóa, môi trường thành tạo',
             'sections' => [
@@ -652,6 +700,8 @@ function khtd_default_worksheets(): array
                 $sdg('Đá vôi là nguyên liệu xi măng (~0,8 t CO₂/t clinker). Đề xuất 1 cách giảm phát thải liên quan vật liệu địa chất.'),
                 $self(['Dùng thang Wentworth gọi tên cấp hạt', 'Đánh giá chọn lọc, mài tròn', 'Định danh 7 mẫu trầm tích', 'Suy luận môi trường thành tạo'])],
             'rubric' => $R,
+            'answer_key' => ['q1' => 'Cát kết hạt tròn, chọn lọc tốt, chỉ gồm thạch anh là trưởng thành hơn vì đã vận chuyển xa và phong hóa hóa học mạnh, các khoáng vật kém bền như feldspar bị phá hủy hết; gợi ý nguồn xa, khí hậu nóng ẩm, môi trường năng lượng ổn định như bãi biển hoặc cồn cát gió. Mẫu hạt góc cạnh nhiều feldspar và mảnh đá là chưa trưởng thành: nguồn gần, vận chuyển nhanh, khí hậu khô hoặc kiến tạo nâng mạnh.', 'q2' => 'Vì đó là đá vôi sinh hóa, hình thành do tích tụ bộ xương canxi cacbonat của sinh vật. Môi trường: biển nông, ấm, nước trong sạch, ít vật liệu vụn lục địa, độ muối bình thường, đủ ánh sáng cho rạn san hô phát triển.', 'q3' => 'Laterit hình thành do phong hóa hóa học mạnh trong khí hậu nhiệt đới ẩm: silic và cation kiềm bị rửa trôi, sắt và nhôm tích tụ dạng oxit hydroxit. Mực nước ngầm dao động theo mùa làm sắt luân phiên hòa tan rồi oxy hóa kết tủa, tạo kết vón và lớp đá ong, khi lộ ra không khí thì cứng lại. Vì vậy thường gặp ở đồi thấp và thềm cổ nơi mực nước ngầm nông và dao động.', 'q4' => 'Vì đá trầm tích chỉ là lớp phủ mỏng trên bề mặt nhưng trải rộng khắp lục địa và đáy biển, trong khi phần lớn thể tích vỏ Trái đất bên dưới là đá magma và đá biến chất có bề dày lớn hơn nhiều.', 'sdg' => 'Hướng giảm phát thải: thay một phần clinker bằng puzolan tự nhiên, tro bay, xỉ lò cao hoặc đất sét nung hoạt hóa (xi măng LC3); dùng bột đá vôi nghiền mịn làm phụ gia; tận dụng phế thải xây dựng; thu giữ CO2 từ lò nung. Nêu được một hướng kèm giải thích là đạt.'],
+            'reference' => 'Dữ liệu chuẩn đá trầm tích. Cấp hạt theo Wentworth: trên 2 mm là cuội và sỏi; 2 đến 0,0625 mm là cát; 0,0625 đến 0,004 mm là bột; dưới 0,004 mm là sét. Cuội kết: hạt trên 2 mm tròn cạnh gắn kết. Dăm kết: hạt trên 2 mm sắc cạnh. Cát kết: cỡ cát, nhám tay, có thể phân lớp xiên. Bột kết và sét kết: rất mịn, mặt trơn, dễ tách lớp. Đá vôi chứa hóa thạch: sủi bọt mạnh HCl, thấy vỏ sò, san hô, huệ biển, biển nông ấm. Travertin: carbonat kết tủa từ nước ngầm hoặc suối khoáng, nhiều lỗ hổng, phân dải màu, sủi HCl. Laterit: nâu đỏ, kết vón sắt nhôm, lỗ hổng tổ ong, không sủi HCl, là sản phẩm phong hóa nhiệt đới. Độ chọn lọc tốt và mài tròn cao ứng với vận chuyển xa và môi trường năng lượng ổn định.',
             'answer_hints' => 'Cát kết thạch anh tròn, chọn lọc tốt = trưởng thành (vận chuyển xa, phong hóa hóa học mạnh, khí hậu ẩm; môi trường gió/bãi biển); arkose/greywacke góc cạnh = chưa trưởng thành, nguồn gần, khí hậu khô/kiến tạo nâng nhanh. Đá vôi Kiên Lương: biển nông ấm, trong, Permi, rạn san hô. Laterit: phong hóa nhiệt đới rửa trôi Si, kiềm, tích tụ Fe–Al; kết vón khi mực nước ngầm dao động (oxi hóa), lộ ra cứng hóa. 75%/5%: trầm tích là lớp phủ mỏng trên bề mặt; vỏ chủ yếu magma + biến chất. Giảm phát thải: thay clinker bằng puzolan, tro bay, xỉ, đất sét nung (LC3), đá vôi nghiền mịn.'],
         4 => ['title' => 'Đá biến chất – tác nhân, có phiến/không phiến, đá mẹ, chu trình đá',
             'sections' => [
@@ -664,6 +714,8 @@ function khtd_default_worksheets(): array
                 $sdg('Serpentinit và đá siêu mafic biến chất là bể chứa tiềm năng khoáng hóa CO₂ (vd Núi Nưa, Thanh Hóa). Cần dữ liệu gì để đánh giá tiềm năng?'),
                 $self(['Phân biệt phiến – không phiến', 'Xếp chuỗi slate → gneiss theo mức độ', 'Xác định đá mẹ của 7 mẫu', 'Vẽ/mô tả chu trình đá đầy đủ'])],
             'rubric' => $R,
+            'answer_key' => ['q1' => 'Mica xếp song song do áp suất định hướng trong biến chất khu vực: khoáng vật dạng tấm tái kết tinh và xoay sao cho mặt phẳng của chúng vuông góc với phương ứng suất nén lớn nhất; vì vậy mặt phiến vuông góc với hướng nén.', 'q2' => 'Là marble. Lập luận: vẫn sủi bọt HCl nên thành phần là calcit như đá vôi, nhưng tinh thể calcit lớn, khít và lấp lánh do tái kết tinh, đồng thời mất hết hóa thạch và cấu tạo phân lớp vốn có của đá vôi trầm tích, đó là dấu hiệu đã qua biến chất.', 'q3' => 'Chu trình đá đầy đủ: magma nguội và kết tinh thành đá magma; mọi loại đá lộ ra bị phong hóa, xói mòn, vận chuyển, lắng đọng rồi nén ép và xi măng hóa thành đá trầm tích; đá chịu nhiệt độ và áp suất cao cùng dung dịch hoạt tính thì tái kết tinh thành đá biến chất; biến chất tiếp tục đến nóng chảy thì trở lại thành magma. Đường tắt: đá magma có thể biến chất trực tiếp, đá biến chất có thể bị phong hóa thành trầm tích.', 'q4' => 'Marble ở các vùng này là sản phẩm biến chất khu vực của thành tạo đá vôi Paleozoi, gắn với đới nâng và biến dạng cùng nhiệt từ các khối magma xâm nhập lân cận. Nhiệt độ và áp suất làm đá vôi tái kết tinh thành marble hạt thô, ít tạp chất nên đạt yêu cầu đá ốp lát.', 'sdg' => 'Dữ liệu cần: thành phần khoáng vật (hàm lượng olivin, serpentin, pyroxen giàu Mg), trữ lượng và bề dày khối đá, độ rỗng và độ thấm, điều kiện địa chất thủy văn, khoảng cách tới nguồn phát thải CO2, chi phí và tác động môi trường.'],
+            'reference' => 'Dữ liệu chuẩn đá biến chất. Slate: phiến rất mịn, tách tấm phẳng, từ sét kết, biến chất thấp. Phyllit: phiến gợn sóng, ánh lụa do mica vi tinh, từ slate. Schist: phiến rõ, mica hạt nhìn thấy lấp lánh, có thể có granat, biến chất trung bình. Gneiss: phân dải sáng tối gồm thạch anh và feldspar xen mica hoặc amphibol, hạt thô, biến chất cao, đá mẹ granit hoặc sét kết. Marble: không phiến, tinh thể calcit lấp lánh, sủi bọt HCl, độ cứng 3, từ đá vôi hoặc dolomit. Quartzit: không phiến, độ cứng 7, vỡ xuyên hạt, ánh mỡ, từ cát kết thạch anh. Hornfels: không phiến, hạt rất mịn, sẫm, chắc, biến chất tiếp xúc từ sét kết. Tác nhân biến chất: nhiệt độ trên 150 đến 200 độ C, áp suất trên 1.500 bar, dung dịch hoạt tính.',
             'answer_hints' => 'Mica định hướng vuông góc với ứng suất nén cực đại (áp suất định hướng) trong biến chất khu vực; mặt phiến vuông góc σ1. Marble: tái kết tinh xóa hóa thạch và phân lớp, tinh thể calcit khít lấp lánh; đá vôi hạt mịn, có hóa thạch/phân lớp. Chu trình: nóng chảy, kết tinh, nâng–phong hóa–vận chuyển–lắng đọng, thành đá (nén, xi măng), biến chất (T, P, dung dịch), đường tắt: đá magma→biến chất, trầm tích→phong hóa lại, biến chất→phong hóa. Marble Yên Bái/Thanh Hóa: biến chất khu vực đá vôi Paleozoi dọc đới Sông Hồng/các khối xâm nhập. Dữ liệu: thành phần khoáng (olivin, serpentin), độ rỗng/thấm, khối lượng đá, nguồn CO₂ gần, địa chất thủy văn, chi phí.'],
         5 => ['title' => 'Bản đồ địa hình (1) – tỷ lệ, đường đồng mức, độ cao, độ dốc, dạng địa hình',
             'sections' => [
@@ -676,6 +728,8 @@ function khtd_default_worksheets(): array
                 $sdg('Với ngành Kinh tế đất đai: vùng nào trên bản đồ phù hợp canh tác/định cư, vùng nào nên giữ rừng phòng hộ? Vì sao?'),
                 $self(['Đổi tỷ lệ và đo khoảng cách thực', 'Nội suy độ cao giữa 2 đường đồng mức', 'Nhận diện 5 dạng địa hình', 'Tính độ dốc % và góc dốc'])],
             'rubric' => $rubric([['hd1', 'Bảng 6 điểm: tọa độ, độ cao, dạng địa hình', 3], ['bang', 'Bảng khoảng cách – độ dốc', 3], ['vd', 'Câu hỏi 1–4 & SDG', 3], ['td', 'Trình bày, lập luận', 1]]),
+            'answer_key' => ['q1' => 'Sông Dinh chảy về phía nam đến tây nam. Căn cứ: đường đồng mức cắt qua thung lũng uốn thành chữ V có đỉnh chỉ về phía thượng nguồn (phía bắc và đông bắc), đồng thời độ cao giảm dần về phía nam, từ trên 140 m xuống khoảng 100 đến 110 m ở vùng bãi bồi.', 'q2' => 'Sườn dốc nhất ở sườn phía nam của đồi 252 m và đồi 299 m, nơi các đường đồng mức xếp sít nhau nhất. Vùng thoải nhất là dải 100 đến 120 m ven sông Dinh phía nam, nơi đường đồng mức cách nhau rất xa, phải vẽ thêm đường phụ 110 m và 130 m.', 'q3' => 'Phải so sánh bằng số: đo khoảng cách ngang từ đỉnh tới một đường đồng mức thấp hơn ở sườn nam của mỗi đồi rồi lấy chênh cao chia khoảng cách. Chấp nhận kết luận nào có kèm phép tính và đọc đúng mật độ đường đồng mức; thông thường sườn nam đồi 252 m dốc hơn vì hạ 110 đến 130 m trên quãng ngắn hơn.', 'q4' => 'Vì vùng thấp phía nam rất thoải: với khoảng cao đều 20 m các đường đồng mức cách nhau quá xa, không thể hiện được gờ thềm, trũng nhỏ và hướng dốc. Đường phụ nét đứt bước 10 m được thêm để mô tả chi tiết địa hình bằng phẳng đó.', 'sdg' => 'Phù hợp canh tác và định cư: dải thềm thoải khoảng 110 đến 140 m gần nguồn nước, địa hình bằng, độ dốc dưới 8 phần trăm, nhưng tránh bãi bồi sát lòng sông vì nguy cơ ngập. Nên giữ rừng phòng hộ: sườn đồi 252 m và 299 m độ dốc trên 15 phần trăm, nơi đường đồng mức dày, vì dễ xói mòn và trượt lở, đồng thời là vùng đầu nguồn sinh thủy.'],
+            'reference' => 'Số liệu bản đồ Suối Kiết tỷ lệ 1:25.000, khoảng cao đều 20 m, đường phụ 10 m. Tọa độ lưới cục bộ và độ cao: A (1,24; 1,86) đỉnh 252 m; B (2,60; 0,35) bãi bồi khoảng 105 đến 110 m; C (3,34; 0,52) điểm độ cao 136 m; D (2,82; 3,02) đỉnh 299 m; E (1,90; 2,50) sườn bắc khoảng 190 đến 200 m; F (3,60; 1,90) sườn đông khoảng 150 đến 160 m. Chấp nhận sai lệch trong một khoảng cao đều nếu sinh viên trình bày cách nội suy đúng. Khoảng cách thực: A đến B 2.030 m tức 8,1 cm trên bản đồ; A đến D 1.965 m; B đến C 758 m; E đến F 1.803 m. Độ dốc tham khảo: A đến B khoảng 7 phần trăm tức 4 độ; A đến D khoảng 2,4 phần trăm; B đến C khoảng 3,8 phần trăm. Công thức: khoảng cách thực bằng khoảng cách bản đồ nhân mẫu số tỷ lệ; độ dốc phần trăm bằng chênh cao chia khoảng cách ngang nhân 100; góc dốc bằng arctang của chênh cao chia khoảng cách ngang.',
             'answer_hints' => 'Tỷ lệ 1:25.000: 1 cm = 250 m. A (1,24; 1,86) đỉnh 252 m; B (2,60; 0,35) bãi bồi ~105–110 m (giữa 100 và 110); C (3,34; 0,52) điểm độ cao 136 m; D (2,82; 3,02) đỉnh 299 m; E (1,90; 2,50) sườn bắc ~190–200 m; F (3,60; 1,90) sườn đông ~150–160 m (chấp nhận ±1 khoảng cao đều nếu lập luận nội suy đúng). Khoảng cách thực: AB 2.030 m (8,1 cm), AD 1.965 m, BC 758 m, EF 1.803 m. Độ dốc AB ≈ (252−107)/2030 ≈ 7% ≈ 4°; AD ≈ 47/1965 ≈ 2,4%; BC ≈ 29/758 ≈ 3,8%. Sông Dinh chảy về phía tây-nam/nam (chữ V của đường đồng mức chỉ ngược dòng về đông bắc; độ cao giảm về phía nam). Sườn dốc nhất: sườn nam đồi 299 m / đồi 252 m nơi đường dày; thoải: vùng 100–120 m ven sông. Đường phụ 10 m vì vùng thấp quá thoải, 20 m không đủ thể hiện. SDG: thềm thoải 110–140 m gần nước phù hợp canh tác/định cư nhưng tránh bãi bồi ngập; đồi dốc >15% giữ rừng chống xói mòn.'],
         6 => ['title' => 'Bản đồ địa hình (2) – mặt cắt A–B, phóng đại đứng & ôn tập tổng hợp',
             'sections' => [
@@ -687,6 +741,8 @@ function khtd_default_worksheets(): array
                 ['id' => 'sododd', 'type' => 'text', 'title' => 'Sơ đồ quyết định nhanh', 'prompt' => 'Điền tên đá cho các nhánh: magma xâm nhập sáng/muối tiêu/sẫm; phun trào sáng/xám/đen nặng/đen bóng/nhẹ nổi; trầm tích >2 mm tròn/góc, cát, mịn, hóa thạch+HCl; biến chất phiến mịn, ánh lụa, mica lớn, dải, HCl, cứng 7.'],
                 $self(['Dựng mặt cắt từ bản đồ đồng mức', 'Tính phóng đại đứng', 'Định danh 10 mẫu bất kỳ trong 30 phút', 'Nêu 2 dấu hiệu quyết định mỗi mẫu'])],
             'rubric' => $rubric([['hd1', 'Bảng giao điểm mặt cắt A–B', 3], ['vd', 'Câu hỏi 1–3', 3], ['bang', 'Thi thử 10 mẫu + sơ đồ quyết định', 3], ['td', 'Trình bày', 1]]),
+            'answer_key' => ['q1' => 'Phóng đại đứng bằng tỷ lệ đứng chia tỷ lệ ngang: trục đứng 1 cm ứng 20 m tức 1:2.000, trục ngang 1:25.000, vậy hệ số là 12,5 lần. Nếu vẽ không phóng đại, chênh cao toàn tuyến khoảng 150 m chỉ cao 150 m chia 25.000 bằng 6 mm.', 'q2' => 'Đoạn dốc nhất là đoạn đầu từ A, khoảng 0 đến 700 m, hạ từ 252 m xuống khoảng 120 m, độ dốc trung bình khoảng 18 đến 19 phần trăm tức 10 đến 11 độ. Toàn tuyến A đến B dài 2.030 m với chênh cao khoảng 145 m nên độ dốc trung bình chỉ khoảng 7 phần trăm tức 4 độ; đoạn đầu dốc gấp khoảng 2,5 lần mức trung bình.', 'q3' => 'Trình tự đúng từ A đến B: đỉnh đồi A cao 252 m; sườn dốc đều đổ về phía đông nam với đường đồng mức dày; chân sườn ở khoảng 140 m độ dốc giảm hẳn; tiếp đến bề mặt thềm thoải lượn sóng ở 110 đến 120 m; cuối cùng là bãi bồi thấp và lòng sông Dinh tại B khoảng 105 đến 110 m.', 'sododd' => 'Magma xâm nhập: sáng là granit, muối tiêu là diorit, sẫm là gabro. Phun trào: sáng là rhyolit, xám là andesit, đen nặng là basalt, đen bóng thủy tinh là obsidian, nhẹ nổi trên nước là đá bọt. Trầm tích: hạt trên 2 mm tròn cạnh là cuội kết, góc cạnh là dăm kết, cỡ cát là cát kết, rất mịn là bột kết hoặc sét kết, có hóa thạch và sủi HCl là đá vôi. Biến chất: phiến rất mịn là slate, ánh lụa là phyllit, mica hạt lớn lấp lánh là schist, phân dải sáng tối là gneiss, sủi HCl và tinh thể lấp lánh là marble, cứng 7 vỡ xuyên hạt là quartzit.'],
+            'reference' => 'Mặt cắt A đến B dài 2.030 m, từ đỉnh A 252 m tới bãi bồi B khoảng 105 đến 110 m. Giao điểm với đường đồng mức tính từ A: 118 m ứng cao độ 240; 175 m ứng 220; 242 m ứng 200; 334 m ứng 180; 418 m ứng 160; 636 m ứng 140; 704 m ứng 120; sau đó địa hình thoải, các giao điểm ở 939, 1.218, 1.259, 1.322 và 1.889 m đều ứng cao độ 120. Chấp nhận sai lệch khoảng cách dưới 50 m và cao độ trong một khoảng cao đều. Phóng đại đứng của lưới mặt cắt là 12,5 lần.',
             'answer_hints' => 'Giao điểm từ A (252 m): 118 m→240; 175→220; 242→200; 334→180; 418→160; 636→140; 704→120; rồi dao động 100–120 (939, 1218, 1259, 1322, 1889 m đều 120) đến B ~105–110 m; tổng 2.030 m. VE = 25.000/2.000 = 12,5×; không phóng đại: 150 m chênh cao → 6 mm. Dốc nhất: 0–700 m từ A (≈132 m/700 m ≈ 19% ≈ 11°) so với toàn tuyến ≈ 7%. Mô tả: đỉnh A → sườn dốc đều hướng ĐN → chân sườn ~140 m → bậc thềm thoải 110–120 m lượn sóng → bãi bồi và lòng sông Dinh tại B. Sơ đồ: granit/diorit/gabro; rhyolit/andesit/basalt/obsidian/đá bọt; cuội kết/dăm kết, cát kết, bột–sét kết, đá vôi hóa thạch; slate, phyllit, schist, gneiss, marble, quartzit. Thi thử: chấm theo tên đúng + 2 dấu hiệu quan sát được.'],
     ];
 }

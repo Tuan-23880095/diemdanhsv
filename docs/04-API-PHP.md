@@ -1110,7 +1110,9 @@ Mục đích: sinh viên làm 6 phiếu học tập thực tập Khoa học Trá
 
 **Model**: KHÔNG ghi cứng. `khtd_gemini_list_models()` gọi `GET /v1beta/models`, lọc model hỗ trợ `generateContent`, ưu tiên flash > pro, phiên bản cao hơn, bỏ preview/lite; đệm 6 giờ ở thư mục tạm. Tên trong `gemini.model`/`gemini.models` (nếu có) được thử trước. Nút **Kiểm tra Gemini** ở `khtd/quanly.html` gọi `khtdAiTest`.
 
-**Chấm AI**: `khtd_gemini_grade()` thử lần lượt `gemini.models` (mặc định 2.0-flash → 2.5-flash → 2.0-flash-lite) khi gặp 404/429/5xx; dừng ngay khi 400/401/403 (key sai).  gửi cấu trúc phiếu + rubric + gợi ý đáp án + bài làm, yêu cầu JSON `{criteria[{id,score,comment}], feedback, flags}`; điểm từng tiêu chí kẹp 0..max, làm tròn 0,25; tổng quy về /10. Lỗi API không làm hỏng lượt nộp (ghi error_log).
+**Đáp án để đối chiếu**: mỗi phiếu trong `khtd_default_worksheets()` có `answer_key` (đáp án từng câu, khoá theo id câu hỏi), `reference` (dữ liệu chuẩn của khoáng vật/đá/bản đồ để đối chiếu bảng mô tả — bảng mẫu vật KHÔNG có đáp án cố định theo số trạm nên chấm bằng tính nhất quán giữa tên gọi và mô tả) và `answer_hints` (đáp án dạng văn xuôi). Cả ba bị `unset` trong `khtdGetWorksheet` nên sinh viên không thấy. Kết quả chấm trả thêm mảng `doi_chieu` (mục · bài làm · đáp án · kết quả) — giảng viên luôn xem được, sinh viên chỉ xem sau khi giảng viên duyệt điểm.
+
+**Chấm AI**: `khtd_gemini_grade()` gửi kèm `thinkingConfig.thinkingBudget = 0` (model 2.5+ suy nghĩ ngầm có thể tiêu hết `maxOutputTokens` 8192 rồi trả rỗng; model không hiểu tham số này thì gọi lại không kèm), bỏ qua model trả rỗng, thử lần lượt `gemini.models` (mặc định 2.0-flash → 2.5-flash → 2.0-flash-lite) khi gặp 404/429/5xx; dừng ngay khi 400/401/403 (key sai).  gửi cấu trúc phiếu + rubric + gợi ý đáp án + bài làm, yêu cầu JSON `{criteria[{id,score,comment}], feedback, flags}`; điểm từng tiêu chí kẹp 0..max, làm tròn 0,25; tổng quy về /10. Lỗi API không làm hỏng lượt nộp (ghi error_log).
 
 **Email**: `khtd_send_result_mail()` dùng `mail_send()` (mục 25); gửi tới `students.Email`; tiêu đề `[KHTĐ] Kết quả Phiếu học tập số n (tạm tính|chính thức)`.
 

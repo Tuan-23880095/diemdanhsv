@@ -9,6 +9,16 @@ class KhtdView {
     return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
+  _doiChieu(ai) {
+    if (!ai || !Array.isArray(ai.doi_chieu) || !ai.doi_chieu.length) return '';
+    const mau = { 'đúng': 'bg-green-50', 'đúng một phần': 'bg-amber-50', 'thiếu': 'bg-amber-50', 'sai': 'bg-red-50', 'trống': 'bg-slate-100' };
+    return `<details class="mt-3" open><summary class="cursor-pointer font-semibold">Đối chiếu với đáp án (${ai.doi_chieu.length} mục)</summary>
+      <div class="mt-2 overflow-x-auto"><table class="w-full border text-xs"><thead class="bg-slate-100"><tr>
+      <th class="border px-1 py-1 text-left">Mục</th><th class="border px-1 py-1 text-left">Bài làm</th><th class="border px-1 py-1 text-left">Đáp án</th><th class="border px-1 py-1">Kết quả</th></tr></thead><tbody>` +
+      ai.doi_chieu.map((d) => `<tr class="${mau[d.ket_qua] || ''}"><td class="border px-1 py-1">${this._esc(d.muc)}</td><td class="border px-1 py-1">${this._esc(d.bai_lam)}</td><td class="border px-1 py-1">${this._esc(d.dap_an)}</td><td class="border px-1 py-1 text-center font-semibold">${this._esc(d.ket_qua)}</td></tr>`).join('') +
+      '</tbody></table></div></details>';
+  }
+
   show(id, on = true) { const el = this.$(id); if (el) el.classList.toggle('hidden', !on); }
 
   msg(text, kind = 'info') {
@@ -75,6 +85,7 @@ class KhtdView {
     else if (ai) h += `<p class="mt-1 text-lg">Điểm tạm tính (AI, GV sẽ duyệt): <b>${this._esc(ai.total)}/10</b></p>`;
     else h += '<p class="mt-1 text-sm text-slate-600">Đang chờ giảng viên chấm.</p>';
     if (ai) h += `<ul class="mt-2 list-disc pl-5 text-sm">${ai.criteria.map((c) => `<li><b>${this._esc(c.name)}</b>: ${this._esc(c.score)}/${this._esc(c.max)}${c.comment ? ' — ' + this._esc(c.comment) : ''}</li>`).join('')}</ul>${ai.feedback ? `<p class="mt-2 text-sm italic">${this._esc(ai.feedback)}</p>` : ''}`;
+    if (ai && sub.FinalScore != null) h += this._doiChieu(ai);
     box.innerHTML = h; box.classList.remove('hidden');
   }
 
@@ -125,7 +136,7 @@ class KhtdView {
       if (s.type === 'self') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><p class="text-sm">${s.items.map((it, i) => `${this._esc(it)}: <b>${['Chưa', 'Tạm được', 'Tự tin'][(a[s.id] || [])[i]] || '—'}</b>`).join(' · ')}</p>`;
       return '';
     }).join('');
-    const aiH = ai ? `<div class="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm"><b>AI đề xuất: ${this._esc(ai.total)}/10</b> (${this._esc(ai.model)})<ul class="mt-1 list-disc pl-5">${ai.criteria.map((c) => `<li>${this._esc(c.name)}: ${this._esc(c.score)}/${this._esc(c.max)} — ${this._esc(c.comment)}</li>`).join('')}</ul><p class="mt-1 italic">${this._esc(ai.feedback)}</p>${(ai.flags || []).length ? `<p class="mt-1 text-red-700">Cờ: ${this._esc(ai.flags.join('; '))}</p>` : ''}</div>` : '<p class="mt-3 text-sm text-slate-500">Chưa có chấm AI (chưa cấu hình Gemini hoặc lỗi gọi API).</p>';
+    const aiH = ai ? `<div class="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm"><b>AI đề xuất: ${this._esc(ai.total)}/10</b> (${this._esc(ai.model)})<ul class="mt-1 list-disc pl-5">${ai.criteria.map((c) => `<li>${this._esc(c.name)}: ${this._esc(c.score)}/${this._esc(c.max)} — ${this._esc(c.comment)}</li>`).join('')}</ul><p class="mt-1 italic">${this._esc(ai.feedback)}</p>${(ai.flags || []).length ? `<p class="mt-1 text-red-700">Cờ: ${this._esc(ai.flags.join('; '))}</p>` : ''}${this._doiChieu(ai)}</div>` : '<p class="mt-3 text-sm text-slate-500">Chưa có chấm AI (chưa cấu hình Gemini hoặc lỗi gọi API).</p>';
     box.innerHTML = `<div class="flex items-start justify-between"><h3 class="text-lg font-bold">Phiếu ${this._esc(row.No)} · ${this._esc(row.FullName)} (${this._esc(row.MSSV)})</h3><button id="sub-close" class="text-slate-500 hover:text-slate-900">✕</button></div>
       <p class="text-xs text-slate-500">Nộp: ${this._esc(row.SubmittedAt || '')} · Email: ${this._esc(row.Email || '(chưa có)')} · Trạng thái: ${this._esc(row.Status)}</p>${body}${aiH}
       <form id="grade-form" class="mt-4 grid gap-2 rounded-lg border p-3 sm:grid-cols-[120px_1fr_auto]">
