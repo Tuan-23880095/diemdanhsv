@@ -98,6 +98,7 @@ class KhtdController {
     document.getElementById('class-select').addEventListener('change', (e) => { this.classId = e.target.value; if (this.classId) this.loadClass(); });
     document.getElementById('btn-seed').addEventListener('click', () => this.seed());
     document.getElementById('btn-export').addEventListener('click', () => this.exportCsv());
+    document.getElementById('btn-aitest').addEventListener('click', () => this.aiTest());
     document.getElementById('btn-reload').addEventListener('click', () => this.loadClass());
     document.getElementById('lec-ws').addEventListener('click', (e) => { const b = e.target.closest('[data-ws-toggle]'); if (b) this.toggleWs(b.dataset.wsToggle, b.dataset.next); });
     document.getElementById('lec-subs').addEventListener('click', (e) => { const b = e.target.closest('[data-sub]'); if (b) this.openSubmission(b.dataset.sub); });
@@ -145,6 +146,19 @@ class KhtdController {
       this.view.msg(`Đã duyệt ${d.finalScore}/10${d.emailSent ? ' và gửi email cho sinh viên.' : '.'}`, 'ok');
       document.getElementById('sub-detail').classList.add('hidden'); this.loadClass();
     } catch (err) { this.view.msg(err.message, 'err'); }
+  }
+
+  async aiTest() {
+    const box = document.getElementById('ai-test');
+    const btn = document.getElementById('btn-aitest');
+    btn.disabled = true; btn.textContent = 'Đang kiểm tra…';
+    box.classList.remove('hidden'); box.textContent = 'Đang hỏi Google…';
+    try {
+      const d = await this.api.khtdAiTest(this.token, true);
+      box.textContent = JSON.stringify(d, null, 2);
+      this.view.msg(d.ket_luan || 'Đã kiểm tra.', d.goi_thu && d.goi_thu.ok ? 'ok' : 'err');
+    } catch (err) { box.textContent = 'Lỗi: ' + err.message; this.view.msg(err.message, 'err'); }
+    finally { btn.disabled = false; btn.textContent = 'Kiểm tra Gemini'; }
   }
 
   async regrade() {

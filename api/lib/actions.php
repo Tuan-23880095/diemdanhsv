@@ -68,6 +68,7 @@ const KNOWN_ACTIONS = [
     'khtdLecturerGrade'      => 'POST',
     'khtdExportCsv'          => 'GET',
     'khtdRegrade'            => 'POST',
+    'khtdAiTest'             => 'GET',
 ];
 
 /** Điều hướng theo $action, gọi thẳng api_ok()/api_fail() (hai hàm này tự exit). */
@@ -177,6 +178,7 @@ function api_dispatch(string $action, string $method, array $params): void
         case 'khtdLecturerGrade':      action_khtd_lecturer_grade($params);       return;
         case 'khtdExportCsv':          action_khtd_export_csv($params);           return;
         case 'khtdRegrade':            action_khtd_regrade($params);              return;
+        case 'khtdAiTest':             action_khtd_ai_test($params);              return;
     }
 }
 

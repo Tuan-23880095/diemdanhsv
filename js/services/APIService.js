@@ -112,4 +112,5 @@ class APIService {
   khtdLecturerGrade(token, submissionId, finalScore, note, sendEmail) { return this.post('khtdLecturerGrade', { token, submissionId, finalScore, note, sendEmail: !!sendEmail }); }
   khtdExportCsv(token, classId)               { return this.get('khtdExportCsv', { token, classId }); }
   khtdRegrade(token, submissionId)            { return this.post('khtdRegrade', { token, submissionId }); }
+  khtdAiTest(token, fresh)                    { return this.get('khtdAiTest', { token, fresh: fresh ? 1 : '' }); }
 }

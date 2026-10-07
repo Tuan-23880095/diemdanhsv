@@ -28,8 +28,9 @@ return [
     ],
     'gemini' => [
         'api_key' => '',                         // Google AI Studio key — để trống = không chấm AI (GĐ11 khtd)
-        'model'   => 'gemini-2.0-flash',         // model chính; tự chuyển sang 'models' dự phòng khi 404/429/5xx
-        'models'  => ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-2.0-flash-lite'],
+        // ĐỂ TRỐNG 'model'/'models' là tốt nhất: code tự hỏi Google xem key dùng được model nào
+        // (ListModels) rồi ưu tiên bản flash mới nhất — không hỏng khi Google đổi tên model.
+        // Chỉ điền khi muốn ép dùng đúng một model: 'model' => 'gemini-2.5-flash',
     ],
     'app' => [
         'timezone'             => 'Asia/Ho_Chi_Minh',

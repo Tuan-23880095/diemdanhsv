@@ -233,9 +233,70 @@ function khtd_gemini_config(): array
 {
     $cfg = app_config();
     $g = is_array($cfg['gemini'] ?? null) ? $cfg['gemini'] : [];
-    $models = $g['models'] ?? null;                       // danh sách dự phòng; thiếu thì suy từ 'model'
-    if (!is_array($models) || !$models) $models = [(string) ($g['model'] ?? 'gemini-2.0-flash'), 'gemini-2.5-flash', 'gemini-2.0-flash-lite'];
-    return ['key' => (string) ($g['api_key'] ?? ''), 'models' => array_values(array_unique(array_filter($models)))];
+    $pref = [];
+    if (!empty($g['model'])) $pref[] = (string) $g['model'];
+    if (is_array($g['models'] ?? null)) foreach ($g['models'] as $m) $pref[] = (string) $m;
+    return ['key' => (string) ($g['api_key'] ?? ''), 'prefer' => array_values(array_unique(array_filter($pref)))];
+}
+
+/**
+ * Hỏi Google xem key này dùng được model nào (endpoint ListModels). Tên model đổi theo thời gian
+ * (gemini-2.0-flash, gemini-2.5-flash, gemini-3-flash…) nên KHÔNG ghi cứng trong code.
+ * Kết quả lưu đệm 6 giờ ở thư mục tạm; lỗi đọc/ghi đệm không ảnh hưởng lượt gọi.
+ *
+ * @return array{ok:bool, models:string[], http?:int, loi?:string, status?:string, cache?:bool}
+ */
+function khtd_gemini_list_models(string $key, bool $fresh = false): array
+{
+    $cacheFile = sys_get_temp_dir() . '/khtd_gemini_models_' . substr(sha1($key), 0, 12) . '.json';
+    if (!$fresh && is_file($cacheFile) && (time() - (int) filemtime($cacheFile)) < 6 * 3600) {
+        $c = json_decode((string) @file_get_contents($cacheFile), true);
+        if (is_array($c['models'] ?? null) && $c['models']) return ['ok' => true, 'models' => $c['models'], 'cache' => true];
+    }
+    $ch = curl_init('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200');
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTPHEADER => ['x-goog-api-key: ' . $key]]);
+    $resp = curl_exec($ch);
+    $http = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $cerr = curl_error($ch);
+    curl_close($ch);
+    if ($resp === false) return ['ok' => false, 'models' => [], 'loi' => 'curl: ' . $cerr];
+    $d = json_decode((string) $resp, true);
+    if ($http !== 200) {
+        return ['ok' => false, 'models' => [], 'http' => $http,
+                'status' => (string) ($d['error']['status'] ?? ''),
+                'loi' => substr((string) ($d['error']['message'] ?? $resp), 0, 300)];
+    }
+    $names = [];
+    foreach ((array) ($d['models'] ?? []) as $m) {
+        if (!in_array('generateContent', (array) ($m['supportedGenerationMethods'] ?? []), true)) continue;
+        $id = preg_replace('#^models/#', '', (string) ($m['name'] ?? ''));
+        if ($id === '' || preg_match('/embedding|aqa|tts|imagen|veo|audio|live|vision/i', $id)) continue;
+        $names[] = $id;
+    }
+    // Ưu tiên bản flash (nhanh, rẻ), phiên bản mới hơn, tránh bản preview/exp và lite.
+    usort($names, static function (string $a, string $b): int {
+        $score = static function (string $n): float {
+            $s = str_contains($n, 'flash') ? 1000 : (str_contains($n, 'pro') ? 500 : 200);
+            if (preg_match('/(\d+(?:\.\d+)?)/', $n, $mm)) $s += ((float) $mm[1]) * 10;
+            if (str_contains($n, 'lite')) $s -= 6;
+            if (preg_match('/preview|exp|thinking/i', $n)) $s -= 12;
+            return $s;
+        };
+        return $score($b) <=> $score($a);
+    });
+    @file_put_contents($cacheFile, json_encode(['at' => time(), 'models' => $names], JSON_UNESCAPED_UNICODE));
+    return ['ok' => true, 'models' => $names, 'cache' => false];
+}
+
+/** Danh sách model sẽ thử lần lượt: tên trong config trước, rồi tên Google trả về. */
+function khtd_gemini_candidates(array $g, bool $fresh = false): array
+{
+    $list = $g['prefer'];
+    $disc = khtd_gemini_list_models($g['key'], $fresh);
+    foreach ($disc['models'] as $m) $list[] = $m;
+    $list = array_values(array_unique(array_filter($list)));
+    return ['models' => array_slice($list, 0, 6), 'discover' => $disc];
 }
 
 /** Trả về null nếu chưa cấu hình; ném RuntimeException nếu gọi lỗi. */
@@ -243,6 +304,11 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
 {
     $g = khtd_gemini_config();
     if ($g['key'] === '') return null;
+    $cand = khtd_gemini_candidates($g);
+    if (!$cand['models']) {
+        $d = $cand['discover'];
+        throw new RuntimeException('Không lấy được danh sách model Gemini' . (isset($d['loi']) ? ': ' . $d['loi'] : '') . '.');
+    }
     $schema = $ws['schema'];
     $rubric = $schema['rubric'] ?? ['criteria' => []];
     $max = 0; foreach ($rubric['criteria'] as $c) $max += (float) $c['max'];
@@ -267,7 +333,7 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
     // Thử lần lượt các model: 404 (model không tồn tại), 429 (hết hạn mức), 5xx → chuyển model kế tiếp;
     // 400/401/403 (key sai, bị khoá, thiếu quyền) → dừng ngay, báo rõ để GV sửa cấu hình.
     $data = null; $used = null; $lastErr = '';
-    foreach ($g['models'] as $model) {
+    foreach ($cand['models'] as $model) {
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($model) . ':generateContent';
         $ch = curl_init($url);
         curl_setopt_array($ch, [
@@ -436,6 +502,55 @@ function action_khtd_lecturer_grade(array $params): void
         if ($mailed) db()->prepare('UPDATE khtd_submissions SET EmailSentAt = NOW(), EmailTo = :e WHERE SubmissionID = :id')->execute(['e' => $row['Email'], 'id' => $row['SubmissionID']]);
     }
     api_ok(['submissionId' => $row['SubmissionID'], 'finalScore' => $score, 'emailSent' => $mailed]);
+}
+
+/** GET khtdAiTest {token, fresh?} — chẩn đoán key Gemini: model dùng được + gọi thử một câu. */
+function action_khtd_ai_test(array $params): void
+{
+    require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
+    $g = khtd_gemini_config();
+    if ($g['key'] === '') { api_fail("Chưa có mục 'gemini' => ['api_key' => '...'] trong private/config.php."); return; }
+    $fresh = !empty($params['fresh']);
+    $out = ['key_duoi' => '…' . substr($g['key'], -4), 'model_trong_config' => $g['prefer']];
+    $cand = khtd_gemini_candidates($g, $fresh);
+    $d = $cand['discover'];
+    $out['google_tra_ve'] = $d['ok']
+        ? ['ok' => true, 'tu_bo_dem' => (bool) ($d['cache'] ?? false), 'so_model' => count($d['models']), 'models' => array_slice($d['models'], 0, 12)]
+        : ['ok' => false, 'http' => $d['http'] ?? null, 'status' => $d['status'] ?? '', 'loi' => $d['loi'] ?? ''];
+    if (!$d['ok']) {
+        $out['goi_y'] = match ((int) ($d['http'] ?? 0)) {
+            400 => 'Key sai định dạng — tạo lại key ở aistudio.google.com/apikey.',
+            401, 403 => 'Key bị từ chối: key có giới hạn HTTP referrer (phải để None hoặc chặn theo IP), chưa bật Generative Language API cho project, hoặc tài khoản bị tổ chức khoá.',
+            429 => 'Hết hạn mức tạm thời — thử lại sau ít phút.',
+            default => 'Kiểm tra mạng ra Internet của hosting và trạng thái project trên Google Cloud.',
+        };
+        api_ok($out); return;
+    }
+    $out['se_thu_lan_luot'] = $cand['models'];
+    foreach ($cand['models'] as $model) {
+        $body = ['contents' => [['role' => 'user', 'parts' => [['text' => 'Trả lời đúng một từ: OK']]]],
+                 'generationConfig' => ['temperature' => 0, 'maxOutputTokens' => 16]];
+        $ch = curl_init('https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($model) . ':generateContent');
+        curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 45,
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $g['key']],
+            CURLOPT_POSTFIELDS => json_encode($body, JSON_UNESCAPED_UNICODE)]);
+        $resp = curl_exec($ch);
+        $http = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        $r = json_decode((string) $resp, true);
+        if ($http === 200) {
+            $out['goi_thu'] = ['ok' => true, 'model' => $model,
+                               'tra_loi' => trim((string) ($r['candidates'][0]['content']['parts'][0]['text'] ?? ''))];
+            $out['ket_luan'] = 'Gemini chạy được. Phiếu nộp sẽ được chấm bằng model: ' . $model;
+            api_ok($out); return;
+        }
+        $out['thu_that_bai'][] = ['model' => $model, 'http' => $http,
+                                  'loi' => substr((string) ($r['error']['message'] ?? $resp), 0, 200)];
+        if (in_array($http, [400, 401, 403], true)) break;
+    }
+    $out['goi_thu'] = ['ok' => false];
+    $out['ket_luan'] = 'Không model nào gọi được — xem mục thu_that_bai.';
+    api_ok($out);
 }
 
 /** POST khtdRegrade {token, submissionId} — GV yêu cầu AI chấm lại (sau khi sửa key/model hoặc hết hạn mức). */

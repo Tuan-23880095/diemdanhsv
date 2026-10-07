@@ -28,6 +28,7 @@
       <button id="btn-seed" class="rounded border border-blue-700 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-50">Tạo 6 phiếu mặc định</button>
       <button id="btn-reload" class="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Tải lại</button>
       <button id="btn-export" class="rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-900">Xuất CSV điểm phiếu</button>
+      <button id="btn-aitest" class="rounded border border-amber-600 px-3 py-1.5 text-sm text-amber-700 hover:bg-amber-50">Kiểm tra Gemini</button>
       <p class="basis-full text-xs text-slate-500">Quy trình: mở phiên điểm danh (mã 4 ký tự) ở trang Giảng viên → SV vào <code>khtd/online.html</code> bằng MSSV + mã → nộp → AI chấm & email tạm → bạn duyệt điểm tại đây (có thể gửi email chính thức).</p>
     </div>
     <h2 class="mt-5 mb-2 font-bold">Phiếu của lớp</h2>
@@ -37,6 +38,7 @@
       <table class="w-full text-sm"><thead class="bg-slate-100"><tr><th class="px-2 py-1 text-left">Phiếu</th><th class="px-2 py-1 text-left">MSSV</th><th class="px-2 py-1 text-left">Họ tên</th><th class="px-2 py-1 text-left">Trạng thái</th><th class="px-2 py-1 text-right">AI</th><th class="px-2 py-1 text-right">Chính thức</th><th class="px-2 py-1">Email</th><th class="px-2 py-1"></th></tr></thead>
       <tbody id="lec-subs"></tbody></table>
     </div>
+    <pre id="ai-test" class="hidden mt-4 overflow-x-auto rounded-xl border bg-slate-900 p-4 text-xs text-slate-100"></pre>
     <div id="sub-detail" class="hidden mt-5 rounded-2xl border bg-white p-4 shadow-sm"></div>
   </div>
 </main>
