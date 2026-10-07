@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Phiếu 2 – Đá magma</title><meta name="author" content="ThS. Đinh Quốc Tuấn"/>
+<style>
+:root{--blue:#1B4F72;--teal:#117A65;--orange:#E67E22;--red:#C0392B;--ink:#1d2733;--sand:#FBF8F1}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html{background:#7f8c8d}
+body{margin:0;font-family:"Times New Roman",Times,"DejaVu Serif",serif;font-size:12.5pt;line-height:1.42;color:var(--ink)}
+#flow{width:210mm;margin:0 auto;background:#fff;padding:24mm 15mm 22mm 22mm}
+.page{width:210mm;height:297mm;margin:8mm auto;background:#fff;position:relative;box-shadow:0 2px 12px rgba(0,0,0,.35);overflow:hidden}
+.page::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4mm;background:linear-gradient(#1B4F72,#117A65,#E67E22)}
+.page .content{position:absolute;top:23mm;left:22mm;right:15mm;bottom:20mm;overflow:hidden}
+.page .hdr{position:absolute;top:7mm;left:22mm;right:15mm;height:12mm;font-size:9pt;color:#555;border-bottom:.8pt solid var(--blue);display:flex;align-items:center;gap:3mm;padding-bottom:1mm;font-style:italic}
+.page .hdr img{height:9mm;width:auto}.page .hdr .l{flex:1}.page .hdr .run{text-align:right;color:var(--blue);font-weight:bold;font-style:normal}
+.page .ftr{position:absolute;bottom:7mm;left:22mm;right:15mm;border-top:.6pt solid #bbb;padding-top:1.5mm;display:flex;align-items:center;justify-content:space-between;font-size:8.5pt;color:#555}
+.page .ftr .pn{display:inline-block;min-width:8mm;height:8mm;line-height:8mm;border-radius:4mm;background:var(--blue);color:#fff;text-align:center;font-size:10.5pt;font-weight:bold}
+p{margin:0 0 5pt;text-align:justify}ul,ol{margin:0 0 5pt;padding-left:7mm}li{margin:0 0 2pt}
+h1{font-size:17pt;margin:0 0 4pt;color:var(--blue);line-height:1.25}
+h2{font-size:13pt;margin:9pt 0 4pt;padding:1.5mm 3mm;border-left:4pt solid var(--teal);background:#F1F8F5;color:#0E4D40;line-height:1.3}
+h3{font-size:12.5pt;margin:7pt 0 3pt;color:var(--blue)}
+.banner{display:flex;align-items:center;gap:5mm;border:1.2pt solid var(--blue);border-radius:3mm;padding:3mm 5mm;background:linear-gradient(90deg,#EBF5FB,#fff)}
+.banner img{height:16mm;width:auto}.banner .t{flex:1}.banner .t .k{font-size:9.5pt;color:#555;letter-spacing:.5pt;text-transform:uppercase}
+.banner .t h1{margin:1pt 0}.banner .t .s{font-size:10.5pt;color:#333}
+.stu{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm 8mm;margin:5pt 0 4pt;padding:2mm 4mm;border:1pt dashed #95A5A6;border-radius:2mm;font-size:11.5pt}
+.stu .dl{display:inline-block;border-bottom:1pt dotted #555;min-width:38mm}
+.box{border:.8pt solid #bbb;border-radius:2.5mm;padding:3pt 8pt 2pt;margin:4pt 0 7pt;background:#FCFBF8}
+.box .bt{font-weight:bold;color:var(--blue);margin-bottom:2pt}
+.box.goal{background:#EBF5FB;border-color:var(--blue)}.box.tips{background:#F1F8F5;border-color:var(--teal)}.box.warn{background:#FEF9E7;border-color:#F39C12}
+.box.sdg{background:#F4ECF7;border-color:#8E44AD}
+table.sc{border-collapse:collapse;width:100%;font-size:10.5pt;line-height:1.28;margin:3pt 0 6pt}
+table.sc th,table.sc td{border:.6pt solid #7F8C8D;padding:3pt 4pt;vertical-align:top}
+table.sc th{background:#EBF5FB;color:var(--blue);text-align:center}
+table.sc tr:nth-child(even) td{background:#FBFCFC}
+table.fill td{height:9mm}table.fill.tall td{height:13mm}
+.blank{display:block;border-bottom:1pt dotted #777;height:7.5mm}
+.q{margin:0 0 4pt;padding-left:6mm;text-indent:-6mm}.q b{color:var(--red)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+.pill{display:inline-block;padding:0 2.5mm;border-radius:3mm;font-size:10pt;background:#FEF5E7;color:#935116;border:.6pt solid #F5B041}
+.grade{border:1pt solid var(--blue);border-radius:2.5mm;padding:3pt 6pt;margin-top:4pt;font-size:10.5pt}
+.grade table{width:100%;border-collapse:collapse}.grade td,.grade th{border:.5pt solid #999;padding:2pt 3pt;text-align:center;font-size:10pt}
+.chk{display:inline-block;width:4mm;height:4mm;border:.8pt solid #333;vertical-align:middle;margin-right:1.5mm}
+.keep{break-inside:avoid}
+figure{margin:3pt 0 6pt;text-align:center}figure img,figure svg{max-width:100%;height:auto}figcaption{font-size:9.5pt;font-style:italic;color:#555}
+.cover{height:297mm;position:relative}
+.cv{position:absolute;inset:12mm;border:3pt double var(--blue);border-radius:4mm;padding:8mm 10mm;text-align:center;display:flex;flex-direction:column;background:radial-gradient(circle at 90% 8%,#FEF5E7 0,#fff 45%),#fff}
+.cv .logos{display:flex;align-items:center;justify-content:space-between;gap:4mm}.cv .logos img{height:24mm}
+.cv .orgt{flex:1;font-size:11.5pt;line-height:1.45;color:var(--blue)}.cv .orgt b{color:var(--red)}
+.cv .ttl{font-size:26pt;font-weight:bold;color:var(--red);margin-top:12mm;line-height:1.25}.cv .ttl span{font-size:16pt;color:var(--blue);display:block;margin-top:3mm}
+.cv .motto{margin:10mm auto 0;padding:3mm 10mm;border-left:4pt solid #F39C12;border-right:4pt solid #F39C12;background:#FEF9E7;border-radius:2mm;font-size:14pt;font-style:italic;font-weight:bold;color:#7E5109}
+.cv .au{margin-top:auto;font-size:13pt}.cv .cp{font-size:10pt;color:#555;font-style:italic}
+.tool{position:fixed;top:8px;right:8px;background:#fff;padding:6px 10px;border-radius:6px;font:12px Arial,sans-serif;box-shadow:0 1px 5px rgba(0,0,0,.3);z-index:9}
+@media print{html{background:#fff}.page{margin:0;box-shadow:none;break-after:page}.tool{display:none}}
+@page{size:A4;margin:0}
+</style></head>
+<body data-left="Khoa học Trái đất (LEC10002) · Thực tập · LEC10002_25KTE1B_TT · ThS. Đinh Quốc Tuấn">
+<div class="tool"><b class="np">Đang dàn trang…</b> · In/Lưu PDF: Ctrl+P → khổ A4, lề 0, bật “Hình nền”</div>
+<div id="book"></div>
+<div id="flow"><div class="banner keep" data-run="Phiếu 2"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt=""/><div class="t">
+<div class="k">Khoa học Trái đất (LEC10002) · Thực tập · Lớp LEC10002_25KTE1B_TT · HK1 · 2026–2027</div><h1>PHIẾU HỌC TẬP SỐ 2: ĐÁ MAGMA</h1>
+<div class="s">Kiến trúc · Thành phần · 8 mẫu đá magma phổ biến · Thời lượng 3 tiết · Chuẩn đầu ra CHP2 · ĐG1.1, ĐG1.2, ĐG1.3</div></div><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/ttbdvh.jpg?alt=media&token=f270aa9b-a2bc-48e8-8910-80742b542615" alt=""/></div><div class="stu keep"><div>Họ tên SV: <span class="dl" style="min-width:52mm"></span></div><div>MSSV: <span class="dl"></span></div>
+<div>Nhóm / Trạm xuất phát: <span class="dl" style="min-width:30mm"></span></div><div>Ngày thực tập: <span class="dl" style="min-width:30mm"></span></div></div><div class="box goal keep"><div class="bt">Mục tiêu buổi học — sau buổi này bạn có thể:</div><ul><li>Phân biệt đá xâm nhập – phun trào qua kiến trúc (hiển tinh, ẩn tinh, ban trạng, thủy tinh, bọt).</li><li>Ước lượng chỉ số màu để xếp đá vào nhóm felsic – trung tính – mafic – siêu mafic.</li><li>Mô tả, gọi tên granit, rhyolit, diorit, andesit, gabro, basalt, obsidian, đá bọt và liên hệ điều kiện thành tạo.</li><li>Vẽ sơ đồ 2 chiều (kiến trúc × thành phần) để định danh đá magma.</li></ul></div><h2>1. Kiến thức nền</h2><div class="two"><table class="sc"><thead><tr><th>Kiến trúc</th><th>Nghĩa là gì</th><th>Suy ra</th></tr></thead><tbody><tr><td>Hiển tinh (hạt thô–vừa)</td><td>tinh thể ≥ 1 mm, nhìn thấy</td><td>nguội chậm, dưới sâu → <b>xâm nhập</b></td></tr><tr><td>Ẩn tinh / vi tinh</td><td>hạt rất nhỏ, không phân biệt</td><td>nguội nhanh, bề mặt → <b>phun trào</b></td></tr><tr><td>Ban trạng (porphyr)</td><td>ban tinh lớn trên nền mịn</td><td>2 giai đoạn nguội</td></tr><tr><td>Thủy tinh</td><td>không tinh thể, vết vỡ vỏ sò</td><td>nguội cực nhanh</td></tr><tr><td>Bọt / lỗ hổng</td><td>nhiều lỗ khí</td><td>dung nham giàu khí, phun nổ</td></tr></tbody></table><table class="sc"><thead><tr><th>Nhóm</th><th>SiO₂</th><th>Màu</th><th>Khoáng vật chính</th></tr></thead><tbody><tr><td>Felsic (acid)</td><td>> 66%</td><td>sáng</td><td>thạch anh, K-feldspar, Na-plagioclase, mica</td></tr><tr><td>Trung tính</td><td>52–66%</td><td>“muối tiêu”</td><td>plagioclase, amphibol, pyroxen, biotit</td></tr><tr><td>Mafic (bazơ)</td><td>45–52%</td><td>sẫm</td><td>Ca-plagioclase, pyroxen, olivin</td></tr><tr><td>Siêu mafic</td><td>< 45%</td><td>lục–đen</td><td>olivin, pyroxen</td></tr></tbody></table></div><table class="sc"><thead><tr><th></th><th>Felsic</th><th>Trung tính</th><th>Mafic</th><th>Siêu mafic</th></tr></thead><tbody><tr><td><b>Xâm nhập</b> (hiển tinh)</td><td>Granit</td><td>Diorit</td><td>Gabro</td><td>Peridotit</td></tr><tr><td><b>Phun trào</b> (ẩn tinh/ban trạng)</td><td>Rhyolit</td><td>Andesit</td><td>Basalt</td><td>(komatiit – hiếm)</td></tr><tr><td><b>Thủy tinh / bọt</b></td><td>Obsidian · Đá bọt (pumice)</td><td></td><td>Scoria</td><td></td></tr></tbody></table><h2>2. Hoạt động 1 — So sánh cặp (15 phút)</h2><div class="box warn keep"><div class="bt">Cách tổ chức (học theo trạm, nhóm 4–5 SV)</div>Lớp chia 5 nhóm, luân phiên qua <b>4 trạm</b>, mỗi trạm <b>15 phút</b>. Tại mỗi trạm: <i>Quan sát độc lập (2′) → Trao đổi cặp (2′) → Thống nhất nhóm &amp; ghi phiếu</i> (Think–Pair–Share). Giảng viên chỉ gợi ý bằng câu hỏi, không nói đáp án. Mỗi trạm 2 mẫu <i>cùng thành phần, khác kiến trúc</i> (granit–rhyolit, diorit–andesit, gabro–basalt, obsidian–đá bọt). Kết thúc: mỗi nhóm trình bày 1 mẫu “khó nhất” (1′) — ghi nhận điểm cộng ĐG1.3.</div><table class="sc fill tall"><colgroup><col style="width:16%"/><col style="width:26%"/><col style="width:26%"/><col style="width:32%"/></colgroup><thead><tr><th>Cặp mẫu</th><th>Giống nhau ở…</th><th>Khác nhau ở…</th><th>Mẫu nào nguội nhanh hơn? Vì sao?</th></tr></thead><tbody><tr><td>Cặp 1</td><td></td><td></td><td></td></tr><tr><td>Cặp 2</td><td></td><td></td><td></td></tr><tr><td>Cặp 3</td><td></td><td></td><td></td></tr><tr><td>Cặp 4</td><td></td><td></td><td></td></tr></tbody></table><h2>3. Hoạt động 2 — Mô tả &amp; định danh 8 mẫu (60 phút)</h2><div class="box tips keep"><div class="bt">Mẹo quan sát</div>Chỉ số màu = % khoáng vật sẫm màu ước lượng bằng mắt (0–15 felsic, 15–40 trung tính, 40–70 mafic, > 70 siêu mafic). Thấy hạt thạch anh trong suốt/xám ánh mỡ → chắc chắn felsic. Nhấc mẫu: đá bọt nổi trên nước; basalt nặng, chắc.</div><table class="sc fill tall"><colgroup><col style="width:6%"/><col style="width:13%"/><col style="width:12%"/><col style="width:17%"/><col style="width:12%"/><col style="width:12%"/><col style="width:12%"/><col style="width:16%"/></colgroup><thead><tr><th>Mẫu</th><th>Màu / chỉ số màu (%)</th><th>Kiến trúc</th><th>Khoáng vật nhận ra</th><th>Xâm nhập hay phun trào</th><th>Nhóm thành phần</th><th>Tên đá</th><th>Điều kiện thành tạo</th></tr></thead><tbody><tr><td>Mẫu 1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Mẫu 2</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Mẫu 3</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Mẫu 4</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Mẫu 5</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Mẫu 6</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Mẫu 7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Mẫu 8</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table><h2>4. Câu hỏi vận dụng</h2><p class="q"><b>Câu 1.</b> Hai mẫu đen: một ẩn tinh nặng, một thủy tinh bóng vết vỡ vỏ sò. Tên và vì sao cùng “đen” nhưng khác nhóm thành phần?<span class="blank"></span><span class="blank"></span></p><p class="q"><b>Câu 2.</b> Giải thích vì sao magma giàu SiO₂ thường tạo núi lửa phun nổ (rhyolit, đá bọt, tro), còn magma bazơ tạo dòng chảy basalt?<span class="blank"></span><span class="blank"></span></p><p class="q"><b>Câu 3.</b> Một mẫu ban trạng: ban tinh feldspar hồng 1 cm trên nền hạt mịn xám nhạt. Lịch sử nguội của nó gồm mấy giai đoạn? Gọi tên.<span class="blank"></span><span class="blank"></span></p><p class="q"><b>Câu 4.</b> Vẽ (phác) chu trình đá và đánh dấu vị trí của granit và basalt.<span class="blank"></span><span class="blank"></span></p><div class="box sdg keep"><div class="bt">🌍 Liên hệ SDGs / Net Zero</div>Basalt giàu Ca–Mg được dùng để <i>khoáng hóa CO₂</i> (dự án CarbFix, Iceland: CO₂ hòa tan bơm vào basalt → carbonat trong < 2 năm). Vì sao basalt phù hợp hơn granit cho việc này? <span class='blank'></span></div><div class="keep"><h3>Tự đánh giá sau buổi học</h3><table class="sc"><thead><tr><th style="text-align:left">Tôi có thể…</th><th>Chưa</th><th>Tạm được</th><th>Tự tin</th></tr></thead><tbody><tr><td style='text-align:left'>phân biệt kiến trúc hiển tinh / ẩn tinh / ban trạng / thủy tinh / bọt</td><td><span class='chk'></span></td><td><span class='chk'></span></td><td><span class='chk'></span></td></tr><tr><td style='text-align:left'>ước lượng chỉ số màu</td><td><span class='chk'></span></td><td><span class='chk'></span></td><td><span class='chk'></span></td></tr><tr><td style='text-align:left'>định danh 8 mẫu đá magma</td><td><span class='chk'></span></td><td><span class='chk'></span></td><td><span class='chk'></span></td></tr><tr><td style='text-align:left'>liên hệ kiến trúc với tốc độ nguội</td><td><span class='chk'></span></td><td><span class='chk'></span></td><td><span class='chk'></span></td></tr></tbody></table></div><div class="grade keep"><b>Phần dành cho giảng viên</b> — chấm theo Rubric R2 (phiếu học tập); điểm phiếu tính vào ĐG1.2 (kiểm tra thường xuyên), phát biểu/thảo luận ghi nhận điểm cộng ĐG1.3.
+<table><tr><th style="text-align:left">Tiêu chí</th><th>Tối đa</th><th>Điểm</th></tr><tr><td style='text-align:left'>HĐ1 so sánh cặp: nêu đúng kiến trúc & tốc độ nguội</td><td>2</td><td></td></tr><tr><td style='text-align:left'>Bảng 8 mẫu: đủ ô, thuật ngữ đúng</td><td>3</td><td></td></tr><tr><td style='text-align:left'>Gọi tên đúng (0,25/mẫu)</td><td>2</td><td></td></tr><tr><td style='text-align:left'>Câu hỏi vận dụng</td><td>2</td><td></td></tr><tr><td style='text-align:left'>Thái độ, hợp tác, bảo quản mẫu</td><td>1</td><td></td></tr><tr><th style="text-align:left">Tổng</th><th>10</th><th></th></tr></table>
+<div style="margin-top:3pt">Nhận xét: <span class="dl" style="display:inline-block;border-bottom:1pt dotted #777;width:80%"></span>&nbsp; Điểm cộng thảo luận (ĐG1.3): <span class="chk"></span>0,25 <span class="chk"></span>0,5</div></div></div>
+<script>
+function paginate(){
+ const flow=document.getElementById('flow');if(!flow)return;
+ const LEFT=document.body.dataset.left||'';const blocks=[...flow.children];flow.remove();
+ const book=document.getElementById('book');let page,box,pn=0,running='';
+ function newPage(cover){pn++;page=document.createElement('div');page.className='page'+(cover?' cover':'');
+  const h=document.createElement('div');h.className='hdr';h.innerHTML='<img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/ttbdvh.jpg?alt=media&token=f270aa9b-a2bc-48e8-8910-80742b542615" alt=""/><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt=""/><span class="l">'+LEFT+'</span><span class="run"></span>';
+  box=document.createElement('div');box.className='content';
+  const f=document.createElement('div');f.className='ftr';f.innerHTML='<span>'+LEFT+'</span><span class="pn">'+pn+'</span>';
+  page.append(h,box,f);book.append(page);page.querySelector('.run').textContent=running;
+  if(cover){h.style.display='none';f.style.display='none';box.style.inset='0';}}
+ const fits=()=>box.scrollHeight<=box.clientHeight+1;const isHead=e=>/^H[1-3]$/.test(e.tagName);
+ function splitInto(el){
+  if(el.classList&&(el.classList.contains('keep')||el.classList.contains('cover')))return null;
+  let shell,src,dst;
+  if(el.tagName==='TABLE'){shell=el.cloneNode(false);const th=el.querySelector('thead');if(th)shell.append(th.cloneNode(true));const tb=document.createElement('tbody');shell.append(tb);src=el.querySelector('tbody')||el;dst=tb;}
+  else if(['DIV','UL','OL'].includes(el.tagName)){shell=el.cloneNode(false);shell.removeAttribute('id');src=el;dst=shell;const bt=el.querySelector(':scope>.bt');if(bt)dst.append(bt.cloneNode(true));}
+  else return null;
+  box.append(shell);let moved=0;
+  while(src.firstElementChild){const c=src.firstElementChild;if(c.classList&&c.classList.contains('bt')&&src===el){c.remove();continue;}dst.append(c);if(!fits()){dst.removeChild(c);break;}moved++;}
+  if(!moved){box.removeChild(shell);return null;}
+  if(!src.firstElementChild)return 'done';
+  const sb=shell.querySelector(':scope>.bt');if(sb&&el.tagName==='DIV'){const c=sb.cloneNode(true);c.textContent+=' (tiếp theo)';el.prepend(c);}
+  return el;}
+ function place(el,guard){
+  if(el.dataset&&el.dataset.run!==undefined)running=el.dataset.run;
+  const forced=el.classList&&el.classList.contains('pb');
+  if(!page||(forced&&box.children.length))newPage(el.classList&&el.classList.contains('cover'));
+  if(forced)page.querySelector('.run').textContent=running;
+  box.append(el);if(fits())return;box.removeChild(el);
+  const carry=[];if(!guard){while(box.lastElementChild&&isHead(box.lastElementChild)){carry.unshift(box.lastElementChild);box.lastElementChild.remove();}}
+  if(box.children.length&&!carry.length){const r=splitInto(el);if(r==='done')return;if(r){newPage();place(r,true);return;}}
+  if(!box.children.length&&!carry.length){const r=splitInto(el);if(r==='done')return;if(r){newPage();place(r,true);return;}box.append(el);return;}
+  newPage();carry.forEach(c=>box.append(c));box.append(el);if(fits())return;box.removeChild(el);
+  const r=splitInto(el);if(r==='done')return;if(r){newPage();place(r,true);return;}newPage();box.append(el);}
+ blocks.forEach(b=>place(b,false));
+ const tl=document.querySelector('.tool .np');if(tl)tl.textContent=pn+' trang A4';document.body.dataset.paged='1';document.body.dataset.ready='1';
+}
+if(document.readyState==='complete')paginate();else window.addEventListener('load',paginate);
+</script></body></html>
