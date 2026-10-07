@@ -137,6 +137,7 @@ function action_khtd_get_worksheet(array $params): void
     if ($sub) {
         $sub['answers'] = json_decode((string) $sub['AnswersJSON'], true) ?: new stdClass();
         $sub['ai'] = $sub['AiJSON'] ? json_decode((string) $sub['AiJSON'], true) : null;
+        if (is_array($sub['ai']) && !isset($sub['ai']['criteria'])) $sub['ai'] = null;   // bản ghi lỗi, không phải kết quả chấm
         unset($sub['AnswersJSON'], $sub['AiJSON']);
     }
     api_ok(['worksheet' => ['id' => $ws['WorksheetID'], 'no' => (int) $ws['No'], 'title' => $ws['Title'],
@@ -204,6 +205,7 @@ function action_khtd_submit(array $params): void
     log_audit($me['studentId'], 'STUDENT', 'khtdSubmit', 'worksheet', $ws['WorksheetID'], ['submissionId' => $id]);
 
     // Chấm bằng Gemini (fail-open: lỗi AI không làm hỏng lượt nộp).
+    khtd_long_request();
     $ai = null; $aiErr = null;
     try {
         $ai = khtd_gemini_grade($ws, $answers, $me);
@@ -214,6 +216,10 @@ function action_khtd_submit(array $params): void
     } catch (Throwable $e) {
         $aiErr = $e->getMessage();
         error_log('khtd gemini: ' . $aiErr);
+    }
+    if (!$ai) {   // lưu lý do để giảng viên thấy trên trang duyệt (cột AI)
+        db()->prepare('UPDATE khtd_submissions SET AiJSON = :j WHERE SubmissionID = :id')
+            ->execute(['j' => json_encode(['error' => $aiErr ?: 'Chưa cấu hình Gemini', 'at' => date('Y-m-d H:i:s')], JSON_UNESCAPED_UNICODE), 'id' => $id]);
     }
     // Email kết quả tạm tính.
     $mailed = false;
@@ -228,6 +234,31 @@ function action_khtd_submit(array $params): void
 /* ------------------------------------------------------------------ */
 /* Gemini                                                               */
 /* ------------------------------------------------------------------ */
+
+/** Nới thời gian chạy PHP cho lượt gọi Gemini (hosting thường đặt max_execution_time 30 s — chấm phiếu dài có thể quá). */
+function khtd_long_request(): void
+{
+    @set_time_limit(170);
+    @ini_set('max_execution_time', '170');
+    ignore_user_abort(true);
+}
+
+/** Bài làm mẫu để chấm thử (khtdAiTest): điền ngắn gọn vào mọi ô của phiếu theo cấu trúc. */
+function khtd_sample_answers(array $schema): array
+{
+    $out = [];
+    foreach ($schema['sections'] ?? [] as $s) {
+        $t = $s['type'] ?? '';
+        if ($t === 'table') {
+            $out[$s['id']] = array_map(fn($r) => array_map(fn($c) => 'Trả lời thử cho ' . $c, $s['columns'] ?? []), $s['rows'] ?? []);
+        } elseif ($t === 'questions') {
+            foreach ($s['items'] ?? [] as $q) $out[$q['id']] = 'Câu trả lời thử nghiệm của hệ thống (không phải sinh viên).';
+        } elseif ($t === 'text') {
+            $out[$s['id']] = 'Câu trả lời thử nghiệm của hệ thống.';
+        }
+    }
+    return $out;
+}
 
 function khtd_gemini_config(): array
 {
@@ -483,6 +514,28 @@ function action_khtd_set_worksheet_status(array $params): void
     api_ok(['worksheetId' => $ws['WorksheetID'], 'status' => $status, 'closeAt' => $closeAt]);
 }
 
+/**
+ * GET khtdActiveCode {token, classId} — mã vào lớp (4 ký tự) đang mở của lớp, dùng ở khtd/quanly.html.
+ * Mã này chính là mã điểm danh (attendance_keys.Code, Status OPEN, chưa hết hạn) — sinh viên dùng
+ * cùng một mã để điểm danh và đăng nhập làm phiếu. Trả thêm danh sách buổi ACTIVE để mở mã tại chỗ.
+ */
+function action_khtd_active_code(array $params): void
+{
+    $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
+    $classId = trim((string) ($params['classId'] ?? ''));
+    assert_class_access($me, $classId);
+    $k = db()->prepare(
+        "SELECT k.Code, k.SessionID, k.StartTime, k.LateAfter, k.EndTime, se.SessionNo, se.Content " .
+        "FROM attendance_keys k JOIN sessions se ON se.SessionID = k.SessionID " .
+        "WHERE se.ClassID = :c AND k.Status = 'OPEN' AND k.EndTime > NOW() ORDER BY k.CreatedAt DESC LIMIT 1"
+    );
+    $k->execute(['c' => $classId]);
+    $key = $k->fetch() ?: null;
+    $s = db()->prepare("SELECT SessionID, SessionNo, `Date`, StartTime, Content FROM sessions WHERE ClassID = :c AND Status = 'ACTIVE' ORDER BY SessionNo");
+    $s->execute(['c' => $classId]);
+    api_ok(['key' => $key, 'sessions' => $s->fetchAll(), 'now' => date('Y-m-d H:i:s')]);
+}
+
 /** GET khtdLecturerList {token, classId} — phiếu + bài nộp của cả lớp. */
 function action_khtd_lecturer_list(array $params): void
 {
@@ -492,7 +545,8 @@ function action_khtd_lecturer_list(array $params): void
     $ws = db()->prepare('SELECT WorksheetID, No, Title, Status, OpenAt, CloseAt FROM khtd_worksheets WHERE ClassID = :c ORDER BY No');
     $ws->execute(['c' => $classId]);
     $subs = db()->prepare(
-        "SELECT sub.SubmissionID, sub.WorksheetID, w.No, s.MSSV, s.FullName, s.Email, sub.Status, sub.SubmittedAt, sub.AiScore, sub.FinalScore, sub.FinalNote, sub.EmailSentAt " .
+        "SELECT sub.SubmissionID, sub.WorksheetID, w.No, s.MSSV, s.FullName, s.Email, sub.Status, sub.SubmittedAt, sub.AiScore, sub.AiModel, sub.FinalScore, sub.FinalNote, sub.EmailSentAt, " .
+        "CASE WHEN sub.AiScore IS NULL THEN JSON_UNQUOTE(JSON_EXTRACT(sub.AiJSON, '$.error')) END AS AiError " .
         "FROM khtd_submissions sub JOIN khtd_worksheets w ON w.WorksheetID = sub.WorksheetID JOIN students s ON s.StudentID = sub.StudentID " .
         "WHERE w.ClassID = :c ORDER BY w.No, s.FullName"
     );
@@ -511,6 +565,7 @@ function action_khtd_lecturer_submission(array $params): void
     assert_class_access($me, (string) $row['ClassID']);
     $row['answers'] = json_decode((string) $row['AnswersJSON'], true);
     $row['ai'] = $row['AiJSON'] ? json_decode((string) $row['AiJSON'], true) : null;
+    if (is_array($row['ai']) && !isset($row['ai']['criteria'])) { $row['aiError'] = $row['ai']['error'] ?? 'Chấm AI thất bại'; $row['ai'] = null; }
     $row['schema'] = json_decode((string) $row['SchemaJSON'], true);
     unset($row['AnswersJSON'], $row['AiJSON'], $row['SchemaJSON']);
     api_ok($row);
@@ -547,6 +602,7 @@ function action_khtd_lecturer_grade(array $params): void
 function action_khtd_ai_test(array $params): void
 {
     require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
+    khtd_long_request();
     $g = khtd_gemini_config();
     if ($g['key'] === '') { api_fail("Chưa có mục 'gemini' => ['api_key' => '...'] trong private/config.php."); return; }
     $fresh = !empty($params['fresh']);
@@ -585,7 +641,23 @@ function action_khtd_ai_test(array $params): void
                 continue;
             }
             $out['goi_thu'] = ['ok' => true, 'model' => $model, 'tra_loi' => $tl];
-            $out['ket_luan'] = 'Gemini chạy được. Phiếu nộp sẽ được chấm bằng model: ' . $model;
+            // Chấm thử thật sự một phiếu mẫu (phiếu 1) — đây mới là bước phiếu nộp sẽ đi qua.
+            $out['php_max_execution_time'] = ini_get('max_execution_time');
+            $def = khtd_default_worksheets()[1];
+            $wsTest = ['No' => 1, 'Title' => $def['title'], 'schema' => $def];
+            $t0 = microtime(true);
+            try {
+                $ai = khtd_gemini_grade($wsTest, khtd_sample_answers($def), ['email' => '', 'fullName' => 'Bài chấm thử', 'mssv' => '00000000']);
+                $out['cham_thu'] = $ai
+                    ? ['ok' => true, 'model' => $ai['model'], 'diem' => $ai['total'], 'so_tieu_chi' => count($ai['criteria'] ?? []),
+                       'so_dong_doi_chieu' => count($ai['doi_chieu'] ?? []), 'giay' => round(microtime(true) - $t0, 1)]
+                    : ['ok' => false, 'loi' => 'khtd_gemini_grade trả về null', 'giay' => round(microtime(true) - $t0, 1)];
+            } catch (Throwable $e) {
+                $out['cham_thu'] = ['ok' => false, 'loi' => $e->getMessage(), 'giay' => round(microtime(true) - $t0, 1)];
+            }
+            $out['ket_luan'] = !empty($out['cham_thu']['ok'])
+                ? 'Gemini chấm được phiếu mẫu bằng model ' . $out['cham_thu']['model'] . ' trong ' . $out['cham_thu']['giay'] . ' giây. Phiếu nộp sẽ được chấm tự động.'
+                : 'Gọi thử OK nhưng CHẤM PHIẾU THẤT BẠI — xem cham_thu.loi. Nếu giay ≈ 30 thì hosting cắt ở max_execution_time: nâng lên 120–180 s trong hPanel → PHP Configuration.';
             api_ok($out); return;
         }
         $out['thu_that_bai'][] = ['model' => $model, 'http' => $http,
@@ -609,6 +681,7 @@ function action_khtd_regrade(array $params): void
     if ($row['Status'] === 'DRAFT') { api_fail('Sinh viên chưa nộp.'); return; }
     $ws = ['No' => $row['No'], 'Title' => $row['Title'], 'schema' => json_decode((string) $row['SchemaJSON'], true) ?: []];
     $student = ['email' => $row['Email'], 'fullName' => $row['FullName'], 'mssv' => $row['MSSV']];
+    khtd_long_request();
     try {
         $ai = khtd_gemini_grade($ws, json_decode((string) $row['AnswersJSON'], true) ?: [], $student);
     } catch (Throwable $e) { api_fail('Chấm AI lỗi: ' . $e->getMessage()); return; }

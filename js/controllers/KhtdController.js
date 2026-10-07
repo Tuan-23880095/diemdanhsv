@@ -100,6 +100,8 @@ class KhtdController {
     document.getElementById('btn-export').addEventListener('click', () => this.exportCsv());
     document.getElementById('btn-aitest').addEventListener('click', () => this.aiTest());
     document.getElementById('btn-reload').addEventListener('click', () => this.loadClass());
+    document.getElementById('btn-open-code').addEventListener('click', () => this.openCode());
+    document.getElementById('btn-refresh-code').addEventListener('click', () => this.loadCode());
     document.getElementById('lec-ws').addEventListener('click', (e) => { const b = e.target.closest('[data-ws-toggle]'); if (b) this.toggleWs(b.dataset.wsToggle, b.dataset.next); });
     document.getElementById('lec-subs').addEventListener('click', (e) => { const b = e.target.closest('[data-sub]'); if (b) this.openSubmission(b.dataset.sub); });
     document.getElementById('sub-detail').addEventListener('click', (e) => {
@@ -118,6 +120,28 @@ class KhtdController {
   async loadClass() {
     try { this.view.renderLecturer(await this.api.khtdLecturerList(this.token, this.classId)); }
     catch (err) { this.view.msg(err.message, 'err'); }
+    this.loadCode();
+  }
+
+  /* Mã vào lớp = mã điểm danh đang mở của lớp (một mã cho cả điểm danh và làm phiếu). */
+  async loadCode() {
+    clearTimeout(this._codeTimer);
+    if (!this.classId) return this.view.renderCode(null);
+    try {
+      const d = await this.api.khtdActiveCode(this.token, this.classId);
+      this.view.renderCode(d);
+      if (d.key) this._codeTimer = setTimeout(() => this.loadCode(), 60000);   // tự cập nhật khi mã hết hạn
+    } catch (err) { this.view.msg(err.message, 'err'); }
+  }
+
+  async openCode() {
+    const sid = document.getElementById('code-session').value;
+    if (!sid) return this.view.msg('Chọn buổi học để mở mã.', 'err');
+    try {
+      const info = await this.api.openAttendance(this.token, sid, {});
+      this.view.msg('Đã mở mã vào lớp (đồng thời là mã điểm danh): ' + info.code, 'ok');
+      this.loadCode();
+    } catch (err) { this.view.msg(err.message, 'err'); }
   }
 
   async seed() {

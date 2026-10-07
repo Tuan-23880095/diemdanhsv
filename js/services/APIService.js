@@ -113,4 +113,5 @@ class APIService {
   khtdExportCsv(token, classId)               { return this.get('khtdExportCsv', { token, classId }); }
   khtdRegrade(token, submissionId)            { return this.post('khtdRegrade', { token, submissionId }); }
   khtdAiTest(token, fresh)                    { return this.get('khtdAiTest', { token, fresh: fresh ? 1 : '' }); }
+  khtdActiveCode(token, classId)              { return this.get('khtdActiveCode', { token, classId }); }
 }

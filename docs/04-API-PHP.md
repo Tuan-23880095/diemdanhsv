@@ -1132,3 +1132,13 @@ Trước đây mọi tài liệu nằm công khai trong `khtd/`, kể cả hồ 
 **Cách khoá**: `.htaccess` gốc có `RewriteRule ^khtd/_gv(/|$) - [F,L]` (thêm `khtd/_gv/.htaccess` chặn lần hai) nên không mở được bằng URL trực tiếp. Mọi lượt xem đi qua `khtd/tai-lieu.php?f=<đường dẫn trong _gv>`: nạp `api/lib/{config,db,roles}.php`, gọi `require_role($token, ['LECTURER','ADMIN'])` với token lấy từ header `X-Token` (hoặc tham số `token`), kiểm tên tệp bằng regex + `realpath` phải nằm trong `_gv/`, rồi `readfile`. Trang `gv.html` gửi token bằng `fetch` và ghi nội dung vào tab mới nên token không lọt vào URL hay lịch sử duyệt.
 
 **Đáp án đề thi** (`DapAn_DG11.html`) và **bảng điểm Excel** không đặt trên web — giữ ở máy giảng viên/Drive riêng.
+
+
+## 28. GĐ11c — Điều hướng hai chiều và mã vào lớp cho `khtd/` (08/10/2026)
+
+- **Trang chủ** `index.html`: thêm mục menu và thẻ “Thực tập Khoa học Trái đất” (→ `khtd/online.html`, `khtd/Rubric_R1-R4.html`). **Bảng điều khiển giảng viên** `pages/lecturer.html`: thêm nút “Khoa học Trái đất” (→ `khtd/quanly.html`). Mọi trang trong `khtd/` có nút “← Trang chủ diemdanhsv”.
+- **Trang sinh viên** `khtd/index.html` chỉ còn hai mục: *Mở trang làm phiếu* và *Cách chấm điểm*. Danh sách phiếu in A4 và bản đồ chuyển sang `khtd/gv.html` (tệp vẫn công khai để trang làm phiếu tham chiếu, nhưng không liệt kê cho sinh viên).
+- **Mã vào lớp** (`khtd/quanly.html`): khi chọn lớp, trang gọi `khtdActiveCode` (GET, LECTURER/ADMIN, `assert_class_access`) trả `{key, sessions, now}` — `key` là bản ghi `attendance_keys` đang `OPEN` và chưa quá `EndTime` của lớp (JOIN `sessions`), `sessions` là các buổi ACTIVE. Khung mã hiển thị như trang điểm danh (`.code-display`), tự làm mới mỗi 60 giây; nút “Mở mã vào lớp” gọi lại `openAttendance` (mục 8) cho buổi đã chọn. Sinh viên dùng **một mã** cho cả điểm danh và `khtdLogin`.
+- Không thêm bảng/migration mới.
+
+**Chẩn đoán chấm AI (cùng ngày)**: `khtdAiTest` sau khi gọi thử “OK” sẽ **chấm thử thật** phiếu mặc định số 1 với bài làm mẫu (`khtd_sample_answers`) và trả `cham_thu {ok, model, diem, giay, loi}` cùng `php_max_execution_time`. `khtdSubmit`, `khtdRegrade`, `khtdAiTest` gọi `khtd_long_request()` (`set_time_limit(170)`, `ignore_user_abort`) vì hosting mặc định cắt PHP ở 30 s trong khi một lượt chấm có thể 20–60 s. Khi chấm thất bại lúc nộp, `AiJSON` lưu `{"error","at"}` (không có `criteria`): `khtdLecturerList` trả `AiError` (cột AI hiện “lỗi AI”, rê chuột xem lý do), `khtdLecturerSubmission` trả `aiError`; `khtdGetWorksheet`/`khtdLecturerSubmission` không coi bản ghi lỗi là kết quả chấm.
