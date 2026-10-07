@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Khu vực giảng viên — Thực tập Khoa học Trái đất</title><meta name="robots" content="noindex"/>
+<link rel="icon" type="image/png" href="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738"/>
+<meta name="theme-color" content="#0b4f9e"/>
+<style>
+:root{--b:#0b4f9e;--b2:#117A65;--bg:#f6f8fb;--card:#fff;--ink:#17202a;--mute:#5b6b7c;--line:#dde5ee}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1722;--card:#17212e;--ink:#e8eef6;--mute:#9fb0c2;--line:#27374a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Segoe UI",Inter,system-ui,-apple-system,sans-serif}
+header{background:linear-gradient(100deg,var(--b),var(--b2));color:#fff;padding:20px 16px}
+header .in{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:14px}
+header img{height:46px;width:auto;background:#fff;border-radius:8px;padding:5px;flex:none}
+header h1{margin:0;font-size:19px;line-height:1.3}
+header p{margin:3px 0 0;font-size:13px;opacity:.9}
+main{max-width:900px;margin:0 auto;padding:18px 16px 40px}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+nav a,nav button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:10px;padding:9px 14px;font:inherit;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--b)}
+nav a.primary{background:var(--b);border-color:var(--b);color:#fff}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:16px}
+section h2{margin:0 0 4px;font-size:17px;color:var(--b)}
+@media(prefers-color-scheme:dark){section h2{color:#7cb3f0}}
+section p.note{margin:4px 0 10px;font-size:13.5px;color:var(--mute)}
+ul.list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+ul.list a{display:flex;align-items:baseline;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+  text-decoration:none;color:var(--ink)}
+ul.list a:hover{border-color:var(--b);background:rgba(11,79,158,.05)}
+ul.list .n{flex:none;min-width:26px;height:26px;border-radius:7px;background:var(--b);color:#fff;font-size:13px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center}
+ul.list .t{font-weight:600}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px}
+.btnrow button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 13px;
+  font:inherit;font-size:14px;cursor:pointer;text-align:left}
+.btnrow button:hover{border-color:var(--b)}
+.warn{border:1px solid #f0c36d;background:#fff8e6;color:#6b4e00;border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:14.5px}
+@media(prefers-color-scheme:dark){.warn{background:#3a2f12;color:#f3dfa8;border-color:#7a6327}}
+footer{max-width:900px;margin:0 auto;padding:0 16px 30px;font-size:13px;color:var(--mute);display:flex;
+  justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer a{color:var(--mute)}
+</style></head><body>
+<header><div class="in"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM"/>
+<div><h1>Khu vực giảng viên — Thực tập Khoa học Trái đất</h1><p>Lớp LEC10002_25KTE1B_TT · HK1 · 2026–2027 · tài liệu khoá, sinh viên không xem được</p></div></div></header><main><nav>
+<a href="quanly.html">🗂️ Duyệt phiếu online</a>
+<a href="../pages/lecturer.html">🔑 Mở phiên &amp; lấy mã 4 ký tự</a>
+<a href="../pages/admin.html">⚙️ Quản trị lớp</a>
+<a href="index.html">👁️ Xem như sinh viên</a>
+</nav>
+
+<div id="noauth" class="warn" hidden>Chưa đăng nhập giảng viên. Mở <a href="../pages/lecturer.html">trang Giảng viên</a> để đăng nhập (phiên 6 giờ), rồi quay lại trang này.</div>
+
+<section><h2>Hồ sơ nộp Khoa</h2>
+<p class="note">Chỉ giảng viên xem được: tệp nằm ngoài vùng công khai, mỗi lượt mở đều kiểm tra token đăng nhập. Mở ra rồi Ctrl+P để in nộp.</p>
+<div class="btnrow"><button type="button" data-f="vanban/KeHoachGiangDayThucTap.html">📄 Kế hoạch giảng dạy thực tập</button><button type="button" data-f="vanban/DanhMucMinhChung.html">📄 Danh mục minh chứng môn học (BM1)</button><button type="button" data-f="vanban/BaoCaoKetQuaGiangDay.html">📄 Báo cáo kết quả công tác giảng dạy (BM2)</button><button type="button" data-f="vanban/BienBanBanGiao.html">📄 Biên bản bàn giao minh chứng (BM3)</button></div></section>
+
+<section><h2>Đề thi nhận diện mẫu vật (ĐG1.1)</h2>
+<p class="note">Hai đề tương đương, dùng cho buổi thi sau đợt thực tập. <b>Đáp án và barem không đưa lên web</b> — giữ trong máy hoặc Drive riêng.</p>
+<div class="btnrow"><button type="button" data-f="DeThi_DG11_DeA.html">📄 Đề thi ĐG1.1 – Đề A</button><button type="button" data-f="DeThi_DG11_DeB.html">📄 Đề thi ĐG1.1 – Đề B</button></div></section>
+
+<section><h2>Bảng điểm</h2>
+<p class="note">Điểm phiếu online xuất từ trang <a href="quanly.html">Duyệt phiếu online</a> (nút “Xuất CSV điểm phiếu”). File Excel bảng điểm quá trình chứa dữ liệu cá nhân sinh viên nên không đặt trên web.</p></section>
+
+</main><footer><span>Khoa Địa chất · Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM</span>
+<a href="index.html">← Trang lớp học</a></footer>
+<script>
+(function () {
+  var token = sessionStorage.getItem('dd_token');
+  if (!token) document.getElementById('noauth').hidden = false;
+  document.querySelectorAll('.btnrow button[data-f]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var t = sessionStorage.getItem('dd_token');
+      if (!t) { document.getElementById('noauth').hidden = false; window.scrollTo(0, 0); return; }
+      var w = window.open('', '_blank');            // mở ngay để không bị chặn popup
+      var nhan = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Đang mở…';
+      fetch('tai-lieu.php?f=' + encodeURIComponent(btn.dataset.f), { headers: { 'X-Token': t } })
+        .then(function (r) {
+          if (!r.ok) throw new Error(r.status === 403
+            ? 'Phiên đăng nhập đã hết hạn — đăng nhập lại ở trang Giảng viên.'
+            : 'Không mở được tài liệu (HTTP ' + r.status + ').');
+          return r.text();
+        })
+        .then(function (html) { w.document.open(); w.document.write(html); w.document.close(); })
+        .catch(function (e) { if (w) w.close(); alert(e.message); })
+        .then(function () { btn.disabled = false; btn.textContent = nhan; });
+    });
+  });
+})();
+</script></body></html>
