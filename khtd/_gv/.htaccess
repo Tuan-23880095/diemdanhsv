@@ -1,0 +1,8 @@
+# Hồ sơ nộp Khoa + đề thi: chỉ phục vụ qua khtd/tai-lieu.php sau khi kiểm tra token giảng viên.
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

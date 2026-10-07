@@ -1117,3 +1117,18 @@ Mục đích: sinh viên làm 6 phiếu học tập thực tập Khoa học Trá
 **Email**: `khtd_send_result_mail()` dùng `mail_send()` (mục 25); gửi tới `students.Email`; tiêu đề `[KHTĐ] Kết quả Phiếu học tập số n (tạm tính|chính thức)`.
 
 **Frontend**: `js/services/APIService.js` (12 method `khtd*`), `js/views/KhtdView.js`, `js/controllers/KhtdController.js` (mode student/lecturer). Trang GV dùng token `dd_token` trong sessionStorage (đăng nhập ở `pages/lecturer.html`).
+
+
+## 27. GĐ11b — Tách trang sinh viên / giảng viên cho `khtd/` (08/10/2026)
+
+Trước đây mọi tài liệu nằm công khai trong `khtd/`, kể cả hồ sơ nộp Khoa và đề thi. Nay chia hai vùng:
+
+| Vùng | Đường dẫn | Ai xem được |
+|---|---|---|
+| Công khai | `khtd/index.html`, `khtd/phieu/*.html`, `khtd/Rubric_R1-R4.html`, `khtd/img/*`, `khtd/online.html` | Sinh viên (chỉ phiếu học tập, cách chấm điểm, bản đồ, trang làm phiếu) |
+| Khoá | `khtd/_gv/vanban/*.html` (4 văn bản nộp Khoa), `khtd/_gv/DeThi_DG11_De[AB].html` | Chỉ giảng viên |
+| Trang điều hướng giảng viên | `khtd/gv.html`, `khtd/quanly.html` | Giảng viên (cần `dd_token`) |
+
+**Cách khoá**: `.htaccess` gốc có `RewriteRule ^khtd/_gv(/|$) - [F,L]` (thêm `khtd/_gv/.htaccess` chặn lần hai) nên không mở được bằng URL trực tiếp. Mọi lượt xem đi qua `khtd/tai-lieu.php?f=<đường dẫn trong _gv>`: nạp `api/lib/{config,db,roles}.php`, gọi `require_role($token, ['LECTURER','ADMIN'])` với token lấy từ header `X-Token` (hoặc tham số `token`), kiểm tên tệp bằng regex + `realpath` phải nằm trong `_gv/`, rồi `readfile`. Trang `gv.html` gửi token bằng `fetch` và ghi nội dung vào tab mới nên token không lọt vào URL hay lịch sử duyệt.
+
+**Đáp án đề thi** (`DapAn_DG11.html`) và **bảng điểm Excel** không đặt trên web — giữ ở máy giảng viên/Drive riêng.
