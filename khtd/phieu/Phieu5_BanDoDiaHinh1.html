@@ -51,13 +51,33 @@ figure{margin:3pt 0 6pt;text-align:center}figure img,figure svg{max-width:100%;h
 .tool{position:fixed;top:8px;right:8px;background:#fff;padding:6px 10px;border-radius:6px;font:12px Arial,sans-serif;box-shadow:0 1px 5px rgba(0,0,0,.3);z-index:9}
 @media print{html{background:#fff}.page{margin:0;box-shadow:none;break-after:page}.tool{display:none}}
 @page{size:A4;margin:0}
+/* ---- ĐỊNH DẠNG HÀNH CHÍNH: đen trắng, Times New Roman, khung đơn ---- */
+:root{--blue:#000;--teal:#000;--orange:#000;--red:#000;--ink:#000}
+.page::before{display:none}
+.page .hdr{color:#000;border-bottom:.6pt solid #000;font-style:normal;font-size:10pt}
+.page .hdr img{height:11mm}.page .hdr .run{color:#000;font-weight:bold}
+.page .ftr{color:#000;border-top:.5pt solid #000}.page .ftr .pn{background:none;color:#000;border:none;font-size:11pt;font-weight:normal;border-radius:0}
+h1{color:#000;font-size:15pt;text-transform:uppercase}
+h2{background:none;border-left:none;border-bottom:.6pt solid #000;padding:0 0 1.5pt;color:#000;font-size:12.5pt;font-weight:bold;border-radius:0}
+h3{color:#000}
+.banner{border:none;border-bottom:1.2pt solid #000;border-radius:0;background:none;padding:0 0 3mm}
+.banner .t .k{color:#000;letter-spacing:0;font-size:11pt;text-transform:none;font-weight:bold}.banner .t .s{color:#000}
+.banner img.logo2{display:none}
+.stu{border:.6pt solid #000;border-radius:0}
+.box,.box.goal,.box.tips,.box.warn,.box.sdg{background:none;border:.6pt solid #000;border-radius:0}.box .bt{color:#000}
+table.sc th{background:none;color:#000}table.sc th,table.sc td{border:.6pt solid #000}table.sc tr:nth-child(even) td{background:none}
+.pill{background:none;color:#000;border:.6pt solid #000;border-radius:0}
+.grade{border:.6pt solid #000;border-radius:0}.grade td,.grade th{border:.5pt solid #000}
+.q b{color:#000}
+.cv{border:1.5pt solid #000;border-radius:0;background:#fff}.cv .orgt{color:#000}.cv .orgt b{color:#000}.cv .ttl{color:#000}.cv .ttl span{color:#000}
+.cv .motto{border-left:none;border-right:none;background:none;color:#000;font-weight:normal}
 </style></head>
-<body data-left="Khoa học Trái đất (LEC10002) · Thực tập · LEC10002_25KTE1B_TT · ThS. Đinh Quốc Tuấn">
+<body data-left="Trường ĐH Khoa học Tự nhiên – Khoa Địa chất · Khoa học Trái đất (LEC10002) · Thực tập · Lớp LEC10002_25KTE1B_TT">
 <div class="tool"><b class="np">Đang dàn trang…</b> · In/Lưu PDF: Ctrl+P → khổ A4, lề 0, bật “Hình nền”</div>
 <div id="book"></div>
 <div id="flow"><div class="banner keep" data-run="Phiếu 5"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt=""/><div class="t">
 <div class="k">Khoa học Trái đất (LEC10002) · Thực tập · Lớp LEC10002_25KTE1B_TT · HK1 · 2026–2027</div><h1>PHIẾU HỌC TẬP SỐ 5: BẢN ĐỒ ĐỊA HÌNH (1)</h1>
-<div class="s">Thành phần bản đồ · Tỷ lệ · Đường đồng mức · Độ cao – chênh cao · Dạng địa hình · Thời lượng 3 tiết · Chuẩn đầu ra CHP2 · ĐG1.2, ĐG1.3</div></div><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/ttbdvh.jpg?alt=media&token=f270aa9b-a2bc-48e8-8910-80742b542615" alt=""/></div><div class="stu keep"><div>Họ tên SV: <span class="dl" style="min-width:52mm"></span></div><div>MSSV: <span class="dl"></span></div>
+<div class="s">Thành phần bản đồ · Tỷ lệ · Đường đồng mức · Độ cao – chênh cao · Dạng địa hình · Thời lượng 3 tiết · Chuẩn đầu ra CHP2 · ĐG1.2, ĐG1.3</div></div></div><div class="stu keep"><div>Họ tên SV: <span class="dl" style="min-width:52mm"></span></div><div>MSSV: <span class="dl"></span></div>
 <div>Nhóm / Trạm xuất phát: <span class="dl" style="min-width:30mm"></span></div><div>Ngày thực tập: <span class="dl" style="min-width:30mm"></span></div></div><div class="box goal keep"><div class="bt">Mục tiêu buổi học — sau buổi này bạn có thể:</div><ul><li>Đọc 6 thành phần của bản đồ địa hình: tỷ lệ, hướng, lưới tọa độ, chú giải, điểm độ cao, đường đồng mức.</li><li>Đổi khoảng cách bản đồ ↔ thực địa; xác định độ cao điểm bất kỳ, chênh cao, khoảng cao đều.</li><li>Áp dụng 6 quy tắc đường đồng mức để nhận diện đỉnh, yên ngựa, thung lũng, sống núi, sườn dốc/thoải, trũng kín.</li><li>Tính độ dốc (%, độ) giữa hai điểm.</li></ul></div><h2>1. Kiến thức nền</h2><div class="two"><table class="sc"><thead><tr><th>Thành phần</th><th>Đọc thế nào</th></tr></thead><tbody><tr><td>Tỷ lệ 1:25.000</td><td>1 cm bản đồ = 250 m; thước tỷ lệ đọc trực tiếp</td></tr><tr><td>Hướng</td><td>mũi tên Bắc; lưới km (VN-2000/UTM) song song trục</td></tr><tr><td>Lưới tọa độ</td><td>ô vuông 1 km; đọc X (Đông) trước, Y (Bắc) sau</td></tr><tr><td>Khoảng cao đều</td><td>chênh cao giữa 2 đường kề nhau (ở đây 20 m); đường phụ nét đứt 10 m</td></tr><tr><td>Đường cái (index)</td><td>nét đậm, ghi số (100, 200, 300)</td></tr><tr><td>Điểm độ cao ▲</td><td>độ cao đo chính xác (299, 252, 136, 115)</td></tr></tbody></table><table class="sc"><thead><tr><th>Quy tắc đường đồng mức (EarthLab Lab 6)</th><th></th></tr></thead><tbody><tr><td>1</td><td>Mọi điểm trên một đường có cùng độ cao.</td></tr><tr><td>2</td><td>Đường không phân nhánh, không cắt nhau (trừ vách đứng – trùng nhau).</td></tr><tr><td>3</td><td>Đường khép kín = đồi; khép kín có gạch răng lược hướng vào = trũng kín.</td></tr><tr><td>4</td><td>Dày = dốc; thưa = thoải; cách đều = sườn đều.</td></tr><tr><td>5</td><td>Qua thung lũng/suối: uốn chữ <b>V</b>, đỉnh V chỉ về <b>thượng nguồn</b>; qua sống núi: chữ V/U chỉ xuống dốc.</td></tr><tr><td>6</td><td>Yên ngựa: 2 đồi khép kín kề nhau, giữa là vùng thấp hình “đồng hồ cát”.</td></tr></tbody></table></div><div class="box tips keep"><div class="bt">Công thức</div>Khoảng cách thực = khoảng cách bản đồ × mẫu số tỷ lệ. &nbsp;·&nbsp; Chênh cao Δh = h₂ – h₁. &nbsp;·&nbsp; Độ dốc (%) = Δh / khoảng cách ngang × 100. &nbsp;·&nbsp; Góc dốc α = arctan(Δh / D). &nbsp;·&nbsp; Nội suy độ cao điểm nằm giữa 2 đường: h = h₁ + (d₁/d) × khoảng cao đều.</div><h2>2. Bản đồ thực hành — trích mảnh Suối Kiết (Bình Thuận), 1:25.000</h2><figure class="keep"><div style="border:1pt solid #333;display:inline-block;max-width:100%"><svg style="width:160mm;height:auto;display:block" xmlns:xlink="http://www.w3.org/1999/xlink" width="453.543307pt" height="351.496063pt" viewBox="0 0 453.543307 351.496063" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -6700,7 +6720,7 @@ function paginate(){
  const LEFT=document.body.dataset.left||'';const blocks=[...flow.children];flow.remove();
  const book=document.getElementById('book');let page,box,pn=0,running='';
  function newPage(cover){pn++;page=document.createElement('div');page.className='page'+(cover?' cover':'');
-  const h=document.createElement('div');h.className='hdr';h.innerHTML='<img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/ttbdvh.jpg?alt=media&token=f270aa9b-a2bc-48e8-8910-80742b542615" alt=""/><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt=""/><span class="l">'+LEFT+'</span><span class="run"></span>';
+  const h=document.createElement('div');h.className='hdr';h.innerHTML='<img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt=""/><span class="l">'+LEFT+'</span><span class="run"></span>';
   box=document.createElement('div');box.className='content';
   const f=document.createElement('div');f.className='ftr';f.innerHTML='<span>'+LEFT+'</span><span class="pn">'+pn+'</span>';
   page.append(h,box,f);book.append(page);page.querySelector('.run').textContent=running;

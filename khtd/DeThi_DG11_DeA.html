@@ -51,12 +51,32 @@ figure{margin:3pt 0 6pt;text-align:center}figure img,figure svg{max-width:100%;h
 .tool{position:fixed;top:8px;right:8px;background:#fff;padding:6px 10px;border-radius:6px;font:12px Arial,sans-serif;box-shadow:0 1px 5px rgba(0,0,0,.3);z-index:9}
 @media print{html{background:#fff}.page{margin:0;box-shadow:none;break-after:page}.tool{display:none}}
 @page{size:A4;margin:0}
+/* ---- ĐỊNH DẠNG HÀNH CHÍNH: đen trắng, Times New Roman, khung đơn ---- */
+:root{--blue:#000;--teal:#000;--orange:#000;--red:#000;--ink:#000}
+.page::before{display:none}
+.page .hdr{color:#000;border-bottom:.6pt solid #000;font-style:normal;font-size:10pt}
+.page .hdr img{height:11mm}.page .hdr .run{color:#000;font-weight:bold}
+.page .ftr{color:#000;border-top:.5pt solid #000}.page .ftr .pn{background:none;color:#000;border:none;font-size:11pt;font-weight:normal;border-radius:0}
+h1{color:#000;font-size:15pt;text-transform:uppercase}
+h2{background:none;border-left:none;border-bottom:.6pt solid #000;padding:0 0 1.5pt;color:#000;font-size:12.5pt;font-weight:bold;border-radius:0}
+h3{color:#000}
+.banner{border:none;border-bottom:1.2pt solid #000;border-radius:0;background:none;padding:0 0 3mm}
+.banner .t .k{color:#000;letter-spacing:0;font-size:11pt;text-transform:none;font-weight:bold}.banner .t .s{color:#000}
+.banner img.logo2{display:none}
+.stu{border:.6pt solid #000;border-radius:0}
+.box,.box.goal,.box.tips,.box.warn,.box.sdg{background:none;border:.6pt solid #000;border-radius:0}.box .bt{color:#000}
+table.sc th{background:none;color:#000}table.sc th,table.sc td{border:.6pt solid #000}table.sc tr:nth-child(even) td{background:none}
+.pill{background:none;color:#000;border:.6pt solid #000;border-radius:0}
+.grade{border:.6pt solid #000;border-radius:0}.grade td,.grade th{border:.5pt solid #000}
+.q b{color:#000}
+.cv{border:1.5pt solid #000;border-radius:0;background:#fff}.cv .orgt{color:#000}.cv .orgt b{color:#000}.cv .ttl{color:#000}.cv .ttl span{color:#000}
+.cv .motto{border-left:none;border-right:none;background:none;color:#000;font-weight:normal}
 </style></head>
-<body data-left="Khoa học Trái đất (LEC10002) · Thực tập · LEC10002_25KTE1B_TT · ThS. Đinh Quốc Tuấn">
+<body data-left="Trường ĐH Khoa học Tự nhiên – Khoa Địa chất · Khoa học Trái đất (LEC10002) · Thực tập · Lớp LEC10002_25KTE1B_TT">
 <div class="tool"><b class="np">Đang dàn trang…</b> · In/Lưu PDF: Ctrl+P → khổ A4, lề 0, bật “Hình nền”</div>
 <div id="book"></div>
 <div id="flow"><div class="banner keep" data-run="Đề A"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt=""/><div class="t"><div class="k">Khoa học Trái đất (LEC10002) · Thực tập · Lớp LEC10002_25KTE1B_TT · HK1 · 2026–2027</div>
-<h1>ĐỀ THI THỰC HÀNH – NHẬN DIỆN MẪU VẬT (ĐG1.1) · Đề A</h1><div class="s">Thời gian 30 phút (10 trạm × 3 phút) · Được dùng bộ dụng cụ thử (kính, đinh, tấm sứ, HCl 10%, kính lúp) · Không dùng tài liệu, điện thoại</div></div><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/ttbdvh.jpg?alt=media&token=f270aa9b-a2bc-48e8-8910-80742b542615" alt=""/></div><div class="stu keep"><div>Họ tên SV: <span class="dl" style="min-width:52mm"></span></div><div>MSSV: <span class="dl"></span></div>
+<h1>ĐỀ THI THỰC HÀNH – NHẬN DIỆN MẪU VẬT (ĐG1.1) · Đề A</h1><div class="s">Thời gian 30 phút (10 trạm × 3 phút) · Được dùng bộ dụng cụ thử (kính, đinh, tấm sứ, HCl 10%, kính lúp) · Không dùng tài liệu, điện thoại</div></div></div><div class="stu keep"><div>Họ tên SV: <span class="dl" style="min-width:52mm"></span></div><div>MSSV: <span class="dl"></span></div>
 <div>Nhóm / Trạm xuất phát: <span class="dl" style="min-width:30mm"></span></div><div>Ngày thực tập: <span class="dl" style="min-width:30mm"></span></div></div><div class="box warn keep"><div class="bt">Hướng dẫn</div><ul><li>Mỗi trạm có 1 mẫu đánh số 1–10. Ghi kết quả vào đúng hàng; hết 3 phút chuyển trạm theo hiệu lệnh.</li><li>Mỗi mẫu: <b>Khoáng vật hay Đá</b> → <b>Nhóm/kiểu</b> (vd: magma phun trào – mafic; trầm tích sinh hóa; biến chất có phiến; feldspar…) → <b>2 dấu hiệu quyết định</b> bạn đã quan sát/thử được → <b>Tên</b>.</li><li>Thang điểm: tên 0,5 · nhóm 0,2 · dấu hiệu 0,2 · kỹ năng–kỷ luật 0,1 (mỗi mẫu 1,0 điểm). Chấm theo Rubric R3.</li></ul></div><table class="sc fill tall"><colgroup><col style="width:7%"/><col style="width:13%"/><col style="width:20%"/><col style="width:35%"/><col style="width:18%"/><col style="width:7%"/></colgroup><thead><tr><th>Trạm</th><th>Khoáng vật / Đá</th><th>Nhóm – kiểu</th><th>2 dấu hiệu quyết định (đã quan sát / thử)</th><th>Tên mẫu</th><th>Điểm</th></tr></thead><tbody><tr><td>1</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>4</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>5</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>6</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>7</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>8</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>9</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>10</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table><div class="keep"><p style="margin-top:8pt"><b>Cam kết:</b> Tôi làm bài độc lập, không trao đổi. &nbsp; Chữ ký SV: ______________ &nbsp;&nbsp; Giám thị: ______________ &nbsp;&nbsp; Tổng điểm: ______ / 10</p></div></div>
 <script>
 function paginate(){
@@ -64,7 +84,7 @@ function paginate(){
  const LEFT=document.body.dataset.left||'';const blocks=[...flow.children];flow.remove();
  const book=document.getElementById('book');let page,box,pn=0,running='';
  function newPage(cover){pn++;page=document.createElement('div');page.className='page'+(cover?' cover':'');
-  const h=document.createElement('div');h.className='hdr';h.innerHTML='<img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/ttbdvh.jpg?alt=media&token=f270aa9b-a2bc-48e8-8910-80742b542615" alt=""/><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt=""/><span class="l">'+LEFT+'</span><span class="run"></span>';
+  const h=document.createElement('div');h.className='hdr';h.innerHTML='<img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt=""/><span class="l">'+LEFT+'</span><span class="run"></span>';
   box=document.createElement('div');box.className='content';
   const f=document.createElement('div');f.className='ftr';f.innerHTML='<span>'+LEFT+'</span><span class="pn">'+pn+'</span>';
   page.append(h,box,f);book.append(page);page.querySelector('.run').textContent=running;
