@@ -1105,8 +1105,12 @@ Mục đích: sinh viên làm 6 phiếu học tập thực tập Khoa học Trá
 | khtdLecturerSubmission | GET | GV | token, submissionId | bài làm đầy đủ + chấm AI |
 | khtdLecturerGrade | POST | GV | token, submissionId, finalScore, note, sendEmail | FINAL + email chính thức |
 | khtdExportCsv | GET | GV | token, classId | MSSV, Họ tên, Phieu1..6 |
+| khtdRegrade | POST | GV | token, submissionId | AI chấm lại (sau khi sửa key/model, hết hạn mức) |
+| khtdAiTest | GET | GV | token, fresh | Chẩn đoán key: ListModels + gọi thử; trả mã lỗi và gợi ý sửa |
 
-**Chấm AI**: `khtd_gemini_grade()` gửi cấu trúc phiếu + rubric + gợi ý đáp án + bài làm, yêu cầu JSON `{criteria[{id,score,comment}], feedback, flags}`; điểm từng tiêu chí kẹp 0..max, làm tròn 0,25; tổng quy về /10. Lỗi API không làm hỏng lượt nộp (ghi error_log).
+**Model**: KHÔNG ghi cứng. `khtd_gemini_list_models()` gọi `GET /v1beta/models`, lọc model hỗ trợ `generateContent`, ưu tiên flash > pro, phiên bản cao hơn, bỏ preview/lite; đệm 6 giờ ở thư mục tạm. Tên trong `gemini.model`/`gemini.models` (nếu có) được thử trước. Nút **Kiểm tra Gemini** ở `khtd/quanly.html` gọi `khtdAiTest`.
+
+**Chấm AI**: `khtd_gemini_grade()` thử lần lượt `gemini.models` (mặc định 2.0-flash → 2.5-flash → 2.0-flash-lite) khi gặp 404/429/5xx; dừng ngay khi 400/401/403 (key sai).  gửi cấu trúc phiếu + rubric + gợi ý đáp án + bài làm, yêu cầu JSON `{criteria[{id,score,comment}], feedback, flags}`; điểm từng tiêu chí kẹp 0..max, làm tròn 0,25; tổng quy về /10. Lỗi API không làm hỏng lượt nộp (ghi error_log).
 
 **Email**: `khtd_send_result_mail()` dùng `mail_send()` (mục 25); gửi tới `students.Email`; tiêu đề `[KHTĐ] Kết quả Phiếu học tập số n (tạm tính|chính thức)`.
 
