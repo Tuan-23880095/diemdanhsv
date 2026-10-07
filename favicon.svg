@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6e3a6"/>
+      <stop offset="1" stop-color="#d9a93a"/>
+    </linearGradient>
+    <linearGradient id="pOuter" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4fae4a"/>
+      <stop offset="1" stop-color="#1f6f2e"/>
+    </linearGradient>
+    <linearGradient id="pInner" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fd97a"/>
+      <stop offset="1" stop-color="#3a9a42"/>
+    </linearGradient>
+    <linearGradient id="pCenter" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b6ef9e"/>
+      <stop offset="1" stop-color="#45a84c"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b8de0"/>
+      <stop offset="1" stop-color="#17417f"/>
+    </linearGradient>
+  </defs>
+  <!-- Nền Thổ (vàng đất) + viền Kim mảnh -->
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="10" y="10" width="492" height="492" rx="104" fill="none" stroke="#fff7d6" stroke-width="6"/>
+  <!-- Mặt nước Thủy dưới chân sen -->
+  <path d="M46 430 C120 396 200 396 256 418 C312 396 392 396 466 430 L466 470 Q256 500 46 470 Z" fill="url(#water)"/>
+  <path d="M90 442 Q170 426 256 442 T422 442" fill="none" stroke="#bfe0ff" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+  <!-- Cuống (đuôi lá bích) -->
+  <path d="M244 352 L268 352 L282 412 L230 412 Z" fill="#1f6f2e"/>
+  <!-- Hoa sen cách điệu dáng lá bích -->
+  <!-- hai thùy ngoài -->
+  <path d="M256 356 C176 372 64 318 70 208 C150 198 236 262 256 356 Z" fill="url(#pOuter)"/>
+  <path d="M256 356 C336 372 448 318 442 208 C362 198 276 262 256 356 Z" fill="url(#pOuter)"/>
+  <!-- hai cánh trong -->
+  <path d="M256 356 C186 318 142 214 176 104 C244 162 264 272 256 356 Z" fill="url(#pInner)"/>
+  <path d="M256 356 C326 318 370 214 336 104 C268 162 248 272 256 356 Z" fill="url(#pInner)"/>
+  <!-- cánh giữa (mũi nhọn lá bích) -->
+  <path d="M256 356 C172 300 172 160 256 48 C340 160 340 300 256 356 Z" fill="url(#pCenter)"/>
+  <path d="M256 356 C226 290 226 190 256 100 C262 190 262 290 256 356 Z" fill="#ffffff" opacity="0.25"/>
+  <!-- Năm viên ngọc trên mặt nước: Kim · Thủy · MỘC · Hỏa · Thổ -->
+  <g stroke="#fffaf0" stroke-width="5">
+    <circle cx="136" cy="432" r="19" fill="#e6e6ea"/>
+    <circle cx="196" cy="446" r="19" fill="#2f7fe6"/>
+    <circle cx="256" cy="452" r="24" fill="#2fb34a"/>
+    <circle cx="316" cy="446" r="19" fill="#e03b2f"/>
+    <circle cx="376" cy="432" r="19" fill="#f2b705"/>
+  </g>
+  <g fill="#ffffff" opacity="0.75">
+    <circle cx="129" cy="425" r="6"/><circle cx="189" cy="439" r="6"/><circle cx="247" cy="443" r="7"/><circle cx="309" cy="439" r="6"/><circle cx="369" cy="425" r="6"/>
+  </g>
+</svg>
