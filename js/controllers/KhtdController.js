@@ -101,7 +101,10 @@ class KhtdController {
     document.getElementById('btn-reload').addEventListener('click', () => this.loadClass());
     document.getElementById('lec-ws').addEventListener('click', (e) => { const b = e.target.closest('[data-ws-toggle]'); if (b) this.toggleWs(b.dataset.wsToggle, b.dataset.next); });
     document.getElementById('lec-subs').addEventListener('click', (e) => { const b = e.target.closest('[data-sub]'); if (b) this.openSubmission(b.dataset.sub); });
-    document.getElementById('sub-detail').addEventListener('click', (e) => { if (e.target.id === 'sub-close') document.getElementById('sub-detail').classList.add('hidden'); });
+    document.getElementById('sub-detail').addEventListener('click', (e) => {
+      if (e.target.id === 'sub-close') document.getElementById('sub-detail').classList.add('hidden');
+      if (e.target.id === 'btn-regrade') this.regrade();
+    });
     document.getElementById('sub-detail').addEventListener('submit', (e) => { if (e.target.id === 'grade-form') { e.preventDefault(); this.grade(); } });
     this.loadClasses();
   }
@@ -142,6 +145,14 @@ class KhtdController {
       this.view.msg(`Đã duyệt ${d.finalScore}/10${d.emailSent ? ' và gửi email cho sinh viên.' : '.'}`, 'ok');
       document.getElementById('sub-detail').classList.add('hidden'); this.loadClass();
     } catch (err) { this.view.msg(err.message, 'err'); }
+  }
+
+  async regrade() {
+    const id = document.getElementById('sub-detail').dataset.sub;
+    const btn = document.getElementById('btn-regrade'); btn.disabled = true; btn.textContent = 'Đang chấm…';
+    try { await this.api.khtdRegrade(this.token, id); this.view.msg('AI đã chấm lại.', 'ok'); await this.openSubmission(id); this.loadClass(); }
+    catch (err) { this.view.msg(err.message, 'err'); }
+    finally { btn.disabled = false; btn.textContent = 'Chấm lại bằng AI'; }
   }
 
   async exportCsv() {

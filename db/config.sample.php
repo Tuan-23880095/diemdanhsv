@@ -28,7 +28,8 @@ return [
     ],
     'gemini' => [
         'api_key' => '',                         // Google AI Studio key — để trống = không chấm AI (GĐ11 khtd)
-        'model'   => 'gemini-2.0-flash',
+        'model'   => 'gemini-2.0-flash',         // model chính; tự chuyển sang 'models' dự phòng khi 404/429/5xx
+        'models'  => ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-2.0-flash-lite'],
     ],
     'app' => [
         'timezone'             => 'Asia/Ho_Chi_Minh',

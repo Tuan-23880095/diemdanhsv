@@ -233,7 +233,9 @@ function khtd_gemini_config(): array
 {
     $cfg = app_config();
     $g = is_array($cfg['gemini'] ?? null) ? $cfg['gemini'] : [];
-    return ['key' => (string) ($g['api_key'] ?? ''), 'model' => (string) ($g['model'] ?? 'gemini-2.0-flash')];
+    $models = $g['models'] ?? null;                       // danh sách dự phòng; thiếu thì suy từ 'model'
+    if (!is_array($models) || !$models) $models = [(string) ($g['model'] ?? 'gemini-2.0-flash'), 'gemini-2.5-flash', 'gemini-2.0-flash-lite'];
+    return ['key' => (string) ($g['api_key'] ?? ''), 'models' => array_values(array_unique(array_filter($models)))];
 }
 
 /** Trả về null nếu chưa cấu hình; ném RuntimeException nếu gọi lỗi. */
@@ -262,20 +264,28 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
         'contents' => [['role' => 'user', 'parts' => [['text' => json_encode($user, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)]]]],
         'generationConfig' => ['temperature' => 0.2, 'responseMimeType' => 'application/json', 'maxOutputTokens' => 2048],
     ];
-    $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($g['model']) . ':generateContent';
-    $ch = curl_init($url);
-    curl_setopt_array($ch, [
-        CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 60,
-        CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $g['key']],
-        CURLOPT_POSTFIELDS => json_encode($body, JSON_UNESCAPED_UNICODE),
-    ]);
-    $resp = curl_exec($ch);
-    $http = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $cerr = curl_error($ch);
-    curl_close($ch);
-    if ($resp === false) throw new RuntimeException('Không gọi được Gemini: ' . $cerr);
-    $data = json_decode((string) $resp, true);
-    if ($http !== 200) throw new RuntimeException('Gemini HTTP ' . $http . ': ' . substr((string) ($data['error']['message'] ?? $resp), 0, 200));
+    // Thử lần lượt các model: 404 (model không tồn tại), 429 (hết hạn mức), 5xx → chuyển model kế tiếp;
+    // 400/401/403 (key sai, bị khoá, thiếu quyền) → dừng ngay, báo rõ để GV sửa cấu hình.
+    $data = null; $used = null; $lastErr = '';
+    foreach ($g['models'] as $model) {
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . rawurlencode($model) . ':generateContent';
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 60,
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $g['key']],
+            CURLOPT_POSTFIELDS => json_encode($body, JSON_UNESCAPED_UNICODE),
+        ]);
+        $resp = curl_exec($ch);
+        $http = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $cerr = curl_error($ch);
+        curl_close($ch);
+        if ($resp === false) { $lastErr = 'Không gọi được Gemini: ' . $cerr; continue; }
+        $d = json_decode((string) $resp, true);
+        if ($http === 200) { $data = $d; $used = $model; break; }
+        $lastErr = 'Gemini ' . $model . ' HTTP ' . $http . ': ' . substr((string) ($d['error']['message'] ?? $resp), 0, 200);
+        if (in_array($http, [400, 401, 403], true)) break;   // lỗi cấu hình key — đổi model cũng vô ích
+    }
+    if ($data === null) throw new RuntimeException($lastErr ?: 'Gemini không phản hồi.');
     $text = (string) ($data['candidates'][0]['content']['parts'][0]['text'] ?? '');
     $out = json_decode($text, true);
     if (!is_array($out) || !isset($out['criteria'])) throw new RuntimeException('Gemini trả về không đúng JSON.');
@@ -294,7 +304,7 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
         if (!in_array($id, array_column($crit, 'id'), true)) $crit[] = ['id' => $id, 'name' => $c['name'], 'max' => (float) $c['max'], 'score' => 0, 'comment' => 'Chưa chấm được — GV xem lại.'];
     }
     $total10 = $max > 0 ? round($total / $max * 10 * 4) / 4 : 0;
-    return ['model' => $g['model'], 'criteria' => $crit, 'raw_total' => $total, 'max' => $max, 'total' => $total10,
+    return ['model' => $used, 'criteria' => $crit, 'raw_total' => $total, 'max' => $max, 'total' => $total10,
             'feedback' => mb_substr((string) ($out['feedback'] ?? ''), 0, 2000), 'flags' => array_slice((array) ($out['flags'] ?? []), 0, 5)];
 }
 
@@ -426,6 +436,29 @@ function action_khtd_lecturer_grade(array $params): void
         if ($mailed) db()->prepare('UPDATE khtd_submissions SET EmailSentAt = NOW(), EmailTo = :e WHERE SubmissionID = :id')->execute(['e' => $row['Email'], 'id' => $row['SubmissionID']]);
     }
     api_ok(['submissionId' => $row['SubmissionID'], 'finalScore' => $score, 'emailSent' => $mailed]);
+}
+
+/** POST khtdRegrade {token, submissionId} — GV yêu cầu AI chấm lại (sau khi sửa key/model hoặc hết hạn mức). */
+function action_khtd_regrade(array $params): void
+{
+    $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
+    $stmt = db()->prepare('SELECT sub.*, s.MSSV, s.FullName, s.Email, w.ClassID, w.No, w.Title, w.SchemaJSON FROM khtd_submissions sub JOIN students s ON s.StudentID = sub.StudentID JOIN khtd_worksheets w ON w.WorksheetID = sub.WorksheetID WHERE sub.SubmissionID = :id LIMIT 1');
+    $stmt->execute(['id' => trim((string) ($params['submissionId'] ?? ''))]);
+    $row = $stmt->fetch();
+    if (!$row) { api_fail('Không tìm thấy bài nộp.'); return; }
+    assert_class_access($me, (string) $row['ClassID']);
+    if ($row['Status'] === 'DRAFT') { api_fail('Sinh viên chưa nộp.'); return; }
+    $ws = ['No' => $row['No'], 'Title' => $row['Title'], 'schema' => json_decode((string) $row['SchemaJSON'], true) ?: []];
+    $student = ['email' => $row['Email'], 'fullName' => $row['FullName'], 'mssv' => $row['MSSV']];
+    try {
+        $ai = khtd_gemini_grade($ws, json_decode((string) $row['AnswersJSON'], true) ?: [], $student);
+    } catch (Throwable $e) { api_fail('Chấm AI lỗi: ' . $e->getMessage()); return; }
+    if (!$ai) { api_fail('Chưa cấu hình key Gemini trong private/config.php.'); return; }
+    $newStatus = $row['Status'] === 'FINAL' ? 'FINAL' : 'AI_GRADED';
+    db()->prepare("UPDATE khtd_submissions SET Status = :st, AiScore = :sc, AiJSON = :j, AiModel = :m, AiGradedAt = NOW() WHERE SubmissionID = :id")
+        ->execute(['st' => $newStatus, 'sc' => $ai['total'], 'j' => json_encode($ai, JSON_UNESCAPED_UNICODE), 'm' => $ai['model'], 'id' => $row['SubmissionID']]);
+    log_audit((string) ($me['userId'] ?? ''), 'LECTURER', 'khtdRegrade', 'submission', $row['SubmissionID'], ['model' => $ai['model']]);
+    api_ok(['submissionId' => $row['SubmissionID'], 'ai' => $ai]);
 }
 
 /** GET khtdExportCsv {token, classId} — MSSV, Họ tên, Phiếu 1..6 (điểm chính thức, hoặc AI nếu chưa duyệt). */
