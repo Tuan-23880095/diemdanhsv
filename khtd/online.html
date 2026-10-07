@@ -7,8 +7,8 @@
 <link rel="icon" type="image/png" href="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738">
 <meta name="theme-color" content="#0b4f9e">
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css?v=20261008-khtd">
-<script src="../js/ui/logo-fallback.js?v=20261008-khtd"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261008b-khtd">
+<script src="../js/ui/logo-fallback.js?v=20261008b-khtd"></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
@@ -21,7 +21,7 @@
     <button id="btn-logout" class="ml-auto rounded border border-white/40 px-2 py-1 text-xs hover:bg-white/10">Thoát</button>
   </div>
 </header>
-<nav class="mx-auto flex max-w-4xl flex-wrap gap-2 px-4 pt-4 text-sm"><a href="index.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">← Trang lớp học</a><a href="Rubric_R1-R4.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Cách chấm điểm</a><a href="img/bando_suoikiet_25k.png" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Bản đồ bài tập</a></nav>
+<nav class="mx-auto flex max-w-4xl flex-wrap gap-2 px-4 pt-4 text-sm"><a href="../index.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">← Trang chủ diemdanhsv</a><a href="index.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Trang lớp học</a><a href="Rubric_R1-R4.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Cách chấm điểm</a><a href="img/bando_suoikiet_25k.png" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Bản đồ bài tập</a></nav>
 
 <main class="mx-auto max-w-4xl px-4 py-6">
   <div id="msg" class="hidden"></div>
@@ -61,10 +61,10 @@
   </section>
 </main>
 
-<script src="../js/config/config.js?v=20261008-khtd"></script>
-<script src="../js/services/APIService.js?v=20261008-khtd"></script>
-<script src="../js/views/KhtdView.js?v=20261008-khtd"></script>
-<script src="../js/controllers/KhtdController.js?v=20261008-khtd"></script>
+<script src="../js/config/config.js?v=20261008b-khtd"></script>
+<script src="../js/services/APIService.js?v=20261008b-khtd"></script>
+<script src="../js/views/KhtdView.js?v=20261008b-khtd"></script>
+<script src="../js/controllers/KhtdController.js?v=20261008b-khtd"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     new KhtdController(new APIService(CONFIG.API_URL), new KhtdView(), 'student').init();

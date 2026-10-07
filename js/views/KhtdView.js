@@ -111,6 +111,22 @@ class KhtdView {
     sel.innerHTML = '<option value="">— Chọn lớp —</option>' + classes.map((c) => `<option value="${this._esc(c.ClassID || c.classId)}">${this._esc(c.ClassCode || c.classCode)} – ${this._esc(c.CourseName || c.courseName || '')}</option>`).join('');
   }
 
+  /* Khung mã vào lớp (khtd/quanly.html): mã điểm danh đang mở + chọn buổi để mở mã mới. */
+  renderCode(d) {
+    const box = this.$('code-box'); if (!box) return;
+    const sel = this.$('code-session');
+    if (!d) { box.classList.add('hidden'); return; }
+    box.classList.remove('hidden');
+    const k = d.key;
+    this.$('code-text').textContent = k ? k.Code : '----';
+    this.$('code-until').textContent = k
+      ? `Buổi ${this._esc(k.SessionNo)} · đóng lúc ${String(k.EndTime).substring(11, 16)} · tính trễ sau ${String(k.LateAfter).substring(11, 16)}`
+      : 'Lớp chưa có mã đang mở. Chọn buổi học rồi bấm “Mở mã vào lớp”.';
+    this.$('code-text').classList.toggle('text-slate-400', !k);
+    const opts = (d.sessions || []).map((s) => `<option value="${this._esc(s.SessionID)}">Buổi ${this._esc(s.SessionNo)}${s.Date ? ' – ' + this._esc(s.Date) : ''}${s.Content ? ' – ' + this._esc(String(s.Content).substring(0, 40)) : ''}</option>`).join('');
+    if (sel) sel.innerHTML = '<option value="">— Chọn buổi —</option>' + opts;
+  }
+
   renderLecturer(data) {
     const ws = this.$('lec-ws'); const tb = this.$('lec-subs');
     ws.innerHTML = data.worksheets.length ? data.worksheets.map((w) => `<div class="flex items-center justify-between rounded-lg border bg-white px-3 py-2 text-sm"><span>Phiếu ${this._esc(w.No)} – ${this._esc(w.Title)}</span>

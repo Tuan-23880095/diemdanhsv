@@ -7,8 +7,8 @@
 <link rel="icon" type="image/png" href="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738">
 <meta name="theme-color" content="#0b4f9e">
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css?v=20261008-khtd">
-<script src="../js/ui/logo-fallback.js?v=20261008-khtd"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261008b-khtd">
+<script src="../js/ui/logo-fallback.js?v=20261008b-khtd"></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 <header class="brand-bar text-white">
@@ -18,7 +18,7 @@
     <h1 class="truncate text-base font-bold">Phiếu học tập online — Quản lý & duyệt điểm (giảng viên)</h1>
   </div>
 </header>
-<nav class="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 pt-4 text-sm"><a href="gv.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">← Khu vực giảng viên</a><a href="../pages/lecturer.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Mở phiên &amp; lấy mã</a><a href="index.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Xem như sinh viên</a></nav>
+<nav class="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 pt-4 text-sm"><a href="../index.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">← Trang chủ diemdanhsv</a><a href="../pages/lecturer.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Bảng điều khiển giảng viên</a><a href="gv.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Khu vực giảng viên (hồ sơ, đáp án)</a><a href="index.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Xem như sinh viên</a></nav>
 <main class="mx-auto max-w-6xl px-4 py-6">
   <div id="msg" class="hidden"></div>
   <p id="need-login" class="hidden rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm">Bạn chưa đăng nhập giảng viên. Vào <a class="font-semibold underline" href="../pages/lecturer.html">trang Giảng viên</a> để đăng nhập (phiên 6 giờ), rồi quay lại trang này.</p>
@@ -30,7 +30,19 @@
       <button id="btn-reload" class="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Tải lại</button>
       <button id="btn-export" class="rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-900">Xuất CSV điểm phiếu</button>
       <button id="btn-aitest" class="rounded border border-amber-600 px-3 py-1.5 text-sm text-amber-700 hover:bg-amber-50">Kiểm tra Gemini</button>
-      <p class="basis-full text-xs text-slate-500">Quy trình: mở phiên điểm danh (mã 4 ký tự) ở trang Giảng viên → SV vào <code>khtd/online.html</code> bằng MSSV + mã → nộp → AI chấm & email tạm → bạn duyệt điểm tại đây (có thể gửi email chính thức).</p>
+      <p class="basis-full text-xs text-slate-500">Quy trình: chọn lớp → mở mã vào lớp ngay tại đây (hoặc ở Bảng điều khiển giảng viên) → sinh viên vào <code>khtd/online.html</code> bằng MSSV + mã → nộp → trợ lý AI chấm và gửi email tạm → giảng viên duyệt điểm tại đây (có thể gửi email chính thức).</p>
+    </div>
+    <!-- MÃ VÀO LỚP — cùng một mã với điểm danh; chiếu lên máy chiếu -->
+    <div id="code-box" class="hidden mt-4 rounded-2xl border-2 border-blue-200 bg-blue-50 p-6 text-center">
+      <p class="text-sm font-medium uppercase tracking-wide text-blue-700">Mã vào lớp (cũng là mã điểm danh)</p>
+      <p id="code-text" class="code-display font-black text-blue-900">----</p>
+      <p id="code-until" class="mt-2 text-sm text-blue-700"></p>
+      <div class="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
+        <select id="code-session" class="rounded border px-2 py-1.5 min-w-[220px]"></select>
+        <button id="btn-open-code" class="rounded bg-blue-700 px-3 py-1.5 font-semibold text-white hover:bg-blue-800">Mở mã vào lớp</button>
+        <button id="btn-refresh-code" class="rounded border px-3 py-1.5 hover:bg-white">Cập nhật</button>
+      </div>
+      <p class="mt-2 text-xs text-blue-700">Sinh viên dùng mã này để điểm danh (trang Điểm danh) và để đăng nhập làm phiếu (khtd/online.html). Thời hạn mã theo cấu hình điểm danh.</p>
     </div>
     <h2 class="mt-5 mb-2 font-bold">Phiếu của lớp</h2>
     <div id="lec-ws" class="grid gap-2 sm:grid-cols-2"></div>
@@ -43,10 +55,10 @@
     <div id="sub-detail" class="hidden mt-5 rounded-2xl border bg-white p-4 shadow-sm"></div>
   </div>
 </main>
-<script src="../js/config/config.js?v=20261008-khtd"></script>
-<script src="../js/services/APIService.js?v=20261008-khtd"></script>
-<script src="../js/views/KhtdView.js?v=20261008-khtd"></script>
-<script src="../js/controllers/KhtdController.js?v=20261008-khtd"></script>
+<script src="../js/config/config.js?v=20261008b-khtd"></script>
+<script src="../js/services/APIService.js?v=20261008b-khtd"></script>
+<script src="../js/views/KhtdView.js?v=20261008b-khtd"></script>
+<script src="../js/controllers/KhtdController.js?v=20261008b-khtd"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     new KhtdController(new APIService(CONFIG.API_URL), new KhtdView(), 'lecturer').init();

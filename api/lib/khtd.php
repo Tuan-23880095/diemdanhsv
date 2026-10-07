@@ -483,6 +483,28 @@ function action_khtd_set_worksheet_status(array $params): void
     api_ok(['worksheetId' => $ws['WorksheetID'], 'status' => $status, 'closeAt' => $closeAt]);
 }
 
+/**
+ * GET khtdActiveCode {token, classId} — mã vào lớp (4 ký tự) đang mở của lớp, dùng ở khtd/quanly.html.
+ * Mã này chính là mã điểm danh (attendance_keys.Code, Status OPEN, chưa hết hạn) — sinh viên dùng
+ * cùng một mã để điểm danh và đăng nhập làm phiếu. Trả thêm danh sách buổi ACTIVE để mở mã tại chỗ.
+ */
+function action_khtd_active_code(array $params): void
+{
+    $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
+    $classId = trim((string) ($params['classId'] ?? ''));
+    assert_class_access($me, $classId);
+    $k = db()->prepare(
+        "SELECT k.Code, k.SessionID, k.StartTime, k.LateAfter, k.EndTime, se.SessionNo, se.Content " .
+        "FROM attendance_keys k JOIN sessions se ON se.SessionID = k.SessionID " .
+        "WHERE se.ClassID = :c AND k.Status = 'OPEN' AND k.EndTime > NOW() ORDER BY k.CreatedAt DESC LIMIT 1"
+    );
+    $k->execute(['c' => $classId]);
+    $key = $k->fetch() ?: null;
+    $s = db()->prepare("SELECT SessionID, SessionNo, `Date`, StartTime, Content FROM sessions WHERE ClassID = :c AND Status = 'ACTIVE' ORDER BY SessionNo");
+    $s->execute(['c' => $classId]);
+    api_ok(['key' => $key, 'sessions' => $s->fetchAll(), 'now' => date('Y-m-d H:i:s')]);
+}
+
 /** GET khtdLecturerList {token, classId} — phiếu + bài nộp của cả lớp. */
 function action_khtd_lecturer_list(array $params): void
 {
