@@ -1125,8 +1125,8 @@ Trước đây mọi tài liệu nằm công khai trong `khtd/`, kể cả hồ 
 
 | Vùng | Đường dẫn | Ai xem được |
 |---|---|---|
-| Công khai | `khtd/index.html`, `khtd/phieu/*.html`, `khtd/Rubric_R1-R4.html`, `khtd/img/*`, `khtd/online.html` | Sinh viên (chỉ phiếu học tập, cách chấm điểm, bản đồ, trang làm phiếu) |
-| Khoá | `khtd/_gv/vanban/*.html` (4 văn bản nộp Khoa), `khtd/_gv/DeThi_DG11_De[AB].html` | Chỉ giảng viên |
+| Công khai | `khtd/index.html`, `khtd/Rubric_R1-R4.html`, `khtd/online.html` (và `khtd/phieu/*.html` không liệt kê) | Sinh viên (chỉ trang làm phiếu và cách chấm điểm) |
+| Khoá | `khtd/_gv/vanban/*.html` (4 văn bản nộp Khoa), `khtd/_gv/dapan/*.html` (đáp án 6 phiếu), `khtd/_gv/DeThi_DG11_De[AB].html`, `khtd/_gv/img/bando_*.{png,svg}` (bản đồ bài tập — từ 08/10 khoá theo yêu cầu, `tai-lieu.php` phục vụ thêm png/svg với Content-Type ảnh) | Chỉ giảng viên |
 | Trang điều hướng giảng viên | `khtd/gv.html`, `khtd/quanly.html` | Giảng viên (cần `dd_token`) |
 
 **Cách khoá**: `.htaccess` gốc có `RewriteRule ^khtd/_gv(/|$) - [F,L]` (thêm `khtd/_gv/.htaccess` chặn lần hai) nên không mở được bằng URL trực tiếp. Mọi lượt xem đi qua `khtd/tai-lieu.php?f=<đường dẫn trong _gv>`: nạp `api/lib/{config,db,roles}.php`, gọi `require_role($token, ['LECTURER','ADMIN'])` với token lấy từ header `X-Token` (hoặc tham số `token`), kiểm tên tệp bằng regex + `realpath` phải nằm trong `_gv/`, rồi `readfile`. Trang `gv.html` gửi token bằng `fetch` và ghi nội dung vào tab mới nên token không lọt vào URL hay lịch sử duyệt.
