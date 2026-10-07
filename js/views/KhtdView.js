@@ -136,7 +136,7 @@ class KhtdView {
     const subs = data.submissions;
     tb.innerHTML = subs.length ? subs.map((s) => `<tr class="border-b hover:bg-slate-50">
       <td class="px-2 py-1">${this._esc(s.No)}</td><td class="px-2 py-1">${this._esc(s.MSSV)}</td><td class="px-2 py-1">${this._esc(s.FullName)}</td>
-      <td class="px-2 py-1 text-xs">${this._esc(s.Status)}</td><td class="px-2 py-1 text-right">${s.AiScore == null ? '' : this._esc(s.AiScore)}</td>
+      <td class="px-2 py-1 text-xs">${this._esc(s.Status)}</td><td class="px-2 py-1 text-right">${s.AiScore != null ? this._esc(s.AiScore) : (s.AiError ? `<span class="cursor-help text-xs text-red-600" title="${this._esc(s.AiError)}">lỗi AI</span>` : '')}</td>
       <td class="px-2 py-1 text-right font-semibold">${s.FinalScore == null ? '' : this._esc(s.FinalScore)}</td><td class="px-2 py-1 text-xs">${s.EmailSentAt ? '✓' : ''}</td>
       <td class="px-2 py-1"><button data-sub="${this._esc(s.SubmissionID)}" class="rounded border px-2 py-0.5 text-xs hover:bg-slate-100">Xem / chấm</button></td></tr>`).join('')
       : '<tr><td colspan="8" class="px-2 py-3 text-center text-slate-500">Chưa có bài nộp.</td></tr>';
@@ -152,9 +152,10 @@ class KhtdView {
       if (s.type === 'self') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><p class="text-sm">${s.items.map((it, i) => `${this._esc(it)}: <b>${['Chưa', 'Tạm được', 'Tự tin'][(a[s.id] || [])[i]] || '—'}</b>`).join(' · ')}</p>`;
       return '';
     }).join('');
+    const aiErrH = (!ai && row.aiError) ? `<div class="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm"><b>AI chưa chấm được:</b> ${this._esc(row.aiError)} — bấm “Chấm lại bằng AI” sau khi khắc phục, hoặc chấm tay bên dưới.</div>` : '';
     const aiH = ai ? `<div class="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm"><b>AI đề xuất: ${this._esc(ai.total)}/10</b> (${this._esc(ai.model)})<ul class="mt-1 list-disc pl-5">${ai.criteria.map((c) => `<li>${this._esc(c.name)}: ${this._esc(c.score)}/${this._esc(c.max)} — ${this._esc(c.comment)}</li>`).join('')}</ul><p class="mt-1 italic">${this._esc(ai.feedback)}</p>${(ai.flags || []).length ? `<p class="mt-1 text-red-700">Cờ: ${this._esc(ai.flags.join('; '))}</p>` : ''}${this._doiChieu(ai)}</div>` : '<p class="mt-3 text-sm text-slate-500">Chưa có chấm AI (chưa cấu hình Gemini hoặc lỗi gọi API).</p>';
     box.innerHTML = `<div class="flex items-start justify-between"><h3 class="text-lg font-bold">Phiếu ${this._esc(row.No)} · ${this._esc(row.FullName)} (${this._esc(row.MSSV)})</h3><button id="sub-close" class="text-slate-500 hover:text-slate-900">✕</button></div>
-      <p class="text-xs text-slate-500">Nộp: ${this._esc(row.SubmittedAt || '')} · Email: ${this._esc(row.Email || '(chưa có)')} · Trạng thái: ${this._esc(row.Status)}</p>${body}${aiH}
+      <p class="text-xs text-slate-500">Nộp: ${this._esc(row.SubmittedAt || '')} · Email: ${this._esc(row.Email || '(chưa có)')} · Trạng thái: ${this._esc(row.Status)}</p>${body}${aiH}${aiErrH}
       <form id="grade-form" class="mt-4 grid gap-2 rounded-lg border p-3 sm:grid-cols-[120px_1fr_auto]">
         <label class="text-sm">Điểm chính thức<input id="grade-score" type="number" min="0" max="10" step="0.25" value="${row.FinalScore != null ? this._esc(row.FinalScore) : (ai ? this._esc(ai.total) : '')}" class="mt-1 w-full rounded border px-2 py-1" required/></label>
         <label class="text-sm">Nhận xét của GV (kèm vào email)<textarea id="grade-note" rows="2" class="mt-1 w-full rounded border px-2 py-1">${this._esc(row.FinalNote || '')}</textarea></label>
