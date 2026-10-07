@@ -29,7 +29,7 @@ try {
 }
 
 $f = (string) ($_GET['f'] ?? '');
-if ($f === '' || str_contains($f, '..') || !preg_match('#^[A-Za-z0-9_\-]+(/[A-Za-z0-9_\-]+)*\.html$#', $f)) {
+if ($f === '' || str_contains($f, '..') || !preg_match('#^[A-Za-z0-9_\-]+(/[A-Za-z0-9_\-]+)*\.(html|png|svg)$#', $f)) {
     khtd_tl_fail(400, 'Tên tài liệu không hợp lệ.');
 }
 $base = realpath(__DIR__ . '/_gv');
@@ -37,7 +37,8 @@ $real = realpath(__DIR__ . '/_gv/' . $f);
 if ($base === false || $real === false || !str_starts_with($real, $base . DIRECTORY_SEPARATOR)) {
     khtd_tl_fail(404, 'Không tìm thấy tài liệu.');
 }
-header('Content-Type: text/html; charset=utf-8');
+$ext = strtolower(pathinfo($real, PATHINFO_EXTENSION));
+header('Content-Type: ' . ($ext === 'png' ? 'image/png' : ($ext === 'svg' ? 'image/svg+xml' : 'text/html; charset=utf-8')));
 header('X-Robots-Tag: noindex, nofollow');
 header('Cache-Control: private, no-store');
 readfile($real);
