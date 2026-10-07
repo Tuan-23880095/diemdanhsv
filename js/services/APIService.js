@@ -98,4 +98,17 @@ class APIService {
   }
   adminSessionAttendance(token, sessionId)  { return this.get('adminSessionAttendance', { token, sessionId }); }
   adminSetAttendance(token, sessionId, marks) { return this.post('adminSetAttendance', { token, sessionId, marks }); }
+
+  /* ---- GĐ11: phiếu học tập online KHTĐ (api/lib/khtd.php) ---- */
+  khtdLogin(mssv, code)                       { return this.post('khtdLogin', { mssv, code }); }
+  khtdListWorksheets(token)                   { return this.get('khtdListWorksheets', { token }); }
+  khtdGetWorksheet(token, worksheetId)        { return this.get('khtdGetWorksheet', { token, worksheetId }); }
+  khtdSaveDraft(token, worksheetId, answers)  { return this.post('khtdSaveDraft', { token, worksheetId, answers }); }
+  khtdSubmit(token, worksheetId, answers)     { return this.post('khtdSubmit', { token, worksheetId, answers }); }
+  khtdSeedWorksheets(token, classId)          { return this.post('khtdSeedWorksheets', { token, classId }); }
+  khtdSetWorksheetStatus(token, worksheetId, status, closeAt) { return this.post('khtdSetWorksheetStatus', { token, worksheetId, status, closeAt }); }
+  khtdLecturerList(token, classId)            { return this.get('khtdLecturerList', { token, classId }); }
+  khtdLecturerSubmission(token, submissionId) { return this.get('khtdLecturerSubmission', { token, submissionId }); }
+  khtdLecturerGrade(token, submissionId, finalScore, note, sendEmail) { return this.post('khtdLecturerGrade', { token, submissionId, finalScore, note, sendEmail: !!sendEmail }); }
+  khtdExportCsv(token, classId)               { return this.get('khtdExportCsv', { token, classId }); }
 }

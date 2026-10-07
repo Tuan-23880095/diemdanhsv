@@ -54,6 +54,19 @@ const KNOWN_ACTIONS = [
     'adminApplyAttendanceScore' => 'POST',
     'adminImportGrades'         => 'POST',
     'adminSetAttendance'        => 'POST',
+
+    // GĐ11 — Phiếu học tập online thực tập KHTĐ (api/lib/khtd.php, docs/04 mục 26).
+    'khtdLogin'              => 'POST',
+    'khtdListWorksheets'     => 'GET',
+    'khtdGetWorksheet'       => 'GET',
+    'khtdSaveDraft'          => 'POST',
+    'khtdSubmit'             => 'POST',
+    'khtdSeedWorksheets'     => 'POST',
+    'khtdSetWorksheetStatus' => 'POST',
+    'khtdLecturerList'       => 'GET',
+    'khtdLecturerSubmission' => 'GET',
+    'khtdLecturerGrade'      => 'POST',
+    'khtdExportCsv'          => 'GET',
 ];
 
 /** Điều hướng theo $action, gọi thẳng api_ok()/api_fail() (hai hàm này tự exit). */
@@ -150,6 +163,18 @@ function api_dispatch(string $action, string $method, array $params): void
         case 'adminApplyAttendanceScore': action_admin_apply_attendance_score($params); return;
         case 'adminImportGrades':         action_admin_import_grades($params);          return;
         case 'adminSetAttendance':        action_admin_set_attendance($params);         return;
+
+        case 'khtdLogin':              action_khtd_login($params);                return;
+        case 'khtdListWorksheets':     action_khtd_list_worksheets($params);      return;
+        case 'khtdGetWorksheet':       action_khtd_get_worksheet($params);        return;
+        case 'khtdSaveDraft':          action_khtd_save_draft($params);           return;
+        case 'khtdSubmit':             action_khtd_submit($params);               return;
+        case 'khtdSeedWorksheets':     action_khtd_seed_worksheets($params);      return;
+        case 'khtdSetWorksheetStatus': action_khtd_set_worksheet_status($params); return;
+        case 'khtdLecturerList':       action_khtd_lecturer_list($params);        return;
+        case 'khtdLecturerSubmission': action_khtd_lecturer_submission($params);  return;
+        case 'khtdLecturerGrade':      action_khtd_lecturer_grade($params);       return;
+        case 'khtdExportCsv':          action_khtd_export_csv($params);           return;
     }
 }
 

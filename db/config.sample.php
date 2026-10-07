@@ -26,6 +26,10 @@ return [
         // 'tls'       => 'implicit',             // hoặc 'starttls'; mặc định theo cổng
         // 'cafile'    => '/path/ca-bundle.crt',  // chỉ khi host không xác minh được chứng chỉ
     ],
+    'gemini' => [
+        'api_key' => '',                         // Google AI Studio key — để trống = không chấm AI (GĐ11 khtd)
+        'model'   => 'gemini-2.0-flash',
+    ],
     'app' => [
         'timezone'             => 'Asia/Ho_Chi_Minh',
         'code_length'          => 4,
@@ -43,6 +47,8 @@ return [
             'checkin_ip'       => ['limit' => 60, 'window_sec' => 600],  // mã điểm danh SAI / IP
             'gradecode_req_ip' => ['limit' => 30, 'window_sec' => 900],  // xin mã xem điểm (mọi lượt) / IP
             'gradecode_ver_ip' => ['limit' => 50, 'window_sec' => 900],  // nhập mã xem điểm SAI / IP
+            'khtd_login_ip'    => ['limit' => 30, 'window_sec' => 600],  // đăng nhập phiếu online SAI / IP (GĐ11)
+            'khtd_submit_ip'   => ['limit' => 30, 'window_sec' => 600],  // nộp phiếu / IP (GĐ11)
         ],
         'gps_accuracy_limit_m' => 150,
         'default_radius_m'     => 100,
