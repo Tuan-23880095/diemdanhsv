@@ -43,6 +43,7 @@ const RATE_LIMIT_MESSAGE = 'Thao tác quá nhiều lần. Vui lòng đợi vài 
 const RATE_LIMIT_DEFAULTS = [
     'khtd_login_ip'    => [30, 600],  // GĐ11: đăng nhập phiếu online SAI / 10 phút / IP
     'khtd_submit_ip'   => [30, 600],  // GĐ11: nộp phiếu / 10 phút / IP
+    'khtd_upload_ip'   => [600, 600], // GĐ11e: tải ảnh mẫu / 10 phút / IP (lớp 40 SV × 8 mẫu × 2 ảnh trên Wi-Fi chung)
     'login_ip'         => [20, 900],  // 20 lần login SAI / 15 phút / IP
     'login_user'       => [10, 900],  // 10 lần login SAI / 15 phút / tên đăng nhập (chặn dò phân tán)
     'checkin_ip'       => [60, 600],  // 60 mã SAI / 10 phút / IP — lớp 100 em trên WiFi chung vẫn dư

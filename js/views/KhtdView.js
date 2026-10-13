@@ -3,6 +3,77 @@
 class KhtdView {
   constructor() {
     this.$ = (id) => document.getElementById(id);
+    this.photos = {};          // bài đang làm: {sectionId: {rowIdx: [PhotoID]}}
+    this.imgToken = '';        // token gửi kèm khi tải ảnh (header X-Token)
+    this._blob = {};           // PhotoID → Promise<objectURL>
+  }
+
+  /* ---------- Ảnh mẫu vật (docs/04 mục 30) ---------- */
+  _rowPhotos(sec, ri) { return ((this.photos[sec] || {})[ri]) || []; }
+
+  _thumbsHtml(sec, ri, editable, list) {
+    const ids = list || this._rowPhotos(sec, ri);
+    return ids.map((id) => `<span class="relative inline-block"><img data-photo-id="${this._esc(id)}" alt="Ảnh mẫu" class="h-14 w-14 max-w-none cursor-zoom-in rounded border border-slate-300 bg-slate-100 object-cover"/>` +
+      (editable ? `<button type="button" data-photo-del="${this._esc(id)}" data-sec="${this._esc(sec)}" data-row="${ri}" title="Bỏ ảnh này" class="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-red-600 text-xs leading-5 text-white">×</button>` : '') + '</span>').join('');
+  }
+
+  /* Ô ảnh của một mẫu — giống ô chụp ảnh của phiếu thực địa Long Hải: viền đứt, mở thẳng camera. */
+  _photoCell(sec, ri, editable) {
+    const n = this._rowPhotos(sec, ri).length;
+    const add = editable && n < 3 ? `<div class="mt-1 flex flex-col gap-1">
+        <label class="cursor-pointer rounded border border-dashed border-green-500 bg-green-50 px-1 py-1 text-center text-xs font-semibold text-green-800 hover:bg-green-100">📸 Chụp ảnh<input type="file" accept="image/*" capture="environment" class="hidden" data-photo-input data-sec="${this._esc(sec)}" data-row="${ri}"/></label>
+        <label class="cursor-pointer rounded border border-dashed border-slate-400 px-1 py-1 text-center text-xs text-slate-700 hover:bg-slate-50">🖼 Chọn ảnh<input type="file" accept="image/*" multiple class="hidden" data-photo-input data-sec="${this._esc(sec)}" data-row="${ri}"/></label></div>` : '';
+    return `<td class="border p-1 align-top" style="min-width:7.5rem" data-photo-cell="${this._esc(sec)}:${ri}"><div class="flex flex-wrap gap-1">${this._thumbsHtml(sec, ri, editable)}</div>${add}<p class="hidden text-xs text-blue-700" data-photo-status></p></td>`;
+  }
+
+  refreshPhotoCell(sec, ri, editable = true) {
+    const td = document.querySelector(`[data-photo-cell="${CSS.escape(sec + ':' + ri)}"]`); if (!td) return;
+    td.outerHTML = this._photoCell(sec, ri, editable);
+    this.hydratePhotos(this.$('ws-body'));
+  }
+
+  setPhotoStatus(sec, ri, text) {
+    const el = document.querySelector(`[data-photo-cell="${CSS.escape(sec + ':' + ri)}"] [data-photo-status]`); if (!el) return;
+    el.textContent = text || ''; el.classList.toggle('hidden', !text);
+  }
+
+  addPhoto(sec, ri, id) {
+    this.photos[sec] = this.photos[sec] || {};
+    this.photos[sec][ri] = (this.photos[sec][ri] || []).concat([id]).slice(0, 3);
+  }
+
+  removePhoto(sec, ri, id) {
+    if (!this.photos[sec] || !this.photos[sec][ri]) return;
+    this.photos[sec][ri] = this.photos[sec][ri].filter((x) => x !== id);
+  }
+
+  /* Ảnh nằm sau khtd/anh.php có kiểm token → tải bằng fetch + header X-Token (token không lộ trong URL). */
+  hydratePhotos(root) {
+    if (!root) return;
+    root.querySelectorAll('img[data-photo-id]').forEach((img) => {
+      if (img.dataset.loaded) return; img.dataset.loaded = '1';
+      const id = img.dataset.photoId;
+      if (!this._blob[id]) {
+        this._blob[id] = fetch('anh.php?id=' + encodeURIComponent(id), { headers: { 'X-Token': this.imgToken } })
+          .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.blob(); })
+          .then((b) => URL.createObjectURL(b));
+        this._blob[id].catch(() => { delete this._blob[id]; });
+      }
+      this._blob[id].then((u) => { img.src = u; }).catch(() => { img.alt = 'Lỗi tải ảnh'; img.classList.add('border-red-400'); });
+    });
+  }
+
+  showPhoto(id) {
+    if (!this._blob[id]) return;
+    this._blob[id].then((u) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-slate-900/80 p-4';
+      wrap.innerHTML = `<img src="${u}" alt="Ảnh mẫu" class="max-h-full max-w-full rounded shadow-xl"/>`;
+      const close = () => { document.removeEventListener('keydown', onKey); wrap.remove(); };
+      const onKey = (e) => { if (e.key === 'Escape') close(); };
+      wrap.addEventListener('click', close); document.addEventListener('keydown', onKey);
+      document.body.appendChild(wrap);
+    }).catch(() => {});
   }
 
   _esc(s) {
@@ -62,11 +133,15 @@ class KhtdView {
     this.$('ws-title').textContent = `Phiếu học tập số ${ws.no}: ${ws.title}`;
     const locked = sub && sub.Status !== 'DRAFT';
     const a = (sub && sub.answers) || {};
+    this.photos = JSON.parse(JSON.stringify(a._photos || {}));
     const parts = ws.schema.sections.map((s) => {
       if (s.type === 'table') {
+        const editable = !locked && ws.open;
         const rows = s.rows.map((r, ri) => `<tr><th class="border px-2 py-1 text-left bg-slate-50 whitespace-nowrap">${this._esc(r)}</th>` +
+          (s.photos ? this._photoCell(s.id, ri, editable) : '') +
           s.columns.map((c, ci) => `<td class="border p-0"><textarea data-sec="${s.id}" data-r="${ri}" data-c="${ci}" rows="2" ${locked ? 'disabled' : ''} class="w-full resize-y border-0 p-1 text-sm focus:ring-1 focus:ring-blue-300">${this._esc(((a[s.id] || [])[ri] || [])[ci] || '')}</textarea></td>`).join('') + '</tr>').join('');
-        return `<section class="mt-5"><h3 class="font-bold">${this._esc(s.title)}</h3><div class="table-wrap mt-2 overflow-x-auto"><table class="w-full border text-sm"><thead><tr><th class="border px-2 py-1 bg-slate-100"></th>${s.columns.map((c) => `<th class="border px-2 py-1 bg-slate-100 text-left">${this._esc(c)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div></section>`;
+        const hint = s.photos ? '<p class="text-xs text-slate-600">Mỗi mẫu chụp 1–3 ảnh rõ nét (toàn mẫu và cận cảnh mặt vỡ, cát khai, kiến trúc); ảnh được nén tự động trước khi gửi.</p>' : '';
+        return `<section class="mt-5"><h3 class="font-bold">${this._esc(s.title)}</h3>${hint}<div class="table-wrap mt-2 overflow-x-auto"><table class="w-full border text-sm"><thead><tr><th class="border px-2 py-1 bg-slate-100"></th>${s.photos ? '<th class="border px-2 py-1 bg-green-50 text-left">Ảnh mẫu</th>' : ''}${s.columns.map((c) => `<th class="border px-2 py-1 bg-slate-100 text-left">${this._esc(c)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div></section>`;
       }
       if (s.type === 'questions') {
         return `<section class="mt-5"><h3 class="font-bold">${this._esc(s.title)}</h3>` + s.items.map((q, i) => `<div class="mt-3"><label class="block text-sm"><b>Câu ${i + 1}.</b> ${this._esc(q.text)}</label><textarea data-q="${q.id}" rows="3" ${locked ? 'disabled' : ''} class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-sm">${this._esc(a[q.id] || '')}</textarea></div>`).join('') + '</section>';
@@ -82,6 +157,7 @@ class KhtdView {
       return '';
     });
     this.$('ws-body').innerHTML = parts.join('');
+    this.hydratePhotos(this.$('ws-body'));
     this.show('btn-save', !locked && ws.open); this.show('btn-submit', !locked && ws.open);
     this.show('btn-retake', !!(att && att.canRetake));
     const rb = this.$('btn-retake');
@@ -121,6 +197,7 @@ class KhtdView {
       if (info.emptyQ) blanks.push(`${info.emptyQ} câu trả lời`);
       if (info.emptyCells) blanks.push(`${info.emptyCells} ô trong bảng`);
       if (info.emptySelf) blanks.push(`${info.emptySelf} mục tự đánh giá`);
+      if (info.noPhoto) blanks.push(`${info.noPhoto} mẫu chưa có ảnh`);
       let after;
       if (info.allowed === 1 && !info.extra) after = '<b>Phiếu này chỉ nộp một lần</b> — sau khi nộp không sửa được nữa.';
       else if (info.remainingAfter === 0) after = '<b>Đây là lần nộp cuối cùng</b> — sau khi nộp không làm lại được nữa.';
@@ -145,14 +222,16 @@ class KhtdView {
 
   /* Đếm ô còn trống để báo trong hộp xác nhận nộp. */
   countBlanks(schema, answers) {
-    let emptyQ = 0, emptyCells = 0, emptySelf = 0;
+    let emptyQ = 0, emptyCells = 0, emptySelf = 0, noPhoto = 0;
+    const ph = answers._photos || {};
     schema.sections.forEach((s) => {
+      if (s.type === 'table' && s.photos) s.rows.forEach((_, ri) => { if (!((ph[s.id] || {})[ri] || []).length) noPhoto++; });
       if (s.type === 'table') (answers[s.id] || []).forEach((r) => r.forEach((c) => { if (!c) emptyCells++; }));
       else if (s.type === 'questions') s.items.forEach((q) => { if (!answers[q.id]) emptyQ++; });
       else if (s.type === 'text') { if (!answers[s.id]) emptyQ++; }
       else if (s.type === 'self') (answers[s.id] || []).forEach((v) => { if (v == null) emptySelf++; });
     });
-    return { emptyQ, emptyCells, emptySelf };
+    return { emptyQ, emptyCells, emptySelf, noPhoto };
   }
 
   renderResult(sub, att) {
@@ -185,6 +264,11 @@ class KhtdView {
         out[s.id] = s.items.map((_, i) => { const el = document.querySelector(`input[data-self="${s.id}"][data-i="${i}"]:checked`); return el ? Number(el.value) : null; });
       }
     });
+    const ph = {};
+    Object.keys(this.photos || {}).forEach((sec) => Object.keys(this.photos[sec] || {}).forEach((ri) => {
+      if ((this.photos[sec][ri] || []).length) { ph[sec] = ph[sec] || {}; ph[sec][ri] = this.photos[sec][ri]; }
+    }));
+    if (Object.keys(ph).length) out._photos = ph;
     return out;
   }
 
@@ -249,7 +333,10 @@ class KhtdView {
     const box = this.$('sub-detail'); box.classList.remove('hidden');
     const a = row.answers || {}; const ai = row.ai;
     const body = row.schema.sections.map((s) => {
-      if (s.type === 'table') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><div class="overflow-x-auto"><table class="w-full border text-xs"><thead><tr><th class="border px-1"></th>${s.columns.map((c) => `<th class="border px-1 text-left">${this._esc(c)}</th>`).join('')}</tr></thead><tbody>${s.rows.map((r, ri) => `<tr><th class="border px-1 text-left bg-slate-50">${this._esc(r)}</th>${s.columns.map((_, ci) => `<td class="border px-1">${this._esc(((a[s.id] || [])[ri] || [])[ci] || '')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+      if (s.type === 'table') {
+        const ph = (a._photos || {})[s.id] || {};
+        return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><div class="overflow-x-auto"><table class="w-full border text-xs"><thead><tr><th class="border px-1"></th>${s.photos ? '<th class="border px-1 text-left">Ảnh</th>' : ''}${s.columns.map((c) => `<th class="border px-1 text-left">${this._esc(c)}</th>`).join('')}</tr></thead><tbody>${s.rows.map((r, ri) => `<tr><th class="border px-1 text-left bg-slate-50">${this._esc(r)}</th>${s.photos ? `<td class="border p-1 align-top" style="min-width:4.25rem"><div class="flex flex-wrap gap-1">${this._thumbsHtml(s.id, ri, false, ph[ri] || [])}</div>${(ph[ri] || []).length ? '' : '<span class="text-slate-400">—</span>'}</td>` : ''}${s.columns.map((_, ci) => `<td class="border px-1">${this._esc(((a[s.id] || [])[ri] || [])[ci] || '')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+      }
       if (s.type === 'questions') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4>` + s.items.map((q, i) => `<p class="mt-1 text-sm"><b>Câu ${i + 1}.</b> ${this._esc(q.text)}<br/><span class="whitespace-pre-wrap text-blue-900">${this._esc(a[q.id] || '(trống)')}</span></p>`).join('');
       if (s.type === 'text') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><p class="whitespace-pre-wrap text-sm text-blue-900">${this._esc(a[s.id] || '(trống)')}</p>`;
       if (s.type === 'self') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><p class="text-sm">${s.items.map((it, i) => `${this._esc(it)}: <b>${['Chưa', 'Tạm được', 'Tự tin'][(a[s.id] || [])[i]] || '—'}</b>`).join(' · ')}</p>`;
@@ -270,5 +357,6 @@ class KhtdView {
         <div class="flex flex-col justify-end gap-1 text-sm"><label><input id="grade-mail" type="checkbox" checked ${row.Email ? '' : 'disabled'}/> Gửi email</label><button class="rounded bg-blue-700 px-3 py-1.5 text-white hover:bg-blue-800">Duyệt điểm</button><button type="button" id="btn-regrade" class="rounded border px-3 py-1 text-xs hover:bg-slate-50">Chấm lại bằng AI</button></div>
       </form>`;
     box.dataset.sub = row.SubmissionID;
+    this.hydratePhotos(box);
   }
 }
