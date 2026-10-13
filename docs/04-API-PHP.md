@@ -1201,7 +1201,7 @@ Mục đích: mỗi mẫu (một hàng) của bảng mô tả có ô **Ảnh m�
 
 **Phiếu in là minh chứng (nộp phòng Khảo thí) — quy định 14/10/2026:**
 - Logo: CHỈ logo Trường `images/logo-hcmus.png` (tải từ đúng link ảnh web đang dùng). Không có tệp thì không in logo; không bao giờ thay bằng logo khác.
-- Đầu trang (`khtd_pdf_header()`, thầy chỉnh mẫu 14/10/2026): logo sát lề trái, **cao bằng khối 3 dòng chữ** (24,5 mm); 3 dòng tên Trường / tiêu đề / học kỳ căn giữa phần còn lại, cỡ chữ lớn (14,5 – 20 – 14,5 pt), dòng nào dài quá tự thu nhỏ cho vừa. Dùng chung cho phiếu từng SV và trang tổng hợp.
+- Đầu trang (`khtd_pdf_header()`, thầy chỉnh mẫu 14/10/2026): logo sát lề trái, **cao bằng khối 3 dòng chữ** (24,5 mm); 3 dòng tên Trường / tiêu đề / học kỳ **canh trái sát logo**, cỡ chữ lớn (14,5 – 20 – 14,5 pt), dòng nào dài quá tự thu nhỏ cho vừa. Dùng chung cho phiếu từng SV và trang tổng hợp.
 - KHÔNG in chữ "AI", "trợ lý", "Gemini", "chatbot"… do hệ thống tạo: tiêu mục là "Nhận xét theo rubric", "Nhận xét theo tiêu chí (rubric)"; trạng thái "Chờ GV duyệt"; không in nguy cơ dùng AI (chỉ xem trên web). Lời nhận xét chấm theo rubric đi qua `khtd_pdf_clean()` — bỏ câu nào nhắc AI/chatbot/Gemini/trí tuệ nhân tạo; prompt chấm cũng cấm nhắc các chữ này trong comment/feedback/flags. Bài làm của sinh viên in nguyên văn.
 - Cuối phiếu: "TP. Hồ Chí Minh, ngày … tháng … năm 20…", ô **SINH VIÊN** và **GIẢNG VIÊN XÁC NHẬN** (ký và ghi rõ họ tên, in sẵn họ tên). Trang tổng hợp có ô giảng viên xác nhận.
 - Chỉ còn một bản PDF (bỏ "bản GV"): nút "Tải phiếu điểm PDF" trong chi tiết bài in đúng bản gửi kèm email.

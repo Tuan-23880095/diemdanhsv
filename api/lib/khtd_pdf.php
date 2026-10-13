@@ -318,7 +318,7 @@ function khtd_pdf_signatures(KhtdPdf $pdf, ?string $student, string $lecturer): 
 
 /**
  * Đầu trang phiếu in: logo Trường sát lề trái, CAO BẰNG khối 3 dòng chữ (theo mẫu thầy chỉnh 14/10/2026);
- * 3 dòng (tên Trường / tiêu đề / dòng phụ) căn giữa phần còn lại, tự thu nhỏ cỡ chữ nếu quá dài.
+ * 3 dòng (tên Trường / tiêu đề / dòng phụ) CANH TRÁI sát logo, tự thu nhỏ cỡ chữ nếu quá dài.
  */
 function khtd_pdf_header(KhtdPdf $pdf, string $title, string $subtitle): void
 {
@@ -331,13 +331,13 @@ function khtd_pdf_header(KhtdPdf $pdf, string $title, string $subtitle): void
         $lw = $sz ? $H * $sz[0] / $sz[1] : $H;
         try { $pdf->Image($logo, $left, $top, $lw, $H); } catch (Throwable $e) { $lw = 0.0; }
     }
-    $x = $left + ($lw > 0 ? $lw + 2 : 0); $w = $right - $x;
+    $x = $left + ($lw > 0 ? $lw + 1 : 0); $w = $right - $x;
     $y = $top;
     foreach ($lines as [$text, $size, $lh]) {
         $pdf->font($size, 'B', KHTD_PDF_NAVY);
         while ($size > 8 && $pdf->GetStringWidth($text) > $w - 1) { $size -= 0.5; $pdf->font($size, 'B', KHTD_PDF_NAVY); }
         $pdf->SetXY($x, $y);
-        $pdf->Cell($w, $lh, $text, 0, 0, 'C');
+        $pdf->Cell($w, $lh, $text, 0, 0, 'L');
         $y += $lh;
     }
     $pdf->SetY($top + $H + 3);
