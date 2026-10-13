@@ -348,3 +348,31 @@ CREATE TABLE IF NOT EXISTS khtd_photos (
   PRIMARY KEY (PhotoID),
   KEY idx_photo_owner (WorksheetID, StudentID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Lưu trữ cuối học kỳ: thống kê ẩn danh của lớp đã kết thúc (migration 009)
+CREATE TABLE IF NOT EXISTS class_archives (
+  ArchiveID     VARCHAR(40)  NOT NULL,              -- ARC_xxxxxxxxxxxx
+  ClassID       VARCHAR(40)  NOT NULL,
+  ClassCode     VARCHAR(40)  NOT NULL,
+  CourseCode    VARCHAR(30)  NULL,
+  CourseName    VARCHAR(200) NULL,
+  Semester      VARCHAR(10)  NULL,
+  AcademicYear  VARCHAR(20)  NULL,
+  LecturerName  VARCHAR(120) NULL,
+  StudentsCount INT NOT NULL DEFAULT 0,
+  Status        ENUM('PACKAGED','RESET') NOT NULL DEFAULT 'PACKAGED',
+  StatsJSON     MEDIUMTEXT NULL,                    -- ảnh chụp thống kê ẩn danh
+  PackageName   VARCHAR(160) NULL,
+  PackageBytes  BIGINT NULL,
+  PackageSha256 CHAR(64) NULL,
+  PackagedAt    DATETIME NULL,
+  PackagedBy    VARCHAR(40) NULL,
+  DeletedJSON   TEXT NULL,                          -- số dòng/tệp đã xoá theo bảng
+  SafetyFile    VARCHAR(200) NULL,                  -- bản cứu dữ liệu chữ (giữ 30 ngày)
+  ResetAt       DATETIME NULL,
+  ResetBy       VARCHAR(40) NULL,
+  CreatedAt     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (ArchiveID),
+  UNIQUE KEY uq_archive_class (ClassID),
+  KEY idx_archive_course (CourseCode)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

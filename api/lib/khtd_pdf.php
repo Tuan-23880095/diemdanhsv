@@ -577,3 +577,33 @@ function khtd_pdf_cover(KhtdPdf $pdf, array $cls, array $st, string $lecturer): 
     khtd_pdf_signatures($pdf, null, $lecturer);
 }
 
+/** Thông tin lớp + học phần + giảng viên phụ trách (dùng cho trang tổng hợp, gói lưu trữ). */
+function khtd_class_info(string $classId): array
+{
+    $c = db()->prepare('SELECT c.ClassID, c.ClassCode, c.Semester, c.AcademicYear, c.LecturerID, c.Status, co.CourseCode, co.CourseName FROM classes c LEFT JOIN courses co ON co.CourseID = c.CourseID WHERE c.ClassID = :c');
+    $c->execute(['c' => $classId]);
+    $cls = $c->fetch();
+    if (!$cls) throw new RuntimeException('Không tìm thấy lớp.');
+    $cls['LecturerName'] = '';
+    $ids = array_filter(array_map('trim', explode(',', (string) $cls['LecturerID'])));
+    if ($ids) {
+        $u = db()->prepare('SELECT FullName FROM users WHERE UserID = :id');
+        $u->execute(['id' => reset($ids)]);
+        $cls['LecturerName'] = (string) ($u->fetchColumn() ?: '');
+    }
+    return $cls;
+}
+
+/** PDF cả lớp cho một phiếu: trang tổng hợp + phiếu từng SV (lần được tính). $stats = phần tử của khtd_class_stats(). */
+function khtd_pdf_worksheet_all(array $cls, array $stats): array
+{
+    $pdf = new KhtdPdf();
+    $pdf->SetSubject('Phiếu ' . $stats['no'] . ' – ' . $cls['ClassCode'], true);
+    khtd_pdf_cover($pdf, $cls, $stats, (string) $cls['LecturerName']);
+    foreach ($stats['roster'] as $r) {
+        if ($r['submissionId']) khtd_pdf_render($pdf, khtd_pdf_data($r['submissionId']));
+    }
+    $name = preg_replace('/[^A-Za-z0-9.\-]/', '', khtd_ascii((string) $cls['ClassCode'], false) . '-Diem-Phieu' . $stats['no'] . '-' . khtd_ascii(khtd_short_title($stats['title'])) . '-' . date('Ymd') . '.pdf');
+    return ['name' => $name, 'data' => $pdf->Output('S')];
+}
+

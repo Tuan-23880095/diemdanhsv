@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lưu trữ cuối học kỳ — Giảng viên</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg?v=20261008-logo">
+<link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="../favicon.ico?v=20261008-logo">
+<link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png?v=20261008-logo">
+<meta name="theme-color" content="#0b4f9e">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261014-luutru">
+<script src="../js/ui/logo-fallback.js?v=20261014-luutru"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+<header class="brand-bar text-white">
+  <div class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+    <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM" class="logo-img h-10 w-auto max-w-[110px] shrink-0 rounded bg-white/90 p-1 object-contain">
+    <a href="lecturer.html" class="text-white/80 hover:text-white">&larr;</a>
+    <h1 class="truncate text-base font-bold">Lưu trữ cuối học kỳ &amp; so sánh qua các năm</h1>
+  </div>
+</header>
+<nav class="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 pt-4 text-sm"><a href="lecturer.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">← Bảng điều khiển giảng viên</a><a href="../khtd/quanly.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Phiếu học tập (KHTĐ)</a></nav>
+
+<main class="mx-auto max-w-6xl px-4 py-6">
+  <div id="msg" class="hidden"></div>
+  <p id="need-login" class="hidden rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm">Bạn chưa đăng nhập giảng viên. Vào <a class="font-semibold underline" href="lecturer.html">trang Giảng viên</a> để đăng nhập, rồi quay lại trang này.</p>
+
+  <div id="main" class="hidden space-y-6">
+    <section class="rounded-2xl border bg-white p-4 shadow-sm">
+      <h2 class="text-lg font-bold">Lưu trữ một lớp học phần đã kết thúc</h2>
+      <p class="mt-1 text-sm text-slate-600">Ba bước: <b>tải gói lưu trữ về máy</b> → kiểm tra những gì sẽ xoá → <b>xoá dữ liệu học kỳ</b>. Sau khi xoá, trên web chỉ còn <b>thống kê không tên</b> (điểm trung bình, phân bố, chuyên cần, điểm từng tiêu chí rubric, tự đánh giá…) để so sánh qua các năm. Lớp được ẩn; học kỳ sau tạo lớp mới.</p>
+      <label class="mt-3 block text-sm">Lớp<br/><select id="class-select" class="mt-1 min-w-[280px] rounded border px-2 py-1.5"></select></label>
+      <div id="preview" class="mt-4"></div>
+    </section>
+
+    <section class="rounded-2xl border bg-white p-4 shadow-sm">
+      <div class="flex flex-wrap items-end justify-between gap-2">
+        <div><h2 class="text-lg font-bold">So sánh qua các năm</h2>
+          <p class="text-sm text-slate-600">Dùng cho đánh giá chương trình giảng dạy và mức độ người học. Số liệu ẩn danh, theo lần được tính điểm.</p></div>
+        <div class="flex items-end gap-2"><label class="text-sm">Môn học<br/><select id="course-select" class="mt-1 min-w-[220px] rounded border px-2 py-1.5"></select></label>
+          <button id="btn-csv" class="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Tải CSV so sánh</button></div>
+      </div>
+      <div id="compare" class="mt-3"></div>
+    </section>
+  </div>
+</main>
+<script src="../js/config/config.js?v=20261014-luutru"></script>
+<script src="../js/services/APIService.js?v=20261014-luutru"></script>
+<script src="../js/controllers/ArchiveController.js?v=20261014-luutru"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => { new ArchiveController(new APIService(CONFIG.API_URL)).init(); });
+</script>
+</body>
+</html>

@@ -47,24 +47,8 @@ try {
         assert_class_access($me, (string) $ws['ClassID']);
         $stats = array_values(array_filter(khtd_class_stats((string) $ws['ClassID']), static fn ($x) => $x['worksheetId'] === $wsId))[0] ?? null;
         if (!$stats) khtd_xp_fail(404, 'Không tìm thấy phiếu.');
-        $c = db()->prepare('SELECT c.ClassCode, c.Semester, c.AcademicYear, c.LecturerID, co.CourseCode, co.CourseName FROM classes c LEFT JOIN courses co ON co.CourseID = c.CourseID WHERE c.ClassID = :c');
-        $c->execute(['c' => $ws['ClassID']]);
-        $cls = $c->fetch() ?: ['ClassCode' => $ws['ClassID']];
-        $lect = '';
-        if (!empty($cls['LecturerID'])) {
-            $u = db()->prepare('SELECT FullName FROM users WHERE UserID = :id');
-            $u->execute(['id' => trim(explode(',', (string) $cls['LecturerID'])[0])]);
-            $lect = (string) ($u->fetchColumn() ?: '');
-        }
-        $pdf = new KhtdPdf();
-        $pdf->SetSubject('Phiếu ' . $stats['no'] . ' – ' . $cls['ClassCode'], true);
-        khtd_pdf_cover($pdf, $cls, $stats, $lect);
-        foreach ($stats['roster'] as $r) {
-            if (!$r['submissionId']) continue;
-            khtd_pdf_render($pdf, khtd_pdf_data($r['submissionId']));
-        }
-        $data = $pdf->Output('S');
-        $name = preg_replace('/[^A-Za-z0-9.\-]/', '', khtd_ascii((string) $cls['ClassCode'], false) . '-Diem-Phieu' . $stats['no'] . '-' . khtd_ascii(khtd_short_title($stats['title'])) . '-' . date('Ymd') . '.pdf');
+        $out = khtd_pdf_worksheet_all(khtd_class_info((string) $ws['ClassID']), $stats);
+        $name = $out['name']; $data = $out['data'];
         log_audit((string) ($me['userId'] ?? ($me['UserID'] ?? '')), 'LECTURER', 'khtdExportPdf', 'worksheet', $wsId, ['students' => count(array_filter($stats['roster'], static fn ($r) => $r['submissionId']))]);
     } else {
         khtd_xp_fail(400, 'Thiếu submissionId hoặc worksheetId.');
