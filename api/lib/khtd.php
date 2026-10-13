@@ -261,6 +261,7 @@ function action_khtd_get_worksheet(array $params): void
         if (is_array($sub['ai']) && !($sub['Status'] === 'FINAL' && !$sum['canRetake'])) {
             unset($sub['ai']['doi_chieu']);
         }
+        if (is_array($sub['ai'])) unset($sub['ai']['ai_risk']);     // ước lượng dùng AI chỉ dành cho GV
         unset($sub['AnswersJSON'], $sub['AiJSON']);
     }
     api_ok(['worksheet' => ['id' => $ws['WorksheetID'], 'no' => (int) $ws['No'], 'title' => $ws['Title'],
@@ -293,7 +294,7 @@ function action_khtd_save_draft(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không lưu được nữa.'); return; }
-    $answers = khtd_clean_photo_refs(khtd_clean_answers($params['answers'] ?? null), $ws, $me['studentId']);
+    $answers = khtd_clean_meta(khtd_clean_photo_refs(khtd_clean_answers($params['answers'] ?? null), $ws, $me['studentId']));
     $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
     $sub = $sum['latest'];
     if ($sub && $sub['Status'] !== 'DRAFT') { api_fail(khtd_already_submitted_msg($sum)); return; }
@@ -319,7 +320,7 @@ function action_khtd_submit(array $params): void
     $ip = rate_limit_client_ip();
     rate_limit_guard('khtd_submit_ip', $ip);
     rate_limit_record('khtd_submit_ip', $ip);
-    $answers = khtd_clean_photo_refs(khtd_clean_answers($params['answers'] ?? null), $ws, $me['studentId']);
+    $answers = khtd_clean_meta(khtd_clean_photo_refs(khtd_clean_answers($params['answers'] ?? null), $ws, $me['studentId']));
     $json = json_encode($answers, JSON_UNESCAPED_UNICODE);
 
     $extra = khtd_extra_attempts($ws['WorksheetID'], $me['studentId']);
@@ -363,7 +364,7 @@ function action_khtd_submit(array $params): void
         $mailed = khtd_send_result_mail($me, $ws, $ai, null, null, khtd_attempt_mail_line($sum, $no));
         if ($mailed) db()->prepare('UPDATE khtd_submissions SET EmailSentAt = NOW(), EmailTo = :e WHERE SubmissionID = :id')->execute(['e' => $me['email'], 'id' => $id]);
     }
-    if ($ai) unset($ai['doi_chieu']);   // có đáp án — SV chỉ xem sau khi GV duyệt (khtdGetWorksheet)
+    if ($ai) unset($ai['doi_chieu'], $ai['ai_risk']);   // đáp án: SV chỉ xem sau khi GV duyệt; nguy cơ AI: chỉ GV
     api_ok(['submissionId' => $id, 'attemptNo' => $no, 'status' => $ai ? 'AI_GRADED' : 'SUBMITTED', 'ai' => $ai,
             'attempt' => khtd_attempt_public($sum),
             'emailSent' => $mailed, 'emailTo' => $me['email'], 'aiError' => $ai ? null : ($aiErr ?: 'Chưa cấu hình Gemini — giảng viên sẽ chấm tay.')]);
@@ -391,7 +392,9 @@ function action_khtd_retake(array $params): void
     }
     $prev = db()->prepare('SELECT AnswersJSON FROM khtd_submissions WHERE SubmissionID = :id');
     $prev->execute(['id' => $latest['SubmissionID']]);
-    $answers = (string) ($prev->fetchColumn() ?: '{}');
+    $prevAns = json_decode((string) ($prev->fetchColumn() ?: '{}'), true) ?: [];
+    unset($prevAns['_meta']);                         // đếm dán/gõ của lần mới bắt đầu lại từ 0
+    $answers = json_encode($prevAns ?: new stdClass(), JSON_UNESCAPED_UNICODE);
     $no = (int) $latest['AttemptNo'] + 1;
     $id = new_id('SUB');
     try {
@@ -683,8 +686,10 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
             . "3. Ô để trống, chép lại đề bài, hoặc viết dài mà không có ý đúng theo đáp án → 0 điểm cho phần đó.\n"
             . "4. Điểm từng tiêu chí là bội số của 0,25 và không vượt mức tối đa.\n"
             . "5. Nhận xét ngắn gọn bằng tiếng Việt, nêu 1–2 điểm tốt và 1–2 điểm cần sửa CỤ THỂ (dẫn đúng ý sai và ý đúng tương ứng trong đáp án), không chép nguyên đáp án.\n"
+            . "6. Ước lượng khả năng bài được viết bằng chatbot AI (0–100) vào 'nguy_co_ai': dấu hiệu như văn phong trơn tru kiểu máy, mở đầu 'Dưới đây là', định dạng markdown, thuật ngữ vượt trình độ sinh viên không chuyên, lý thuyết chung chung không gắn với mẫu cụ thể sinh viên quan sát. Chỉ là ước lượng; không trừ điểm vì lý do này.\n"
             . "Chỉ trả về JSON hợp lệ theo mẫu: {\"doi_chieu\":[{\"muc\":\"...\",\"bai_lam\":\"...\",\"dap_an\":\"...\",\"ket_qua\":\"đúng|đúng một phần|thiếu|sai|trống\"}],"
-            . "\"criteria\":[{\"id\":\"...\",\"score\":0,\"comment\":\"...\"}],\"feedback\":\"...\",\"flags\":[\"...\"]}";
+            . "\"criteria\":[{\"id\":\"...\",\"score\":0,\"comment\":\"...\"}],\"feedback\":\"...\",\"flags\":[\"...\"],"
+            . "\"nguy_co_ai\":{\"muc\":0,\"dau_hieu\":[\"...\"]}}";
     $user = [
         'phieu' => ['so' => (int) $ws['No'], 'tieu_de' => $ws['Title'], 'cau_truc' => array_map(function ($s) {
             return ['id' => $s['id'], 'type' => $s['type'], 'title' => $s['title'] ?? '', 'columns' => $s['columns'] ?? null, 'items' => $s['items'] ?? null, 'prompt' => $s['prompt'] ?? null];
@@ -693,7 +698,7 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
         'dap_an' => $schema['answer_key'] ?? [],
         'dap_an_tong_quat' => $schema['answer_hints'] ?? '',
         'du_lieu_chuan' => $schema['reference'] ?? '',
-        'bai_lam_cua_sinh_vien' => array_diff_key($answers, ['_photos' => 1]),
+        'bai_lam_cua_sinh_vien' => array_diff_key($answers, ['_photos' => 1, '_meta' => 1]),
         'so_anh_mau_dinh_kem' => array_sum(array_map(static fn ($rows) => is_array($rows) ? array_sum(array_map(static fn ($x) => is_array($x) ? count($x) : 0, $rows)) : 0, (array) ($answers['_photos'] ?? []))),
     ];
     $body = [
@@ -753,14 +758,16 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
         if (count($dc) >= 40) break;
     }
     return ['model' => $used, 'doi_chieu' => $dc, 'criteria' => $crit, 'raw_total' => $total, 'max' => $max, 'total' => $total10,
-            'feedback' => mb_substr((string) ($out['feedback'] ?? ''), 0, 2000), 'flags' => array_slice((array) ($out['flags'] ?? []), 0, 5)];
+            'feedback' => mb_substr((string) ($out['feedback'] ?? ''), 0, 2000), 'flags' => array_slice((array) ($out['flags'] ?? []), 0, 5),
+            'ai_risk' => is_array($out['nguy_co_ai'] ?? null) ? ['muc' => max(0, min(100, (int) ($out['nguy_co_ai']['muc'] ?? 0))),
+                'dau_hieu' => array_map(static fn ($x) => mb_substr((string) $x, 0, 200), array_slice(array_filter((array) ($out['nguy_co_ai']['dau_hieu'] ?? []), 'is_scalar'), 0, 4))] : null];
 }
 
 /* ------------------------------------------------------------------ */
 /* Email                                                                */
 /* ------------------------------------------------------------------ */
 
-function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $final, ?string $note, string $attemptLine = ''): bool
+function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $final, ?string $note, string $attemptLine = '', array $attachments = []): bool
 {
     $to = trim((string) $student['email']);
     if ($to === '') return false;
@@ -787,7 +794,8 @@ function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $fi
     $lines[] = 'ThS. Đinh Quốc Tuấn – Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM';
     $lines[] = '(Email tự động từ hệ thống diemdanhsv.com — vui lòng không trả lời thư này.)';
     $subject = '[KHTĐ] Kết quả Phiếu học tập số ' . $ws['No'] . ($final !== null ? ' (chính thức)' : ' (tạm tính)');
-    return mail_send($to, $subject, implode("\n", $lines));
+    if ($attachments) { $lines[] = ''; $lines[] = 'Đính kèm: phiếu đánh giá điểm (PDF) — ' . implode(', ', array_map(static fn ($a) => (string) $a['name'], $attachments)) . '.'; }
+    return mail_send($to, $subject, implode("\n", $lines), $attachments);
 }
 
 /* ------------------------------------------------------------------ */
@@ -981,16 +989,28 @@ function action_khtd_lecturer_grade(array $params): void
     db()->prepare("UPDATE khtd_submissions SET Status = 'FINAL', FinalScore = :sc, FinalNote = :n, GradedBy = :by, GradedAt = NOW() WHERE SubmissionID = :id")
         ->execute(['sc' => $score, 'n' => $note, 'by' => $uid, 'id' => $row['SubmissionID']]);
     log_audit($uid, 'LECTURER', 'khtdLecturerGrade', 'submission', $row['SubmissionID'], ['score' => $score]);
-    $mailed = false;
+    $mailed = false; $pdfName = null; $pdfErr = null;
     if (!empty($params['sendEmail'])) {
         $ai = $row['AiJSON'] ? json_decode((string) $row['AiJSON'], true) : null;
+        if (is_array($ai) && !isset($ai['criteria'])) $ai = null;
+        // Phiếu đánh giá điểm PDF (bản sinh viên, không kèm ước lượng dùng AI) — lỗi tạo PDF vẫn gửi thư.
+        $att = [];
+        try {
+            khtd_long_request();
+            $pdf = khtd_pdf_one((string) $row['SubmissionID'], false);
+            $att[] = ['name' => $pdf['name'], 'mime' => 'application/pdf', 'data' => $pdf['data']];
+            $pdfName = $pdf['name'];
+        } catch (Throwable $e) {
+            $pdfErr = $e->getMessage();
+            error_log('khtd pdf: ' . $pdfErr);
+        }
         $student = ['email' => $row['Email'], 'fullName' => $row['FullName'], 'mssv' => $row['MSSV']];
         $wsRow = khtd_worksheet((string) $row['WorksheetID']);
         $sum = khtd_attempt_summary($wsRow, khtd_student_attempts((string) $row['WorksheetID'], (string) $row['StudentID']), khtd_extra_attempts((string) $row['WorksheetID'], (string) $row['StudentID']));
-        $mailed = khtd_send_result_mail($student, $row, $ai, $score, $note, khtd_attempt_mail_line($sum, (int) $row['AttemptNo']));
+        $mailed = khtd_send_result_mail($student, $row, $ai, $score, $note, khtd_attempt_mail_line($sum, (int) $row['AttemptNo']), $att);
         if ($mailed) db()->prepare('UPDATE khtd_submissions SET EmailSentAt = NOW(), EmailTo = :e WHERE SubmissionID = :id')->execute(['e' => $row['Email'], 'id' => $row['SubmissionID']]);
     }
-    api_ok(['submissionId' => $row['SubmissionID'], 'finalScore' => $score, 'emailSent' => $mailed]);
+    api_ok(['submissionId' => $row['SubmissionID'], 'finalScore' => $score, 'emailSent' => $mailed, 'pdfName' => $pdfName, 'pdfError' => $pdfErr]);
 }
 
 /** GET khtdAiTest {token, fresh?} — chẩn đoán key Gemini: model dùng được + gọi thử một câu. */
