@@ -114,4 +114,7 @@ class APIService {
   khtdRegrade(token, submissionId)            { return this.post('khtdRegrade', { token, submissionId }); }
   khtdAiTest(token, fresh)                    { return this.get('khtdAiTest', { token, fresh: fresh ? 1 : '' }); }
   khtdActiveCode(token, classId)              { return this.get('khtdActiveCode', { token, classId }); }
+  khtdRetake(token, worksheetId)              { return this.post('khtdRetake', { token, worksheetId }); }
+  khtdSetWorksheetPolicy(token, worksheetId, maxAttempts, scorePolicy) { return this.post('khtdSetWorksheetPolicy', { token, worksheetId, maxAttempts, scorePolicy }); }
+  khtdGrantRetake(token, submissionId)        { return this.post('khtdGrantRetake', { token, submissionId }); }
 }

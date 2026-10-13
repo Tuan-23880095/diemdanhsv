@@ -287,6 +287,8 @@ CREATE TABLE IF NOT EXISTS khtd_worksheets (
   OpenAt      DATETIME NULL,                        -- NULL = mở ngay
   CloseAt     DATETIME NULL,                        -- NULL = không hạn
   Status      ENUM('OPEN','CLOSED','HIDDEN') NOT NULL DEFAULT 'OPEN',
+  MaxAttempts TINYINT UNSIGNED NOT NULL DEFAULT 1,  -- số lần nộp tối đa; 0 = không giới hạn (migration 007)
+  ScorePolicy ENUM('BEST','LAST') NOT NULL DEFAULT 'BEST', -- điểm tính: cao nhất / lần cuối
   CreatedBy   VARCHAR(40) NULL,
   CreatedAt   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UpdatedAt   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -299,6 +301,7 @@ CREATE TABLE IF NOT EXISTS khtd_submissions (
   SubmissionID VARCHAR(40) NOT NULL,                -- SUB_xxxxxxxxxxxx
   WorksheetID  VARCHAR(40) NOT NULL,
   StudentID    VARCHAR(40) NOT NULL,
+  AttemptNo    TINYINT UNSIGNED NOT NULL DEFAULT 1,  -- lần làm thứ mấy (migration 007)
   AnswersJSON  MEDIUMTEXT  NOT NULL,                -- bài làm (nháp hoặc đã nộp)
   Status       ENUM('DRAFT','SUBMITTED','AI_GRADED','FINAL') NOT NULL DEFAULT 'DRAFT',
   SubmittedAt  DATETIME NULL,
@@ -315,6 +318,16 @@ CREATE TABLE IF NOT EXISTS khtd_submissions (
   CreatedAt    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UpdatedAt    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (SubmissionID),
-  UNIQUE KEY uq_sub_student_ws (StudentID, WorksheetID),
+  UNIQUE KEY uq_sub_student_ws_attempt (StudentID, WorksheetID, AttemptNo),
   KEY idx_sub_ws (WorksheetID, Status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Lượt làm lại giảng viên cấp thêm cho từng sinh viên (migration 007)
+CREATE TABLE IF NOT EXISTS khtd_extra_attempts (
+  WorksheetID VARCHAR(40) NOT NULL,
+  StudentID   VARCHAR(40) NOT NULL,
+  Extra       TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  GrantedBy   VARCHAR(40) NULL,
+  UpdatedAt   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (WorksheetID, StudentID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

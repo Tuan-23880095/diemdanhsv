@@ -1142,3 +1142,28 @@ Trước đây mọi tài liệu nằm công khai trong `khtd/`, kể cả hồ 
 - Không thêm bảng/migration mới.
 
 **Chẩn đoán chấm AI (cùng ngày)**: `khtdAiTest` sau khi gọi thử “OK” sẽ **chấm thử thật** phiếu mặc định số 1 với bài làm mẫu (`khtd_sample_answers`) và trả `cham_thu {ok, model, diem, giay, loi}` cùng `php_max_execution_time`. `khtdSubmit`, `khtdRegrade`, `khtdAiTest` gọi `khtd_long_request()` (`set_time_limit(170)`, `ignore_user_abort`) vì hosting mặc định cắt PHP ở 30 s trong khi một lượt chấm có thể 20–60 s. Khi chấm thất bại lúc nộp, `AiJSON` lưu `{"error","at"}` (không có `criteria`): `khtdLecturerList` trả `AiError` (cột AI hiện “lỗi AI”, rê chuột xem lý do), `khtdLecturerSubmission` trả `aiError`; `khtdGetWorksheet`/`khtdLecturerSubmission` không coi bản ghi lỗi là kết quả chấm.
+
+## 29. GĐ11d — Làm lại phiếu & làm nhiều lần lấy điểm cao nhất (14/10/2026)
+
+Mục đích: sinh viên bấm nhầm “Nộp phiếu” thì giảng viên cấp thêm lượt làm lại; giảng viên có thể cho một phiếu làm nhiều lần và lấy điểm cao nhất (hoặc lần cuối).
+
+**CSDL** — migration `007-khtd-attempts.sql` (idempotent, tương thích ngược với code cũ):
+- `khtd_worksheets.MaxAttempts` TINYINT (mặc định **1** = nộp một lần như trước; **0** = không giới hạn; tối đa 20) và `ScorePolicy` ENUM('BEST','LAST') (mặc định BEST).
+- `khtd_submissions.AttemptNo` — mỗi lần làm là một dòng; khoá duy nhất đổi thành `(StudentID, WorksheetID, AttemptNo)`. Bài cũ thành lần 1.
+- Bảng `khtd_extra_attempts (WorksheetID, StudentID, Extra, GrantedBy)` — lượt giảng viên cấp thêm. Số lần được nộp = `MaxAttempts + Extra` (khi `MaxAttempts` > 0).
+
+**Điểm của phiếu** (`khtd_attempt_summary()`): điểm mỗi lần = `FinalScore` nếu GV đã duyệt, không thì `AiScore`; BEST lấy lần cao nhất (bằng nhau giữ lần sớm hơn), LAST lấy lần nộp sau cùng. `khtdExportCsv`, danh sách phiếu của SV và trang GV đều dùng hàm này.
+
+| Action | Method | Ai | Tham số | Ghi chú |
+|---|---|---|---|---|
+| khtdRetake | POST | SV | token, worksheetId | Tạo lần mới (DRAFT), **chép bài lần trước** sang để sửa. Chặn khi phiếu đóng / hết lượt. Bấm hai lần → trả lại lần nháp đang có (`already: true`). |
+| khtdSetWorksheetPolicy | POST | GV | token, worksheetId, maxAttempts (0–20), scorePolicy (BEST/LAST) | Ghi `audit_log`. |
+| khtdGrantRetake | POST | GV | token, submissionId | +1 lượt cho SV của bài nộp đó; trả `used/allowed/remaining/worksheetOpen` (phiếu đóng thì GV phải mở lại). Không áp dụng cho phiếu không giới hạn. |
+
+Thay đổi ở action cũ: `khtdSaveDraft`/`khtdSubmit` làm trên lần mới nhất (lần đã nộp → báo bấm “Làm lại”); `khtdSubmit` trả thêm `attemptNo`, `attempt`; `khtdGetWorksheet` trả thêm `attempt {used, allowed, remaining, policy, countedNo, score, canRetake, attempts[]}`; `khtdListWorksheets` trả `attempt` và giữ các khoá cũ (điểm = lần được tính); `khtdLecturerList` trả mọi lần kèm `AttemptNo, AttemptsUsed, AttemptsAllowed, IsCounted, IsLatest`; `khtdLecturerSubmission` trả `attempt.attempts[].submissionId` để chuyển giữa các lần. Email kết quả có thêm dòng “Lần nộp k/N — điểm tính theo …” khi phiếu cho làm nhiều lần.
+
+**Bảo mật đáp án**: bảng `doi_chieu` (có đáp án) **không còn được trả cho sinh viên** trong `khtdSubmit`, và `khtdGetWorksheet` chỉ trả khi lần đó đã FINAL **và** SV không còn làm lại được — tránh nộp bừa để đọc đáp án rồi làm lại. (Trước đây trường này nằm trong phản hồi API, chỉ bị ẩn ở giao diện.)
+
+**Giao diện**: `khtd/online.html` — hộp xác nhận nộp riêng (đếm ô trống, nói rõ “chỉ nộp một lần” / “lần cuối” / “còn k lượt”, nút mặc định là *Quay lại làm tiếp*), khung các lần làm, nút **Làm lại**. `khtd/quanly.html` — mỗi thẻ phiếu có ô *Số lần nộp* và *Điểm tính*; bảng bài nộp có cột *Lần* (★ = lần được tính) và nút **Cho làm lại**. `?v=20261014-lamlai`.
+
+**Lưu ý vận hành**: mỗi lần nộp gọi Gemini một lần — phiếu “không giới hạn” tốn hạn mức AI hơn; rate limit `khtd_submit_ip` (30/10 phút/IP) tính chung cả lớp nếu dùng chung Wi-Fi. Kiểm thử: `php tools/smoke_khtd_attempts.php --config=<CSDL thử>` (38 ca).
