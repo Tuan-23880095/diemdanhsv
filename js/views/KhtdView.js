@@ -6,6 +6,8 @@ class KhtdView {
     this.photos = {};          // bài đang làm: {sectionId: {rowIdx: [PhotoID]}}
     this.imgToken = '';        // token gửi kèm khi tải ảnh (header X-Token)
     this._blob = {};           // PhotoID → Promise<objectURL>
+    this.meta = {};            // đếm thao tác của SV: {pasteChars, pasteCount, keys} (docs/04 mục 31)
+    this.statsSel = null;      // phiếu đang xem ở khung thống kê (GV)
   }
 
   /* ---------- Ảnh mẫu vật (docs/04 mục 30) ---------- */
@@ -134,6 +136,7 @@ class KhtdView {
     const locked = sub && sub.Status !== 'DRAFT';
     const a = (sub && sub.answers) || {};
     this.photos = JSON.parse(JSON.stringify(a._photos || {}));
+    this.meta = Object.assign({ pasteChars: 0, pasteCount: 0, keys: 0 }, a._meta || {});
     const parts = ws.schema.sections.map((s) => {
       if (s.type === 'table') {
         const editable = !locked && ws.open;
@@ -269,6 +272,7 @@ class KhtdView {
       if ((this.photos[sec][ri] || []).length) { ph[sec] = ph[sec] || {}; ph[sec][ri] = this.photos[sec][ri]; }
     }));
     if (Object.keys(ph).length) out._photos = ph;
+    if (this.meta && (this.meta.pasteCount || this.meta.keys)) out._meta = { pasteChars: this.meta.pasteChars | 0, pasteCount: this.meta.pasteCount | 0, keys: this.meta.keys | 0 };
     return out;
   }
 
@@ -350,13 +354,67 @@ class KhtdView {
       att.attempts.map((a) => `<button type="button" data-sub-open="${this._esc(a.submissionId)}" class="rounded border px-2 py-0.5 ${Number(a.no) === Number(row.AttemptNo) ? 'border-blue-600 bg-blue-50 font-semibold' : 'hover:bg-slate-50'}">Lần ${this._esc(a.no)}${a.status === 'DRAFT' ? ' (nháp)' : a.score != null ? ': ' + this._esc(a.score) : ''}${a.counted ? ' ★' : ''}</button>`).join('') + '</div>' : '';
     const canGrant = att && att.allowed != null && att.currentNo === Number(row.AttemptNo) && row.Status !== 'DRAFT';
     box.innerHTML = `<div class="flex items-start justify-between"><h3 class="text-lg font-bold">Phiếu ${this._esc(row.No)}${multi ? ' · lần ' + this._esc(row.AttemptNo) : ''} · ${this._esc(row.FullName)} (${this._esc(row.MSSV)})</h3><button id="sub-close" class="text-slate-500 hover:text-slate-900">✕</button></div>
-      <p class="text-xs text-slate-500">Nộp: ${this._esc(row.SubmittedAt || '')} · Email: ${this._esc(row.Email || '(chưa có)')} · Trạng thái: ${this._esc(row.Status)}${canGrant ? ` · <button type="button" id="btn-grant" data-grant-id="${this._esc(row.SubmissionID)}" class="text-blue-700 underline">Cho làm lại (+1 lượt)</button>` : ''}</p>${nav}${body}${aiH}${aiErrH}
+      <p class="text-xs text-slate-500">Nộp: ${this._esc(row.SubmittedAt || '')} · Email: ${this._esc(row.Email || '(chưa có)')} · Trạng thái: ${this._esc(row.Status)}${canGrant ? ` · <button type="button" id="btn-grant" data-grant-id="${this._esc(row.SubmissionID)}" class="text-blue-700 underline">Cho làm lại (+1 lượt)</button>` : ''}${row.Status !== 'DRAFT' ? ` · <button type="button" data-pdf-sub="${this._esc(row.SubmissionID)}" class="text-blue-700 underline">Tải PDF (bản gửi SV)</button> · <button type="button" data-pdf-sub="${this._esc(row.SubmissionID)}" data-ban="gv" class="text-blue-700 underline">PDF bản GV</button>` : ''}</p>${nav}${body}${aiH}${aiErrH}
       <form id="grade-form" class="mt-4 grid gap-2 rounded-lg border p-3 sm:grid-cols-[120px_1fr_auto]">
         <label class="text-sm">Điểm chính thức<input id="grade-score" type="number" min="0" max="10" step="0.25" value="${row.FinalScore != null ? this._esc(row.FinalScore) : (ai ? this._esc(ai.total) : '')}" class="mt-1 w-full rounded border px-2 py-1" required/></label>
         <label class="text-sm">Nhận xét của GV (kèm vào email)<textarea id="grade-note" rows="2" class="mt-1 w-full rounded border px-2 py-1">${this._esc(row.FinalNote || '')}</textarea></label>
-        <div class="flex flex-col justify-end gap-1 text-sm"><label><input id="grade-mail" type="checkbox" checked ${row.Email ? '' : 'disabled'}/> Gửi email</label><button class="rounded bg-blue-700 px-3 py-1.5 text-white hover:bg-blue-800">Duyệt điểm</button><button type="button" id="btn-regrade" class="rounded border px-3 py-1 text-xs hover:bg-slate-50">Chấm lại bằng AI</button></div>
+        <div class="flex flex-col justify-end gap-1 text-sm"><label title="Thư kèm phiếu đánh giá điểm PDF"><input id="grade-mail" type="checkbox" checked ${row.Email ? '' : 'disabled'}/> Gửi email + PDF</label><button class="rounded bg-blue-700 px-3 py-1.5 text-white hover:bg-blue-800">Duyệt điểm</button><button type="button" id="btn-regrade" class="rounded border px-3 py-1 text-xs hover:bg-slate-50">Chấm lại bằng AI</button></div>
       </form>`;
     box.dataset.sub = row.SubmissionID;
     this.hydratePhotos(box);
+  }
+
+  /* ---------- Thống kê theo buổi (GV, docs/04 mục 31) ---------- */
+  renderStats(data) {
+    const box = this.$('lec-stats'); if (!box) return;
+    const list = (data && data.worksheets) || [];
+    const t = this.$('stats-time'); if (t) t.textContent = data && data.generatedAt ? `cập nhật ${String(data.generatedAt).slice(11, 16)}` : '';
+    if (!list.length) { box.innerHTML = '<p class="text-sm text-slate-500">Lớp chưa có phiếu.</p>'; return; }
+    if (!list.some((w) => w.worksheetId === this.statsSel)) {
+      const withSub = list.filter((w) => w.submissions.total > 0);
+      this.statsSel = (withSub.length ? withSub[withSub.length - 1] : list[0]).worksheetId;
+    }
+    const w = list.find((x) => x.worksheetId === this.statsSel);
+    const e = (v) => this._esc(v);
+    const num = (v) => (v == null ? '—' : String(v).replace('.', ','));
+    const who = (arr) => (arr || []).map((x) => `<button type="button" data-sub="${e(x.submissionId)}" class="underline decoration-dotted hover:text-blue-700">${e(x.name)}</button> (${e(x.mssv)})`).join(', ');
+    const tabs = list.map((x) => `<button type="button" data-stats-ws="${e(x.worksheetId)}" class="rounded-full border px-3 py-1 text-xs ${x.worksheetId === w.worksheetId ? 'border-blue-700 bg-blue-700 text-white' : 'hover:bg-slate-50'}">Phiếu ${e(x.no)}${x.submissions.total ? ` · ${x.studentsSubmitted}/${x.enrolled}` : ''}</button>`).join('');
+    const sb = w.submissions; const sc = w.scores;
+    const tile = (label, val, sub, cls) => `<div class="rounded-xl border p-2 ${cls}"><div class="text-xs text-slate-600">${label}</div><div class="text-xl font-bold">${val}</div>${sub ? `<div class="text-xs text-slate-500">${sub}</div>` : ''}</div>`;
+    const high = w.aiRisk.filter((r) => r.level === 'Cao').length;
+    const tiles = [
+      tile('Sinh viên đã làm bài', `${w.studentsSubmitted}/${w.enrolled}`, `${w.studentsDraftOnly} đang nháp · ${w.studentsNotStarted} chưa mở`, 'bg-green-50 border-green-200'),
+      tile('Tổng bài nộp', sb.total, sb.total !== w.studentsSubmitted ? 'tính cả các lần làm lại' : '', 'bg-blue-50 border-blue-200'),
+      tile('GV đã chấm', sb.final, '', 'bg-green-50 border-green-200'),
+      tile('Chưa chấm – chỉ có AI chấm', sb.aiOnly, '', 'bg-amber-50 border-amber-200'),
+      tile('Chưa có điểm nào', sb.ungraded, sb.aiError ? `${sb.aiError} bài AI lỗi` : '', sb.ungraded ? 'bg-red-50 border-red-200' : 'bg-slate-50'),
+      tile('Nguy cơ dùng AI', w.aiRisk.length, w.aiRisk.length ? `${high} cao · ${w.aiRisk.length - high} trung bình` : 'không có bài đáng ngờ', w.aiRisk.length ? 'bg-pink-50 border-pink-200' : 'bg-slate-50'),
+    ].join('');
+    const maxB = Math.max(1, ...Object.values(sc.buckets));
+    const bars = Object.entries(sc.buckets).map(([k, v]) => `<div class="flex items-center gap-2 text-xs"><span class="w-14 shrink-0 text-right text-slate-600">${e(k)}</span><span class="h-3 rounded bg-blue-500" style="width:${Math.round(v / maxB * 140)}px"></span><span>${v}</span></div>`).join('');
+    const scoreH = sc.count
+      ? `<div class="grid gap-3 sm:grid-cols-[1fr_auto]"><div class="space-y-1 text-sm">
+          <p>Điểm trung bình <b>${num(sc.avg)}</b> · trung vị <b>${num(sc.median)}</b> <span class="text-xs text-slate-500">(${sc.count} SV có điểm, theo lần được tính)</span></p>
+          <p>🏆 Cao nhất <b class="text-green-700">${num(sc.max.score)}</b>: ${who(sc.max.students)}</p>
+          <p>⬇ Thấp nhất <b class="text-red-700">${num(sc.min.score)}</b>: ${who(sc.min.students)}</p></div>
+          <div class="space-y-1">${bars}</div></div>`
+      : '<p class="text-sm text-slate-500">Chưa có bài nào có điểm.</p>';
+    const special = w.special.length
+      ? `<ul class="mt-1 space-y-1 text-sm">${w.special.map((x) => `<li><button type="button" data-sub="${e(x.submissionId)}" class="font-semibold underline decoration-dotted hover:text-blue-700">${e(x.name)}</button> <span class="text-xs text-slate-500">${e(x.mssv)}${x.score != null ? ' · ' + num(x.score) + 'đ' : ''}</span> — ${x.tags.map((g) => `<span class="mr-1 inline-block rounded bg-amber-100 px-1.5 text-xs text-amber-900">${e(g)}</span>`).join('')}</li>`).join('')}</ul>`
+      : '<p class="text-sm text-slate-500">Không có.</p>';
+    const risk = w.aiRisk.length
+      ? `<ul class="mt-1 space-y-1 text-sm">${w.aiRisk.map((x) => `<li><span class="mr-1 inline-block rounded px-1.5 text-xs font-bold ${x.level === 'Cao' ? 'bg-red-600 text-white' : 'bg-amber-200 text-amber-900'}">${e(x.level)} ${e(x.riskScore)}</span><button type="button" data-sub="${e(x.submissionId)}" class="font-semibold underline decoration-dotted hover:text-blue-700">${e(x.name)}</button> <span class="text-xs text-slate-500">${e(x.mssv)}</span><br/><span class="text-xs text-slate-600">${e(x.reasons.join(' · '))}</span></li>`).join('')}</ul>`
+      : '<p class="text-sm text-slate-500">Không có bài nào ở mức trung bình trở lên.</p>';
+    const missing = w.notStarted.length ? `<details class="mt-2 text-sm"><summary class="cursor-pointer text-slate-600">${w.notStarted.length} sinh viên chưa nộp</summary><p class="mt-1">${w.notStarted.map((x) => `${e(x.name)} (${e(x.mssv)})`).join(', ')}</p></details>` : '';
+    box.innerHTML = `<div class="flex flex-wrap gap-1">${tabs}</div>
+      <div class="mt-3 flex flex-wrap items-baseline justify-between gap-2"><h3 class="font-semibold">Phiếu ${e(w.no)} – ${e(w.title)}</h3>
+        <button type="button" data-pdf-ws="${e(w.worksheetId)}" class="rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-900" ${w.submissions.total ? '' : 'disabled title="Chưa có bài nộp"'}>⬇ Xuất PDF tất cả bài</button></div>
+      <div class="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">${tiles}</div>
+      <div class="mt-3">${scoreH}</div>
+      <div class="mt-3 grid gap-4 lg:grid-cols-2">
+        <div><h4 class="text-sm font-bold">Bài đặc biệt</h4>${special}</div>
+        <div><h4 class="text-sm font-bold">Nguy cơ dùng trí tuệ nhân tạo</h4>${risk}
+          <p class="mt-1 text-xs text-slate-500">Ước lượng tự động (tỉ lệ nội dung dán, tốc độ viết, văn phong chatbot, ước lượng của Gemini khi chấm). Chỉ để giảng viên xem lại bài — không phải kết luận.</p></div>
+      </div>${missing}`;
   }
 }

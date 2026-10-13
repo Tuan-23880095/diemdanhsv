@@ -118,4 +118,5 @@ class APIService {
   khtdSetWorksheetPolicy(token, worksheetId, maxAttempts, scorePolicy) { return this.post('khtdSetWorksheetPolicy', { token, worksheetId, maxAttempts, scorePolicy }); }
   khtdGrantRetake(token, submissionId)        { return this.post('khtdGrantRetake', { token, submissionId }); }
   khtdUploadPhoto(token, worksheetId, sectionId, row, image) { return this.post('khtdUploadPhoto', { token, worksheetId, sectionId, row, image }); }
+  khtdStats(token, classId)                   { return this.get('khtdStats', { token, classId }); }
 }

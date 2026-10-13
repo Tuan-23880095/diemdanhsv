@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * tools/smoke_khtd_attempts.php — Kiểm thử "làm nhiều lần / làm lại" (docs/04 mục 29, migration 007)
- * và "ảnh mẫu vật" (mục 30, migration 008) của phiếu học tập online. CLI-ONLY, CHỈ chạy trên CSDL THỬ.
+ * "ảnh mẫu vật" (mục 30, migration 008), thống kê + nguy cơ AI + PDF/email (mục 31) của phiếu học tập online. CLI-ONLY, CHỈ chạy trên CSDL THỬ.
  * File cấu hình thử nên có 'khtd' => ['upload_dir' => '/tmp/...'] để ảnh thử không lẫn ảnh thật.
  *
  *   php tools/smoke_khtd_attempts.php --config=../private/config.test.php
@@ -38,7 +38,7 @@ putenv('DIEMDANH_CONFIG=' . $configPath);
 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 ini_set('error_log', sys_get_temp_dir() . '/diemdanhsv-smoke-khtd.log');
-foreach (['response', 'config', 'db', 'audit', 'ratelimit', 'mailer', 'auth', 'gradeauth', 'roles', 'attendance', 'queries', 'admin', 'grading', 'khtd', 'actions'] as $lib) {
+foreach (['response', 'config', 'db', 'audit', 'ratelimit', 'mailer', 'auth', 'gradeauth', 'roles', 'attendance', 'queries', 'admin', 'grading', 'khtd', 'khtd_stats', 'khtd_pdf', 'actions'] as $lib) {
     require $root . '/api/lib/' . $lib . '.php';
 }
 
@@ -237,6 +237,34 @@ check('làm lại: tải thêm ảnh được', ok($up($s1, 'mota', 1, $jpg)));
 $sid = (string) $pdo->query("SELECT SubmissionID FROM khtd_submissions WHERE WorksheetID = " . $pdo->quote($ws3) . " AND StudentID = 'KTA_S1' AND AttemptNo = 1")->fetchColumn();
 $r = call('GET', ['action' => 'khtdLecturerSubmission', 'token' => $gv, 'submissionId' => $sid]);
 check('GV xem bài: có tham chiếu ảnh + schema có photos', ok($r) && ($r['data']['answers']['_photos']['mota'][0][0] ?? '') === $p1 && ($r['data']['schema']['sections'][1]['photos'] ?? null) === true, $r['data']['answers'] ?? $r);
+
+echo "== Thống kê, nguy cơ AI, PDF, email đính kèm ==\n";
+$schemaT = ['sections' => [['id' => 'q', 'type' => 'questions', 'items' => [['id' => 'q1', 'text' => 'x']]]]];
+$long = str_repeat('Đá granit có kiến trúc hạt thô do nguội chậm dưới sâu. ', 12);
+$rk = khtd_ai_risk(['CreatedAt' => '2026-10-14 08:00:00', 'SubmittedAt' => '2026-10-14 08:40:00'], ['q1' => $long], null, $schemaT);
+check('bài tự gõ, 40 phút → nguy cơ Thấp', $rk['level'] === 'Thấp', $rk);
+$rk = khtd_ai_risk(['CreatedAt' => '2026-10-14 08:00:00', 'SubmittedAt' => '2026-10-14 08:01:00'],
+    ['q1' => "Dưới đây là phân tích:\n**Granit** (granite) có kiến trúc (texture) hạt thô (coarse). " . $long, '_meta' => ['pasteChars' => 900]],
+    ['ai_risk' => ['muc' => 90, 'dau_hieu' => ['văn phong máy']]], $schemaT);
+check('bài dán + nhanh + văn phong chatbot + Gemini 90% → nguy cơ Cao', $rk['level'] === 'Cao' && count($rk['reasons']) >= 4, $rk);
+check('_meta chỉ giữ số nguyên', khtd_clean_meta(['_meta' => ['pasteChars' => '12', 'evil' => '<x>', 'keys' => -5]])['_meta'] === ['pasteChars' => 12, 'keys' => 0]);
+$pairs = khtd_similar_pairs(['a' => ['mssv' => '1', 'fields' => ['q1' => $long]], 'b' => ['mssv' => '2', 'fields' => ['q1' => $long . ' Thêm.']], 'c' => ['mssv' => '3', 'fields' => ['q1' => str_repeat('Basalt ẩn tinh màu đen nặng phun trào nguội nhanh trên mặt đất. ', 6)]]]);
+check('phát hiện hai bài giống nhau, không gán nhầm bài thứ ba', isset($pairs['a'], $pairs['b']) && !isset($pairs['c']) && $pairs['a'][0]['mssv'] === '2', $pairs);
+
+$r = call('GET', ['action' => 'khtdStats', 'token' => $gv, 'classId' => 'KTA_C1']);
+$st2 = ok($r) ? array_values(array_filter($r['data']['worksheets'], fn ($x) => $x['worksheetId'] === $ws2))[0] : null;
+check('khtdStats phiếu 2: 1/2 SV nộp, 3 bài, 3 chỉ AI chấm, cao nhất 7.75', $st2 && $st2['studentsSubmitted'] === 1 && $st2['enrolled'] === 2 && $st2['submissions']['total'] === 3
+    && $st2['submissions']['aiOnly'] === 3 && (float) $st2['scores']['max']['score'] === 7.75 && count($st2['roster']) === 2, $st2 ? ['sub' => $st2['submissions'], 'sc' => $st2['scores']] : $r);
+check('khtdStats chặn SV', err(call('GET', ['action' => 'khtdStats', 'token' => $s1, 'classId' => 'KTA_C1'])));
+
+$pdf = khtd_pdf_one($subs[2], false);
+check('PDF một bài: tên tệp đúng mẫu', $pdf['name'] === '99100002-SvThu2-Diem-Phieu2-DaMagma-Lan2.pdf', $pdf['name']);
+check('PDF hợp lệ (%PDF-, có trang)', str_starts_with($pdf['data'], '%PDF-') && strlen($pdf['data']) > 5000, strlen($pdf['data']));
+$msg = smtp_build_message('a@b.c', 'X', 'd@e.f', 'Tiêu đề', "Thân thư", 'h', [['name' => $pdf['name'], 'mime' => 'application/pdf', 'data' => $pdf['data']]]);
+check('thư kèm PDF: multipart/mixed + filename', str_contains($msg, 'multipart/mixed') && str_contains($msg, 'filename="' . $pdf['name'] . '"'));
+check('thư không đính kèm giữ nguyên text/plain', str_contains(smtp_build_message('a@b.c', 'X', 'd@e.f', 'T', 'B', 'h'), 'Content-Type: text/plain'));
+$r = call('POST', ['action' => 'khtdLecturerGrade', 'token' => $gv, 'submissionId' => $subs[2], 'finalScore' => 8, 'note' => 'Tốt', 'sendEmail' => true]);
+check('GV duyệt + gửi mail: tạo PDF đính kèm (SV không có email → không gửi)', ok($r) && $r['data']['pdfName'] === '99100002-SvThu2-Diem-Phieu2-DaMagma-Lan2.pdf' && $r['data']['pdfError'] === null, $r);
 $pdo->exec("DELETE FROM khtd_photos WHERE StudentID LIKE 'KTA\\_%'");
 
 $cleanup($pdo);

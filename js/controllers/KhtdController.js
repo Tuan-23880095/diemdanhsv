@@ -22,6 +22,13 @@ class KhtdController {
     document.getElementById('btn-submit').addEventListener('click', () => this.submit());
     document.getElementById('btn-retake').addEventListener('click', () => this.retake());
     document.getElementById('ws-body').addEventListener('input', (e) => { if (!e.target.matches('[data-photo-input]')) this._scheduleAutosave(); });
+    // Đếm thao tác dán/gõ (tín hiệu "nguy cơ dùng AI" cho GV, docs/04 mục 31) — chỉ đếm số ký tự, không lưu nội dung clipboard.
+    document.getElementById('ws-body').addEventListener('paste', (e) => {
+      if (!e.target.matches('textarea')) return;
+      const t = (e.clipboardData && e.clipboardData.getData('text')) || '';
+      this.view.meta.pasteChars = (this.view.meta.pasteChars | 0) + t.length; this.view.meta.pasteCount = (this.view.meta.pasteCount | 0) + 1;
+    });
+    document.getElementById('ws-body').addEventListener('keydown', (e) => { if (e.target.matches('textarea') && e.key.length === 1) this.view.meta.keys = (this.view.meta.keys | 0) + 1; });
     document.getElementById('ws-body').addEventListener('change', (e) => { if (e.target.matches('[data-photo-input]')) this.uploadPhotos(e.target); });
     document.getElementById('ws-body').addEventListener('click', (e) => {
       const del = e.target.closest('[data-photo-del]'); if (del) return this.removePhoto(del.dataset.sec, Number(del.dataset.row), del.dataset.photoDel);
@@ -187,6 +194,12 @@ class KhtdController {
       if (e.target.id === 'btn-grant') this.grantRetake(e.target.dataset.grantId);
       const o = e.target.closest('[data-sub-open]'); if (o) this.openSubmission(o.dataset.subOpen);
       const img = e.target.closest('img[data-photo-id]'); if (img) this.view.showPhoto(img.dataset.photoId);
+      const pdf = e.target.closest('[data-pdf-sub]'); if (pdf) this.downloadPdf(`submissionId=${encodeURIComponent(pdf.dataset.pdfSub)}${pdf.dataset.ban === 'gv' ? '&ban=gv' : ''}`, pdf);
+    });
+    document.getElementById('lec-stats').addEventListener('click', (e) => {
+      const tab = e.target.closest('[data-stats-ws]'); if (tab) { this.view.statsSel = tab.dataset.statsWs; this.view.renderStats(this.stats); return; }
+      const pdf = e.target.closest('[data-pdf-ws]'); if (pdf) return this.downloadPdf(`worksheetId=${encodeURIComponent(pdf.dataset.pdfWs)}`, pdf);
+      const b = e.target.closest('[data-sub]'); if (b) this.openSubmission(b.dataset.sub);
     });
     document.getElementById('sub-detail').addEventListener('submit', (e) => { if (e.target.id === 'grade-form') { e.preventDefault(); this.grade(); } });
     this.loadClasses();
@@ -201,6 +214,29 @@ class KhtdController {
     try { this.view.renderLecturer(await this.api.khtdLecturerList(this.token, this.classId)); }
     catch (err) { this.view.msg(err.message, 'err'); }
     this.loadCode();
+    this.loadStats();
+  }
+
+  async loadStats() {
+    if (!this.classId) return;
+    try { this.stats = await this.api.khtdStats(this.token, this.classId); this.view.renderStats(this.stats); }
+    catch (err) { this.view.msg('Thống kê: ' + err.message, 'err'); }
+  }
+
+  /* Tải PDF từ khtd/xuat-pdf.php (token qua header X-Token, không nằm trong URL). */
+  async downloadPdf(query, btn) {
+    const old = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = 'Đang tạo PDF…'; }
+    try {
+      const r = await fetch('xuat-pdf.php?' + query, { headers: { 'X-Token': this.token } });
+      if (!r.ok) throw new Error((await r.text()) || ('Lỗi ' + r.status));
+      const blob = await r.blob();
+      const m = /filename="([^"]+)"/.exec(r.headers.get('Content-Disposition') || '');
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = m ? m[1] : 'phieu-diem.pdf';
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 30000);
+      this.view.msg('Đã tạo ' + a.download, 'ok');
+    } catch (err) { this.view.msg('Không tạo được PDF: ' + err.message, 'err'); }
+    finally { if (btn) { btn.disabled = false; btn.textContent = old; } }
   }
 
   /* Mã vào lớp = mã điểm danh đang mở của lớp (một mã cho cả điểm danh và làm phiếu). */
@@ -272,7 +308,12 @@ class KhtdController {
     const mail = document.getElementById('grade-mail').checked;
     try {
       const d = await this.api.khtdLecturerGrade(this.token, id, score, note, mail);
-      this.view.msg(`Đã duyệt ${d.finalScore}/10${d.emailSent ? ' và gửi email cho sinh viên.' : '.'}`, 'ok');
+      let m = `Đã duyệt ${d.finalScore}/10`;
+      if (d.emailSent) m += ` và gửi email cho sinh viên${d.pdfName ? ' kèm ' + d.pdfName : ''}.`;
+      else if (mail) m += '. Chưa gửi được email (kiểm tra cấu hình SMTP hoặc email sinh viên).';
+      else m += '.';
+      if (d.pdfError) m += ' Không tạo được PDF: ' + d.pdfError;
+      this.view.msg(m, d.pdfError || (mail && !d.emailSent) ? 'err' : 'ok');
       document.getElementById('sub-detail').classList.add('hidden'); this.loadClass();
     } catch (err) { this.view.msg(err.message, 'err'); }
   }

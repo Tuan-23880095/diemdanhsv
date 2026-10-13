@@ -29,3 +29,8 @@ private/
 config.php
 *.pem
 *service-account*.json
+
+# Bộ đệm số đo font tFPDF — tự sinh trên máy chủ (chứa đường dẫn tuyệt đối)
+api/lib/pdf/font/unifont/*.mtx.php
+api/lib/pdf/font/unifont/*.cw.dat
+api/lib/pdf/font/unifont/*.cw127.php

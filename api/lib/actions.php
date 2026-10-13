@@ -74,6 +74,7 @@ const KNOWN_ACTIONS = [
     'khtdSetWorksheetPolicy' => 'POST',
     'khtdGrantRetake'        => 'POST',
     'khtdUploadPhoto'        => 'POST',
+    'khtdStats'              => 'GET',
 ];
 
 /** Điều hướng theo $action, gọi thẳng api_ok()/api_fail() (hai hàm này tự exit). */
@@ -189,6 +190,7 @@ function api_dispatch(string $action, string $method, array $params): void
         case 'khtdSetWorksheetPolicy': action_khtd_set_worksheet_policy($params); return;
         case 'khtdGrantRetake':        action_khtd_grant_retake($params);         return;
         case 'khtdUploadPhoto':        action_khtd_upload_photo($params);         return;
+        case 'khtdStats':              action_khtd_stats($params);                return;
     }
 }
 
