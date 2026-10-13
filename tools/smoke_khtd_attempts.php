@@ -259,6 +259,9 @@ check('khtdStats chặn SV', err(call('GET', ['action' => 'khtdStats', 'token' =
 
 $pdf = khtd_pdf_one($subs[2], false);
 check('PDF một bài: tên tệp đúng mẫu', $pdf['name'] === '99100002-SvThu2-Diem-Phieu2-DaMagma-Lan2.pdf', $pdf['name']);
+check('phiếu in: lọc câu nhắc AI trong nhận xét, giữ câu khác', khtd_pdf_clean('Mô tả đúng. Bài có dấu hiệu dùng AI. Cần thêm ảnh.') === 'Mô tả đúng. Cần thêm ảnh.' && khtd_pdf_clean('Văn phong giống ChatGPT') === '');
+check('phiếu in: ghi chú bài đặc biệt không còn chữ AI', khtd_pdf_tag('AI gắn cờ: thiếu ảnh') === 'Lưu ý khi chấm: thiếu ảnh' && !preg_match('/\bAI\b/u', khtd_pdf_tag('GV và AI chênh 2,5 điểm') . khtd_pdf_tag('AI chưa chấm được')));
+check('phiếu in: logo Trường có trong repo', is_file(khtd_pdf_logo() ?? '') && str_ends_with((string) khtd_pdf_logo(), 'logo-hcmus.png'));
 check('PDF hợp lệ (%PDF-, có trang)', str_starts_with($pdf['data'], '%PDF-') && strlen($pdf['data']) > 5000, strlen($pdf['data']));
 $msg = smtp_build_message('a@b.c', 'X', 'd@e.f', 'Tiêu đề', "Thân thư", 'h', [['name' => $pdf['name'], 'mime' => 'application/pdf', 'data' => $pdf['data']]]);
 check('thư kèm PDF: multipart/mixed + filename', str_contains($msg, 'multipart/mixed') && str_contains($msg, 'filename="' . $pdf['name'] . '"'));

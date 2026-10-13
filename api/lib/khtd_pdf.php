@@ -6,7 +6,9 @@
  *   đầu trang logo + TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN, ĐHQG-HCM + PHIẾU ĐÁNH GIÁ ĐIỂM …
  *   1. PHẦN DÀNH CHO SINH VIÊN  (a–g)
  *   2. BẢNG ĐIỂM CHI TIẾT       (bảng tiêu chí có ô màu, các lần làm bài, nhận xét từng tiêu chí, bài làm)
- *   3. PHẦN NHẬN XÉT / ĐÁNH GIÁ TỪ GIẢNG VIÊN
+ *   3. PHẦN NHẬN XÉT / ĐÁNH GIÁ TỪ GIẢNG VIÊN + ký tên sinh viên, giảng viên xác nhận
+ * Phiếu in dùng nộp phòng Khảo thí / làm minh chứng nên: logo Trường (images/logo-hcmus.png, không thay
+ * bằng logo khác) và KHÔNG in bất kỳ chữ "AI"/trợ lý/Gemini nào do hệ thống tạo — xem khtd_pdf_clean().
  * Thư viện: tFPDF 1.33 (LGPL, api/lib/pdf/) + font Liberation Sans (OFL) — có đủ dấu tiếng Việt.
  * Không ghi gì ra thư mục web; ảnh tạm nằm ở sys_get_temp_dir() và bị xoá ngay.
  */
@@ -15,7 +17,6 @@ if (!defined('FPDF_FONTPATH')) define('FPDF_FONTPATH', __DIR__ . '/pdf/font/');
 require_once __DIR__ . '/pdf/font/unifont/ttfonts.php';   // tFPDF 1.33 trông vào autoload của composer — nạp tay
 require_once __DIR__ . '/pdf/tfpdf.php';
 
-const KHTD_PDF_LOGO_URL = 'https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738';
 
 class KhtdPdf extends tFPDF
 {
@@ -219,9 +220,9 @@ function khtd_term_label(array $cls, ?string $date): string
 }
 
 /**
- * Nạp mọi thứ cần để in một bài nộp. $withRisk = bản giảng viên (kèm ước lượng nguy cơ dùng AI).
+ * Nạp mọi thứ cần để in một bài nộp.
  */
-function khtd_pdf_data(string $submissionId, bool $withRisk = false): array
+function khtd_pdf_data(string $submissionId): array
 {
     $stmt = db()->prepare(
         'SELECT sub.*, s.MSSV, s.FullName, s.Email, w.ClassID, w.No, w.Title, w.SchemaJSON, w.MaxAttempts, w.ScorePolicy, w.Status AS WsStatus, w.OpenAt, w.CloseAt, ' .
@@ -265,26 +266,54 @@ function khtd_pdf_data(string $submissionId, bool $withRisk = false): array
         'sub' => ['SubmissionID' => $r['SubmissionID'], 'AttemptNo' => (int) $r['AttemptNo'], 'Status' => $r['Status'], 'SubmittedAt' => $r['SubmittedAt'],
                   'AiScore' => $r['AiScore'], 'FinalScore' => $r['FinalScore'], 'FinalNote' => (string) ($r['FinalNote'] ?? ''), 'GradedAt' => $r['GradedAt']],
         'ai' => $ai, 'answers' => $answers, 'attempt' => $sum, 'photos' => $photos,
-        'risk' => $withRisk && $r['Status'] !== 'DRAFT' ? khtd_ai_risk($r, $answers, is_array($ai) ? $ai : null, $schema) : null,
     ];
 }
 
-/** Logo Trường: bản đệm trong ../private, lần đầu tải từ link ảnh web đang dùng; lỗi → logo hoa sen của hệ thống. */
+/** Logo Trường ĐH KHTN (images/logo-hcmus.png, trong repo). Không có tệp thì không in logo — tuyệt đối không thay logo khác. */
 function khtd_pdf_logo(): ?string
 {
-    $cache = dirname(khtd_upload_dir()) . '/khtd_cache/logo-hcmus.png';
-    if (is_file($cache) && filesize($cache) > 1000) return $cache;
-    if (function_exists('curl_init') && !is_file($cache . '.fail') ) {
-        $ch = curl_init(KHTD_PDF_LOGO_URL);
-        curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 6, CURLOPT_FOLLOWLOCATION => true]);
-        $bin = curl_exec($ch); $http = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
-        $info = is_string($bin) ? @getimagesizefromstring($bin) : false;
-        @mkdir(dirname($cache), 0750, true);
-        if ($http === 200 && $info && $info[2] === IMAGETYPE_PNG && @file_put_contents($cache, $bin) !== false) return $cache;
-        @touch($cache . '.fail');                              // không thử lại mỗi lần (xoá tệp .fail để thử lại)
-    }
-    $fallback = dirname(__DIR__, 2) . '/images/icon-192.png';
-    return is_file($fallback) ? $fallback : null;
+    $f = dirname(__DIR__, 2) . '/images/logo-hcmus.png';
+    return is_file($f) ? $f : null;
+}
+
+/**
+ * Lọc lời nhận xét chấm theo rubric trước khi in: bỏ câu nào nhắc tới AI / chatbot / Gemini / trí tuệ nhân tạo
+ * (phiếu in là minh chứng — không được có các chữ này). Không áp dụng cho bài làm của sinh viên.
+ */
+function khtd_pdf_clean(string $text): string
+{
+    $re = '/\b(AI|A\.I\.|chatbot|chat ?GPT|Gemini|LLM|trí tuệ nhân tạo|trợ lý ảo|mô hình ngôn ngữ)\b/iu';
+    if (!preg_match($re, $text)) return $text;
+    $parts = preg_split('/(?<=[.!?;])\s+/u', $text) ?: [$text];
+    return trim(implode(' ', array_filter($parts, static fn ($p) => !preg_match($re, $p))));
+}
+
+/** Ghi chú "bài đặc biệt" khi in: đổi cách gọi, bỏ chữ AI. */
+function khtd_pdf_tag(string $tag): string
+{
+    $tag = preg_replace('/^AI gắn cờ:\s*/u', 'Lưu ý khi chấm: ', $tag);
+    $tag = preg_replace('/^AI chưa chấm được$/u', 'Chưa chấm được theo rubric', $tag);
+    $tag = preg_replace('/^GV và AI chênh (.+) điểm$/u', 'Điểm duyệt chênh điểm rubric $1 điểm', $tag);
+    return khtd_pdf_clean($tag);
+}
+
+/** Phần ký tên cuối phiếu: sinh viên (trái) và giảng viên xác nhận (phải). $student = null → chỉ ô giảng viên. */
+function khtd_pdf_signatures(KhtdPdf $pdf, ?string $student, string $lecturer): void
+{
+    $pdf->need(46);
+    $pdf->Ln(4);
+    $W = $pdf->GetPageWidth() - 30; $half = $W / 2; $x0 = 15; $y = $pdf->GetY();
+    $pdf->SetXY($x0 + $half, $y);
+    $pdf->font(9, 'I'); $pdf->Cell($half, 5, 'TP. Hồ Chí Minh, ngày ..... tháng ..... năm 20.....', 0, 0, 'C');
+    $y += 6;
+    $col = static function (float $x, string $title, string $name) use ($pdf, $half, $y): void {
+        $pdf->SetXY($x, $y); $pdf->font(10, 'B'); $pdf->Cell($half, 5.5, $title, 0, 2, 'C');
+        $pdf->font(8.5, 'I', [80, 80, 80]); $pdf->Cell($half, 4.5, '(Ký và ghi rõ họ tên)', 0, 2, 'C');
+        $pdf->SetXY($x, $y + 30); $pdf->font(10, 'B'); $pdf->Cell($half, 5.5, $name, 0, 0, 'C');
+    };
+    if ($student !== null) $col($x0, 'SINH VIÊN', $student);
+    $col($x0 + $half, 'GIẢNG VIÊN XÁC NHẬN', $lecturer);
+    $pdf->SetXY($x0, $y + 38);
 }
 
 /** Ảnh mẫu thu nhỏ (JPEG ~500 px) để PDF gọn; trả đường dẫn tệp tạm hoặc null. */
@@ -324,10 +353,10 @@ const KHTD_PDF_GREEN  = [56, 118, 29];
 const KHTD_PDF_FILLS  = [[217, 234, 211], [207, 226, 243], [234, 209, 220], [255, 242, 204], [252, 229, 205], [217, 210, 233]];
 
 /** Thêm "phiếu đánh giá điểm" của một bài nộp vào $pdf (bắt đầu trang mới). */
-function khtd_pdf_render(KhtdPdf $pdf, array $d, bool $lecturerCopy = false): void
+function khtd_pdf_render(KhtdPdf $pdf, array $d): void
 {
+    $pdf->AddPage();   // AddPage() in chân trang của trang TRƯỚC — đặt chữ chân trang sau đó
     $pdf->footerText = 'diemdanhsv.com · Phiếu ' . $d['ws']['No'] . ' · ' . $d['mssv'] . ' · lần ' . $d['sub']['AttemptNo'];
-    $pdf->AddPage();
     $W = $pdf->GetPageWidth() - 30;
     $ai = $d['ai']; $sub = $d['sub']; $sum = $d['attempt'];
     $final = $sub['FinalScore'] !== null ? (float) $sub['FinalScore'] : null;
@@ -343,9 +372,6 @@ function khtd_pdf_render(KhtdPdf $pdf, array $d, bool $lecturerCopy = false): vo
     $pdf->Cell($W - 33, 7.5, 'PHIẾU ĐÁNH GIÁ ĐIỂM PHIẾU HỌC TẬP', 0, 2, 'C');
     $pdf->font(12.5, 'B', KHTD_PDF_NAVY);
     $pdf->Cell($W - 33, 6.5, khtd_term_label($d['cls'], $sub['SubmittedAt']), 0, 2, 'C');
-    if ($lecturerCopy) {
-        $pdf->SetXY(150, 4); $pdf->font(7, 'B', [180, 0, 0]); $pdf->Cell(45, 4, 'BẢN LƯU GIẢNG VIÊN', 0, 0, 'R');
-    }
     $pdf->SetY(36);
 
     // ---------- 1. Sinh viên ----------
@@ -385,8 +411,8 @@ function khtd_pdf_render(KhtdPdf $pdf, array $d, bool $lecturerCopy = false): vo
     $pdf->row($vals, 5.2);
     $pdf->font(7.5, 'I', [90, 90, 90]);
     $note = $final !== null
-        ? 'Tổng kết là điểm giảng viên đã duyệt' . ($aiScore !== null ? ' (trợ lý AI đề xuất ' . khtd_num($aiScore) . ')' : '') . '. Điểm từng tiêu chí do trợ lý AI chấm theo rubric, giảng viên xem lại.'
-        : ($aiScore !== null ? 'Điểm TẠM TÍNH do trợ lý AI chấm theo rubric — giảng viên sẽ duyệt lại.' : 'Bài chưa có điểm.');
+        ? 'Tổng kết là điểm giảng viên đã duyệt. Điểm từng tiêu chí chấm theo rubric.'
+        : ($aiScore !== null ? 'Điểm TẠM TÍNH theo rubric — giảng viên chưa duyệt.' : 'Bài chưa có điểm.');
     $pdf->MultiCell(0, 4, $note, 0, 'L');
 
     // Các lần làm bài
@@ -407,11 +433,11 @@ function khtd_pdf_render(KhtdPdf $pdf, array $d, bool $lecturerCopy = false): vo
 
     // Nhận xét từng tiêu chí
     if (is_array($ai['criteria'] ?? null) && $ai['criteria']) {
-        $pdf->caption('Nhận xét theo tiêu chí', ' (trợ lý AI, giảng viên đã xem)');
+        $pdf->caption('Nhận xét theo tiêu chí', ' (rubric)');
         $pdf->row([['Tiêu chí', 52, 'C', [242, 242, 242], 'B', 8.5], ['Điểm', 18, 'C', [242, 242, 242], 'B', 8.5], ['Nhận xét', $W - 70, 'C', [242, 242, 242], 'B', 8.5]]);
         foreach ($ai['criteria'] as $c) {
             $pdf->row([[(string) $c['name'], 52, 'L', null, 'B', 8.5], [khtd_num((float) $c['score']) . '/' . khtd_num((float) $c['max']), 18, 'C', null, 'B', 8.5, KHTD_PDF_PURPLE],
-                       [(string) ($c['comment'] ?? ''), $W - 70, 'L', null, '', 8.5]]);
+                       [khtd_pdf_clean((string) ($c['comment'] ?? '')), $W - 70, 'L', null, '', 8.5]]);
         }
     }
 
@@ -469,34 +495,31 @@ function khtd_pdf_render(KhtdPdf $pdf, array $d, bool $lecturerCopy = false): vo
     if ($d['lecturer'] !== '') $pdf->para('Giảng viên: ' . $d['lecturer'], 10, 'B', KHTD_PDF_BLUE, 8, 5.2);
     $pdf->para('Nhận xét của giảng viên:', 11, 'BI', KHTD_PDF_NAVY, 8, 6);
     $pdf->para($sub['FinalNote'] !== '' ? $sub['FinalNote'] : ($final !== null ? 'Giảng viên đã duyệt điểm, không có nhận xét thêm.' : 'Giảng viên chưa duyệt bài này.'), 9, '', [153, 0, 0], 8, 4.8);
-    if (!empty($ai['feedback'])) {
-        $pdf->para('Nhận xét của trợ lý AI (chấm theo rubric):', 11, 'BI', KHTD_PDF_NAVY, 8, 6);
-        $pdf->para((string) $ai['feedback'], 9, '', [153, 0, 0], 8, 4.8);
-    }
-    if ($lecturerCopy && $d['risk']) {
-        $rk = $d['risk'];
-        $pdf->para('Nguy cơ dùng AI (ước lượng, chỉ để giảng viên xem lại): ' . $rk['level'] . ' – ' . $rk['score'] . '/100', 9.5, 'B', $rk['score'] >= KHTD_RISK_HIGH ? [180, 0, 0] : [120, 80, 0], 8, 5);
-        if ($rk['reasons']) $pdf->para('Dấu hiệu: ' . implode('; ', $rk['reasons']), 8.5, '', [80, 80, 80], 8, 4.4);
+    $fb = khtd_pdf_clean((string) ($ai['feedback'] ?? ''));
+    if ($fb !== '') {
+        $pdf->para('Nhận xét theo rubric:', 11, 'BI', KHTD_PDF_NAVY, 8, 6);
+        $pdf->para($fb, 9, '', [153, 0, 0], 8, 4.8);
     }
     $pdf->Ln(2);
-    $pdf->para('Thắc mắc về điểm: phản hồi giảng viên trong 7 ngày kể từ khi nhận phiếu. Phiếu được tạo tự động từ diemdanhsv.com lúc ' . date('d/m/Y H:i') . '.', 7.5, 'I', [110, 110, 110], 8, 3.8);
+    $pdf->para('Thắc mắc về điểm: phản hồi giảng viên trong 7 ngày kể từ khi nhận phiếu. Phiếu tạo từ diemdanhsv.com lúc ' . date('d/m/Y H:i') . '.', 7.5, 'I', [110, 110, 110], 8, 3.8);
+    khtd_pdf_signatures($pdf, mb_strtoupper($d['name']), $d['lecturer']);
 }
 
 /** Một bài nộp → chuỗi PDF. */
-function khtd_pdf_one(string $submissionId, bool $lecturerCopy = false): array
+function khtd_pdf_one(string $submissionId): array
 {
-    $d = khtd_pdf_data($submissionId, $lecturerCopy);
+    $d = khtd_pdf_data($submissionId);
     $pdf = new KhtdPdf();
     $pdf->SetSubject('Phiếu ' . $d['ws']['No'] . ' – ' . $d['mssv'], true);
-    khtd_pdf_render($pdf, $d, $lecturerCopy);
+    khtd_pdf_render($pdf, $d);
     return ['name' => khtd_pdf_filename($d), 'data' => $pdf->Output('S'), 'meta' => $d];
 }
 
 /** Trang đầu của bản "xuất tất cả bài": thống kê + danh sách cả lớp cho một phiếu (buổi). */
 function khtd_pdf_cover(KhtdPdf $pdf, array $cls, array $st, string $lecturer): void
 {
-    $pdf->footerText = 'diemdanhsv.com · ' . $cls['ClassCode'] . ' · Phiếu ' . $st['no'] . ' · tổng hợp';
     $pdf->AddPage();
+    $pdf->footerText = 'diemdanhsv.com · ' . $cls['ClassCode'] . ' · Phiếu ' . $st['no'] . ' · tổng hợp';
     $W = $pdf->GetPageWidth() - 30;
     $logo = khtd_pdf_logo();
     if ($logo) { try { $pdf->Image($logo, 22, 10, 22); } catch (Throwable $e) { /* bỏ logo */ } }
@@ -504,7 +527,6 @@ function khtd_pdf_cover(KhtdPdf $pdf, array $cls, array $st, string $lecturer): 
     $pdf->font(11.5, 'B', KHTD_PDF_NAVY); $pdf->Cell($W - 33, 6, 'TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN, ĐHQG-HCM', 0, 2, 'C');
     $pdf->font(14, 'B', KHTD_PDF_NAVY); $pdf->Cell($W - 33, 7.5, 'TỔNG HỢP ĐIỂM PHIẾU HỌC TẬP SỐ ' . $st['no'], 0, 2, 'C');
     $pdf->font(11, 'B', KHTD_PDF_NAVY); $pdf->Cell($W - 33, 6, khtd_short_title($st['title']) . ' · ' . khtd_term_label($cls, null), 0, 2, 'C');
-    $pdf->SetXY(150, 4); $pdf->font(7, 'B', [180, 0, 0]); $pdf->Cell(45, 4, 'BẢN LƯU GIẢNG VIÊN', 0, 0, 'R');
     $pdf->SetY(36);
     $pdf->labelLine('', 'Học phần:', trim(($cls['CourseCode'] ?? '') . ' – ' . ($cls['CourseName'] ?? ''), ' –'), 'B', KHTD_PDF_NAVY);
     $pdf->labelLine('', 'Lớp:', (string) $cls['ClassCode'] . ($lecturer !== '' ? '   ·   Giảng viên: ' . $lecturer : ''), '', [0, 0, 0]);
@@ -517,9 +539,9 @@ function khtd_pdf_cover(KhtdPdf $pdf, array $cls, array $st, string $lecturer): 
         ['Đã nộp bài' . "\n" . $st['studentsSubmitted'] . '/' . $st['enrolled'], 0, 'C', [217, 234, 211], 'B', 9],
         ['Tổng bài nộp' . "\n" . $sb['total'], 0, 'C', [207, 226, 243], 'B', 9],
         ['GV đã chấm' . "\n" . $sb['final'], 0, 'C', [217, 234, 211], 'B', 9],
-        ['Chỉ AI chấm' . "\n" . $sb['aiOnly'], 0, 'C', [255, 242, 204], 'B', 9],
+        ['Chờ GV duyệt' . "\n" . $sb['aiOnly'], 0, 'C', [255, 242, 204], 'B', 9],
         ['Chưa có điểm' . "\n" . $sb['ungraded'], 0, 'C', [244, 204, 204], 'B', 9],
-        ['Nguy cơ AI ≥ TB' . "\n" . count($st['aiRisk']), 0, 'C', [234, 209, 220], 'B', 9],
+        ['Bài đặc biệt' . "\n" . count($st['special']), 0, 'C', [234, 209, 220], 'B', 9],
     ];
     foreach ($cells as &$c) $c[1] = $W / count($cells);
     unset($c);
@@ -538,20 +560,20 @@ function khtd_pdf_cover(KhtdPdf $pdf, array $cls, array $st, string $lecturer): 
     $pdf->para($line, 8.5, '', [0, 0, 0], 0, 4.4);
 
     $pdf->section('Danh sách sinh viên');
-    $w = [9, 19, 44, 11, 13, 24, 22, $W - 142];
+    $w = [9, 19, 46, 11, 13, 24, $W - 122];
     $pdf->row([['STT', $w[0], 'C', [242, 242, 242], 'B', 8], ['MSSV', $w[1], 'C', [242, 242, 242], 'B', 8], ['Họ và tên', $w[2], 'C', [242, 242, 242], 'B', 8],
                ['Số lần', $w[3], 'C', [242, 242, 242], 'B', 8], ['Điểm', $w[4], 'C', [207, 226, 243], 'B', 8], ['Trạng thái', $w[5], 'C', [242, 242, 242], 'B', 8],
-               ['Nguy cơ AI', $w[6], 'C', [234, 209, 220], 'B', 8], ['Ghi chú (bài đặc biệt)', $w[7], 'C', [242, 242, 242], 'B', 8]]);
+               ['Ghi chú', $w[6], 'C', [242, 242, 242], 'B', 8]]);
     foreach ($st['roster'] as $i => $r) {
-        $rk = $r['risk'];
+        $state = ['Chỉ AI chấm' => 'Chờ GV duyệt'][$r['state']] ?? $r['state'];
         $pdf->row([[(string) ($i + 1), $w[0], 'C', null, '', 8], [$r['mssv'], $w[1], 'C', null, '', 8], [$r['name'], $w[2], 'L', null, '', 8],
                    [$r['used'] ? (string) $r['used'] : '', $w[3], 'C', null, '', 8],
                    [$r['score'] === null ? '' : khtd_num((float) $r['score']), $w[4], 'C', null, 'B', 8.5, $r['final'] ? KHTD_PDF_GREEN : [180, 95, 6]],
-                   [$r['state'], $w[5], 'L', null, '', 7.5],
-                   [$rk ? $rk['level'] . ' (' . $rk['score'] . ')' : '', $w[6], 'C', $rk && $rk['score'] >= KHTD_RISK_HIGH ? [244, 204, 204] : ($rk && $rk['score'] >= KHTD_RISK_MID ? [255, 242, 204] : null), '', 7.5],
-                   [implode('; ', $r['tags']), $w[7], 'L', null, '', 7]], 3.8);
+                   [$state, $w[5], 'L', null, '', 7.5],
+                   [implode('; ', array_filter(array_map('khtd_pdf_tag', $r['tags']))), $w[6], 'L', null, '', 7]], 3.8);
     }
     $pdf->Ln(1);
-    $pdf->para('Điểm xanh: giảng viên đã duyệt; điểm cam: trợ lý AI tạm tính. "Nguy cơ AI" là ước lượng tự động (dán nội dung, tốc độ viết, văn phong, ước lượng của Gemini) — chỉ để giảng viên xem lại, không phải kết luận. Các trang sau: phiếu đánh giá điểm của từng sinh viên (lần được tính điểm).', 7.5, 'I', [90, 90, 90], 0, 3.8);
+    $pdf->para('Điểm xanh: giảng viên đã duyệt; điểm cam: điểm tạm tính theo rubric, chờ giảng viên duyệt. Các trang sau: phiếu đánh giá điểm của từng sinh viên (lần được tính điểm).', 7.5, 'I', [90, 90, 90], 0, 3.8);
+    khtd_pdf_signatures($pdf, null, $lecturer);
 }
 

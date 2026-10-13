@@ -194,7 +194,7 @@ class KhtdController {
       if (e.target.id === 'btn-grant') this.grantRetake(e.target.dataset.grantId);
       const o = e.target.closest('[data-sub-open]'); if (o) this.openSubmission(o.dataset.subOpen);
       const img = e.target.closest('img[data-photo-id]'); if (img) this.view.showPhoto(img.dataset.photoId);
-      const pdf = e.target.closest('[data-pdf-sub]'); if (pdf) this.downloadPdf(`submissionId=${encodeURIComponent(pdf.dataset.pdfSub)}${pdf.dataset.ban === 'gv' ? '&ban=gv' : ''}`, pdf);
+      const pdf = e.target.closest('[data-pdf-sub]'); if (pdf) this.downloadPdf(`submissionId=${encodeURIComponent(pdf.dataset.pdfSub)}`, pdf);
     });
     document.getElementById('lec-stats').addEventListener('click', (e) => {
       const tab = e.target.closest('[data-stats-ws]'); if (tab) { this.view.statsSel = tab.dataset.statsWs; this.view.renderStats(this.stats); return; }

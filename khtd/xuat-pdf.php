@@ -4,7 +4,7 @@ declare(strict_types=1);
  * khtd/xuat-pdf.php — tải "phiếu đánh giá điểm" PDF (docs/04-API-PHP.md mục 31). CHỈ giảng viên/admin
  * có quyền với lớp. Token qua header X-Token (trang quanly.html tải bằng fetch) hoặc tham số token.
  *
- *   ?submissionId=SUB_…            một bài; &ban=gv để kèm ước lượng nguy cơ dùng AI (mặc định: bản gửi sinh viên)
+ *   ?submissionId=SUB_…            một bài (đúng bản gửi kèm email cho sinh viên)
  *   ?worksheetId=WSH_…             cả lớp cho một phiếu (buổi): trang tổng hợp + phiếu của từng SV (lần được tính điểm)
  */
 $root = dirname(__DIR__);
@@ -40,7 +40,7 @@ try {
         $classId = (string) ($q->fetchColumn() ?: '');
         if ($classId === '') khtd_xp_fail(404, 'Không tìm thấy bài nộp.');
         assert_class_access($me, $classId);
-        $out = khtd_pdf_one($subId, ($_GET['ban'] ?? '') === 'gv');
+        $out = khtd_pdf_one($subId);
         $name = $out['name']; $data = $out['data'];
     } elseif ($wsId !== '') {
         $ws = khtd_worksheet($wsId);
@@ -61,7 +61,7 @@ try {
         khtd_pdf_cover($pdf, $cls, $stats, $lect);
         foreach ($stats['roster'] as $r) {
             if (!$r['submissionId']) continue;
-            khtd_pdf_render($pdf, khtd_pdf_data($r['submissionId'], true), true);
+            khtd_pdf_render($pdf, khtd_pdf_data($r['submissionId']));
         }
         $data = $pdf->Output('S');
         $name = preg_replace('/[^A-Za-z0-9.\-]/', '', khtd_ascii((string) $cls['ClassCode'], false) . '-Diem-Phieu' . $stats['no'] . '-' . khtd_ascii(khtd_short_title($stats['title'])) . '-' . date('Ymd') . '.pdf');
