@@ -76,7 +76,7 @@ $cleanup = static function (PDO $pdo): void {
     $pdo->exec("DELETE FROM classes WHERE ClassID LIKE 'KTA\\_%'");
     $pdo->exec("DELETE FROM courses WHERE CourseID LIKE 'KTA\\_%'");
     $pdo->exec("DELETE FROM users WHERE UserID LIKE 'KTA\\_%'");
-    $pdo->exec("DELETE FROM rate_limits WHERE ClientKey = '127.0.0.1'");
+    $pdo->exec("DELETE FROM rate_limits WHERE ClientKey = '127.0.0.1' OR ClientKey LIKE 'KTA\\_%'");
 };
 $cleanup($pdo);
 
@@ -108,7 +108,7 @@ $setAi = static function (string $subId, float $score) use ($pdo): void {
 
 echo "== Chuẩn bị phiếu ==\n";
 $r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'KTA_C1']);
-check('GV tạo 6 phiếu mặc định', ok($r) && count($r['data']['created']) === 6, $r);
+check('GV tạo 7 phiếu mặc định (6 phiếu + luyện thi)', ok($r) && count($r['data']['created']) === 7, $r);
 $ws1 = $r['data']['created'][0]['id']; $ws2 = $r['data']['created'][1]['id'];
 $r = call('GET', ['action' => 'khtdLecturerList', 'token' => $gv, 'classId' => 'KTA_C1']);
 check('phiếu mới mặc định MaxAttempts = 1, ScorePolicy = BEST', ok($r) && (int) $r['data']['worksheets'][0]['MaxAttempts'] === 1 && $r['data']['worksheets'][0]['ScorePolicy'] === 'BEST', $r['data']['worksheets'][0] ?? $r);

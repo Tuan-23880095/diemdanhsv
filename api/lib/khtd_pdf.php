@@ -459,12 +459,52 @@ function khtd_pdf_render(KhtdPdf $pdf, array $d): void
         }
     }
 
+    // Nội dung cần sửa / bổ sung (đã gửi sinh viên)
+    $fixes = is_array($ai['sua_bai'] ?? null) ? $ai['sua_bai'] : [];
+    if ($fixes) {
+        $pdf->caption('Nội dung cần sửa / bổ sung', ' (theo rubric, để sinh viên hoàn thiện bài)');
+        $pdf->row([['Mục', 52, 'C', [242, 242, 242], 'B', 8.5], ['Vấn đề', 50, 'C', [242, 242, 242], 'B', 8.5], ['Cách sửa', $W - 102, 'C', [242, 242, 242], 'B', 8.5]]);
+        foreach (array_slice($fixes, 0, 40) as $f) {
+            $pdf->row([[khtd_pdf_clean((string) ($f['muc'] ?? '')), 52, 'L', null, 'B', 8], [khtd_pdf_clean((string) ($f['van_de'] ?? '')), 50, 'L', null, '', 8],
+                       [khtd_pdf_clean((string) ($f['cach_sua'] ?? '')), $W - 102, 'L', null, '', 8, KHTD_PDF_GREEN]]);
+        }
+    }
+    if (is_array($ai['exam'] ?? null) && !empty($ai['exam']['time']['elapsedSec'])) {
+        $t = $ai['exam']['time'];
+        $pdf->font(8, 'I', [90, 90, 90]);
+        $pdf->MultiCell(0, 4, 'Phiếu luyện tập (không tính vào điểm tổng). Số mẫu: ' . (int) ($ai['exam']['count'] ?? 0) . ' — thời gian làm ' . intdiv((int) $t['elapsedSec'], 60) . ' phút ' . ((int) $t['elapsedSec'] % 60)
+            . ' giây / giới hạn ' . (int) round(((int) ($t['limitSec'] ?? 0)) / 60) . ' phút' . (!empty($t['overtimeSec']) ? ' (nộp quá giờ).' : '.'), 0, 'L');
+    }
+
     // Bài làm
     $pdf->caption('Bài làm của sinh viên', '');
     $a = $d['answers'];
     foreach ($d['ws']['schema']['sections'] ?? [] as $s) {
         $t = $s['type'] ?? '';
-        if ($t === 'table') {
+        if (($s['layout'] ?? '') === 'specimens') {   // luyện thi: mỗi mẫu một dòng, chỉ các ô đã điền
+            $pdf->need(20);
+            $pdf->font(8.5, 'B'); $pdf->Cell(0, 5, (string) $s['title'], 0, 1);
+            $fx = array_flip((array) ($s['fields'] ?? []));
+            $wr = 14; $wp = 40.6; $wl = 18; $wd = $W - $wr - $wp - $wl;
+            $pdf->row([['Mẫu', $wr, 'C', [242, 242, 242], 'B', 7.5], ['Ảnh mẫu', $wp, 'C', [217, 234, 211], 'B', 7.5], ['Loại', $wl, 'C', [242, 242, 242], 'B', 7.5], ['Số hiệu, tên và mô tả', $wd, 'C', [242, 242, 242], 'B', 7.5]], 3.6);
+            $n = max(1, (int) ($a['_exam']['count'] ?? count((array) ($a[$s['id']] ?? []))));
+            for ($ri = 0; $ri < min($n, count((array) $s['rows'])); $ri++) {
+                $row = (array) ($a[$s['id']][$ri] ?? []);
+                $imgs = [];
+                foreach ((array) ($a['_photos'][$s['id']][$ri] ?? ($a['_photos'][$s['id']][(string) $ri] ?? [])) as $pid) {
+                    if (isset($d['photos'][$pid]) && ($th = khtd_pdf_thumb($pdf, $d['photos'][$pid]))) $imgs[] = $th;
+                }
+                $parts = [];
+                foreach ((array) $s['columns'] as $ci => $label) {
+                    if ($ci === ($fx['loai'] ?? -1)) continue;
+                    $v = trim((string) ($row[$ci] ?? ''));
+                    if ($v !== '') $parts[] = $label . ': ' . $v;
+                }
+                $pdf->row([['Mẫu ' . ($ri + 1), $wr, 'L', [248, 248, 248], 'B', 7.5], ['', $wp, 'L', null, '', 7.5, [0, 0, 0], $imgs ?: null],
+                           [(string) ($row[$fx['loai'] ?? 0] ?? ''), $wl, 'L', null, '', 7.5], [$parts ? implode('; ', $parts) : '(để trống)', $wd, 'L', null, '', 7.5]], 3.6);
+            }
+            $pdf->Ln(1.5);
+        } elseif ($t === 'table') {
             $pdf->need(20);
             $pdf->font(8.5, 'B'); $pdf->Cell(0, 5, (string) $s['title'], 0, 1);
             $cols = (array) $s['columns']; $hasPh = !empty($s['photos']);
