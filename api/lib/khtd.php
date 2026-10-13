@@ -686,7 +686,7 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
             . "3. Ô để trống, chép lại đề bài, hoặc viết dài mà không có ý đúng theo đáp án → 0 điểm cho phần đó.\n"
             . "4. Điểm từng tiêu chí là bội số của 0,25 và không vượt mức tối đa.\n"
             . "5. Nhận xét ngắn gọn bằng tiếng Việt, nêu 1–2 điểm tốt và 1–2 điểm cần sửa CỤ THỂ (dẫn đúng ý sai và ý đúng tương ứng trong đáp án), không chép nguyên đáp án.\n"
-            . "6. Ước lượng khả năng bài được viết bằng chatbot AI (0–100) vào 'nguy_co_ai': dấu hiệu như văn phong trơn tru kiểu máy, mở đầu 'Dưới đây là', định dạng markdown, thuật ngữ vượt trình độ sinh viên không chuyên, lý thuyết chung chung không gắn với mẫu cụ thể sinh viên quan sát. Chỉ là ước lượng; không trừ điểm vì lý do này.\n"
+            . "6. Ước lượng khả năng bài được viết bằng chatbot AI (0–100) vào 'nguy_co_ai': dấu hiệu như văn phong trơn tru kiểu máy, mở đầu 'Dưới đây là', định dạng markdown, thuật ngữ vượt trình độ sinh viên không chuyên, lý thuyết chung chung không gắn với mẫu cụ thể sinh viên quan sát. Chỉ là ước lượng; không trừ điểm vì lý do này. TUYỆT ĐỐI không nhắc tới AI, chatbot, trí tuệ nhân tạo trong 'comment', 'feedback', 'flags' (nhận xét được in vào phiếu điểm làm minh chứng) — chỉ ghi ở 'nguy_co_ai'.\n"
             . "Chỉ trả về JSON hợp lệ theo mẫu: {\"doi_chieu\":[{\"muc\":\"...\",\"bai_lam\":\"...\",\"dap_an\":\"...\",\"ket_qua\":\"đúng|đúng một phần|thiếu|sai|trống\"}],"
             . "\"criteria\":[{\"id\":\"...\",\"score\":0,\"comment\":\"...\"}],\"feedback\":\"...\",\"flags\":[\"...\"],"
             . "\"nguy_co_ai\":{\"muc\":0,\"dau_hieu\":[\"...\"]}}";
@@ -993,11 +993,11 @@ function action_khtd_lecturer_grade(array $params): void
     if (!empty($params['sendEmail'])) {
         $ai = $row['AiJSON'] ? json_decode((string) $row['AiJSON'], true) : null;
         if (is_array($ai) && !isset($ai['criteria'])) $ai = null;
-        // Phiếu đánh giá điểm PDF (bản sinh viên, không kèm ước lượng dùng AI) — lỗi tạo PDF vẫn gửi thư.
+        // Phiếu đánh giá điểm PDF — lỗi tạo PDF vẫn gửi thư.
         $att = [];
         try {
             khtd_long_request();
-            $pdf = khtd_pdf_one((string) $row['SubmissionID'], false);
+            $pdf = khtd_pdf_one((string) $row['SubmissionID']);
             $att[] = ['name' => $pdf['name'], 'mime' => 'application/pdf', 'data' => $pdf['data']];
             $pdfName = $pdf['name'];
         } catch (Throwable $e) {
