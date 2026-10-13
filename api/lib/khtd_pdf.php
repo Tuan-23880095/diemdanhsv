@@ -316,6 +316,33 @@ function khtd_pdf_signatures(KhtdPdf $pdf, ?string $student, string $lecturer): 
     $pdf->SetXY($x0, $y + 38);
 }
 
+/**
+ * Đầu trang phiếu in: logo Trường sát lề trái, CAO BẰNG khối 3 dòng chữ (theo mẫu thầy chỉnh 14/10/2026);
+ * 3 dòng (tên Trường / tiêu đề / dòng phụ) CANH TRÁI sát logo, tự thu nhỏ cỡ chữ nếu quá dài.
+ */
+function khtd_pdf_header(KhtdPdf $pdf, string $title, string $subtitle): void
+{
+    $lines = [['TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN, ĐHQG-HCM', 14.5, 7.5], [$title, 20, 9.5], [$subtitle, 14.5, 7.5]];   // [chữ, cỡ tối đa, cao dòng mm]
+    $H = array_sum(array_column($lines, 2));                    // 24,5 mm = chiều cao logo
+    $top = 10; $left = 15; $right = $pdf->GetPageWidth() - 15;
+    $logo = khtd_pdf_logo(); $lw = 0.0;
+    if ($logo) {
+        $sz = @getimagesize($logo);
+        $lw = $sz ? $H * $sz[0] / $sz[1] : $H;
+        try { $pdf->Image($logo, $left, $top, $lw, $H); } catch (Throwable $e) { $lw = 0.0; }
+    }
+    $x = $left + ($lw > 0 ? $lw + 1 : 0); $w = $right - $x;
+    $y = $top;
+    foreach ($lines as [$text, $size, $lh]) {
+        $pdf->font($size, 'B', KHTD_PDF_NAVY);
+        while ($size > 8 && $pdf->GetStringWidth($text) > $w - 1) { $size -= 0.5; $pdf->font($size, 'B', KHTD_PDF_NAVY); }
+        $pdf->SetXY($x, $y);
+        $pdf->Cell($w, $lh, $text, 0, 0, 'L');
+        $y += $lh;
+    }
+    $pdf->SetY($top + $H + 3);
+}
+
 /** Ảnh mẫu thu nhỏ (JPEG ~500 px) để PDF gọn; trả đường dẫn tệp tạm hoặc null. */
 function khtd_pdf_thumb(KhtdPdf $pdf, string $path): ?string
 {
@@ -363,16 +390,7 @@ function khtd_pdf_render(KhtdPdf $pdf, array $d): void
     $aiScore = $sub['AiScore'] !== null ? (float) $sub['AiScore'] : null;
 
     // ---------- Đầu trang ----------
-    $logo = khtd_pdf_logo();
-    if ($logo) { try { $pdf->Image($logo, 22, 10, 22); } catch (Throwable $e) { /* bỏ logo */ } }
-    $pdf->SetXY(48, 11);
-    $pdf->font(11.5, 'B', KHTD_PDF_NAVY);
-    $pdf->Cell($W - 33, 6, 'TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN, ĐHQG-HCM', 0, 2, 'C');
-    $pdf->font(15, 'B', KHTD_PDF_NAVY);
-    $pdf->Cell($W - 33, 7.5, 'PHIẾU ĐÁNH GIÁ ĐIỂM PHIẾU HỌC TẬP', 0, 2, 'C');
-    $pdf->font(12.5, 'B', KHTD_PDF_NAVY);
-    $pdf->Cell($W - 33, 6.5, khtd_term_label($d['cls'], $sub['SubmittedAt']), 0, 2, 'C');
-    $pdf->SetY(36);
+    khtd_pdf_header($pdf, 'PHIẾU ĐÁNH GIÁ ĐIỂM PHIẾU HỌC TẬP', khtd_term_label($d['cls'], $sub['SubmittedAt']));
 
     // ---------- 1. Sinh viên ----------
     $pdf->section('1.   PHẦN DÀNH CHO SINH VIÊN');
@@ -521,13 +539,7 @@ function khtd_pdf_cover(KhtdPdf $pdf, array $cls, array $st, string $lecturer): 
     $pdf->AddPage();
     $pdf->footerText = 'diemdanhsv.com · ' . $cls['ClassCode'] . ' · Phiếu ' . $st['no'] . ' · tổng hợp';
     $W = $pdf->GetPageWidth() - 30;
-    $logo = khtd_pdf_logo();
-    if ($logo) { try { $pdf->Image($logo, 22, 10, 22); } catch (Throwable $e) { /* bỏ logo */ } }
-    $pdf->SetXY(48, 11);
-    $pdf->font(11.5, 'B', KHTD_PDF_NAVY); $pdf->Cell($W - 33, 6, 'TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN, ĐHQG-HCM', 0, 2, 'C');
-    $pdf->font(14, 'B', KHTD_PDF_NAVY); $pdf->Cell($W - 33, 7.5, 'TỔNG HỢP ĐIỂM PHIẾU HỌC TẬP SỐ ' . $st['no'], 0, 2, 'C');
-    $pdf->font(11, 'B', KHTD_PDF_NAVY); $pdf->Cell($W - 33, 6, khtd_short_title($st['title']) . ' · ' . khtd_term_label($cls, null), 0, 2, 'C');
-    $pdf->SetY(36);
+    khtd_pdf_header($pdf, 'TỔNG HỢP ĐIỂM PHIẾU HỌC TẬP SỐ ' . $st['no'], khtd_short_title($st['title']) . ' · ' . khtd_term_label($cls, null));
     $pdf->labelLine('', 'Học phần:', trim(($cls['CourseCode'] ?? '') . ' – ' . ($cls['CourseName'] ?? ''), ' –'), 'B', KHTD_PDF_NAVY);
     $pdf->labelLine('', 'Lớp:', (string) $cls['ClassCode'] . ($lecturer !== '' ? '   ·   Giảng viên: ' . $lecturer : ''), '', [0, 0, 0]);
     $pdf->labelLine('', 'Phiếu:', $st['title'] . ' (' . ($st['maxAttempts'] === 0 ? 'không giới hạn số lần' : $st['maxAttempts'] . ' lần nộp') . ', điểm ' . ($st['scorePolicy'] === 'LAST' ? 'lần cuối' : 'cao nhất') . ')', '', [0, 0, 0]);
