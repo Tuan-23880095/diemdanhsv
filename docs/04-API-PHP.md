@@ -1206,3 +1206,21 @@ Mục đích: mỗi mẫu (một hàng) của bảng mô tả có ô **Ảnh m�
 - Chỉ còn một bản PDF (bỏ "bản GV"): nút "Tải phiếu điểm PDF" trong chi tiết bài in đúng bản gửi kèm email.
 
 Kiểm thử: `tools/smoke_khtd_attempts.php` 67 ca. `?v=20261014-phieuin`.
+
+## 32. GĐ12 — Lưu trữ cuối học kỳ & so sánh qua các năm (14/10/2026) — `api/lib/archive.php`, `api/luu-tru.php`, `pages/luu-tru.html`
+
+Mục đích: hết học kỳ, giảng viên tải toàn bộ dữ liệu của lớp về máy bàn rồi xoá khỏi web để giảm tải (chủ yếu ảnh mẫu) và không giữ dữ liệu cá nhân sinh viên lâu hơn cần thiết; trên web chỉ còn **thống kê không tên** để so sánh chương trình và mức độ người học qua các năm. Quyết định của thầy (14/10/2026): nút xoá **trên web có khoá an toàn** (ngoại lệ có chủ đích với quy tắc "sửa hàng loạt chỉ qua CLI"); lớp cũ **đóng** (INACTIVE), học kỳ sau tạo lớp mới; **xoá hồ sơ SV** không còn học lớp nào khác; giữ **số tổng hợp + dãy điểm ẩn danh**.
+
+**CSDL** — migration `009-class-archives.sql`: bảng `class_archives` (một dòng/lớp; `Status` PACKAGED → RESET; `StatsJSON` thống kê ẩn danh; `PackageName/Bytes/Sha256/PackagedAt`; `DeletedJSON`; `SafetyFile`).
+
+**Bước 1 — gói lưu trữ** `api/luu-tru.php?classId=` (GET, header `X-Token`, GV của lớp/Admin): ZIP gồm `phieu-hoc-tap/*.pdf` (phiếu đánh giá điểm từng phiếu, mục 31), `phieu-hoc-tap/diem-phieu.csv`, `anh-mau/Phieu<n>/<MSSV>-<Ten>/…` (mọi lần làm), `diem-danh.csv`, `bang-diem.csv`, `danh-sach-sinh-vien.csv` (CSV có BOM — mở thẳng bằng Excel), `du-lieu-goc.json` (mọi dòng CSDL của lớp), `thong-ke-an-danh.json`, `00-DOC-TRUOC.txt`. Tạo trong `../private/archives/tmp-*.zip`, tải xong xoá; ghi `class_archives` (SHA-256). Cần PHP `zip` (ZipArchive).
+
+**Bước 2 — xem trước** `archivePreview` (GET {token, classId}): `snapshot` (thống kê sẽ giữ), `plan` (số dòng/ảnh sẽ xoá theo bảng, SV xoá/giữ, trạng thái gói, `blockers`, `canReset`).
+
+**Bước 3 — xoá** `archiveReset` (POST {token, classId, password, confirmCode}). Điều kiện: GV của lớp/Admin; **nhập lại mật khẩu** (dùng chung giới hạn sai mật khẩu `login_user`); **gõ đúng mã lớp**; đã tạo gói trong **14 ngày** và **không có dữ liệu mới sau khi tạo gói** (`archive_last_change`); không có mã điểm danh đang mở. Trước khi xoá ghi **bản cứu** `../private/archives/<Lop>-<thời điểm>-du-lieu-chu.json.gz` (dữ liệu chữ, không gồm ảnh), tự xoá sau **30 ngày** (`archive_purge_safety`). Trong một transaction xoá: complaints, attendance, attendance_keys, sessions, grades, grade_columns, khtd_photos/extra_attempts/submissions/worksheets, enrollments; SV không còn dòng nào ở lớp khác → xoá grade_codes, token GRADE/KHTD, students; `classes.Status = INACTIVE`. Sau đó xoá thư mục ảnh của các phiếu. Bản sao lưu CSDL hằng đêm (`tools/backup.php`, giữ 14 bản) vẫn còn dữ liệu cũ tới khi quay vòng hết.
+
+**Thống kê ẩn danh** (`archive_class_snapshot`, không có họ tên/MSSV/email/ID SV): lớp (mã, học phần, HK, năm học, GV, sĩ số); chuyên cần (từng buổi: có mặt/trễ/vắng/có phép; tỉ lệ có mặt và điểm chuyên cần — mô tả + dãy ẩn danh; số SV cấm thi); bảng điểm (từng cột + điểm tổng có trọng số: n, TB, trung vị, độ lệch chuẩn, min, max, phân bố, dãy ẩn danh); từng phiếu (điểm theo lần được tính, điểm TB và % tối đa từng **tiêu chí rubric**, phân bố **tự đánh giá** Chưa/Tạm được/Tự tin từng mục, phân bố số lần nộp, mức nguy cơ dùng AI, loại bài đặc biệt, số ảnh/SV).
+
+**So sánh qua các năm** `archiveList` (GET): các lớp RESET mà GV đứng tên (Admin: tất cả). `pages/luu-tru.html` mục "So sánh qua các năm": theo môn — mỗi học kỳ một dòng (SV, có mặt TB, tổng kết TB, TB từng phiếu + % ≥ 8), bảng % đạt từng tiêu chí rubric + % "Tự tin"; lớp đang chọn (chưa lưu trữ) hiện nền vàng để so với các năm trước; tải CSV.
+
+**Khác**: giới hạn nộp phiếu đổi thành `khtd_submit_ip` 400/10 phút (cả lớp chung Wi-Fi) + `khtd_submit_student` 8/10 phút/SV. Kiểm thử: `tools/smoke_archive.php` (28 ca). Link "Lưu trữ" ở `pages/lecturer.html` và `khtd/quanly.html`.

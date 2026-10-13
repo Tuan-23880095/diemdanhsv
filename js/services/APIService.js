@@ -119,4 +119,8 @@ class APIService {
   khtdGrantRetake(token, submissionId)        { return this.post('khtdGrantRetake', { token, submissionId }); }
   khtdUploadPhoto(token, worksheetId, sectionId, row, image) { return this.post('khtdUploadPhoto', { token, worksheetId, sectionId, row, image }); }
   khtdStats(token, classId)                   { return this.get('khtdStats', { token, classId }); }
+  /* ---- GĐ12: lưu trữ cuối học kỳ (api/lib/archive.php) ---- */
+  archivePreview(token, classId)              { return this.get('archivePreview', { token, classId }); }
+  archiveList(token)                          { return this.get('archiveList', { token }); }
+  archiveReset(token, classId, password, confirmCode) { return this.post('archiveReset', { token, classId, password, confirmCode }); }
 }

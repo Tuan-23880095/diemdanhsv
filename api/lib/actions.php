@@ -75,6 +75,10 @@ const KNOWN_ACTIONS = [
     'khtdGrantRetake'        => 'POST',
     'khtdUploadPhoto'        => 'POST',
     'khtdStats'              => 'GET',
+    // GĐ12 — lưu trữ cuối học kỳ (api/lib/archive.php, docs/04 mục 32)
+    'archivePreview'         => 'GET',
+    'archiveList'            => 'GET',
+    'archiveReset'           => 'POST',
 ];
 
 /** Điều hướng theo $action, gọi thẳng api_ok()/api_fail() (hai hàm này tự exit). */
@@ -191,6 +195,9 @@ function api_dispatch(string $action, string $method, array $params): void
         case 'khtdGrantRetake':        action_khtd_grant_retake($params);         return;
         case 'khtdUploadPhoto':        action_khtd_upload_photo($params);         return;
         case 'khtdStats':              action_khtd_stats($params);                return;
+        case 'archivePreview':         action_archive_preview($params);           return;
+        case 'archiveList':            action_archive_list($params);              return;
+        case 'archiveReset':           action_archive_reset($params);             return;
     }
 }
 

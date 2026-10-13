@@ -319,7 +319,9 @@ function action_khtd_submit(array $params): void
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không nộp được nữa.'); return; }
     $ip = rate_limit_client_ip();
     rate_limit_guard('khtd_submit_ip', $ip);
+    rate_limit_guard('khtd_submit_student', $me['studentId']);
     rate_limit_record('khtd_submit_ip', $ip);
+    rate_limit_record('khtd_submit_student', $me['studentId']);
     $answers = khtd_clean_meta(khtd_clean_photo_refs(khtd_clean_answers($params['answers'] ?? null), $ws, $me['studentId']));
     $json = json_encode($answers, JSON_UNESCAPED_UNICODE);
 
