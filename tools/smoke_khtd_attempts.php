@@ -2,8 +2,9 @@
 declare(strict_types=1);
 
 /**
- * tools/smoke_khtd_attempts.php — Kiểm thử "làm nhiều lần / làm lại" của phiếu học tập online
- * (docs/04-API-PHP.md mục 28, migration 007). CLI-ONLY, CHỈ chạy trên CSDL THỬ.
+ * tools/smoke_khtd_attempts.php — Kiểm thử "làm nhiều lần / làm lại" (docs/04 mục 29, migration 007)
+ * và "ảnh mẫu vật" (mục 30, migration 008) của phiếu học tập online. CLI-ONLY, CHỈ chạy trên CSDL THỬ.
+ * File cấu hình thử nên có 'khtd' => ['upload_dir' => '/tmp/...'] để ảnh thử không lẫn ảnh thật.
  *
  *   php tools/smoke_khtd_attempts.php --config=../private/config.test.php
  *
@@ -67,6 +68,7 @@ $pdo = db();
 $cleanup = static function (PDO $pdo): void {
     $pdo->exec("DELETE FROM khtd_submissions WHERE StudentID LIKE 'KTA\\_%'");
     $pdo->exec("DELETE FROM khtd_extra_attempts WHERE StudentID LIKE 'KTA\\_%'");
+    $pdo->exec("DELETE FROM khtd_photos WHERE StudentID LIKE 'KTA\\_%'");
     $pdo->exec("DELETE FROM khtd_worksheets WHERE ClassID LIKE 'KTA\\_%'");
     $pdo->exec("DELETE FROM auth_tokens WHERE SubjectID LIKE 'KTA\\_%'");
     $pdo->exec("DELETE FROM enrollments WHERE StudentID LIKE 'KTA\\_%'");
@@ -195,6 +197,47 @@ call('POST', ['action' => 'khtdSetWorksheetPolicy', 'token' => $gv, 'worksheetId
 check('GV cấp lượt khi phiếu không giới hạn → báo không cần', err(call('POST', ['action' => 'khtdGrantRetake', 'token' => $gv, 'submissionId' => $subs[3]]), 'không giới hạn'));
 call('POST', ['action' => 'khtdSetWorksheetStatus', 'token' => $gv, 'worksheetId' => $ws2, 'status' => 'CLOSED']);
 check('phiếu đóng → Làm lại bị chặn', err(call('POST', ['action' => 'khtdRetake', 'token' => $s2, 'worksheetId' => $ws2]), 'đóng'));
+
+echo "== Ảnh mẫu vật ==\n";
+$ws3 = $r3 = null;
+foreach (call('GET', ['action' => 'khtdLecturerList', 'token' => $gv, 'classId' => 'KTA_C1'])['data']['worksheets'] as $w) if ((int) $w['No'] === 3) $ws3 = $w['WorksheetID'];
+$img = imagecreatetruecolor(2400, 1600); imagefill($img, 0, 0, imagecolorallocate($img, 120, 90, 60));
+ob_start(); imagejpeg($img, null, 90); $jpg = 'data:image/jpeg;base64,' . base64_encode((string) ob_get_clean());
+$r = call('GET', ['action' => 'khtdGetWorksheet', 'token' => $s1, 'worksheetId' => $ws3]);
+$mota = ok($r) ? array_values(array_filter($r['data']['worksheet']['schema']['sections'], fn ($x) => $x['id'] === 'mota'))[0] : null;
+check('bảng mô tả mẫu (mota) có photos = true', $mota && $mota['photos'] === true, $mota);
+$pdo->prepare("UPDATE khtd_worksheets SET SchemaJSON = JSON_REMOVE(SchemaJSON, '$.sections[1].photos') WHERE WorksheetID = :w")->execute(['w' => $ws3]);
+$r = call('GET', ['action' => 'khtdGetWorksheet', 'token' => $s1, 'worksheetId' => $ws3]);
+$sec = ok($r) ? $r['data']['worksheet']['schema']['sections'] : [];
+check('phiếu tạo trước khi có tính năng ảnh: mota vẫn nhận ảnh, bảng khác không', ($sec[1]['photos'] ?? null) === true && ($sec[0]['photos'] ?? null) === false, array_map(fn ($x) => [$x['id'], $x['photos'] ?? null], $sec));
+$up = static fn (string $tok, string $secId, $row, string $data) => call('POST', ['action' => 'khtdUploadPhoto', 'token' => $tok, 'worksheetId' => $ws3, 'sectionId' => $secId, 'row' => $row, 'image' => $data]);
+$r = $up($s1, 'mota', 0, $jpg);
+check('SV1 tải ảnh mẫu 1 → nén về cạnh dài 1600', ok($r) && $r['data']['width'] === 1600 && $r['data']['height'] === 1067, $r);
+$p1 = $r['data']['photoId'] ?? '';
+$f = $pdo->query("SELECT WorksheetID, FileName FROM khtd_photos WHERE PhotoID = " . $pdo->quote($p1))->fetch();
+check('tệp ảnh nằm trong thư mục upload', $f && is_file(khtd_upload_dir() . '/' . $f['WorksheetID'] . '/' . $f['FileName']), khtd_upload_dir());
+check('.htaccess chặn web được tạo trong thư mục upload', is_file(khtd_upload_dir() . '/.htaccess'));
+check('bảng không nhận ảnh (hat) → lỗi', err($up($s1, 'hat', 0, $jpg), 'không nhận ảnh'));
+check('hàng ngoài bảng (99) → lỗi', err($up($s1, 'mota', 99, $jpg), 'Mẫu không hợp lệ'));
+check('dữ liệu không phải ảnh → lỗi', err($up($s1, 'mota', 1, 'data:image/png;base64,' . base64_encode('<?php echo 1;')), 'không phải ảnh'));
+$r = $up($s2, 'mota', 0, $jpg); $pOther = $r['data']['photoId'] ?? '';
+check('SV2 tải ảnh của mình', ok($r), $r);
+$ans = ['_photos' => ['mota' => ['0' => [$p1, $pOther, 'PHO_FAKEFAKEFAKE'], '1' => [$p1]], 'hat' => ['0' => [$p1]]]];
+$r = call('POST', ['action' => 'khtdSaveDraft', 'token' => $s1, 'worksheetId' => $ws3, 'answers' => json_encode($ans)]);
+$saved = json_decode((string) $pdo->query("SELECT AnswersJSON FROM khtd_submissions WHERE WorksheetID = " . $pdo->quote($ws3) . " AND StudentID = 'KTA_S1'")->fetchColumn(), true);
+check('lưu nháp chỉ giữ ảnh của chính SV, đúng mẫu (bỏ ảnh SV khác, ID giả, gắn sai hàng)', ok($r) && $saved['_photos'] === ['mota' => [[$p1]]], $saved);
+call('POST', ['action' => 'khtdSetWorksheetPolicy', 'token' => $gv, 'worksheetId' => $ws3, 'maxAttempts' => 2, 'scorePolicy' => 'BEST']);
+$r = call('POST', ['action' => 'khtdSubmit', 'token' => $s1, 'worksheetId' => $ws3, 'answers' => json_encode(['_photos' => ['mota' => ['0' => [$p1]]]])]);
+check('nộp bài kèm ảnh', ok($r), $r);
+check('đã nộp → không tải thêm ảnh', err($up($s1, 'mota', 1, $jpg), 'Làm lại'));
+call('POST', ['action' => 'khtdRetake', 'token' => $s1, 'worksheetId' => $ws3]);
+$r = call('GET', ['action' => 'khtdGetWorksheet', 'token' => $s1, 'worksheetId' => $ws3]);
+check('làm lại: ảnh lần trước đi theo bài', ok($r) && ($r['data']['submission']['answers']['_photos']['mota'][0][0] ?? '') === $p1, $r['data']['submission']['answers'] ?? $r);
+check('làm lại: tải thêm ảnh được', ok($up($s1, 'mota', 1, $jpg)));
+$sid = (string) $pdo->query("SELECT SubmissionID FROM khtd_submissions WHERE WorksheetID = " . $pdo->quote($ws3) . " AND StudentID = 'KTA_S1' AND AttemptNo = 1")->fetchColumn();
+$r = call('GET', ['action' => 'khtdLecturerSubmission', 'token' => $gv, 'submissionId' => $sid]);
+check('GV xem bài: có tham chiếu ảnh + schema có photos', ok($r) && ($r['data']['answers']['_photos']['mota'][0][0] ?? '') === $p1 && ($r['data']['schema']['sections'][1]['photos'] ?? null) === true, $r['data']['answers'] ?? $r);
+$pdo->exec("DELETE FROM khtd_photos WHERE StudentID LIKE 'KTA\\_%'");
 
 $cleanup($pdo);
 echo "\nKết quả: $pass PASS, $fail FAIL\n";

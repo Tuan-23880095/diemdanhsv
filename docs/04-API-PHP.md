@@ -1167,3 +1167,23 @@ Thay đổi ở action cũ: `khtdSaveDraft`/`khtdSubmit` làm trên lần mới 
 **Giao diện**: `khtd/online.html` — hộp xác nhận nộp riêng (đếm ô trống, nói rõ “chỉ nộp một lần” / “lần cuối” / “còn k lượt”, nút mặc định là *Quay lại làm tiếp*), khung các lần làm, nút **Làm lại**. `khtd/quanly.html` — mỗi thẻ phiếu có ô *Số lần nộp* và *Điểm tính*; bảng bài nộp có cột *Lần* (★ = lần được tính) và nút **Cho làm lại**. `?v=20261014-lamlai`.
 
 **Lưu ý vận hành**: mỗi lần nộp gọi Gemini một lần — phiếu “không giới hạn” tốn hạn mức AI hơn; rate limit `khtd_submit_ip` (30/10 phút/IP) tính chung cả lớp nếu dùng chung Wi-Fi. Kiểm thử: `php tools/smoke_khtd_attempts.php --config=<CSDL thử>` (38 ca).
+
+## 30. GĐ11e — Ảnh chụp mẫu vật trong bảng mô tả (14/10/2026)
+
+Mục đích: mỗi mẫu (một hàng) của bảng mô tả có ô **Ảnh mẫu** để sinh viên chụp/tải 1–3 ảnh; giảng viên xem ảnh cạnh phần mô tả khi duyệt. Cách chụp và nén theo phiếu thực địa Long Hải (repo `ThucDiaLongHai_VPH_DCDT`, `noidung01.html`): `<input type="file" accept="image/*" capture="environment">`, nén canvas cạnh dài 1200 px, JPEG 0,7, gửi base64. Khác bản Long Hải: ảnh lưu trên máy chủ của web (không qua Google Drive/Apps Script).
+
+**Bảng nào có ảnh**: bảng `type: table` có `photos: true` trong SchemaJSON. Phiếu tạo trước ngày này không có khoá đó → `khtd_schema_normalize()` bật cho bảng id `mohs` (phiếu 1, M1–M5), `mota` (phiếu 1–4) và `ontap` (phiếu 6, 10 mẫu). Muốn tắt cho một bảng: đặt `"photos": false` trong SchemaJSON.
+
+**CSDL** — migration `008-khtd-photos.sql`: bảng `khtd_photos (PhotoID, WorksheetID, StudentID, SectionID, RowIdx, FileName, Mime, Bytes, Width, Height)`.
+
+**Tệp ảnh**: `../private/khtd_uploads/<WorksheetID>/<PhotoID>.jpg` (ngoài public_html; đổi bằng `app_config()['khtd']['upload_dir']`; tự tạo `.htaccess` chặn web). Máy chủ nén lại bằng GD (cạnh dài ≤ 1600 px, JPEG 82, bỏ EXIF/GPS) nếu có GD. **Sao lưu**: `tools/backup.php` chỉ sao CSDL — thư mục `private/khtd_uploads` cần sao riêng (File Manager/zip) nếu muốn giữ ảnh.
+
+| Action | Method | Ai | Tham số | Ghi chú |
+|---|---|---|---|---|
+| khtdUploadPhoto | POST | SV | token, worksheetId, sectionId, row, image (data URL) | Chỉ khi phiếu mở và lần làm hiện tại chưa nộp; JPG/PNG/WebP ≤ 4 MB; ≤ 80 ảnh/SV/phiếu; rate limit `khtd_upload_ip` 600/10 phút. Trả `photoId`. |
+
+**Xem ảnh**: `khtd/anh.php?id=PHO_…` với header `X-Token` (trang dùng fetch → blob, token không nằm trong URL ảnh). Được xem: SV chủ ảnh (token KHTD/GRADE) hoặc GV/Admin có quyền lớp; còn lại 403.
+
+**Bài làm**: `answers._photos = {sectionId: {rowIdx: [PhotoID…]}}`. `khtdSaveDraft`/`khtdSubmit` lọc qua `khtd_clean_photo_refs()` — chỉ giữ ảnh của chính SV, đúng phiếu, đúng bảng và hàng, ≤ 3 ảnh/hàng. Làm lại (mục 29) chép cả ảnh sang lần mới. Bỏ ảnh (nút ×) chỉ gỡ tham chiếu; tệp giữ lại vì có thể lần nộp trước còn dùng. Chấm AI không gửi ảnh cho Gemini (chỉ gửi số ảnh đính kèm).
+
+**Giao diện**: `khtd/online.html` — cột *Ảnh mẫu* sau tên mẫu, nút *📸 Chụp ảnh* (mở camera) và *🖼 Chọn ảnh* (thư viện, chọn nhiều), bấm ảnh để phóng to; hộp xác nhận nộp báo thêm “N mẫu chưa có ảnh”. `khtd/quanly.html` — cột *Ảnh* trong bài làm. `?v=20261014-anhmau`. Kiểm thử: `tools/smoke_khtd_attempts.php` (53 ca, gồm 15 ca ảnh).

@@ -331,3 +331,20 @@ CREATE TABLE IF NOT EXISTS khtd_extra_attempts (
   UpdatedAt   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (WorksheetID, StudentID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Ảnh chụp mẫu vật trong phiếu online (migration 008)
+CREATE TABLE IF NOT EXISTS khtd_photos (
+  PhotoID     VARCHAR(40)  NOT NULL,
+  WorksheetID VARCHAR(40)  NOT NULL,
+  StudentID   VARCHAR(40)  NOT NULL,
+  SectionID   VARCHAR(40)  NOT NULL,
+  RowIdx      TINYINT UNSIGNED NOT NULL,
+  FileName    VARCHAR(80)  NOT NULL,
+  Mime        VARCHAR(40)  NOT NULL,
+  Bytes       INT UNSIGNED NOT NULL,
+  Width       SMALLINT UNSIGNED NULL,
+  Height      SMALLINT UNSIGNED NULL,
+  CreatedAt   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (PhotoID),
+  KEY idx_photo_owner (WorksheetID, StudentID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

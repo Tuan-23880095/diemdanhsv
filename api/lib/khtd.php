@@ -94,7 +94,7 @@ function khtd_worksheet(string $id): array
     $stmt->execute(['id' => $id]);
     $ws = $stmt->fetch();
     if (!$ws) throw new RuntimeException('Không tìm thấy phiếu.');
-    $ws['schema'] = json_decode((string) $ws['SchemaJSON'], true) ?: [];
+    $ws['schema'] = khtd_schema_normalize(json_decode((string) $ws['SchemaJSON'], true) ?: []);
     return $ws;
 }
 
@@ -293,7 +293,7 @@ function action_khtd_save_draft(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không lưu được nữa.'); return; }
-    $answers = khtd_clean_answers($params['answers'] ?? null);
+    $answers = khtd_clean_photo_refs(khtd_clean_answers($params['answers'] ?? null), $ws, $me['studentId']);
     $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
     $sub = $sum['latest'];
     if ($sub && $sub['Status'] !== 'DRAFT') { api_fail(khtd_already_submitted_msg($sum)); return; }
@@ -319,7 +319,7 @@ function action_khtd_submit(array $params): void
     $ip = rate_limit_client_ip();
     rate_limit_guard('khtd_submit_ip', $ip);
     rate_limit_record('khtd_submit_ip', $ip);
-    $answers = khtd_clean_answers($params['answers'] ?? null);
+    $answers = khtd_clean_photo_refs(khtd_clean_answers($params['answers'] ?? null), $ws, $me['studentId']);
     $json = json_encode($answers, JSON_UNESCAPED_UNICODE);
 
     $extra = khtd_extra_attempts($ws['WorksheetID'], $me['studentId']);
@@ -403,6 +403,143 @@ function action_khtd_retake(array $params): void
     }
     log_audit($me['studentId'], 'STUDENT', 'khtdRetake', 'worksheet', $ws['WorksheetID'], ['submissionId' => $id, 'attemptNo' => $no]);
     api_ok(['attemptNo' => $no, 'submissionId' => $id, 'already' => false]);
+}
+
+/* ------------------------------------------------------------------ */
+/* Ảnh chụp mẫu vật (migration 008, docs/04 mục 30)                     */
+/*  - Bảng có 'photos' => true trong SchemaJSON nhận ảnh theo từng hàng  */
+/*    (mẫu). Phiếu đã tạo trước đây: bảng id mohs/mota/ontap mặc định có. */
+/*  - Tệp lưu NGOÀI public_html (../private/khtd_uploads), xem qua         */
+/*    khtd/anh.php có kiểm token. Bài làm giữ tham chiếu answers._photos =  */
+/*    {sectionId: {rowIdx: [PhotoID, …]}} — làm lại thì ảnh đi theo bài.  */
+/* ------------------------------------------------------------------ */
+
+const KHTD_PHOTO_SECTIONS  = ['mohs', 'mota', 'ontap'];
+const KHTD_PHOTO_PER_ROW   = 3;
+const KHTD_PHOTO_PER_SHEET = 80;                 // mọi lần làm cộng lại, mỗi SV mỗi phiếu
+const KHTD_PHOTO_MAX_BYTES = 4 * 1024 * 1024;    // sau giải mã base64 (trình duyệt đã nén ~200–400 KB)
+const KHTD_PHOTO_MAX_SIDE  = 1600;               // cạnh dài tối đa khi máy chủ nén lại
+
+/** Gắn cờ 'photos' cho các bảng mẫu vật của phiếu tạo trước khi có tính năng ảnh. */
+function khtd_schema_normalize(array $schema): array
+{
+    foreach ($schema['sections'] ?? [] as $i => $s) {
+        if (($s['type'] ?? '') === 'table' && !array_key_exists('photos', $s)) {
+            $schema['sections'][$i]['photos'] = in_array((string) ($s['id'] ?? ''), KHTD_PHOTO_SECTIONS, true);
+        }
+    }
+    return $schema;
+}
+
+function khtd_photo_section(array $schema, string $sectionId): ?array
+{
+    foreach ($schema['sections'] ?? [] as $s) {
+        if (($s['id'] ?? '') === $sectionId && ($s['type'] ?? '') === 'table' && !empty($s['photos'])) return $s;
+    }
+    return null;
+}
+
+function khtd_upload_dir(): string
+{
+    $d = (string) (app_config()['khtd']['upload_dir'] ?? '');
+    if ($d === '') $d = dirname(__DIR__, 2) . '/../private/khtd_uploads';
+    return rtrim($d, '/\\');
+}
+
+/** Nén lại bằng GD (bỏ EXIF/GPS, thu cạnh dài về KHTD_PHOTO_MAX_SIDE). Không có GD → giữ nguyên. */
+function khtd_photo_reencode(string $bin, array $info): array
+{
+    $mime = (string) $info['mime']; $w = (int) $info[0]; $h = (int) $info[1];
+    if (!function_exists('imagecreatefromstring') || !function_exists('imagejpeg')) return [$bin, $mime, $w, $h];
+    $src = @imagecreatefromstring($bin);
+    if ($src === false) return [$bin, $mime, $w, $h];
+    $scale = min(1, KHTD_PHOTO_MAX_SIDE / max($w, $h, 1));
+    $nw = max(1, (int) round($w * $scale)); $nh = max(1, (int) round($h * $scale));
+    $dst = imagecreatetruecolor($nw, $nh);
+    imagefill($dst, 0, 0, imagecolorallocate($dst, 255, 255, 255));   // nền trắng cho PNG trong suốt
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $w, $h);
+    ob_start(); imagejpeg($dst, null, 82); $out = (string) ob_get_clean();
+    imagedestroy($src); imagedestroy($dst);
+    return $out !== '' ? [$out, 'image/jpeg', $nw, $nh] : [$bin, $mime, $w, $h];
+}
+
+/**
+ * Lọc answers._photos: chỉ giữ ảnh của chính SV, đúng phiếu, đúng bảng/hàng, tối đa KHTD_PHOTO_PER_ROW
+ * ảnh mỗi hàng. Chặn gắn ảnh của người khác vào bài mình.
+ */
+function khtd_clean_photo_refs(array $answers, array $ws, string $studentId): array
+{
+    $refs = $answers['_photos'] ?? null;
+    unset($answers['_photos']);
+    if (!is_array($refs) || !$refs) return $answers;
+    $stmt = db()->prepare('SELECT PhotoID, SectionID, RowIdx FROM khtd_photos WHERE WorksheetID = :w AND StudentID = :s');
+    $stmt->execute(['w' => $ws['WorksheetID'], 's' => $studentId]);
+    $own = [];
+    foreach ($stmt->fetchAll() as $p) $own[$p['PhotoID']] = [(string) $p['SectionID'], (int) $p['RowIdx']];
+    $out = [];
+    foreach ($refs as $sec => $rows) {
+        if (!is_array($rows)) continue;
+        foreach ($rows as $r => $ids) {
+            if (!is_array($ids)) continue;
+            foreach ($ids as $pid) {
+                $pid = (string) $pid;
+                if (!isset($own[$pid]) || $own[$pid][0] !== (string) $sec || $own[$pid][1] !== (int) $r) continue;
+                $cur = $out[(string) $sec][(string) $r] ?? [];
+                if (count($cur) >= KHTD_PHOTO_PER_ROW || in_array($pid, $cur, true)) continue;
+                $out[(string) $sec][(string) $r][] = $pid;
+            }
+        }
+    }
+    if ($out) $answers['_photos'] = $out;
+    return $answers;
+}
+
+/**
+ * POST khtdUploadPhoto {token, worksheetId, sectionId, row, image} — image là data URL/base64 JPEG/PNG/WebP
+ * (trang đã nén ~1200 px). Trả photoId; trang tự thêm vào answers._photos rồi lưu nháp.
+ */
+function action_khtd_upload_photo(array $params): void
+{
+    $me = khtd_require_student((string) ($params['token'] ?? ''));
+    $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
+    khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
+    if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không tải ảnh được nữa.'); return; }
+    $ip = rate_limit_client_ip();
+    rate_limit_guard('khtd_upload_ip', $ip);
+    rate_limit_record('khtd_upload_ip', $ip);
+
+    $secId = trim((string) ($params['sectionId'] ?? ''));
+    $sec = khtd_photo_section($ws['schema'], $secId);
+    if (!$sec) { api_fail('Bảng này không nhận ảnh.'); return; }
+    $rowRaw = (string) ($params['row'] ?? '');
+    $row = (int) $rowRaw;
+    if (!preg_match('/^\d{1,3}$/', $rowRaw) || $row >= count($sec['rows'] ?? [])) { api_fail('Mẫu không hợp lệ.'); return; }
+
+    $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
+    if ($sum['latest'] && $sum['latest']['Status'] !== 'DRAFT') { api_fail(khtd_already_submitted_msg($sum)); return; }
+    $cnt = db()->prepare('SELECT COUNT(*) FROM khtd_photos WHERE WorksheetID = :w AND StudentID = :s');
+    $cnt->execute(['w' => $ws['WorksheetID'], 's' => $me['studentId']]);
+    if ((int) $cnt->fetchColumn() >= KHTD_PHOTO_PER_SHEET) { api_fail('Bạn đã tải quá ' . KHTD_PHOTO_PER_SHEET . ' ảnh cho phiếu này.'); return; }
+
+    $data = (string) ($params['image'] ?? '');
+    if (preg_match('#^data:image/[a-z+.-]+;base64,#i', $data, $m)) $data = substr($data, strlen($m[0]));
+    if ($data === '' || strlen($data) > (int) ceil(KHTD_PHOTO_MAX_BYTES * 4 / 3) + 8) { api_fail('Ảnh trống hoặc quá lớn (tối đa 4 MB).'); return; }
+    $bin = base64_decode($data, true);
+    $info = $bin === false ? false : @getimagesizefromstring($bin);
+    if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true)) { api_fail('Tệp không phải ảnh JPG/PNG/WebP.'); return; }
+    [$bin, $mime, $w, $h] = khtd_photo_reencode($bin, $info);
+
+    $base = khtd_upload_dir();
+    $dir = $base . '/' . $ws['WorksheetID'];
+    if (!is_dir($dir) && !@mkdir($dir, 0750, true) && !is_dir($dir)) { error_log('khtd photo: mkdir ' . $dir); api_fail('Máy chủ chưa lưu được ảnh. Báo giảng viên.'); return; }
+    if (!is_file($base . '/.htaccess')) @file_put_contents($base . '/.htaccess', "Require all denied\nDeny from all\n");
+    $id = new_id('PHO');
+    $file = $id . ($mime === 'image/png' ? '.png' : ($mime === 'image/webp' ? '.webp' : '.jpg'));
+    if (@file_put_contents($dir . '/' . $file, $bin, LOCK_EX) === false) { error_log('khtd photo: write ' . $dir . '/' . $file); api_fail('Máy chủ chưa lưu được ảnh. Báo giảng viên.'); return; }
+    db()->prepare('INSERT INTO khtd_photos (PhotoID, WorksheetID, StudentID, SectionID, RowIdx, FileName, Mime, Bytes, Width, Height) VALUES (:id, :w, :s, :sec, :r, :f, :m, :b, :wd, :ht)')
+        ->execute(['id' => $id, 'w' => $ws['WorksheetID'], 's' => $me['studentId'], 'sec' => $secId, 'r' => $row, 'f' => $file,
+                   'm' => $mime, 'b' => strlen($bin), 'wd' => min($w, 65535), 'ht' => min($h, 65535)]);
+    api_ok(['photoId' => $id, 'sectionId' => $secId, 'row' => $row, 'width' => $w, 'height' => $h, 'bytes' => strlen($bin)]);
 }
 
 /* ------------------------------------------------------------------ */
@@ -556,7 +693,8 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
         'dap_an' => $schema['answer_key'] ?? [],
         'dap_an_tong_quat' => $schema['answer_hints'] ?? '',
         'du_lieu_chuan' => $schema['reference'] ?? '',
-        'bai_lam_cua_sinh_vien' => $answers,
+        'bai_lam_cua_sinh_vien' => array_diff_key($answers, ['_photos' => 1]),
+        'so_anh_mau_dinh_kem' => array_sum(array_map(static fn ($rows) => is_array($rows) ? array_sum(array_map(static fn ($x) => is_array($x) ? count($x) : 0, $rows)) : 0, (array) ($answers['_photos'] ?? []))),
     ];
     $body = [
         'systemInstruction' => ['parts' => [['text' => $system]]],
@@ -815,7 +953,7 @@ function action_khtd_lecturer_submission(array $params): void
     $row['answers'] = json_decode((string) $row['AnswersJSON'], true);
     $row['ai'] = $row['AiJSON'] ? json_decode((string) $row['AiJSON'], true) : null;
     if (is_array($row['ai']) && !isset($row['ai']['criteria'])) { $row['aiError'] = $row['ai']['error'] ?? 'Chấm AI thất bại'; $row['ai'] = null; }
-    $row['schema'] = json_decode((string) $row['SchemaJSON'], true);
+    $row['schema'] = khtd_schema_normalize(json_decode((string) $row['SchemaJSON'], true) ?: []);
     $wsRow = khtd_worksheet((string) $row['WorksheetID']);
     $att = khtd_student_attempts((string) $row['WorksheetID'], (string) $row['StudentID']);
     $sum = khtd_attempt_summary($wsRow, $att, khtd_extra_attempts((string) $row['WorksheetID'], (string) $row['StudentID']));
@@ -990,7 +1128,8 @@ function khtd_default_worksheets(): array
     $sdg = function (string $p) { return ['id' => 'sdg', 'type' => 'text', 'title' => 'Liên hệ SDGs / Net Zero', 'prompt' => $p]; };
     $qs = function (array $q) { $out = []; foreach ($q as $i => $t) $out[] = ['id' => 'q' . ($i + 1), 'text' => $t]; return ['id' => 'vandung', 'type' => 'questions', 'title' => 'Câu hỏi vận dụng', 'items' => $out]; };
     $tbl = function (string $id, string $title, array $cols, int $n, string $prefix = 'Mẫu') {
-        return ['id' => $id, 'type' => 'table', 'title' => $title, 'columns' => $cols, 'rows' => array_map(fn($i) => $prefix . ' ' . $i, range(1, $n))];
+        return ['id' => $id, 'type' => 'table', 'title' => $title, 'columns' => $cols, 'rows' => array_map(fn($i) => $prefix . ' ' . $i, range(1, $n)),
+                'photos' => in_array($id, KHTD_PHOTO_SECTIONS, true)];
     };
     $R = $rubric([['hd1', 'Hoạt động mở đầu', 2], ['bang', 'Bảng mô tả mẫu: đủ ô, thuật ngữ đúng', 3], ['ten', 'Gọi tên đúng', 2], ['vd', 'Câu hỏi vận dụng & SDG', 2], ['td', 'Thái độ, trình bày', 1]]);
 
@@ -1071,7 +1210,7 @@ function khtd_default_worksheets(): array
                 $qs(['Hệ số phóng đại đứng của mặt cắt (ngang 1:25.000, đứng 1 cm = 20 m) là bao nhiêu? Nếu không phóng đại, chiều cao cả mặt cắt còn bao nhiêu mm?',
                      'Đoạn nào trên tuyến dốc nhất? Tính độ dốc trung bình đoạn đó và so với toàn tuyến A–B.',
                      'Mô tả 3–4 câu địa hình dọc A–B từ A đến B (đỉnh, sườn, chân sườn, bậc thềm, bãi bồi, lòng sông).']),
-                ['id' => 'ontap', 'type' => 'table', 'title' => 'Ôn tập – thi thử 10 mẫu', 'columns' => ['Khoáng vật / Đá', 'Nhóm', '2 dấu hiệu quyết định', 'Tên'], 'rows' => array_map(fn($i) => 'Mẫu ' . $i, range(1, 10))],
+                ['id' => 'ontap', 'type' => 'table', 'title' => 'Ôn tập – thi thử 10 mẫu', 'columns' => ['Khoáng vật / Đá', 'Nhóm', '2 dấu hiệu quyết định', 'Tên'], 'rows' => array_map(fn($i) => 'Mẫu ' . $i, range(1, 10)), 'photos' => true],
                 ['id' => 'sododd', 'type' => 'text', 'title' => 'Sơ đồ quyết định nhanh', 'prompt' => 'Điền tên đá cho các nhánh: magma xâm nhập sáng/muối tiêu/sẫm; phun trào sáng/xám/đen nặng/đen bóng/nhẹ nổi; trầm tích >2 mm tròn/góc, cát, mịn, hóa thạch+HCl; biến chất phiến mịn, ánh lụa, mica lớn, dải, HCl, cứng 7.'],
                 $self(['Dựng mặt cắt từ bản đồ đồng mức', 'Tính phóng đại đứng', 'Định danh 10 mẫu bất kỳ trong 30 phút', 'Nêu 2 dấu hiệu quyết định mỗi mẫu'])],
             'rubric' => $rubric([['hd1', 'Bảng giao điểm mặt cắt A–B', 3], ['vd', 'Câu hỏi 1–3', 3], ['bang', 'Thi thử 10 mẫu + sơ đồ quyết định', 3], ['td', 'Trình bày', 1]]),

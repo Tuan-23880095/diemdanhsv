@@ -21,7 +21,12 @@ class KhtdController {
     document.getElementById('btn-save').addEventListener('click', () => this.saveDraft(true));
     document.getElementById('btn-submit').addEventListener('click', () => this.submit());
     document.getElementById('btn-retake').addEventListener('click', () => this.retake());
-    document.getElementById('ws-body').addEventListener('input', () => this._scheduleAutosave());
+    document.getElementById('ws-body').addEventListener('input', (e) => { if (!e.target.matches('[data-photo-input]')) this._scheduleAutosave(); });
+    document.getElementById('ws-body').addEventListener('change', (e) => { if (e.target.matches('[data-photo-input]')) this.uploadPhotos(e.target); });
+    document.getElementById('ws-body').addEventListener('click', (e) => {
+      const del = e.target.closest('[data-photo-del]'); if (del) return this.removePhoto(del.dataset.sec, Number(del.dataset.row), del.dataset.photoDel);
+      const img = e.target.closest('img[data-photo-id]'); if (img) this.view.showPhoto(img.dataset.photoId);
+    });
     if (saved) { this.token = saved; this.showList(); } else { this.view.show('login', true); }
   }
 
@@ -51,6 +56,7 @@ class KhtdController {
   async openWorksheet(id) {
     try {
       const d = await this.api.khtdGetWorksheet(this.token, id);
+      this.view.imgToken = this.token;
       this.ws = d.worksheet; this.schema = d.worksheet.schema;
       this.sub = d.submission; this.attempt = d.attempt || null;
       this.view.show('list', false); this.view.show('ws-panel', true);
@@ -99,6 +105,51 @@ class KhtdController {
     finally { btn.disabled = false; btn.textContent = 'Nộp phiếu'; }
   }
 
+  /* Nén ảnh như phiếu thực địa Long Hải: canvas, cạnh dài 1200 px, JPEG 70% (~150–400 KB). Bỏ luôn EXIF/GPS. */
+  _compress(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file); const img = new Image();
+      img.onload = () => {
+        const MAX = 1200; const sc = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+        const c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(img.naturalWidth * sc)); c.height = Math.max(1, Math.round(img.naturalHeight * sc));
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url); resolve(c.toDataURL('image/jpeg', 0.7));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error(`Không đọc được ảnh "${file.name}". Hãy dùng nút "Chụp ảnh" hoặc chọn ảnh JPG/PNG.`)); };
+      img.src = url;
+    });
+  }
+
+  /* Tải ảnh cho một mẫu (một hàng bảng mô tả), tối đa 3 ảnh, rồi lưu nháp ngay để giữ tham chiếu. */
+  async uploadPhotos(input) {
+    const sec = input.dataset.sec; const ri = Number(input.dataset.row);
+    const files = Array.from(input.files || []); input.value = '';
+    if (!files.length || !this.ws) return;
+    const room = 3 - this.view._rowPhotos(sec, ri).length;
+    if (room <= 0) return this.view.msg('Mỗi mẫu tối đa 3 ảnh — bỏ bớt ảnh cũ (nút ×) rồi thêm.', 'err');
+    const take = files.slice(0, room); let done = 0;
+    for (const f of take) {
+      this.view.setPhotoStatus(sec, ri, `Đang nén và gửi ảnh ${done + 1}/${take.length}…`);
+      try {
+        const data = await this._compress(f);
+        const d = await this.api.khtdUploadPhoto(this.token, this.ws.id, sec, ri, data);
+        this.view.addPhoto(sec, ri, d.photoId); done++;
+      } catch (err) { this.view.msg(err.message, 'err'); break; }
+    }
+    this.view.refreshPhotoCell(sec, ri, true);
+    if (done) {
+      await this.saveDraft(false);
+      if (files.length > room) this.view.msg(`Mỗi mẫu tối đa 3 ảnh — đã lấy ${done} ảnh đầu.`, 'info');
+    }
+  }
+
+  async removePhoto(sec, ri, id) {
+    this.view.removePhoto(sec, ri, id);
+    this.view.refreshPhotoCell(sec, ri, true);
+    await this.saveDraft(false);
+  }
+
   /* Bắt đầu lần làm mới: máy chủ chép bài lần trước sang một bản nháp mới. */
   async retake() {
     if (!this.ws) return;
@@ -115,6 +166,7 @@ class KhtdController {
   _initLecturer() {
     this.token = sessionStorage.getItem('dd_token');
     if (!this.token) { document.getElementById('need-login').classList.remove('hidden'); return; }
+    this.view.imgToken = this.token;
     document.getElementById('lec-main').classList.remove('hidden');
     document.getElementById('class-select').addEventListener('change', (e) => { this.classId = e.target.value; if (this.classId) this.loadClass(); });
     document.getElementById('btn-seed').addEventListener('click', () => this.seed());
@@ -134,6 +186,7 @@ class KhtdController {
       if (e.target.id === 'btn-regrade') this.regrade();
       if (e.target.id === 'btn-grant') this.grantRetake(e.target.dataset.grantId);
       const o = e.target.closest('[data-sub-open]'); if (o) this.openSubmission(o.dataset.subOpen);
+      const img = e.target.closest('img[data-photo-id]'); if (img) this.view.showPhoto(img.dataset.photoId);
     });
     document.getElementById('sub-detail').addEventListener('submit', (e) => { if (e.target.id === 'grade-form') { e.preventDefault(); this.grade(); } });
     this.loadClasses();
