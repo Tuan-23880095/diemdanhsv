@@ -107,23 +107,137 @@ function khtd_is_open(array $ws): bool
     return true;
 }
 
-/** GET khtdListWorksheets {token} — phiếu của các lớp SV đang ghi danh + trạng thái bài làm. */
+/* ------------------------------------------------------------------ */
+/* Nhiều lần làm (migration 007, docs/04 mục 28)                        */
+/*  - khtd_worksheets.MaxAttempts: 1 = nộp một lần (mặc định), 0 = không */
+/*    giới hạn; ScorePolicy: BEST (điểm cao nhất) | LAST (lần cuối).     */
+/*  - Mỗi lần làm là một dòng khtd_submissions (AttemptNo 1, 2, …).       */
+/*  - khtd_extra_attempts: lượt GV cấp thêm cho từng SV (bấm nhầm nộp).   */
+/* ------------------------------------------------------------------ */
+
+const KHTD_MAX_ATTEMPTS_CAP = 20;   // trần MaxAttempts và trần lượt cấp thêm
+
+/** Điểm của một lần làm: điểm GV duyệt nếu có, không thì điểm AI; DRAFT/chưa chấm → null. */
+function khtd_attempt_score(array $row): ?float
+{
+    if (($row['Status'] ?? 'DRAFT') === 'DRAFT') return null;
+    if (isset($row['FinalScore']) && $row['FinalScore'] !== null) return (float) $row['FinalScore'];
+    if (isset($row['AiScore']) && $row['AiScore'] !== null) return (float) $row['AiScore'];
+    return null;
+}
+
+/**
+ * Tổng hợp các lần làm của MỘT sinh viên cho MỘT phiếu.
+ * $ws cần MaxAttempts, ScorePolicy, Status, OpenAt, CloseAt; $rows là các dòng khtd_submissions
+ * (cần AttemptNo, Status, AiScore, FinalScore), thứ tự bất kỳ; $extra = lượt GV cấp thêm.
+ *
+ * @return array{latest:?array, used:int, allowed:?int, remaining:?int, counted:?array, countedNo:?int,
+ *               score:?float, policy:string, maxAttempts:int, extra:int, canRetake:bool, rows:array}
+ *         allowed/remaining = null nghĩa là không giới hạn.
+ */
+function khtd_attempt_summary(array $ws, array $rows, int $extra = 0): array
+{
+    usort($rows, static fn ($a, $b) => (int) $a['AttemptNo'] <=> (int) $b['AttemptNo']);
+    $submitted = array_values(array_filter($rows, static fn ($r) => $r['Status'] !== 'DRAFT'));
+    $max = (int) ($ws['MaxAttempts'] ?? 1);
+    $policy = ($ws['ScorePolicy'] ?? 'BEST') === 'LAST' ? 'LAST' : 'BEST';
+    $allowed = $max === 0 ? null : $max + $extra;
+    $used = count($submitted);
+    $counted = null; $score = null;
+    if ($policy === 'LAST') {
+        if ($submitted) { $counted = $submitted[count($submitted) - 1]; $score = khtd_attempt_score($counted); }
+    } else {
+        foreach ($submitted as $r) {            // điểm cao nhất; bằng nhau giữ lần sớm hơn
+            $sc = khtd_attempt_score($r);
+            if ($counted === null || ($sc !== null && ($score === null || $sc > $score))) { $counted = $r; $score = $sc; }
+        }
+    }
+    $latest = $rows ? $rows[count($rows) - 1] : null;
+    $remaining = $allowed === null ? null : max(0, $allowed - $used);
+    $canRetake = $latest !== null && $latest['Status'] !== 'DRAFT' && ($remaining === null || $remaining > 0)
+        && (int) $latest['AttemptNo'] < 255 && khtd_is_open($ws);
+    return ['latest' => $latest, 'used' => $used, 'allowed' => $allowed, 'remaining' => $remaining,
+            'counted' => $counted, 'countedNo' => $counted ? (int) $counted['AttemptNo'] : null, 'score' => $score,
+            'policy' => $policy, 'maxAttempts' => $max, 'extra' => $extra, 'canRetake' => $canRetake, 'rows' => $rows];
+}
+
+/** Các lần làm của SV cho phiếu (không kèm AnswersJSON/AiJSON). */
+function khtd_student_attempts(string $worksheetId, string $studentId): array
+{
+    $stmt = db()->prepare('SELECT SubmissionID, AttemptNo, Status, SubmittedAt, AiScore, FinalScore FROM khtd_submissions WHERE WorksheetID = :w AND StudentID = :s ORDER BY AttemptNo');
+    $stmt->execute(['w' => $worksheetId, 's' => $studentId]);
+    return $stmt->fetchAll();
+}
+
+function khtd_extra_attempts(string $worksheetId, string $studentId): int
+{
+    $stmt = db()->prepare('SELECT Extra FROM khtd_extra_attempts WHERE WorksheetID = :w AND StudentID = :s LIMIT 1');
+    $stmt->execute(['w' => $worksheetId, 's' => $studentId]);
+    return (int) ($stmt->fetchColumn() ?: 0);
+}
+
+/** Tóm tắt gọn để trả cho trình duyệt (SV hoặc GV). */
+function khtd_attempt_public(array $sum): array
+{
+    return ['used' => $sum['used'], 'allowed' => $sum['allowed'], 'remaining' => $sum['remaining'],
+            'maxAttempts' => $sum['maxAttempts'], 'extra' => $sum['extra'], 'policy' => $sum['policy'],
+            'countedNo' => $sum['countedNo'], 'score' => $sum['score'], 'canRetake' => $sum['canRetake'],
+            'currentNo' => $sum['latest'] ? (int) $sum['latest']['AttemptNo'] : null,
+            'attempts' => array_map(static fn ($r) => ['no' => (int) $r['AttemptNo'], 'status' => $r['Status'],
+                'submittedAt' => $r['SubmittedAt'], 'score' => khtd_attempt_score($r),
+                'final' => isset($r['FinalScore']) && $r['FinalScore'] !== null,
+                'counted' => $sum['countedNo'] !== null && (int) $r['AttemptNo'] === $sum['countedNo']], $sum['rows'])];
+}
+
+/** Một dòng mô tả lần nộp cho email kết quả (rỗng khi phiếu chỉ cho nộp một lần). */
+function khtd_attempt_mail_line(array $sum, int $attemptNo): string
+{
+    if ($sum['allowed'] === 1) return '';
+    $of = $sum['allowed'] === null ? '' : '/' . $sum['allowed'];
+    $rule = $sum['policy'] === 'LAST' ? 'điểm LẦN NỘP CUỐI' : 'điểm CAO NHẤT trong các lần';
+    $line = '• Lần nộp: ' . $attemptNo . $of . ' — điểm phiếu được tính theo ' . $rule;
+    if ($sum['score'] !== null) $line .= ' (hiện tại: ' . number_format($sum['score'], 2) . '/10, lần ' . $sum['countedNo'] . ')';
+    return $line . '.';
+}
+
+/** GET khtdListWorksheets {token} — phiếu của các lớp SV đang ghi danh + trạng thái bài làm (nhiều lần). */
 function action_khtd_list_worksheets(array $params): void
 {
     $me = khtd_require_student((string) ($params['token'] ?? ''));
     $stmt = db()->prepare(
-        "SELECT w.WorksheetID, w.ClassID, c.ClassCode, w.No, w.Title, w.Status, w.OpenAt, w.CloseAt, " .
-        "sub.Status AS SubStatus, sub.SubmittedAt, sub.AiScore, sub.FinalScore " .
+        "SELECT w.WorksheetID, w.ClassID, c.ClassCode, w.No, w.Title, w.Status, w.OpenAt, w.CloseAt, w.MaxAttempts, w.ScorePolicy " .
         "FROM khtd_worksheets w JOIN classes c ON c.ClassID = w.ClassID " .
         "JOIN enrollments e ON e.ClassID = w.ClassID AND e.StudentID = :sid AND e.Status = 'ACTIVE' " .
-        "LEFT JOIN khtd_submissions sub ON sub.WorksheetID = w.WorksheetID AND sub.StudentID = :sid2 " .
         "WHERE w.Status <> 'HIDDEN' ORDER BY c.ClassCode, w.No"
     );
-    $stmt->execute(['sid' => $me['studentId'], 'sid2' => $me['studentId']]);
-    api_ok(['student' => $me, 'worksheets' => $stmt->fetchAll()]);
+    $stmt->execute(['sid' => $me['studentId']]);
+    $list = $stmt->fetchAll();
+
+    $subs = db()->prepare('SELECT WorksheetID, AttemptNo, Status, SubmittedAt, AiScore, FinalScore FROM khtd_submissions WHERE StudentID = :s');
+    $subs->execute(['s' => $me['studentId']]);
+    $bySheet = [];
+    foreach ($subs->fetchAll() as $r) $bySheet[$r['WorksheetID']][] = $r;
+    $ext = db()->prepare('SELECT WorksheetID, Extra FROM khtd_extra_attempts WHERE StudentID = :s');
+    $ext->execute(['s' => $me['studentId']]);
+    $extra = [];
+    foreach ($ext->fetchAll() as $r) $extra[$r['WorksheetID']] = (int) $r['Extra'];
+
+    foreach ($list as &$w) {
+        $sum = khtd_attempt_summary($w, $bySheet[$w['WorksheetID']] ?? [], $extra[$w['WorksheetID']] ?? 0);
+        $latest = $sum['latest']; $counted = $sum['counted'];
+        // Giữ các khoá cũ (SubStatus = lần mới nhất; điểm = lần được tính) để trang cũ trong bộ đệm vẫn hiển thị đúng.
+        $w['SubStatus'] = $latest['Status'] ?? null;
+        $w['SubmittedAt'] = $counted['SubmittedAt'] ?? ($latest['SubmittedAt'] ?? null);
+        $w['AiScore'] = $counted['AiScore'] ?? null;
+        $w['FinalScore'] = $counted['FinalScore'] ?? null;
+        $w['attempt'] = khtd_attempt_public($sum);
+        unset($w['attempt']['attempts']);
+    }
+    unset($w);
+    api_ok(['student' => $me, 'worksheets' => $list]);
 }
 
-/** GET khtdGetWorksheet {token, worksheetId} — cấu trúc phiếu (bỏ rubric/đáp án) + bài làm hiện có. */
+/** GET khtdGetWorksheet {token, worksheetId} — cấu trúc phiếu (bỏ rubric/đáp án) + bài làm lần mới nhất + lịch sử các lần. */
 function action_khtd_get_worksheet(array $params): void
 {
     $me = khtd_require_student((string) ($params['token'] ?? ''));
@@ -131,18 +245,28 @@ function action_khtd_get_worksheet(array $params): void
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     $schema = $ws['schema'];
     unset($schema['answer_hints'], $schema['answer_key'], $schema['reference']);   // không lộ đáp án cho SV
-    $stmt = db()->prepare('SELECT SubmissionID, AnswersJSON, Status, SubmittedAt, AiScore, AiJSON, FinalScore, FinalNote FROM khtd_submissions WHERE WorksheetID = :w AND StudentID = :s LIMIT 1');
-    $stmt->execute(['w' => $ws['WorksheetID'], 's' => $me['studentId']]);
-    $sub = $stmt->fetch() ?: null;
+    $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
+    $sub = null;
+    if ($sum['latest']) {
+        $stmt = db()->prepare('SELECT SubmissionID, AttemptNo, AnswersJSON, Status, SubmittedAt, AiScore, AiJSON, FinalScore, FinalNote FROM khtd_submissions WHERE SubmissionID = :id LIMIT 1');
+        $stmt->execute(['id' => $sum['latest']['SubmissionID']]);
+        $sub = $stmt->fetch() ?: null;
+    }
     if ($sub) {
         $sub['answers'] = json_decode((string) $sub['AnswersJSON'], true) ?: new stdClass();
         $sub['ai'] = $sub['AiJSON'] ? json_decode((string) $sub['AiJSON'], true) : null;
         if (is_array($sub['ai']) && !isset($sub['ai']['criteria'])) $sub['ai'] = null;   // bản ghi lỗi, không phải kết quả chấm
+        // Bảng đối chiếu có ĐÁP ÁN: chỉ trả khi GV đã duyệt VÀ SV không còn làm lại được
+        // (nếu không, SV nộp bừa để đọc đáp án rồi làm lại).
+        if (is_array($sub['ai']) && !($sub['Status'] === 'FINAL' && !$sum['canRetake'])) {
+            unset($sub['ai']['doi_chieu']);
+        }
         unset($sub['AnswersJSON'], $sub['AiJSON']);
     }
     api_ok(['worksheet' => ['id' => $ws['WorksheetID'], 'no' => (int) $ws['No'], 'title' => $ws['Title'],
-            'classId' => $ws['ClassID'], 'open' => khtd_is_open($ws), 'closeAt' => $ws['CloseAt'], 'schema' => $schema],
-            'submission' => $sub, 'student' => $me]);
+            'classId' => $ws['ClassID'], 'open' => khtd_is_open($ws), 'closeAt' => $ws['CloseAt'], 'schema' => $schema,
+            'maxAttempts' => (int) $ws['MaxAttempts'], 'scorePolicy' => $ws['ScorePolicy']],
+            'submission' => $sub, 'attempt' => khtd_attempt_public($sum), 'student' => $me]);
 }
 
 function khtd_clean_answers($raw): array
@@ -154,7 +278,15 @@ function khtd_clean_answers($raw): array
     return $raw;
 }
 
-/** POST khtdSaveDraft {token, worksheetId, answers} */
+/** Thông báo khi lần mới nhất đã nộp mà SV lại lưu/nộp tiếp (vd mở hai tab). */
+function khtd_already_submitted_msg(array $sum): string
+{
+    $no = (int) $sum['latest']['AttemptNo'];
+    if ($sum['canRetake']) return 'Bạn đã nộp lần ' . $no . '. Bấm "Làm lại" để bắt đầu lần mới.';
+    return $sum['allowed'] === 1 ? 'Bạn đã nộp phiếu này, không sửa được nữa.' : 'Bạn đã nộp lần ' . $no . ' và đã dùng hết số lần làm phiếu này.';
+}
+
+/** POST khtdSaveDraft {token, worksheetId, answers} — lưu vào lần đang làm (DRAFT). */
 function action_khtd_save_draft(array $params): void
 {
     $me = khtd_require_student((string) ($params['token'] ?? ''));
@@ -162,23 +294,22 @@ function action_khtd_save_draft(array $params): void
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không lưu được nữa.'); return; }
     $answers = khtd_clean_answers($params['answers'] ?? null);
-    $stmt = db()->prepare('SELECT SubmissionID, Status FROM khtd_submissions WHERE WorksheetID = :w AND StudentID = :s LIMIT 1');
-    $stmt->execute(['w' => $ws['WorksheetID'], 's' => $me['studentId']]);
-    $sub = $stmt->fetch();
-    if ($sub && $sub['Status'] !== 'DRAFT') { api_fail('Bạn đã nộp phiếu này, không sửa được nữa.'); return; }
+    $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
+    $sub = $sum['latest'];
+    if ($sub && $sub['Status'] !== 'DRAFT') { api_fail(khtd_already_submitted_msg($sum)); return; }
     $json = json_encode($answers, JSON_UNESCAPED_UNICODE);
     if ($sub) {
-        db()->prepare('UPDATE khtd_submissions SET AnswersJSON = :a WHERE SubmissionID = :id')->execute(['a' => $json, 'id' => $sub['SubmissionID']]);
-        $id = $sub['SubmissionID'];
+        db()->prepare("UPDATE khtd_submissions SET AnswersJSON = :a WHERE SubmissionID = :id AND Status = 'DRAFT'")->execute(['a' => $json, 'id' => $sub['SubmissionID']]);
+        $id = $sub['SubmissionID']; $no = (int) $sub['AttemptNo'];
     } else {
-        $id = new_id('SUB');
-        db()->prepare('INSERT INTO khtd_submissions (SubmissionID, WorksheetID, StudentID, AnswersJSON, Status) VALUES (:id, :w, :s, :a, \'DRAFT\')')
+        $id = new_id('SUB'); $no = 1;
+        db()->prepare('INSERT INTO khtd_submissions (SubmissionID, WorksheetID, StudentID, AttemptNo, AnswersJSON, Status) VALUES (:id, :w, :s, 1, :a, \'DRAFT\')')
             ->execute(['id' => $id, 'w' => $ws['WorksheetID'], 's' => $me['studentId'], 'a' => $json]);
     }
-    api_ok(['submissionId' => $id, 'savedAt' => db_now()]);
+    api_ok(['submissionId' => $id, 'attemptNo' => $no, 'savedAt' => db_now()]);
 }
 
-/** POST khtdSubmit {token, worksheetId, answers} — nộp một lần, chấm AI, gửi email. */
+/** POST khtdSubmit {token, worksheetId, answers} — nộp lần đang làm, chấm AI, gửi email. */
 function action_khtd_submit(array $params): void
 {
     $me = khtd_require_student((string) ($params['token'] ?? ''));
@@ -191,18 +322,22 @@ function action_khtd_submit(array $params): void
     $answers = khtd_clean_answers($params['answers'] ?? null);
     $json = json_encode($answers, JSON_UNESCAPED_UNICODE);
 
-    $stmt = db()->prepare('SELECT SubmissionID, Status FROM khtd_submissions WHERE WorksheetID = :w AND StudentID = :s LIMIT 1');
-    $stmt->execute(['w' => $ws['WorksheetID'], 's' => $me['studentId']]);
-    $sub = $stmt->fetch();
-    if ($sub && $sub['Status'] !== 'DRAFT') { api_fail('Bạn đã nộp phiếu này rồi.'); return; }
+    $extra = khtd_extra_attempts($ws['WorksheetID'], $me['studentId']);
+    $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), $extra);
+    $sub = $sum['latest'];
+    if ($sub && $sub['Status'] !== 'DRAFT') { api_fail(khtd_already_submitted_msg($sum)); return; }
+    if ($sum['remaining'] === 0) { api_fail('Bạn đã dùng hết ' . $sum['allowed'] . ' lần nộp phiếu này. Bấm nhầm nộp thì báo giảng viên để được cấp thêm lượt.'); return; }
     $id = $sub ? $sub['SubmissionID'] : new_id('SUB');
+    $no = $sub ? (int) $sub['AttemptNo'] : 1;
     if ($sub) {
-        db()->prepare("UPDATE khtd_submissions SET AnswersJSON = :a, Status = 'SUBMITTED', SubmittedAt = NOW() WHERE SubmissionID = :id")->execute(['a' => $json, 'id' => $id]);
+        $u = db()->prepare("UPDATE khtd_submissions SET AnswersJSON = :a, Status = 'SUBMITTED', SubmittedAt = NOW() WHERE SubmissionID = :id AND Status = 'DRAFT'");
+        $u->execute(['a' => $json, 'id' => $id]);
+        if ($u->rowCount() === 0) { api_fail('Lần làm này vừa được nộp ở cửa sổ khác. Tải lại trang để xem kết quả.'); return; }
     } else {
-        db()->prepare("INSERT INTO khtd_submissions (SubmissionID, WorksheetID, StudentID, AnswersJSON, Status, SubmittedAt) VALUES (:id, :w, :s, :a, 'SUBMITTED', NOW())")
+        db()->prepare("INSERT INTO khtd_submissions (SubmissionID, WorksheetID, StudentID, AttemptNo, AnswersJSON, Status, SubmittedAt) VALUES (:id, :w, :s, 1, :a, 'SUBMITTED', NOW())")
             ->execute(['id' => $id, 'w' => $ws['WorksheetID'], 's' => $me['studentId'], 'a' => $json]);
     }
-    log_audit($me['studentId'], 'STUDENT', 'khtdSubmit', 'worksheet', $ws['WorksheetID'], ['submissionId' => $id]);
+    log_audit($me['studentId'], 'STUDENT', 'khtdSubmit', 'worksheet', $ws['WorksheetID'], ['submissionId' => $id, 'attemptNo' => $no]);
 
     // Chấm bằng Gemini (fail-open: lỗi AI không làm hỏng lượt nộp).
     khtd_long_request();
@@ -221,14 +356,53 @@ function action_khtd_submit(array $params): void
         db()->prepare('UPDATE khtd_submissions SET AiJSON = :j WHERE SubmissionID = :id')
             ->execute(['j' => json_encode(['error' => $aiErr ?: 'Chưa cấu hình Gemini', 'at' => date('Y-m-d H:i:s')], JSON_UNESCAPED_UNICODE), 'id' => $id]);
     }
+    $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), $extra);
     // Email kết quả tạm tính.
     $mailed = false;
     if ($ai && $me['email'] !== '') {
-        $mailed = khtd_send_result_mail($me, $ws, $ai, null, null);
+        $mailed = khtd_send_result_mail($me, $ws, $ai, null, null, khtd_attempt_mail_line($sum, $no));
         if ($mailed) db()->prepare('UPDATE khtd_submissions SET EmailSentAt = NOW(), EmailTo = :e WHERE SubmissionID = :id')->execute(['e' => $me['email'], 'id' => $id]);
     }
-    api_ok(['submissionId' => $id, 'status' => $ai ? 'AI_GRADED' : 'SUBMITTED', 'ai' => $ai,
+    if ($ai) unset($ai['doi_chieu']);   // có đáp án — SV chỉ xem sau khi GV duyệt (khtdGetWorksheet)
+    api_ok(['submissionId' => $id, 'attemptNo' => $no, 'status' => $ai ? 'AI_GRADED' : 'SUBMITTED', 'ai' => $ai,
+            'attempt' => khtd_attempt_public($sum),
             'emailSent' => $mailed, 'emailTo' => $me['email'], 'aiError' => $ai ? null : ($aiErr ?: 'Chưa cấu hình Gemini — giảng viên sẽ chấm tay.')]);
+}
+
+/**
+ * POST khtdRetake {token, worksheetId} — bắt đầu lần làm mới (DRAFT) khi phiếu cho làm nhiều lần
+ * hoặc GV đã cấp thêm lượt. Bài làm lần trước được chép sang để SV sửa tiếp, không phải làm lại từ đầu.
+ */
+function action_khtd_retake(array $params): void
+{
+    $me = khtd_require_student((string) ($params['token'] ?? ''));
+    $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
+    khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
+    if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không làm lại được.'); return; }
+    $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
+    $latest = $sum['latest'];
+    if (!$latest) { api_fail('Bạn chưa làm phiếu này — cứ làm và nộp bình thường.'); return; }
+    if ($latest['Status'] === 'DRAFT') { api_ok(['attemptNo' => (int) $latest['AttemptNo'], 'submissionId' => $latest['SubmissionID'], 'already' => true]); return; }
+    if (!$sum['canRetake']) {
+        api_fail($sum['allowed'] === 1
+            ? 'Phiếu này chỉ cho nộp một lần. Nếu bấm nhầm nộp, hãy báo giảng viên để được cấp thêm một lượt làm lại.'
+            : 'Bạn đã dùng hết ' . $sum['allowed'] . ' lần làm phiếu này. Nếu cần, hãy báo giảng viên để được cấp thêm lượt.');
+        return;
+    }
+    $prev = db()->prepare('SELECT AnswersJSON FROM khtd_submissions WHERE SubmissionID = :id');
+    $prev->execute(['id' => $latest['SubmissionID']]);
+    $answers = (string) ($prev->fetchColumn() ?: '{}');
+    $no = (int) $latest['AttemptNo'] + 1;
+    $id = new_id('SUB');
+    try {
+        db()->prepare("INSERT INTO khtd_submissions (SubmissionID, WorksheetID, StudentID, AttemptNo, AnswersJSON, Status) VALUES (:id, :w, :s, :n, :a, 'DRAFT')")
+            ->execute(['id' => $id, 'w' => $ws['WorksheetID'], 's' => $me['studentId'], 'n' => $no, 'a' => $answers]);
+    } catch (PDOException $e) {
+        if ($e->getCode() !== '23000') throw $e;     // bấm hai lần liền: lần kia đã tạo xong
+        api_ok(['attemptNo' => $no, 'already' => true]); return;
+    }
+    log_audit($me['studentId'], 'STUDENT', 'khtdRetake', 'worksheet', $ws['WorksheetID'], ['submissionId' => $id, 'attemptNo' => $no]);
+    api_ok(['attemptNo' => $no, 'submissionId' => $id, 'already' => false]);
 }
 
 /* ------------------------------------------------------------------ */
@@ -448,7 +622,7 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
 /* Email                                                                */
 /* ------------------------------------------------------------------ */
 
-function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $final, ?string $note): bool
+function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $final, ?string $note, string $attemptLine = ''): bool
 {
     $to = trim((string) $student['email']);
     if ($to === '') return false;
@@ -456,6 +630,7 @@ function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $fi
     $lines[] = 'Chào ' . $student['fullName'] . ' (' . $student['mssv'] . '),';
     $lines[] = '';
     $lines[] = 'Kết quả Phiếu học tập số ' . $ws['No'] . ' – ' . $ws['Title'] . ' (Khoa học Trái đất, thực tập):';
+    if ($attemptLine !== '') $lines[] = $attemptLine;
     if ($final !== null) {
         $lines[] = '• ĐIỂM CHÍNH THỨC (giảng viên duyệt): ' . number_format($final, 2) . '/10';
         if ($note) { $lines[] = '• Nhận xét của giảng viên: ' . $note; }
@@ -514,6 +689,46 @@ function action_khtd_set_worksheet_status(array $params): void
     api_ok(['worksheetId' => $ws['WorksheetID'], 'status' => $status, 'closeAt' => $closeAt]);
 }
 
+/** POST khtdSetWorksheetPolicy {token, worksheetId, maxAttempts, scorePolicy} — số lần làm (0 = không giới hạn) + cách tính điểm. */
+function action_khtd_set_worksheet_policy(array $params): void
+{
+    $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
+    $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
+    assert_class_access($me, (string) $ws['ClassID']);
+    $raw = trim((string) ($params['maxAttempts'] ?? '1'));
+    if (!preg_match('/^\d{1,2}$/', $raw) || (int) $raw > KHTD_MAX_ATTEMPTS_CAP) { api_fail('Số lần làm phải từ 1 đến ' . KHTD_MAX_ATTEMPTS_CAP . ' (hoặc 0 = không giới hạn).'); return; }
+    $max = (int) $raw;
+    $policy = strtoupper(trim((string) ($params['scorePolicy'] ?? 'BEST')));
+    if (!in_array($policy, ['BEST', 'LAST'], true)) { api_fail('Cách tính điểm không hợp lệ.'); return; }
+    db()->prepare('UPDATE khtd_worksheets SET MaxAttempts = :m, ScorePolicy = :p WHERE WorksheetID = :id')->execute(['m' => $max, 'p' => $policy, 'id' => $ws['WorksheetID']]);
+    $uid = (string) ($me['userId'] ?? ($me['UserID'] ?? ''));
+    log_audit($uid, 'LECTURER', 'khtdSetWorksheetPolicy', 'worksheet', $ws['WorksheetID'], ['maxAttempts' => $max, 'scorePolicy' => $policy]);
+    api_ok(['worksheetId' => $ws['WorksheetID'], 'maxAttempts' => $max, 'scorePolicy' => $policy]);
+}
+
+/**
+ * POST khtdGrantRetake {token, submissionId} — cấp thêm MỘT lượt làm lại cho sinh viên của bài nộp này
+ * (vd bấm nhầm "Nộp phiếu"). SV vào phiếu, bấm "Làm lại": bài cũ được chép sang để sửa tiếp.
+ */
+function action_khtd_grant_retake(array $params): void
+{
+    $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
+    $stmt = db()->prepare('SELECT sub.StudentID, s.MSSV, s.FullName, w.* FROM khtd_submissions sub JOIN students s ON s.StudentID = sub.StudentID JOIN khtd_worksheets w ON w.WorksheetID = sub.WorksheetID WHERE sub.SubmissionID = :id LIMIT 1');
+    $stmt->execute(['id' => trim((string) ($params['submissionId'] ?? ''))]);
+    $row = $stmt->fetch();
+    if (!$row) { api_fail('Không tìm thấy bài nộp.'); return; }
+    assert_class_access($me, (string) $row['ClassID']);
+    if ((int) $row['MaxAttempts'] === 0) { api_fail('Phiếu này không giới hạn số lần làm — sinh viên tự bấm "Làm lại" được.'); return; }
+    if (khtd_extra_attempts($row['WorksheetID'], $row['StudentID']) >= KHTD_MAX_ATTEMPTS_CAP) { api_fail('Đã cấp tối đa ' . KHTD_MAX_ATTEMPTS_CAP . ' lượt thêm cho sinh viên này.'); return; }
+    $uid = (string) ($me['userId'] ?? ($me['UserID'] ?? ''));
+    db()->prepare('INSERT INTO khtd_extra_attempts (WorksheetID, StudentID, Extra, GrantedBy) VALUES (:w, :s, 1, :by) ON DUPLICATE KEY UPDATE Extra = Extra + 1, GrantedBy = :by2')
+        ->execute(['w' => $row['WorksheetID'], 's' => $row['StudentID'], 'by' => $uid, 'by2' => $uid]);
+    $sum = khtd_attempt_summary($row, khtd_student_attempts($row['WorksheetID'], $row['StudentID']), khtd_extra_attempts($row['WorksheetID'], $row['StudentID']));
+    log_audit($uid, 'LECTURER', 'khtdGrantRetake', 'worksheet', $row['WorksheetID'], ['student' => $row['StudentID'], 'extra' => $sum['extra']]);
+    api_ok(['mssv' => $row['MSSV'], 'fullName' => $row['FullName'], 'no' => (int) $row['No'], 'used' => $sum['used'],
+            'allowed' => $sum['allowed'], 'remaining' => $sum['remaining'], 'extra' => $sum['extra'], 'worksheetOpen' => khtd_is_open($row)]);
+}
+
 /**
  * GET khtdActiveCode {token, classId} — mã vào lớp (4 ký tự) đang mở của lớp, dùng ở khtd/quanly.html.
  * Mã này chính là mã điểm danh (attendance_keys.Code, Status OPEN, chưa hết hạn) — sinh viên dùng
@@ -536,22 +751,56 @@ function action_khtd_active_code(array $params): void
     api_ok(['key' => $key, 'sessions' => $s->fetchAll(), 'now' => date('Y-m-d H:i:s')]);
 }
 
-/** GET khtdLecturerList {token, classId} — phiếu + bài nộp của cả lớp. */
+/** GET khtdLecturerList {token, classId} — phiếu + bài nộp (mọi lần làm) của cả lớp. */
 function action_khtd_lecturer_list(array $params): void
 {
     $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
     $classId = trim((string) ($params['classId'] ?? ''));
     assert_class_access($me, $classId);
-    $ws = db()->prepare('SELECT WorksheetID, No, Title, Status, OpenAt, CloseAt FROM khtd_worksheets WHERE ClassID = :c ORDER BY No');
+    $ws = db()->prepare('SELECT WorksheetID, No, Title, Status, OpenAt, CloseAt, MaxAttempts, ScorePolicy FROM khtd_worksheets WHERE ClassID = :c ORDER BY No');
     $ws->execute(['c' => $classId]);
+    $sheets = $ws->fetchAll();
     $subs = db()->prepare(
-        "SELECT sub.SubmissionID, sub.WorksheetID, w.No, s.MSSV, s.FullName, s.Email, sub.Status, sub.SubmittedAt, sub.AiScore, sub.AiModel, sub.FinalScore, sub.FinalNote, sub.EmailSentAt, " .
+        "SELECT sub.SubmissionID, sub.WorksheetID, sub.StudentID, sub.AttemptNo, w.No, s.MSSV, s.FullName, s.Email, sub.Status, sub.SubmittedAt, sub.AiScore, sub.AiModel, sub.FinalScore, sub.FinalNote, sub.EmailSentAt, " .
         "CASE WHEN sub.AiScore IS NULL THEN JSON_UNQUOTE(JSON_EXTRACT(sub.AiJSON, '$.error')) END AS AiError " .
         "FROM khtd_submissions sub JOIN khtd_worksheets w ON w.WorksheetID = sub.WorksheetID JOIN students s ON s.StudentID = sub.StudentID " .
-        "WHERE w.ClassID = :c ORDER BY w.No, s.FullName"
+        "WHERE w.ClassID = :c ORDER BY w.No, s.FullName, sub.StudentID, sub.AttemptNo"
     );
     $subs->execute(['c' => $classId]);
-    api_ok(['worksheets' => $ws->fetchAll(), 'submissions' => $subs->fetchAll()]);
+    $rows = $subs->fetchAll();
+    $sum = khtd_class_summaries($classId, $sheets, $rows);
+    foreach ($rows as &$r) {
+        $x = $sum[$r['WorksheetID'] . '|' . $r['StudentID']];
+        $r['AttemptsUsed'] = $x['used']; $r['AttemptsAllowed'] = $x['allowed']; $r['Extra'] = $x['extra'];
+        $r['IsCounted'] = $x['countedNo'] === (int) $r['AttemptNo'];
+        $r['IsLatest'] = $x['latest'] && (int) $x['latest']['AttemptNo'] === (int) $r['AttemptNo'];
+        unset($r['StudentID']);
+    }
+    unset($r);
+    api_ok(['worksheets' => $sheets, 'submissions' => $rows]);
+}
+
+/**
+ * Tóm tắt nhiều lần làm cho cả lớp: khoá "WorksheetID|StudentID" → khtd_attempt_summary().
+ * $sheets: dòng khtd_worksheets của lớp; $rows: dòng khtd_submissions (cần WorksheetID, StudentID, AttemptNo, Status, AiScore, FinalScore).
+ */
+function khtd_class_summaries(string $classId, array $sheets, array $rows): array
+{
+    $wsById = [];
+    foreach ($sheets as $w) $wsById[$w['WorksheetID']] = $w;
+    $ext = db()->prepare('SELECT x.WorksheetID, x.StudentID, x.Extra FROM khtd_extra_attempts x JOIN khtd_worksheets w ON w.WorksheetID = x.WorksheetID WHERE w.ClassID = :c');
+    $ext->execute(['c' => $classId]);
+    $extra = [];
+    foreach ($ext->fetchAll() as $e) $extra[$e['WorksheetID'] . '|' . $e['StudentID']] = (int) $e['Extra'];
+    $group = [];
+    foreach ($rows as $r) $group[$r['WorksheetID'] . '|' . $r['StudentID']][] = $r;
+    $out = [];
+    foreach ($group as $k => $g) {
+        $wsId = explode('|', $k, 2)[0];
+        if (!isset($wsById[$wsId])) continue;
+        $out[$k] = khtd_attempt_summary($wsById[$wsId], $g, $extra[$k] ?? 0);
+    }
+    return $out;
 }
 
 /** GET khtdLecturerSubmission {token, submissionId} — bài làm đầy đủ + chấm AI. */
@@ -567,6 +816,12 @@ function action_khtd_lecturer_submission(array $params): void
     $row['ai'] = $row['AiJSON'] ? json_decode((string) $row['AiJSON'], true) : null;
     if (is_array($row['ai']) && !isset($row['ai']['criteria'])) { $row['aiError'] = $row['ai']['error'] ?? 'Chấm AI thất bại'; $row['ai'] = null; }
     $row['schema'] = json_decode((string) $row['SchemaJSON'], true);
+    $wsRow = khtd_worksheet((string) $row['WorksheetID']);
+    $att = khtd_student_attempts((string) $row['WorksheetID'], (string) $row['StudentID']);
+    $sum = khtd_attempt_summary($wsRow, $att, khtd_extra_attempts((string) $row['WorksheetID'], (string) $row['StudentID']));
+    $row['attempt'] = khtd_attempt_public($sum);
+    foreach ($row['attempt']['attempts'] as $i => &$a) $a['submissionId'] = $sum['rows'][$i]['SubmissionID'];
+    unset($a);
     unset($row['AnswersJSON'], $row['AiJSON'], $row['SchemaJSON']);
     api_ok($row);
 }
@@ -592,7 +847,9 @@ function action_khtd_lecturer_grade(array $params): void
     if (!empty($params['sendEmail'])) {
         $ai = $row['AiJSON'] ? json_decode((string) $row['AiJSON'], true) : null;
         $student = ['email' => $row['Email'], 'fullName' => $row['FullName'], 'mssv' => $row['MSSV']];
-        $mailed = khtd_send_result_mail($student, $row, $ai, $score, $note);
+        $wsRow = khtd_worksheet((string) $row['WorksheetID']);
+        $sum = khtd_attempt_summary($wsRow, khtd_student_attempts((string) $row['WorksheetID'], (string) $row['StudentID']), khtd_extra_attempts((string) $row['WorksheetID'], (string) $row['StudentID']));
+        $mailed = khtd_send_result_mail($student, $row, $ai, $score, $note, khtd_attempt_mail_line($sum, (int) $row['AttemptNo']));
         if ($mailed) db()->prepare('UPDATE khtd_submissions SET EmailSentAt = NOW(), EmailTo = :e WHERE SubmissionID = :id')->execute(['e' => $row['Email'], 'id' => $row['SubmissionID']]);
     }
     api_ok(['submissionId' => $row['SubmissionID'], 'finalScore' => $score, 'emailSent' => $mailed]);
@@ -693,27 +950,31 @@ function action_khtd_regrade(array $params): void
     api_ok(['submissionId' => $row['SubmissionID'], 'ai' => $ai]);
 }
 
-/** GET khtdExportCsv {token, classId} — MSSV, Họ tên, Phiếu 1..6 (điểm chính thức, hoặc AI nếu chưa duyệt). */
+/** GET khtdExportCsv {token, classId} — MSSV, Họ tên, Phiếu 1..6: điểm được TÍNH của mỗi phiếu
+ *  (cao nhất các lần hoặc lần cuối, theo ScorePolicy; mỗi lần lấy điểm GV duyệt, chưa duyệt thì điểm AI). */
 function action_khtd_export_csv(array $params): void
 {
     $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
     $classId = trim((string) ($params['classId'] ?? ''));
     assert_class_access($me, $classId);
-    $stmt = db()->prepare(
-        "SELECT s.MSSV, s.FullName, w.No, COALESCE(sub.FinalScore, sub.AiScore) AS Score, sub.Status " .
-        "FROM enrollments e JOIN students s ON s.StudentID = e.StudentID " .
-        "LEFT JOIN khtd_worksheets w ON w.ClassID = e.ClassID " .
-        "LEFT JOIN khtd_submissions sub ON sub.WorksheetID = w.WorksheetID AND sub.StudentID = s.StudentID " .
-        "WHERE e.ClassID = :c AND e.Status = 'ACTIVE' ORDER BY s.FullName, w.No"
-    );
-    $stmt->execute(['c' => $classId]);
+    $ws = db()->prepare('SELECT WorksheetID, No, Status, OpenAt, CloseAt, MaxAttempts, ScorePolicy FROM khtd_worksheets WHERE ClassID = :c ORDER BY No');
+    $ws->execute(['c' => $classId]);
+    $sheets = $ws->fetchAll();
+    $st = db()->prepare("SELECT s.StudentID, s.MSSV, s.FullName FROM enrollments e JOIN students s ON s.StudentID = e.StudentID WHERE e.ClassID = :c AND e.Status = 'ACTIVE' ORDER BY s.FullName");
+    $st->execute(['c' => $classId]);
+    $subs = db()->prepare('SELECT sub.WorksheetID, sub.StudentID, sub.AttemptNo, sub.Status, sub.AiScore, sub.FinalScore FROM khtd_submissions sub JOIN khtd_worksheets w ON w.WorksheetID = sub.WorksheetID WHERE w.ClassID = :c');
+    $subs->execute(['c' => $classId]);
+    $sum = khtd_class_summaries($classId, $sheets, $subs->fetchAll());
     $rows = [];
-    foreach ($stmt->fetchAll() as $r) {
-        $k = $r['MSSV'];
-        $rows[$k] = $rows[$k] ?? ['MSSV' => $r['MSSV'], 'HoTen' => $r['FullName']];
-        if ($r['No'] !== null) $rows[$k]['Phieu' . $r['No']] = $r['Score'] === null ? '' : (float) $r['Score'];
+    foreach ($st->fetchAll() as $s) {
+        $r = ['MSSV' => $s['MSSV'], 'HoTen' => $s['FullName']];
+        foreach ($sheets as $w) {
+            $x = $sum[$w['WorksheetID'] . '|' . $s['StudentID']] ?? null;
+            $r['Phieu' . $w['No']] = ($x && $x['score'] !== null) ? $x['score'] : '';
+        }
+        $rows[] = $r;
     }
-    api_ok(['rows' => array_values($rows)]);
+    api_ok(['rows' => $rows]);
 }
 
 /* ------------------------------------------------------------------ */
