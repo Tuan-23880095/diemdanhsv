@@ -1225,3 +1225,29 @@ Mục đích: hết học kỳ, giảng viên tải toàn bộ dữ liệu của
 **So sánh qua các năm** `archiveList` (GET): các lớp RESET mà GV đứng tên (Admin: tất cả). `pages/luu-tru.html` mục "So sánh qua các năm": theo môn — mỗi học kỳ một dòng (SV, có mặt TB, tổng kết TB, TB từng phiếu + % ≥ 8), bảng % đạt từng tiêu chí rubric + % "Tự tin"; lớp đang chọn (chưa lưu trữ) hiện nền vàng để so với các năm trước; tải CSV.
 
 **Khác**: giới hạn nộp phiếu đổi thành `khtd_submit_ip` 400/10 phút (cả lớp chung Wi-Fi) + `khtd_submit_student` 8/10 phút/SV. Kiểm thử: `tools/smoke_archive.php` (28 ca). Link "Lưu trữ" ở `pages/lecturer.html` và `khtd/quanly.html`.
+
+## 33. GĐ11g — Phiếu luyện thi cuối khóa, dự báo điểm thi, điểm cộng & thái độ (14/10/2026) — `api/lib/khtd_exam.php`, `api/lib/khtd_kb.php`
+
+**Mục đích.** Sinh viên luyện bài thi ĐG1.1 (nhận diện 10 mẫu / 30 phút, 1 điểm/mẫu theo rubric). Không tính vào điểm tổng thực tập; kết quả dùng để giảng viên xét điểm cộng và đánh giá thái độ.
+
+**Phiếu 7** (`khtdSeedWorksheets` tạo thêm cho lớp đã có 6 phiếu; mặc định không giới hạn số lần, tính cao nhất). Schema có `exam` = `{sec_per_sample: 180, max_samples: 10, grace_sec: 60, bonus: {step, add, cap, min_level}, key: [{so_hieu, ten}]}`; bảng `nhandien` có `layout: 'specimens'`, `fields` = khoá của `KHTD_EXAM_FIELDS` (loại, số hiệu, tên, 9 cột khoáng vật, 5 cột đá — theo *Bảng nhận diện khoáng vật / đá*).
+
+| Action | Quyền | Mô tả |
+|---|---|---|
+| `khtdStartExam` POST `{token, worksheetId, count}` | SV | Bắt đầu lần luyện với `count` mẫu (1–10). Máy chủ ghi `answers._exam = {startedAt, count, limitSec}`; gọi lại không đặt lại đồng hồ. |
+| `khtdSetExamKey` POST `{token, worksheetId, text}` | GV | "Đáp án bộ mẫu": mỗi dòng `số hiệu = tên`. Có đáp án thì sai tên so với số hiệu → 0; số hiệu so khớp bỏ dấu, bỏ số 0 đầu (KV01 = KV1). Trả `unknown` = tên không có trong danh mục. |
+| `khtdPracticeBoard` GET `{token, worksheetId}` | GV | Bảng luyện tập cả lớp: số lần, số ngày, số mẫu, số loại thạo (≥ 0,75), lần đầu → gần nhất, cao nhất, phút, điểm cộng đề xuất, mức thái độ (Tích cực ≥ 3 lần, ≥ 2 ngày, ≥ 10 mẫu; Có luyện ≥ 3 mẫu; Ít luyện; Chưa luyện). |
+
+**Bấm giờ.** `khtdSaveDraft`/`khtdSubmit`/`khtdUploadPhoto` của phiếu luyện thi: giữ `_exam` của máy chủ (bỏ `_exam` trình duyệt gửi), chặn khi chưa bắt đầu; quá `limitSec + grace_sec` thì chặn lưu nháp và tải ảnh, vẫn cho nộp nhưng ghi cờ "Nộp quá giờ …" (`_exam.elapsedSec`, `overtimeSec`). Trang tự nộp khi đồng hồ về 0. `khtdRetake` của phiếu luyện thi: lần mới trống bài, chỉ giữ ảnh.
+
+**Chấm** (`khtd_grade` → `khtd_exam_grade`): luôn có điểm. (1) Rubric tự động `khtd_exam_score_sample` đối chiếu bộ tri thức chuẩn `khtd_kb()` (16 khoáng vật, 22 đá; nguồn: giáo trình thực tập ĐCĐC BMCS + sách, xem `docs/07-TRI-THUC-NHAN-DIEN-MAU.md`). (2) Có Gemini: gửi bài + dữ liệu chuẩn + ảnh mẫu (≤ 2 ảnh/mẫu, nén 768 px); Gemini được nâng tối đa 1 mức (cách diễn đạt khác), hạ mức khi sai kiến thức, cho 0 khi ảnh rõ ràng không khớp tên. Gemini lỗi → giữ điểm rubric tự động (`model = rubric-tu-dong`, ghi `exam.note`). Điểm lần luyện = trung bình × 10 = **dự báo điểm bài thi**. AiJSON thêm `exam {count, samples[{stt, kind, key, level, thieu}], time}`, `sua_bai`, `phan_bien`.
+
+**Cần sửa (mọi phiếu).** AiJSON có `sua_bai: [{muc, van_de, cach_sua}]` — phiếu thường do Gemini liệt kê từng chỗ sai/thiếu; phiếu luyện thi sinh từ rubric kèm dữ liệu chuẩn. Hiển thị ở kết quả SV, trang duyệt GV, email (mục "CẦN SỬA / BỔ SUNG") và phiếu điểm PDF. `phan_bien` (Gemini phản biện đáp án/rubric) chỉ GV xem.
+
+**Dự báo điểm thi từ phiếu 1–6.** `khtd_exam_forecast` chấm thử các bảng có cột "Tên …" theo cùng rubric (hàng "Mẫu i" coi như có số hiệu) → `khtdGetWorksheet.forecast` (sau khi nộp) và `khtdListWorksheets.examForecast` `{practice[], describe{score10, samples, perfect, sheets}}`. Phiếu luyện thi: SV xem ngay bảng đối chiếu chuẩn (không vào điểm tổng); phiếu thường vẫn giữ quy tắc cũ.
+
+**CSV** (`khtdExportCsv`): phiếu luyện thi không xuất cột `PhieuN`; thay bằng `LuyenThiN_DuBaoCaoNhat`, `LuyenThiN_SoLan`, `LuyenThiN_LoaiMauDaThao`, `DiemCong_DeXuat`, `ThaiDo_LuyenTap`. Trang GV xuất mọi cột trả về.
+
+**Tài liệu in cho SV:** `khtd/phieu/Bang_NhanDien_KhoangVat_Da.pdf`, `khtd/phieu/Rubric_NhanDien_KhoangDa.pdf` (liên kết ở `khtd/index.html` và trong phiếu 7).
+
+**Kiểm thử:** `php tools/smoke_khtd_exam.php --config=<cấu hình CSDL thử>` (67 kiểm tra: so khớp tên, bậc rubric đá/khoáng, bấm giờ, chống sửa giờ, quá giờ, đáp án bộ mẫu, bảng luyện tập, CSV, dự báo từ phiếu 1, email).

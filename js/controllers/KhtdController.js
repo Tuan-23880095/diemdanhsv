@@ -29,8 +29,12 @@ class KhtdController {
       this.view.meta.pasteChars = (this.view.meta.pasteChars | 0) + t.length; this.view.meta.pasteCount = (this.view.meta.pasteCount | 0) + 1;
     });
     document.getElementById('ws-body').addEventListener('keydown', (e) => { if (e.target.matches('textarea') && e.key.length === 1) this.view.meta.keys = (this.view.meta.keys | 0) + 1; });
-    document.getElementById('ws-body').addEventListener('change', (e) => { if (e.target.matches('[data-photo-input]')) this.uploadPhotos(e.target); });
+    document.getElementById('ws-body').addEventListener('change', (e) => {
+      if (e.target.matches('[data-photo-input]')) this.uploadPhotos(e.target);
+      if (e.target.matches('[data-spec-kind]')) { this.view.setSpecKind(e.target.dataset.r, e.target.value); this._scheduleAutosave(); }
+    });
     document.getElementById('ws-body').addEventListener('click', (e) => {
+      if (e.target.closest('#btn-exam-start')) return this.startExam();
       const del = e.target.closest('[data-photo-del]'); if (del) return this.removePhoto(del.dataset.sec, Number(del.dataset.row), del.dataset.photoDel);
       const img = e.target.closest('img[data-photo-id]'); if (img) this.view.showPhoto(img.dataset.photoId);
     });
@@ -50,10 +54,10 @@ class KhtdController {
 
   async showList() {
     this.view.show('login', false); this.view.show('ws-panel', false); this.view.show('list', true);
-    clearTimeout(this.autosave);
+    clearTimeout(this.autosave); this._stopTimer();
     try {
       const d = await this.api.khtdListWorksheets(this.token);
-      this.view.setStudent(d.student); this.view.renderWorksheetList(d.worksheets);
+      this.view.setStudent(d.student); this.view.renderWorksheetList(d.worksheets, d.examForecast);
     } catch (err) {
       sessionStorage.removeItem('khtd_token'); this.token = null;
       this.view.show('list', false); this.view.show('login', true); this.view.msg(err.message, 'err');
@@ -67,10 +71,37 @@ class KhtdController {
       this.ws = d.worksheet; this.schema = d.worksheet.schema;
       this.sub = d.submission; this.attempt = d.attempt || null;
       this.view.show('list', false); this.view.show('ws-panel', true);
-      this.view.renderWorksheet(d.worksheet, d.submission, d.attempt);
+      this.view.renderWorksheet(d.worksheet, d.submission, d.attempt, { exam: d.exam || null, forecast: d.forecast || null });
+      this._stopTimer();
+      const clock = d.exam && d.exam.clock;
+      if (clock && d.worksheet.open && (!d.submission || d.submission.Status === 'DRAFT')) this._startTimer(clock);
       window.scrollTo(0, 0);
     } catch (err) { this.view.msg(err.message, 'err'); }
   }
+
+  /* ---------- Luyện thi: bấm giờ (giờ máy chủ; trình duyệt chỉ đếm ngược để hiển thị) ---------- */
+  async startExam() {
+    const sel = document.getElementById('exam-count'); const btn = document.getElementById('btn-exam-start');
+    if (!this.ws || !sel) return;
+    btn.disabled = true;
+    try {
+      const d = await this.api.khtdStartExam(this.token, this.ws.id, Number(sel.value));
+      await this.openWorksheet(this.ws.id);
+      if (!d.already) this.view.msg(`Bắt đầu! ${d.clock.count} mẫu — ${Math.round(d.clock.limitSec / 60)} phút. Hết giờ bài tự nộp.`, 'ok');
+    } catch (err) { this.view.msg(err.message, 'err'); btn.disabled = false; }
+  }
+
+  _startTimer(clock) {
+    this._deadline = Date.now() + clock.remainingSec * 1000; this._autoSent = false;
+    const tick = () => {
+      const left = (this._deadline - Date.now()) / 1000;
+      this.view.renderExamTimer(left, left <= 0);
+      if (left <= 0 && !this._autoSent) { this._autoSent = true; this._stopTimer(); this.submit(true); }
+    };
+    tick(); this._timer = setInterval(tick, 1000);
+  }
+
+  _stopTimer() { clearInterval(this._timer); this._timer = null; }
 
   _scheduleAutosave() {
     clearTimeout(this.autosave);
@@ -83,15 +114,18 @@ class KhtdController {
       const d = await this.api.khtdSaveDraft(this.token, this.ws.id, this.view.collectAnswers(this.schema));
       const el = document.getElementById('save-state'); if (el) el.textContent = 'Đã lưu nháp ' + (d.savedAt || '').slice(11, 16);
       if (manual) this.view.msg('Đã lưu nháp. Bạn có thể quay lại làm tiếp trong thời gian phiếu còn mở.', 'ok');
-    } catch (err) { if (manual) this.view.msg(err.message, 'err'); }
+    } catch (err) {
+      if (manual) this.view.msg(err.message, 'err');
+      if (/hết giờ/i.test(err.message) && this._timer && !this._autoSent) { this._autoSent = true; this._stopTimer(); this.submit(true); }
+    }
   }
 
-  async submit() {
+  async submit(auto = false) {
     if (!this.ws) return;
     const answers = this.view.collectAnswers(this.schema);
     const att = this.attempt || {};
     const attemptNo = this.sub && this.sub.Status === 'DRAFT' ? Number(this.sub.AttemptNo || 1) : 1;
-    const ok = await this.view.confirmSubmit(Object.assign({
+    const ok = auto === true ? true : await this.view.confirmSubmit(Object.assign({
       no: this.ws.no, attemptNo, allowed: att.allowed === undefined ? 1 : att.allowed, extra: att.extra || 0,
       remainingAfter: att.remaining == null ? (att.allowed === undefined ? 0 : null) : Math.max(0, att.remaining - 1),
     }, this.view.countBlanks(this.schema, answers)));
@@ -100,8 +134,9 @@ class KhtdController {
     const btn = document.getElementById('btn-submit'); btn.disabled = true; btn.textContent = 'Đang nộp và chấm…';
     try {
       const d = await this.api.khtdSubmit(this.token, this.ws.id, answers);
-      let m = `Đã nộp thành công${d.attemptNo > 1 ? ' lần ' + d.attemptNo : ''}.`;
-      if (d.ai) m += ` Điểm tạm tính: ${d.ai.total}/10.`;
+      this._stopTimer();
+      let m = `${auto === true ? 'Hết giờ — bài đã tự nộp' : 'Đã nộp thành công'}${d.attemptNo > 1 ? ' lần ' + d.attemptNo : ''}.`;
+      if (d.ai) m += d.ai.exam ? ` Dự báo điểm bài thi: ${d.ai.total}/10.` : ` Điểm tạm tính: ${d.ai.total}/10.`;
       if (d.attempt && d.attempt.score != null && (d.attempt.allowed !== 1 || d.attempt.used > 1)) m += ` Điểm phiếu đang tính: ${d.attempt.score}/10.`;
       if (d.emailSent) m += ` Kết quả đã gửi tới ${d.emailTo}.`;
       else if (d.ai) m += ' (Không gửi được email — xem kết quả tại đây.)';
@@ -164,7 +199,9 @@ class KhtdController {
     try {
       const d = await this.api.khtdRetake(this.token, this.ws.id);
       await this.openWorksheet(this.ws.id);
-      this.view.msg(`Bắt đầu lần ${d.attemptNo}. Bài lần trước đã được chép sang — sửa rồi bấm “Nộp phiếu”.`, 'ok');
+      this.view.msg(this.schema && this.schema.exam
+        ? `Lần luyện ${d.attemptNo}: chọn số mẫu rồi bấm “Bắt đầu tính giờ”. Ảnh mẫu lần trước được giữ — thay ảnh nếu luyện mẫu khác.`
+        : `Bắt đầu lần ${d.attemptNo}. Bài lần trước đã được chép sang — sửa rồi bấm “Nộp phiếu”.`, 'ok');
     } catch (err) { this.view.msg(err.message, 'err'); }
     finally { btn.disabled = false; }
   }
@@ -182,7 +219,13 @@ class KhtdController {
     document.getElementById('btn-reload').addEventListener('click', () => this.loadClass());
     document.getElementById('btn-open-code').addEventListener('click', () => this.openCode());
     document.getElementById('btn-refresh-code').addEventListener('click', () => this.loadCode());
-    document.getElementById('lec-ws').addEventListener('click', (e) => { const b = e.target.closest('[data-ws-toggle]'); if (b) this.toggleWs(b.dataset.wsToggle, b.dataset.next); });
+    document.getElementById('lec-ws').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-ws-toggle]'); if (b) return this.toggleWs(b.dataset.wsToggle, b.dataset.next);
+      const k = e.target.closest('[data-exam-key-save]'); if (k) return this.saveExamKey(k);
+      const p = e.target.closest('[data-practice]'); if (p) return this.loadPractice(p.dataset.practice);
+    });
+    const pr = document.getElementById('lec-practice');
+    if (pr) pr.addEventListener('click', (e) => { if (e.target.id === 'practice-close') pr.classList.add('hidden'); });
     document.getElementById('lec-ws').addEventListener('change', (e) => { const c = e.target.closest('[data-ws-card]'); if (c && e.target.dataset.policy) this.savePolicy(c); });
     document.getElementById('lec-subs').addEventListener('click', (e) => {
       const g = e.target.closest('[data-grant]'); if (g) return this.grantRetake(g.dataset.grant);
@@ -211,6 +254,7 @@ class KhtdController {
   }
 
   async loadClass() {
+    this.view.renderPracticeBoard(null);
     try { this.view.renderLecturer(await this.api.khtdLecturerList(this.token, this.classId)); }
     catch (err) { this.view.msg(err.message, 'err'); }
     this.loadCode();
@@ -262,7 +306,24 @@ class KhtdController {
 
   async seed() {
     if (!this.classId) return this.view.msg('Chọn lớp trước.', 'err');
-    try { const d = await this.api.khtdSeedWorksheets(this.token, this.classId); this.view.msg(`Đã tạo ${d.created.length} phiếu mặc định.`, 'ok'); this.loadClass(); }
+    try { const d = await this.api.khtdSeedWorksheets(this.token, this.classId); this.view.msg(d.created.length ? `Đã tạo ${d.created.length} phiếu mặc định (phiếu số ${d.created.map((x) => x.no).join(', ')}).` : 'Lớp đã đủ các phiếu mặc định.', 'ok'); this.loadClass(); }
+    catch (err) { this.view.msg(err.message, 'err'); }
+  }
+
+  /* Đáp án bộ mẫu của phiếu luyện thi (mỗi dòng "số hiệu = tên"). */
+  async saveExamKey(btn) {
+    const card = btn.closest('[data-ws-card]'); const ta = card && card.querySelector('[data-exam-key]');
+    if (!ta) return;
+    try {
+      const d = await this.api.khtdSetExamKey(this.token, btn.dataset.examKeySave, ta.value);
+      let m = d.count ? `Đã lưu đáp án ${d.count} mẫu.` : 'Đã xoá đáp án bộ mẫu (chấm theo tên sinh viên ghi).';
+      if (d.unknown && d.unknown.length) m += ' Không có trong danh mục mẫu (sẽ so đúng chữ): ' + d.unknown.join('; ');
+      this.view.msg(m, d.unknown && d.unknown.length ? 'err' : 'ok');
+    } catch (err) { this.view.msg(err.message, 'err'); }
+  }
+
+  async loadPractice(wsId) {
+    try { this.view.renderPracticeBoard(await this.api.khtdPracticeBoard(this.token, wsId)); document.getElementById('lec-practice').scrollIntoView({ behavior: 'smooth' }); }
     catch (err) { this.view.msg(err.message, 'err'); }
   }
 
@@ -343,7 +404,8 @@ class KhtdController {
     if (!this.classId) return this.view.msg('Chọn lớp trước.', 'err');
     try {
       const d = await this.api.khtdExportCsv(this.token, this.classId);
-      const cols = ['MSSV', 'HoTen', 'Phieu1', 'Phieu2', 'Phieu3', 'Phieu4', 'Phieu5', 'Phieu6'];
+      const cols = []; d.rows.forEach((r) => Object.keys(r).forEach((k) => { if (!cols.includes(k)) cols.push(k); }));
+      if (!cols.length) cols.push('MSSV', 'HoTen');
       const csv = [cols.join(',')].concat(d.rows.map((r) => cols.map((c) => '"' + String(r[c] == null ? '' : r[c]).replace(/"/g, '""') + '"').join(','))).join('\r\n');
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' })); a.download = `khtd_phieu_${this.classId}.csv`; a.click();
     } catch (err) { this.view.msg(err.message, 'err'); }

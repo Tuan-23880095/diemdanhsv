@@ -9,8 +9,8 @@
 <link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png?v=20261008-logo">
 <meta name="theme-color" content="#0b4f9e">
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css?v=20261014-luutru">
-<script src="../js/ui/logo-fallback.js?v=20261014-luutru"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261014-luyenthi">
+<script src="../js/ui/logo-fallback.js?v=20261014-luyenthi"></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
@@ -47,7 +47,7 @@
   <section id="list" class="hidden">
     <h2 class="mb-3 text-lg font-bold">Phiếu học tập của bạn</h2>
     <div id="ws-list" class="space-y-2"></div>
-    <p class="mt-4 text-xs text-slate-500">Bản in A4 của các phiếu: <a class="underline" href="index.html">trang lớp học</a>. Kết quả chấm (tạm tính bởi trợ lý AI theo Rubric R2, giảng viên duyệt lại) được gửi về email sinh viên.</p>
+    <p class="mt-4 text-xs text-slate-500">Bản in A4 của các phiếu: <a class="underline" href="index.html">trang lớp học</a>. Kết quả chấm (tạm tính bởi trợ lý AI theo Rubric R2, giảng viên duyệt lại) được gửi về email sinh viên, kèm danh sách chỗ cần sửa. Phiếu <b>luyện thi cuối khóa</b> chỉ để luyện — không tính vào điểm tổng.</p>
   </section>
 
   <!-- Làm phiếu -->
@@ -68,10 +68,11 @@
   </section>
 </main>
 
-<script src="../js/config/config.js?v=20261014-luutru"></script>
-<script src="../js/services/APIService.js?v=20261014-luutru"></script>
-<script src="../js/views/KhtdView.js?v=20261014-luutru"></script>
-<script src="../js/controllers/KhtdController.js?v=20261014-luutru"></script>
+<script src="../js/config/config.js?v=20261014-luyenthi"></script>
+<script src="../js/services/APIService.js?v=20261014-luyenthi"></script>
+<script src="../js/views/KhtdView.js?v=20261014-luyenthi"></script>
+<script src="../js/views/KhtdExamView.js?v=20261014-luyenthi"></script>
+<script src="../js/controllers/KhtdController.js?v=20261014-luyenthi"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     new KhtdController(new APIService(CONFIG.API_URL), new KhtdView(), 'student').init();

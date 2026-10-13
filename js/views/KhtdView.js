@@ -20,17 +20,18 @@ class KhtdView {
   }
 
   /* Ô ảnh của một mẫu — giống ô chụp ảnh của phiếu thực địa Long Hải: viền đứt, mở thẳng camera. */
-  _photoCell(sec, ri, editable) {
+  _photoCell(sec, ri, editable, tag = 'td') {
     const n = this._rowPhotos(sec, ri).length;
     const add = editable && n < 3 ? `<div class="mt-1 flex flex-col gap-1">
         <label class="cursor-pointer rounded border border-dashed border-green-500 bg-green-50 px-1 py-1 text-center text-xs font-semibold text-green-800 hover:bg-green-100">📸 Chụp ảnh<input type="file" accept="image/*" capture="environment" class="hidden" data-photo-input data-sec="${this._esc(sec)}" data-row="${ri}"/></label>
         <label class="cursor-pointer rounded border border-dashed border-slate-400 px-1 py-1 text-center text-xs text-slate-700 hover:bg-slate-50">🖼 Chọn ảnh<input type="file" accept="image/*" multiple class="hidden" data-photo-input data-sec="${this._esc(sec)}" data-row="${ri}"/></label></div>` : '';
-    return `<td class="border p-1 align-top" style="min-width:7.5rem" data-photo-cell="${this._esc(sec)}:${ri}"><div class="flex flex-wrap gap-1">${this._thumbsHtml(sec, ri, editable)}</div>${add}<p class="hidden text-xs text-blue-700" data-photo-status></p></td>`;
+    const cls = tag === 'div' ? 'rounded border border-dashed border-green-300 bg-green-50/40 p-1' : 'border p-1 align-top';
+    return `<${tag} class="${cls}" style="min-width:7.5rem" data-photo-cell="${this._esc(sec)}:${ri}"><div class="flex flex-wrap gap-1">${this._thumbsHtml(sec, ri, editable)}</div>${add}<p class="hidden text-xs text-blue-700" data-photo-status></p></${tag}>`;
   }
 
   refreshPhotoCell(sec, ri, editable = true) {
     const td = document.querySelector(`[data-photo-cell="${CSS.escape(sec + ':' + ri)}"]`); if (!td) return;
-    td.outerHTML = this._photoCell(sec, ri, editable);
+    td.outerHTML = this._photoCell(sec, ri, editable, td.tagName === 'DIV' ? 'div' : 'td');
     this.hydratePhotos(this.$('ws-body'));
   }
 
@@ -113,10 +114,10 @@ class KhtdView {
     return `Đã nộp ${of} · tính điểm ${att.policy === 'LAST' ? 'lần cuối' : 'cao nhất'}`;
   }
 
-  renderWorksheetList(list) {
+  renderWorksheetList(list, forecast) {
     const box = this.$('ws-list'); if (!box) return;
     if (!list.length) { box.innerHTML = '<p class="text-slate-500">Lớp của bạn chưa có phiếu nào được mở.</p>'; return; }
-    box.innerHTML = list.map((w) => {
+    box.innerHTML = (this.forecastCardHtml ? this.forecastCardHtml(forecast) : '') + list.map((w) => {
       const st = w.SubStatus || 'Chưa làm';
       const att = w.attempt || null;
       const draftNo = att && att.currentNo > 1 && st === 'DRAFT' ? ` lần ${att.currentNo}` : '';
@@ -124,19 +125,42 @@ class KhtdView {
       const score = w.FinalScore != null ? `<b>${this._esc(w.FinalScore)}</b>/10` : (w.AiScore != null ? `tạm ${this._esc(w.AiScore)}/10` : '');
       const open = w.Status === 'OPEN';
       const badge = this._attemptBadge(att);
-      const retake = att && att.canRetake ? '<br/><span class="text-xs font-semibold text-blue-700">Có thể làm lại</span>' : '';
+      const retake = att && att.canRetake ? `<br/><span class="text-xs font-semibold text-blue-700">${w.IsExam ? 'Luyện tiếp được' : 'Có thể làm lại'}</span>` : '';
+      const examTag = w.IsExam ? '<br/><span class="inline-block rounded bg-amber-100 px-1.5 text-xs font-semibold text-amber-900">Luyện thi · không tính điểm tổng</span>' : '';
       return `<button data-ws="${this._esc(w.WorksheetID)}" class="ws-item flex w-full items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left shadow-sm hover:border-blue-400">
-        <span><span class="text-xs text-slate-500">${this._esc(w.ClassCode)} · Phiếu ${this._esc(w.No)}</span><br/><span class="font-semibold">${this._esc(w.Title)}</span>${badge ? `<br/><span class="text-xs text-slate-500">${this._esc(badge)}</span>` : ''}</span>
+        <span><span class="text-xs text-slate-500">${this._esc(w.ClassCode)} · Phiếu ${this._esc(w.No)}</span><br/><span class="font-semibold">${this._esc(w.Title)}</span>${examTag}${badge ? `<br/><span class="text-xs text-slate-500">${this._esc(badge)}</span>` : ''}</span>
         <span class="shrink-0 text-right text-sm"><span class="${open ? 'text-green-700' : 'text-slate-400'}">${open ? 'Đang mở' : 'Đã đóng'}</span><br/>${this._esc(label)} ${score}${retake}</span></button>`;
     }).join('');
   }
 
-  renderWorksheet(ws, sub, att) {
+  renderWorksheet(ws, sub, att, extra) {
     this.$('ws-title').textContent = `Phiếu học tập số ${ws.no}: ${ws.title}`;
     const locked = sub && sub.Status !== 'DRAFT';
     const a = (sub && sub.answers) || {};
     this.photos = JSON.parse(JSON.stringify(a._photos || {}));
     this.meta = Object.assign({ pasteChars: 0, pasteCount: 0, keys: 0 }, a._meta || {});
+    this.extra = extra || {};
+    const ex = this.extra.exam;
+    if (ws.schema.exam && ex) {   // phiếu luyện thi: giới thiệu → chọn số mẫu, bấm giờ → thẻ từng mẫu
+      const s = this._specSection(ws.schema);
+      const clock = ex.clock;
+      const editable = !locked && ws.open && !!clock;
+      let body = this.examIntroHtml(ws, ex);
+      if (!locked && ws.open && !clock) body += this.examStartHtml(ex);
+      else if (s) {
+        const n = clock ? clock.count : Math.max(1, Number((a._exam || {}).count) || 1);
+        body = (editable ? '<div id="exam-timer"></div>' : '') + body + `<h3 class="mt-4 font-bold">${this._esc(s.title)}</h3><p class="text-xs text-slate-600">Mỗi mẫu chụp 1–3 ảnh rõ nét (toàn mẫu + cận cảnh mặt vỡ, cát khai, kiến trúc). Ô nào không biết cứ để trống — đoán bừa không được điểm.</p>` + this.specimenCardsHtml(s, a, n, editable);
+      }
+      this.$('ws-body').innerHTML = body;
+      this.hydratePhotos(this.$('ws-body'));
+      this.show('btn-save', editable); this.show('btn-submit', editable);
+      this.show('btn-retake', !!(att && att.canRetake));
+      const rb = this.$('btn-retake'); if (rb) rb.textContent = 'Luyện lần mới';
+      this.renderAttempts(sub, att);
+      this.renderResult(sub, att);
+      if (!ws.open && !locked) this.msg('Phiếu này đã đóng — chỉ xem, không nộp được.', 'err');
+      return;
+    }
     const parts = ws.schema.sections.map((s) => {
       if (s.type === 'table') {
         const editable = !locked && ws.open;
@@ -177,8 +201,10 @@ class KhtdView {
     if (!multi) { box.classList.add('hidden'); box.innerHTML = ''; return; }
     const rule = att.allowed == null ? 'không giới hạn số lần làm' : `được nộp tối đa <b>${this._esc(att.allowed)} lần</b>${att.extra ? ` (giảng viên cấp thêm ${this._esc(att.extra)})` : ''}`;
     const how = att.policy === 'LAST' ? 'điểm <b>lần nộp cuối cùng</b>' : 'điểm <b>cao nhất</b> trong các lần nộp';
-    let h = `<p>Phiếu này ${rule}; điểm phiếu là ${how}.</p>`;
-    if (sub && sub.Status === 'DRAFT' && Number(sub.AttemptNo) > 1) {
+    let h = this.extra && this.extra.exam
+      ? '<p>Luyện <b>không giới hạn số lần</b>; mỗi lần chọn số mẫu và bấm giờ lại. Dự báo được tính theo lần <b>cao nhất</b> — chỉ để tự đánh giá, không vào điểm tổng.</p>'
+      : `<p>Phiếu này ${rule}; điểm phiếu là ${how}.</p>`;
+    if (sub && sub.Status === 'DRAFT' && Number(sub.AttemptNo) > 1 && !(this.extra && this.extra.exam)) {
       h += `<p class="mt-1 font-semibold text-blue-900">Bạn đang làm lần ${this._esc(sub.AttemptNo)} — bài lần trước đã được chép sang, chỉ cần sửa chỗ chưa đúng rồi nộp.${att.policy === 'LAST' ? ' Lưu ý: lần nộp này sẽ thay điểm cũ, kể cả khi thấp hơn.' : ' Nếu lần này thấp hơn, điểm cao nhất vẫn được giữ.'}</p>`;
     }
     const done = (att.attempts || []).filter((a) => a.status !== 'DRAFT');
@@ -228,6 +254,11 @@ class KhtdView {
     let emptyQ = 0, emptyCells = 0, emptySelf = 0, noPhoto = 0;
     const ph = answers._photos || {};
     schema.sections.forEach((s) => {
+      if (s.layout === 'specimens') {   // luyện thi: đếm mẫu chưa ghi tên / chưa có ảnh trong số mẫu của lần này
+        const fx = this._fidx(s);
+        (answers[s.id] || []).forEach((r, ri) => { if (!document.querySelector(`[data-spec="${ri}"]`)) return; if (!r[fx.ten]) emptyCells++; if (!((ph[s.id] || {})[ri] || []).length) noPhoto++; });
+        return;
+      }
       if (s.type === 'table' && s.photos) s.rows.forEach((_, ri) => { if (!((ph[s.id] || {})[ri] || []).length) noPhoto++; });
       if (s.type === 'table') (answers[s.id] || []).forEach((r) => r.forEach((c) => { if (!c) emptyCells++; }));
       else if (s.type === 'questions') s.items.forEach((q) => { if (!answers[q.id]) emptyQ++; });
@@ -242,12 +273,20 @@ class KhtdView {
     if (!sub || sub.Status === 'DRAFT') { box.classList.add('hidden'); return; }
     const ai = sub.ai;
     const multi = att && (att.allowed !== 1 || att.extra > 0 || (att.attempts || []).length > 1);
+    if (ai && ai.exam) {   // phiếu luyện thi
+      let x = `<p class="text-sm">Lần luyện ${this._esc(sub.AttemptNo)} — nộp lúc <b>${this._esc(sub.SubmittedAt || '')}</b>.</p>` + this.examResultHtml(ai);
+      if (sub.FinalScore != null) x += `<p class="mt-2 text-sm">Giảng viên xác nhận: <b>${this._esc(sub.FinalScore)}/10</b>${sub.FinalNote ? ' — ' + this._esc(sub.FinalNote) : ''}</p>`;
+      if (att && att.canRetake) x += '<p class="mt-3 text-sm font-semibold text-blue-800">Bấm “Luyện lần mới” ở cuối trang để luyện tiếp (chọn lại số mẫu, đồng hồ chạy lại).</p>';
+      box.innerHTML = x; box.classList.remove('hidden'); return;
+    }
     let h = `<p class="text-sm">${multi ? `Lần ${this._esc(sub.AttemptNo)} — đ` : 'Đ'}ã nộp lúc <b>${this._esc(sub.SubmittedAt || '')}</b>.</p>`;
     if (sub.FinalScore != null) h += `<p class="mt-1 text-lg">Điểm chính thức${multi ? ' lần này' : ''}: <b>${this._esc(sub.FinalScore)}/10</b></p>${sub.FinalNote ? `<p class="text-sm">Nhận xét GV: ${this._esc(sub.FinalNote)}</p>` : ''}`;
     else if (ai) h += `<p class="mt-1 text-lg">Điểm tạm tính${multi ? ' lần này' : ''} (AI, GV sẽ duyệt): <b>${this._esc(ai.total)}/10</b></p>`;
     else h += '<p class="mt-1 text-sm text-slate-600">Đang chờ giảng viên chấm.</p>';
     if (multi && att.score != null) h += `<p class="text-sm">Điểm phiếu đang được tính: <b>${this._esc(att.score)}/10</b> (lần ${this._esc(att.countedNo)}, ${att.policy === 'LAST' ? 'lần cuối' : 'cao nhất'}).</p>`;
     if (ai) h += `<ul class="mt-2 list-disc pl-5 text-sm">${ai.criteria.map((c) => `<li><b>${this._esc(c.name)}</b>: ${this._esc(c.score)}/${this._esc(c.max)}${c.comment ? ' — ' + this._esc(c.comment) : ''}</li>`).join('')}</ul>${ai.feedback ? `<p class="mt-2 text-sm italic">${this._esc(ai.feedback)}</p>` : ''}`;
+    if (ai) h += this.fixesHtml(ai.sua_bai);
+    if (this.extra && this.extra.forecast) h += this.forecastHtml(this.extra.forecast);
     if (ai && sub.FinalScore != null) h += this._doiChieu(ai);
     if (att && att.canRetake) h += `<p class="mt-3 text-sm font-semibold text-blue-800">Muốn cải thiện điểm? Bấm “Làm lại” ở cuối trang${att.remaining != null ? ` (còn ${this._esc(att.remaining)} lượt)` : ''}.</p>`;
     else if (att && att.allowed === 1 && !att.extra) h += '<p class="mt-3 text-xs text-slate-500">Bấm nhầm “Nộp phiếu”? Báo giảng viên để được cấp thêm một lượt làm lại.</p>';
@@ -257,7 +296,9 @@ class KhtdView {
   collectAnswers(schema) {
     const out = {};
     schema.sections.forEach((s) => {
-      if (s.type === 'table') {
+      if (s.type === 'table' && s.layout === 'specimens') {
+        out[s.id] = this.collectSpecimens(s);
+      } else if (s.type === 'table') {
         out[s.id] = s.rows.map((_, ri) => s.columns.map((_, ci) => { const el = document.querySelector(`textarea[data-sec="${s.id}"][data-r="${ri}"][data-c="${ci}"]`); return el ? el.value.trim() : ''; }));
       } else if (s.type === 'questions') {
         s.items.forEach((q) => { const el = document.querySelector(`textarea[data-q="${q.id}"]`); out[q.id] = el ? el.value.trim() : ''; });
@@ -315,9 +356,9 @@ class KhtdView {
         <label>Số lần nộp <select data-policy="max" class="rounded border px-1 py-0.5">${maxOpts(max)}</select></label>
         <label>Điểm tính <select data-policy="score" class="rounded border px-1 py-0.5" ${max === 1 ? 'title="Chỉ có tác dụng khi sinh viên nộp từ 2 lần (cho làm nhiều lần hoặc được cấp thêm lượt)"' : ''}>
           <option value="BEST" ${w.ScorePolicy !== 'LAST' ? 'selected' : ''}>cao nhất các lần</option><option value="LAST" ${w.ScorePolicy === 'LAST' ? 'selected' : ''}>lần nộp cuối</option></select></label>
-      </div></div>`;
+      </div>${w.IsExam ? '<p class="mt-1 text-xs font-semibold text-amber-800">Luyện thi — không tính điểm tổng (xuất CSV thành cột dự báo / điểm cộng đề xuất / thái độ).</p>' + this.examKeyHtml(w) : ''}</div>`;
     }).join('')
-      : '<p class="text-sm text-slate-500">Lớp chưa có phiếu — bấm "Tạo 6 phiếu mặc định".</p>';
+      : '<p class="text-sm text-slate-500">Lớp chưa có phiếu — bấm "Tạo / bổ sung phiếu mặc định".</p>';
     const subs = data.submissions;
     tb.innerHTML = subs.length ? subs.map((s) => {
       const multi = s.AttemptsAllowed !== 1 || Number(s.Extra) > 0 || Number(s.AttemptsUsed) > 1;
@@ -337,6 +378,7 @@ class KhtdView {
     const box = this.$('sub-detail'); box.classList.remove('hidden');
     const a = row.answers || {}; const ai = row.ai;
     const body = row.schema.sections.map((s) => {
+      if (s.layout === 'specimens') return this.specimensReviewHtml(s, a);
       if (s.type === 'table') {
         const ph = (a._photos || {})[s.id] || {};
         return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><div class="overflow-x-auto"><table class="w-full border text-xs"><thead><tr><th class="border px-1"></th>${s.photos ? '<th class="border px-1 text-left">Ảnh</th>' : ''}${s.columns.map((c) => `<th class="border px-1 text-left">${this._esc(c)}</th>`).join('')}</tr></thead><tbody>${s.rows.map((r, ri) => `<tr><th class="border px-1 text-left bg-slate-50">${this._esc(r)}</th>${s.photos ? `<td class="border p-1 align-top" style="min-width:4.25rem"><div class="flex flex-wrap gap-1">${this._thumbsHtml(s.id, ri, false, ph[ri] || [])}</div>${(ph[ri] || []).length ? '' : '<span class="text-slate-400">—</span>'}</td>` : ''}${s.columns.map((_, ci) => `<td class="border px-1">${this._esc(((a[s.id] || [])[ri] || [])[ci] || '')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
@@ -347,7 +389,7 @@ class KhtdView {
       return '';
     }).join('');
     const aiErrH = (!ai && row.aiError) ? `<div class="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm"><b>AI chưa chấm được:</b> ${this._esc(row.aiError)} — bấm “Chấm lại bằng AI” sau khi khắc phục, hoặc chấm tay bên dưới.</div>` : '';
-    const aiH = ai ? `<div class="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm"><b>AI đề xuất: ${this._esc(ai.total)}/10</b> (${this._esc(ai.model)})<ul class="mt-1 list-disc pl-5">${ai.criteria.map((c) => `<li>${this._esc(c.name)}: ${this._esc(c.score)}/${this._esc(c.max)} — ${this._esc(c.comment)}</li>`).join('')}</ul><p class="mt-1 italic">${this._esc(ai.feedback)}</p>${(ai.flags || []).length ? `<p class="mt-1 text-red-700">Cờ: ${this._esc(ai.flags.join('; '))}</p>` : ''}${this._doiChieu(ai)}</div>` : '<p class="mt-3 text-sm text-slate-500">Chưa có chấm AI (chưa cấu hình Gemini hoặc lỗi gọi API).</p>';
+    const aiH = ai ? `<div class="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm"><b>AI đề xuất: ${this._esc(ai.total)}/10</b> (${this._esc(ai.model)})<ul class="mt-1 list-disc pl-5">${ai.criteria.map((c) => `<li>${this._esc(c.name)}: ${this._esc(c.score)}/${this._esc(c.max)} — ${this._esc(c.comment)}</li>`).join('')}</ul><p class="mt-1 italic">${this._esc(ai.feedback)}</p>${(ai.flags || []).length ? `<p class="mt-1 text-red-700">Cờ: ${this._esc(ai.flags.join('; '))}</p>` : ''}${ai.exam && ai.exam.note ? `<p class="mt-1 text-xs text-slate-600">${this._esc(ai.exam.note)}</p>` : ''}${this.fixesHtml(ai.sua_bai, 'Cần sửa (đã gửi sinh viên)')}${(ai.phan_bien || []).length ? `<div class="mt-2 rounded border border-purple-200 bg-purple-50 p-2 text-xs"><b>Phản biện đáp án / rubric (chỉ GV xem):</b><ul class="list-disc pl-5">${ai.phan_bien.map((x) => `<li>${this._esc(x)}</li>`).join('')}</ul></div>` : ''}${this._doiChieu(ai)}</div>` : '<p class="mt-3 text-sm text-slate-500">Chưa có chấm AI (chưa cấu hình Gemini hoặc lỗi gọi API).</p>';
     const att = row.attempt || null;
     const multi = att && (att.allowed !== 1 || att.extra > 0 || (att.attempts || []).length > 1);
     const nav = multi ? `<div class="mt-2 flex flex-wrap items-center gap-1 text-xs"><span class="text-slate-500">Các lần (${att.allowed == null ? 'không giới hạn' : 'tối đa ' + this._esc(att.allowed)}, tính ${att.policy === 'LAST' ? 'lần cuối' : 'cao nhất'}):</span>` +

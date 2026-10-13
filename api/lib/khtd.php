@@ -18,6 +18,9 @@
  *   'app' => ['rate_limits' => ['khtd_login_ip' => ['limit'=>30,'window_sec'=>600]]] (tuỳ chọn)
  */
 
+require_once __DIR__ . '/khtd_kb.php';
+require_once __DIR__ . '/khtd_exam.php';
+
 const KHTD_TOKEN_TTL = 3 * 3600;
 
 /* ------------------------------------------------------------------ */
@@ -205,7 +208,7 @@ function action_khtd_list_worksheets(array $params): void
 {
     $me = khtd_require_student((string) ($params['token'] ?? ''));
     $stmt = db()->prepare(
-        "SELECT w.WorksheetID, w.ClassID, c.ClassCode, w.No, w.Title, w.Status, w.OpenAt, w.CloseAt, w.MaxAttempts, w.ScorePolicy " .
+        "SELECT w.WorksheetID, w.ClassID, c.ClassCode, w.No, w.Title, w.Status, w.OpenAt, w.CloseAt, w.MaxAttempts, w.ScorePolicy, w.SchemaJSON " .
         "FROM khtd_worksheets w JOIN classes c ON c.ClassID = w.ClassID " .
         "JOIN enrollments e ON e.ClassID = w.ClassID AND e.StudentID = :sid AND e.Status = 'ACTIVE' " .
         "WHERE w.Status <> 'HIDDEN' ORDER BY c.ClassCode, w.No"
@@ -213,7 +216,7 @@ function action_khtd_list_worksheets(array $params): void
     $stmt->execute(['sid' => $me['studentId']]);
     $list = $stmt->fetchAll();
 
-    $subs = db()->prepare('SELECT WorksheetID, AttemptNo, Status, SubmittedAt, AiScore, FinalScore FROM khtd_submissions WHERE StudentID = :s');
+    $subs = db()->prepare('SELECT SubmissionID, WorksheetID, AttemptNo, Status, SubmittedAt, AiScore, FinalScore, AiJSON FROM khtd_submissions WHERE StudentID = :s');
     $subs->execute(['s' => $me['studentId']]);
     $bySheet = [];
     foreach ($subs->fetchAll() as $r) $bySheet[$r['WorksheetID']][] = $r;
@@ -222,6 +225,7 @@ function action_khtd_list_worksheets(array $params): void
     $extra = [];
     foreach ($ext->fetchAll() as $r) $extra[$r['WorksheetID']] = (int) $r['Extra'];
 
+    $forecast = ['practice' => [], 'describe' => ['samples' => 0, 'sum' => 0.0, 'perfect' => 0, 'sheets' => []]];
     foreach ($list as &$w) {
         $sum = khtd_attempt_summary($w, $bySheet[$w['WorksheetID']] ?? [], $extra[$w['WorksheetID']] ?? 0);
         $latest = $sum['latest']; $counted = $sum['counted'];
@@ -232,9 +236,28 @@ function action_khtd_list_worksheets(array $params): void
         $w['FinalScore'] = $counted['FinalScore'] ?? null;
         $w['attempt'] = khtd_attempt_public($sum);
         unset($w['attempt']['attempts']);
+        // Dự báo điểm bài thi nhận diện mẫu (ĐG1.1): luyện thi (phiếu có bấm giờ) + bảng mô tả mẫu của phiếu 1–6.
+        $sc = json_decode((string) $w['SchemaJSON'], true) ?: [];
+        unset($w['SchemaJSON']);
+        $w['IsExam'] = khtd_is_exam($sc);
+        if ($w['IsExam']) {
+            $p = khtd_practice_summary($sc, $bySheet[$w['WorksheetID']] ?? []);
+            unset($p['attitude']);
+            $forecast['practice'][] = ['no' => (int) $w['No'], 'title' => $w['Title']] + $p;
+        } elseif ($counted && ($counted['Status'] ?? '') !== 'DRAFT') {
+            $ans = db()->prepare('SELECT AnswersJSON FROM khtd_submissions WHERE SubmissionID = :id');
+            $ans->execute(['id' => $counted['SubmissionID']]);
+            $f = khtd_exam_forecast($sc, json_decode((string) $ans->fetchColumn(), true) ?: []);
+            if ($f) { $forecast['describe']['samples'] += $f['samples']; $forecast['describe']['sum'] += $f['score10'] * $f['samples'] / 10; $forecast['describe']['perfect'] += $f['perfect']; $forecast['describe']['sheets'][] = (int) $w['No']; }
+        }
     }
     unset($w);
-    api_ok(['student' => $me, 'worksheets' => $list]);
+    $d = &$forecast['describe'];
+    $d['score10'] = $d['samples'] ? round($d['sum'] / $d['samples'] * 10 * 4) / 4 : null;
+    unset($d['sum'], $d);
+    foreach ($bySheet as &$rs) foreach ($rs as &$r) unset($r['AiJSON']);
+    unset($rs, $r);
+    api_ok(['student' => $me, 'worksheets' => $list, 'examForecast' => $forecast]);
 }
 
 /** GET khtdGetWorksheet {token, worksheetId} — cấu trúc phiếu (bỏ rubric/đáp án) + bài làm lần mới nhất + lịch sử các lần. */
@@ -245,6 +268,8 @@ function action_khtd_get_worksheet(array $params): void
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     $schema = $ws['schema'];
     unset($schema['answer_hints'], $schema['answer_key'], $schema['reference']);   // không lộ đáp án cho SV
+    $isExam = khtd_is_exam($ws['schema']);
+    if ($isExam) unset($schema['exam']['key']);                                      // đáp án bộ mẫu chỉ GV xem
     $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
     $sub = null;
     if ($sum['latest']) {
@@ -258,16 +283,31 @@ function action_khtd_get_worksheet(array $params): void
         if (is_array($sub['ai']) && !isset($sub['ai']['criteria'])) $sub['ai'] = null;   // bản ghi lỗi, không phải kết quả chấm
         // Bảng đối chiếu có ĐÁP ÁN: chỉ trả khi GV đã duyệt VÀ SV không còn làm lại được
         // (nếu không, SV nộp bừa để đọc đáp án rồi làm lại).
-        if (is_array($sub['ai']) && !($sub['Status'] === 'FINAL' && !$sum['canRetake'])) {
+        // Phiếu luyện thi: SV được xem ngay dữ liệu chuẩn của mẫu mình đã gọi tên (mục đích học, điểm không vào tổng).
+        if (is_array($sub['ai']) && !$isExam && !($sub['Status'] === 'FINAL' && !$sum['canRetake'])) {
             unset($sub['ai']['doi_chieu']);
         }
-        if (is_array($sub['ai'])) unset($sub['ai']['ai_risk']);     // ước lượng dùng AI chỉ dành cho GV
+        if (is_array($sub['ai'])) unset($sub['ai']['ai_risk'], $sub['ai']['phan_bien']);     // chỉ dành cho GV
+        $ansArr = json_decode((string) $sub['AnswersJSON'], true) ?: [];
         unset($sub['AnswersJSON'], $sub['AiJSON']);
+    }
+    $more = [];
+    if ($isExam) {
+        $cfg = khtd_exam_cfg($ws['schema']);
+        $mine = db()->prepare('SELECT AttemptNo, Status, SubmittedAt, AiScore, FinalScore, AiJSON FROM khtd_submissions WHERE WorksheetID = :w AND StudentID = :s');
+        $mine->execute(['w' => $ws['WorksheetID'], 's' => $me['studentId']]);
+        $prac = khtd_practice_summary($ws['schema'], $mine->fetchAll());
+        unset($prac['attitude']);                                  // xếp mức thái độ: chỉ GV xem
+        $more['exam'] = ['secPerSample' => $cfg['secPerSample'], 'maxSamples' => $cfg['maxSamples'], 'graceSec' => $cfg['graceSec'],
+                         'clock' => ($sub && $sub['Status'] === 'DRAFT') ? khtd_exam_clock($ws['schema'], $ansArr ?? []) : null,
+                         'practice' => $prac, 'hasKey' => (bool) $cfg['key']];
+    } elseif ($sub && $sub['Status'] !== 'DRAFT') {
+        $more['forecast'] = khtd_exam_forecast($ws['schema'], $ansArr ?? []);
     }
     api_ok(['worksheet' => ['id' => $ws['WorksheetID'], 'no' => (int) $ws['No'], 'title' => $ws['Title'],
             'classId' => $ws['ClassID'], 'open' => khtd_is_open($ws), 'closeAt' => $ws['CloseAt'], 'schema' => $schema,
             'maxAttempts' => (int) $ws['MaxAttempts'], 'scorePolicy' => $ws['ScorePolicy']],
-            'submission' => $sub, 'attempt' => khtd_attempt_public($sum), 'student' => $me]);
+            'submission' => $sub, 'attempt' => khtd_attempt_public($sum), 'student' => $me] + $more);
 }
 
 function khtd_clean_answers($raw): array
@@ -298,6 +338,12 @@ function action_khtd_save_draft(array $params): void
     $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
     $sub = $sum['latest'];
     if ($sub && $sub['Status'] !== 'DRAFT') { api_fail(khtd_already_submitted_msg($sum)); return; }
+    if (khtd_is_exam($ws['schema'])) {
+        $answers = khtd_exam_keep_state($answers, khtd_latest_answers_json($sub));
+        $clock = khtd_exam_clock($ws['schema'], $answers);
+        if (!$clock) { api_fail('Bấm "Bắt đầu tính giờ" trước khi làm bài.'); return; }
+        if ($clock['over']) { api_fail('Đã hết giờ — bấm "Nộp bài" để được chấm.'); return; }
+    }
     $json = json_encode($answers, JSON_UNESCAPED_UNICODE);
     if ($sub) {
         db()->prepare("UPDATE khtd_submissions SET AnswersJSON = :a WHERE SubmissionID = :id AND Status = 'DRAFT'")->execute(['a' => $json, 'id' => $sub['SubmissionID']]);
@@ -330,6 +376,14 @@ function action_khtd_submit(array $params): void
     $sub = $sum['latest'];
     if ($sub && $sub['Status'] !== 'DRAFT') { api_fail(khtd_already_submitted_msg($sum)); return; }
     if ($sum['remaining'] === 0) { api_fail('Bạn đã dùng hết ' . $sum['allowed'] . ' lần nộp phiếu này. Bấm nhầm nộp thì báo giảng viên để được cấp thêm lượt.'); return; }
+    $isExam = khtd_is_exam($ws['schema']);
+    if ($isExam) {   // giờ làm do máy chủ ghi: bắt đầu ở khtdStartExam, kết thúc ở đây
+        $answers = khtd_exam_keep_state($answers, khtd_latest_answers_json($sub));
+        $clock = khtd_exam_clock($ws['schema'], $answers);
+        if (!$clock) { api_fail('Bấm "Bắt đầu tính giờ" trước khi làm bài.'); return; }
+        $answers['_exam'] += ['submittedAt' => db_now(), 'elapsedSec' => $clock['elapsedSec'], 'overtimeSec' => max(0, $clock['elapsedSec'] - $clock['limitSec'])];
+        $json = json_encode($answers, JSON_UNESCAPED_UNICODE);
+    }
     $id = $sub ? $sub['SubmissionID'] : new_id('SUB');
     $no = $sub ? (int) $sub['AttemptNo'] : 1;
     if ($sub) {
@@ -346,7 +400,7 @@ function action_khtd_submit(array $params): void
     khtd_long_request();
     $ai = null; $aiErr = null;
     try {
-        $ai = khtd_gemini_grade($ws, $answers, $me);
+        $ai = khtd_grade($ws, $answers, $me);
         if ($ai) {
             db()->prepare("UPDATE khtd_submissions SET Status = 'AI_GRADED', AiScore = :sc, AiJSON = :j, AiModel = :m, AiGradedAt = NOW() WHERE SubmissionID = :id")
                 ->execute(['sc' => $ai['total'], 'j' => json_encode($ai, JSON_UNESCAPED_UNICODE), 'm' => $ai['model'], 'id' => $id]);
@@ -366,7 +420,10 @@ function action_khtd_submit(array $params): void
         $mailed = khtd_send_result_mail($me, $ws, $ai, null, null, khtd_attempt_mail_line($sum, $no));
         if ($mailed) db()->prepare('UPDATE khtd_submissions SET EmailSentAt = NOW(), EmailTo = :e WHERE SubmissionID = :id')->execute(['e' => $me['email'], 'id' => $id]);
     }
-    if ($ai) unset($ai['doi_chieu'], $ai['ai_risk']);   // đáp án: SV chỉ xem sau khi GV duyệt; nguy cơ AI: chỉ GV
+    if ($ai) {   // đáp án: SV chỉ xem sau khi GV duyệt (phiếu luyện thi: xem ngay); nguy cơ AI, phản biện: chỉ GV
+        unset($ai['ai_risk'], $ai['phan_bien']);
+        if (!$isExam) unset($ai['doi_chieu']);
+    }
     api_ok(['submissionId' => $id, 'attemptNo' => $no, 'status' => $ai ? 'AI_GRADED' : 'SUBMITTED', 'ai' => $ai,
             'attempt' => khtd_attempt_public($sum),
             'emailSent' => $mailed, 'emailTo' => $me['email'], 'aiError' => $ai ? null : ($aiErr ?: 'Chưa cấu hình Gemini — giảng viên sẽ chấm tay.')]);
@@ -396,6 +453,9 @@ function action_khtd_retake(array $params): void
     $prev->execute(['id' => $latest['SubmissionID']]);
     $prevAns = json_decode((string) ($prev->fetchColumn() ?: '{}'), true) ?: [];
     unset($prevAns['_meta']);                         // đếm dán/gõ của lần mới bắt đầu lại từ 0
+    if (khtd_is_exam($ws['schema'])) {                 // luyện thi: lần mới làm từ đầu, bấm giờ lại; chỉ giữ ảnh mẫu
+        $prevAns = isset($prevAns['_photos']) ? ['_photos' => $prevAns['_photos']] : [];
+    }
     $answers = json_encode($prevAns ?: new stdClass(), JSON_UNESCAPED_UNICODE);
     $no = (int) $latest['AttemptNo'] + 1;
     $id = new_id('SUB');
@@ -522,6 +582,12 @@ function action_khtd_upload_photo(array $params): void
 
     $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
     if ($sum['latest'] && $sum['latest']['Status'] !== 'DRAFT') { api_fail(khtd_already_submitted_msg($sum)); return; }
+    if (khtd_is_exam($ws['schema'])) {
+        $clock = khtd_exam_clock($ws['schema'], json_decode((string) khtd_latest_answers_json($sum['latest']), true) ?: []);
+        if (!$clock) { api_fail('Bấm "Bắt đầu tính giờ" trước khi chụp ảnh mẫu.'); return; }
+        if ($clock['over']) { api_fail('Đã hết giờ — bấm "Nộp bài".'); return; }
+        if ($row >= $clock['count']) { api_fail('Lần luyện này chỉ có ' . $clock['count'] . ' mẫu.'); return; }
+    }
     $cnt = db()->prepare('SELECT COUNT(*) FROM khtd_photos WHERE WorksheetID = :w AND StudentID = :s');
     $cnt->execute(['w' => $ws['WorksheetID'], 's' => $me['studentId']]);
     if ((int) $cnt->fetchColumn() >= KHTD_PHOTO_PER_SHEET) { api_fail('Bạn đã tải quá ' . KHTD_PHOTO_PER_SHEET . ' ảnh cho phiếu này.'); return; }
@@ -665,6 +731,62 @@ function khtd_gemini_call(string $key, string $model, array $body): array
             'msg' => substr((string) ($d['error']['message'] ?? $resp), 0, 250)];
 }
 
+/**
+ * Gọi Gemini lần lượt qua các model ứng viên, trả [chữ trả về, model đã dùng]; ném RuntimeException khi không model nào dùng được.
+ * Model 2.5+ mặc định "suy nghĩ" và có thể tiêu hết hạn mức token trước khi kịp xuất JSON → gửi kèm thinkingBudget = 0;
+ * model nào không hiểu tham số này (HTTP 400) thì gọi lại không kèm. 404/429/5xx → model kế tiếp; 401/403 → dừng (lỗi key).
+ */
+function khtd_gemini_generate(array $models, string $key, array $body): array
+{
+    $lastErr = '';
+    foreach ($models as $model) {
+        foreach ([true, false] as $noThink) {
+            $b = $body;
+            if ($noThink) $b['generationConfig']['thinkingConfig'] = ['thinkingBudget' => 0];
+            $r = khtd_gemini_call($key, $model, $b);
+            if ($r['http'] === 200) {
+                $t = (string) ($r['data']['candidates'][0]['content']['parts'][0]['text'] ?? '');
+                if (trim($t) === '') {
+                    $fr = (string) ($r['data']['candidates'][0]['finishReason'] ?? '?');
+                    $lastErr = 'Gemini ' . $model . ' trả về rỗng (finishReason=' . $fr . ').';
+                    break;                                  // model này không dùng được → model kế
+                }
+                return [$t, $model];
+            }
+            $lastErr = 'Gemini ' . $model . ' HTTP ' . $r['http'] . ': ' . $r['msg'];
+            if ($noThink && $r['http'] === 400) continue;    // có thể do thinkingConfig → thử lại không kèm
+            if (in_array($r['http'], [401, 403], true)) break 2;
+            break;
+        }
+    }
+    throw new RuntimeException($lastErr ?: 'Gemini không phản hồi.');
+}
+
+/** Danh sách "cần sửa" Gemini trả về: [{muc, van_de, cach_sua}], cắt độ dài. */
+function khtd_clean_fixes($raw, int $max = 12): array
+{
+    $out = [];
+    foreach ((array) $raw as $x) {
+        if (!is_array($x)) continue;
+        $v = mb_substr(trim((string) ($x['van_de'] ?? '')), 0, 300); $c = mb_substr(trim((string) ($x['cach_sua'] ?? '')), 0, 400);
+        if ($v === '' && $c === '') continue;
+        $out[] = ['muc' => mb_substr(trim((string) ($x['muc'] ?? '')), 0, 120), 'van_de' => $v, 'cach_sua' => $c];
+        if (count($out) >= $max) break;
+    }
+    return $out;
+}
+
+function khtd_clean_list($raw, int $max): array
+{
+    return array_slice(array_values(array_filter(array_map(static fn ($x) => is_scalar($x) ? mb_substr(trim((string) $x), 0, 400) : '', (array) $raw), static fn ($x) => $x !== '')), 0, $max);
+}
+
+/** Chấm một bài: phiếu luyện thi → rubric nhận diện mẫu (luôn có điểm); phiếu thường → Gemini theo rubric. */
+function khtd_grade(array $ws, array $answers, array $student): ?array
+{
+    return khtd_is_exam($ws['schema']) ? khtd_exam_grade($ws, $answers, $student) : khtd_gemini_grade($ws, $answers, $student);
+}
+
 /** Trả về null nếu chưa cấu hình; ném RuntimeException nếu gọi lỗi. */
 function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
 {
@@ -689,9 +811,11 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
             . "4. Điểm từng tiêu chí là bội số của 0,25 và không vượt mức tối đa.\n"
             . "5. Nhận xét ngắn gọn bằng tiếng Việt, nêu 1–2 điểm tốt và 1–2 điểm cần sửa CỤ THỂ (dẫn đúng ý sai và ý đúng tương ứng trong đáp án), không chép nguyên đáp án.\n"
             . "6. Ước lượng khả năng bài được viết bằng chatbot AI (0–100) vào 'nguy_co_ai': dấu hiệu như văn phong trơn tru kiểu máy, mở đầu 'Dưới đây là', định dạng markdown, thuật ngữ vượt trình độ sinh viên không chuyên, lý thuyết chung chung không gắn với mẫu cụ thể sinh viên quan sát. Chỉ là ước lượng; không trừ điểm vì lý do này. TUYỆT ĐỐI không nhắc tới AI, chatbot, trí tuệ nhân tạo trong 'comment', 'feedback', 'flags' (nhận xét được in vào phiếu điểm làm minh chứng) — chỉ ghi ở 'nguy_co_ai'.\n"
+            . "7. 'sua_bai': liệt kê TỪNG chỗ sai hoặc thiếu (tối đa 12 mục) để sinh viên tự hoàn thiện bài: 'muc' = ô/câu (vd 'HĐ2 – Mẫu 3, cột Độ cứng', 'Câu 2'), 'van_de' = sai/thiếu gì, 'cach_sua' = nên sửa, thêm hoặc bỏ nội dung nào (gợi ý hướng, không chép nguyên đáp án). Nếu bảng có mô tả mẫu khoáng vật/đá, nhắc những ý còn thiếu để đạt 1 điểm/mẫu ở bài thi nhận diện mẫu cuối khóa (khoáng vật: số hiệu, tên, thành phần hóa học, độ cứng, cát khai, vết vạch/màu; đá: số hiệu, tên, nhóm đá, kiến trúc, khoáng vật chính, đặc điểm nhận diện).\n"
+            . "8. 'phan_bien' (chỉ giảng viên xem): nếu thấy đáp án/dữ liệu chuẩn có chỗ sai, mơ hồ, hoặc rubric khó áp dụng cho bài này, ghi ngắn gọn từng ý; không có thì để mảng rỗng.\n"
             . "Chỉ trả về JSON hợp lệ theo mẫu: {\"doi_chieu\":[{\"muc\":\"...\",\"bai_lam\":\"...\",\"dap_an\":\"...\",\"ket_qua\":\"đúng|đúng một phần|thiếu|sai|trống\"}],"
-            . "\"criteria\":[{\"id\":\"...\",\"score\":0,\"comment\":\"...\"}],\"feedback\":\"...\",\"flags\":[\"...\"],"
-            . "\"nguy_co_ai\":{\"muc\":0,\"dau_hieu\":[\"...\"]}}";
+            . "\"criteria\":[{\"id\":\"...\",\"score\":0,\"comment\":\"...\"}],\"sua_bai\":[{\"muc\":\"...\",\"van_de\":\"...\",\"cach_sua\":\"...\"}],\"feedback\":\"...\",\"flags\":[\"...\"],"
+            . "\"phan_bien\":[\"...\"],\"nguy_co_ai\":{\"muc\":0,\"dau_hieu\":[\"...\"]}}";
     $user = [
         'phieu' => ['so' => (int) $ws['No'], 'tieu_de' => $ws['Title'], 'cau_truc' => array_map(function ($s) {
             return ['id' => $s['id'], 'type' => $s['type'], 'title' => $s['title'] ?? '', 'columns' => $s['columns'] ?? null, 'items' => $s['items'] ?? null, 'prompt' => $s['prompt'] ?? null];
@@ -709,32 +833,7 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
         'generationConfig' => ['temperature' => 0.2, 'responseMimeType' => 'application/json', 'maxOutputTokens' => 8192],
     ];
 
-    // Thử lần lượt các model. Model 2.5+ mặc định "suy nghĩ" và có thể tiêu hết hạn mức token
-    // trước khi kịp xuất JSON → gửi kèm thinkingBudget = 0; model nào không hiểu tham số này
-    // (HTTP 400) thì gọi lại không kèm. 404/429/5xx → model kế tiếp; 401/403 → dừng (lỗi key).
-    $data = null; $used = null; $lastErr = '';
-    foreach ($cand['models'] as $model) {
-        foreach ([true, false] as $noThink) {
-            $b = $body;
-            if ($noThink) $b['generationConfig']['thinkingConfig'] = ['thinkingBudget' => 0];
-            $r = khtd_gemini_call($g['key'], $model, $b);
-            if ($r['http'] === 200) {
-                $t = (string) ($r['data']['candidates'][0]['content']['parts'][0]['text'] ?? '');
-                if (trim($t) === '') {
-                    $fr = (string) ($r['data']['candidates'][0]['finishReason'] ?? '?');
-                    $lastErr = 'Gemini ' . $model . ' trả về rỗng (finishReason=' . $fr . ').';
-                    break;                                  // model này không dùng được → model kế
-                }
-                $data = $r['data']; $used = $model; break 2;
-            }
-            $lastErr = 'Gemini ' . $model . ' HTTP ' . $r['http'] . ': ' . $r['msg'];
-            if ($noThink && $r['http'] === 400) continue;    // có thể do thinkingConfig → thử lại không kèm
-            if (in_array($r['http'], [401, 403], true)) break 2;
-            break;
-        }
-    }
-    if ($data === null) throw new RuntimeException($lastErr ?: 'Gemini không phản hồi.');
-    $text = (string) ($data['candidates'][0]['content']['parts'][0]['text'] ?? '');
+    [$text, $used] = khtd_gemini_generate($cand['models'], $g['key'], $body);
     $out = json_decode($text, true);
     if (!is_array($out) || !isset($out['criteria'])) throw new RuntimeException('Gemini trả về không đúng JSON.');
 
@@ -760,6 +859,7 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
         if (count($dc) >= 40) break;
     }
     return ['model' => $used, 'doi_chieu' => $dc, 'criteria' => $crit, 'raw_total' => $total, 'max' => $max, 'total' => $total10,
+            'sua_bai' => khtd_clean_fixes($out['sua_bai'] ?? []), 'phan_bien' => khtd_clean_list($out['phan_bien'] ?? [], 6),
             'feedback' => mb_substr((string) ($out['feedback'] ?? ''), 0, 2000), 'flags' => array_slice((array) ($out['flags'] ?? []), 0, 5),
             'ai_risk' => is_array($out['nguy_co_ai'] ?? null) ? ['muc' => max(0, min(100, (int) ($out['nguy_co_ai']['muc'] ?? 0))),
                 'dau_hieu' => array_map(static fn ($x) => mb_substr((string) $x, 0, 200), array_slice(array_filter((array) ($out['nguy_co_ai']['dau_hieu'] ?? []), 'is_scalar'), 0, 4))] : null];
@@ -776,9 +876,14 @@ function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $fi
     $lines = [];
     $lines[] = 'Chào ' . $student['fullName'] . ' (' . $student['mssv'] . '),';
     $lines[] = '';
+    $isExam = khtd_is_exam((array) ($ws['schema'] ?? []));
     $lines[] = 'Kết quả Phiếu học tập số ' . $ws['No'] . ' – ' . $ws['Title'] . ' (Khoa học Trái đất, thực tập):';
     if ($attemptLine !== '') $lines[] = $attemptLine;
-    if ($final !== null) {
+    if ($isExam && $ai && $final === null) {
+        $n = (int) ($ai['exam']['count'] ?? 0);
+        $lines[] = '• DỰ BÁO ĐIỂM BÀI THI nhận diện mẫu (rubric ĐG1.1, ' . $n . ' mẫu): ' . number_format((float) $ai['total'], 2) . '/10';
+        $lines[] = '  Phiếu luyện tập: KHÔNG tính vào điểm tổng thực tập; kết quả các lần luyện dùng để giảng viên xét điểm cộng.';
+    } elseif ($final !== null) {
         $lines[] = '• ĐIỂM CHÍNH THỨC (giảng viên duyệt): ' . number_format($final, 2) . '/10';
         if ($note) { $lines[] = '• Nhận xét của giảng viên: ' . $note; }
     } elseif ($ai) {
@@ -788,6 +893,15 @@ function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $fi
         $lines[] = '';
         $lines[] = 'Chi tiết theo tiêu chí:';
         foreach ($ai['criteria'] as $c) $lines[] = '  - ' . $c['name'] . ': ' . $c['score'] . '/' . $c['max'] . ($c['comment'] ? ' — ' . $c['comment'] : '');
+        if (!empty($ai['sua_bai'])) {
+            $lines[] = '';
+            $lines[] = 'CẦN SỬA / BỔ SUNG ĐỂ HOÀN THIỆN BÀI:';
+            foreach ($ai['sua_bai'] as $i => $f) {
+                $lines[] = '  ' . ($i + 1) . '. ' . ($f['muc'] !== '' ? $f['muc'] . ': ' : '') . $f['van_de'];
+                if ($f['cach_sua'] !== '') $lines[] = '     → ' . $f['cach_sua'];
+            }
+        }
+        foreach ((array) ($ai['flags'] ?? []) as $fl) if (is_scalar($fl) && str_starts_with((string) $fl, 'Nộp quá giờ')) $lines[] = '• ' . $fl;
         if (!empty($ai['feedback'])) { $lines[] = ''; $lines[] = 'Nhận xét chung: ' . $ai['feedback']; }
     }
     $lines[] = '';
@@ -795,7 +909,9 @@ function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $fi
     $lines[] = '';
     $lines[] = 'ThS. Đinh Quốc Tuấn – Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM';
     $lines[] = '(Email tự động từ hệ thống diemdanhsv.com — vui lòng không trả lời thư này.)';
-    $subject = '[KHTĐ] Kết quả Phiếu học tập số ' . $ws['No'] . ($final !== null ? ' (chính thức)' : ' (tạm tính)');
+    $subject = $isExam && $final === null && $ai
+        ? '[KHTĐ] Luyện thi nhận diện mẫu: dự báo ' . number_format((float) $ai['total'], 2) . '/10'
+        : '[KHTĐ] Kết quả Phiếu học tập số ' . $ws['No'] . ($final !== null ? ' (chính thức)' : ' (tạm tính)');
     if ($attachments) { $lines[] = ''; $lines[] = 'Đính kèm: phiếu đánh giá điểm (PDF) — ' . implode(', ', array_map(static fn ($a) => (string) $a['name'], $attachments)) . '.'; }
     return mail_send($to, $subject, implode("\n", $lines), $attachments);
 }
@@ -816,8 +932,10 @@ function action_khtd_seed_worksheets(array $params): void
         $stmt->execute(['c' => $classId, 'n' => $no]);
         if ($stmt->fetch()) continue;
         $id = new_id('WSH');
-        db()->prepare('INSERT INTO khtd_worksheets (WorksheetID, ClassID, No, Title, SchemaJSON, CreatedBy) VALUES (:id, :c, :n, :t, :s, :by)')
-            ->execute(['id' => $id, 'c' => $classId, 'n' => $no, 't' => $def['title'], 's' => json_encode($def, JSON_UNESCAPED_UNICODE), 'by' => $me['userId'] ?? ($me['UserID'] ?? null)]);
+        $maxA = (int) ($def['max_attempts'] ?? 1); $pol = ($def['score_policy'] ?? 'BEST') === 'LAST' ? 'LAST' : 'BEST';
+        unset($def['max_attempts'], $def['score_policy']);
+        db()->prepare('INSERT INTO khtd_worksheets (WorksheetID, ClassID, No, Title, SchemaJSON, CreatedBy, MaxAttempts, ScorePolicy) VALUES (:id, :c, :n, :t, :s, :by, :ma, :sp)')
+            ->execute(['id' => $id, 'c' => $classId, 'n' => $no, 't' => $def['title'], 's' => json_encode($def, JSON_UNESCAPED_UNICODE), 'by' => $me['userId'] ?? ($me['UserID'] ?? null), 'ma' => $maxA, 'sp' => $pol]);
         $created[] = ['no' => $no, 'id' => $id];
     }
     log_audit((string) ($me['userId'] ?? ($me['UserID'] ?? '')), 'LECTURER', 'khtdSeedWorksheets', 'class', $classId, ['created' => count($created)]);
@@ -905,9 +1023,16 @@ function action_khtd_lecturer_list(array $params): void
     $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
     $classId = trim((string) ($params['classId'] ?? ''));
     assert_class_access($me, $classId);
-    $ws = db()->prepare('SELECT WorksheetID, No, Title, Status, OpenAt, CloseAt, MaxAttempts, ScorePolicy FROM khtd_worksheets WHERE ClassID = :c ORDER BY No');
+    $ws = db()->prepare('SELECT WorksheetID, No, Title, Status, OpenAt, CloseAt, MaxAttempts, ScorePolicy, SchemaJSON FROM khtd_worksheets WHERE ClassID = :c ORDER BY No');
     $ws->execute(['c' => $classId]);
     $sheets = $ws->fetchAll();
+    foreach ($sheets as &$w) {
+        $sc = json_decode((string) $w['SchemaJSON'], true) ?: [];
+        $w['IsExam'] = khtd_is_exam($sc);
+        if ($w['IsExam']) $w['ExamKey'] = khtd_exam_key_text($sc);
+        unset($w['SchemaJSON']);
+    }
+    unset($w);
     $subs = db()->prepare(
         "SELECT sub.SubmissionID, sub.WorksheetID, sub.StudentID, sub.AttemptNo, w.No, s.MSSV, s.FullName, s.Email, sub.Status, sub.SubmittedAt, sub.AiScore, sub.AiModel, sub.FinalScore, sub.FinalNote, sub.EmailSentAt, " .
         "CASE WHEN sub.AiScore IS NULL THEN JSON_UNQUOTE(JSON_EXTRACT(sub.AiJSON, '$.error')) END AS AiError " .
@@ -1100,7 +1225,7 @@ function action_khtd_regrade(array $params): void
     $student = ['email' => $row['Email'], 'fullName' => $row['FullName'], 'mssv' => $row['MSSV']];
     khtd_long_request();
     try {
-        $ai = khtd_gemini_grade($ws, json_decode((string) $row['AnswersJSON'], true) ?: [], $student);
+        $ai = khtd_grade($ws, json_decode((string) $row['AnswersJSON'], true) ?: [], $student);
     } catch (Throwable $e) { api_fail('Chấm AI lỗi: ' . $e->getMessage()); return; }
     if (!$ai) { api_fail('Chưa cấu hình key Gemini trong private/config.php.'); return; }
     $newStatus = $row['Status'] === 'FINAL' ? 'FINAL' : 'AI_GRADED';
@@ -1117,9 +1242,17 @@ function action_khtd_export_csv(array $params): void
     $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
     $classId = trim((string) ($params['classId'] ?? ''));
     assert_class_access($me, $classId);
-    $ws = db()->prepare('SELECT WorksheetID, No, Status, OpenAt, CloseAt, MaxAttempts, ScorePolicy FROM khtd_worksheets WHERE ClassID = :c ORDER BY No');
+    $ws = db()->prepare('SELECT WorksheetID, No, Title, Status, OpenAt, CloseAt, MaxAttempts, ScorePolicy, SchemaJSON FROM khtd_worksheets WHERE ClassID = :c ORDER BY No');
     $ws->execute(['c' => $classId]);
     $sheets = $ws->fetchAll();
+    $boards = [];   // phiếu luyện thi: không vào điểm tổng — xuất cột riêng (dự báo, điểm cộng đề xuất, thái độ)
+    foreach ($sheets as $w) {
+        $sc = json_decode((string) $w['SchemaJSON'], true) ?: [];
+        if (khtd_is_exam($sc)) {
+            $b = khtd_practice_board(['WorksheetID' => $w['WorksheetID'], 'ClassID' => $classId, 'No' => $w['No'], 'Title' => $w['Title'], 'schema' => $sc]);
+            foreach ($b['rows'] as $r) $boards[$w['No']][$r['mssv']] = $r;
+        }
+    }
     $st = db()->prepare("SELECT s.StudentID, s.MSSV, s.FullName FROM enrollments e JOIN students s ON s.StudentID = e.StudentID WHERE e.ClassID = :c AND e.Status = 'ACTIVE' ORDER BY s.FullName");
     $st->execute(['c' => $classId]);
     $subs = db()->prepare('SELECT sub.WorksheetID, sub.StudentID, sub.AttemptNo, sub.Status, sub.AiScore, sub.FinalScore FROM khtd_submissions sub JOIN khtd_worksheets w ON w.WorksheetID = sub.WorksheetID WHERE w.ClassID = :c');
@@ -1129,8 +1262,17 @@ function action_khtd_export_csv(array $params): void
     foreach ($st->fetchAll() as $s) {
         $r = ['MSSV' => $s['MSSV'], 'HoTen' => $s['FullName']];
         foreach ($sheets as $w) {
+            if (isset($boards[$w['No']])) continue;
             $x = $sum[$w['WorksheetID'] . '|' . $s['StudentID']] ?? null;
             $r['Phieu' . $w['No']] = ($x && $x['score'] !== null) ? $x['score'] : '';
+        }
+        foreach ($boards as $no => $b) {
+            $p = $b[$s['MSSV']] ?? null;
+            $r['LuyenThi' . $no . '_DuBaoCaoNhat'] = $p && $p['best'] !== null ? $p['best'] : '';
+            $r['LuyenThi' . $no . '_SoLan'] = $p ? $p['attempts'] : 0;
+            $r['LuyenThi' . $no . '_LoaiMauDaThao'] = $p ? $p['mastered'] : 0;
+            $r['DiemCong_DeXuat'] = $p ? $p['bonus'] : 0;
+            $r['ThaiDo_LuyenTap'] = $p ? $p['attitude'] : 'Chưa luyện';
         }
         $rows[] = $r;
     }
@@ -1239,5 +1381,27 @@ function khtd_default_worksheets(): array
             'answer_key' => ['q1' => 'Phóng đại đứng bằng tỷ lệ đứng chia tỷ lệ ngang: trục đứng 1 cm ứng 20 m tức 1:2.000, trục ngang 1:25.000, vậy hệ số là 12,5 lần. Nếu vẽ không phóng đại, chênh cao toàn tuyến khoảng 150 m chỉ cao 150 m chia 25.000 bằng 6 mm.', 'q2' => 'Đoạn dốc nhất là đoạn đầu từ A, khoảng 0 đến 700 m, hạ từ 252 m xuống khoảng 120 m, độ dốc trung bình khoảng 18 đến 19 phần trăm tức 10 đến 11 độ. Toàn tuyến A đến B dài 2.030 m với chênh cao khoảng 145 m nên độ dốc trung bình chỉ khoảng 7 phần trăm tức 4 độ; đoạn đầu dốc gấp khoảng 2,5 lần mức trung bình.', 'q3' => 'Trình tự đúng từ A đến B: đỉnh đồi A cao 252 m; sườn dốc đều đổ về phía đông nam với đường đồng mức dày; chân sườn ở khoảng 140 m độ dốc giảm hẳn; tiếp đến bề mặt thềm thoải lượn sóng ở 110 đến 120 m; cuối cùng là bãi bồi thấp và lòng sông Dinh tại B khoảng 105 đến 110 m.', 'sododd' => 'Magma xâm nhập: sáng là granit, muối tiêu là diorit, sẫm là gabro. Phun trào: sáng là rhyolit, xám là andesit, đen nặng là basalt, đen bóng thủy tinh là obsidian, nhẹ nổi trên nước là đá bọt. Trầm tích: hạt trên 2 mm tròn cạnh là cuội kết, góc cạnh là dăm kết, cỡ cát là cát kết, rất mịn là bột kết hoặc sét kết, có hóa thạch và sủi HCl là đá vôi. Biến chất: phiến rất mịn là slate, ánh lụa là phyllit, mica hạt lớn lấp lánh là schist, phân dải sáng tối là gneiss, sủi HCl và tinh thể lấp lánh là marble, cứng 7 vỡ xuyên hạt là quartzit.'],
             'reference' => 'Mặt cắt A đến B dài 2.030 m, từ đỉnh A 252 m tới bãi bồi B khoảng 105 đến 110 m. Giao điểm với đường đồng mức tính từ A: 118 m ứng cao độ 240; 175 m ứng 220; 242 m ứng 200; 334 m ứng 180; 418 m ứng 160; 636 m ứng 140; 704 m ứng 120; sau đó địa hình thoải, các giao điểm ở 939, 1.218, 1.259, 1.322 và 1.889 m đều ứng cao độ 120. Chấp nhận sai lệch khoảng cách dưới 50 m và cao độ trong một khoảng cao đều. Phóng đại đứng của lưới mặt cắt là 12,5 lần.',
             'answer_hints' => 'Giao điểm từ A (252 m): 118 m→240; 175→220; 242→200; 334→180; 418→160; 636→140; 704→120; rồi dao động 100–120 (939, 1218, 1259, 1322, 1889 m đều 120) đến B ~105–110 m; tổng 2.030 m. VE = 25.000/2.000 = 12,5×; không phóng đại: 150 m chênh cao → 6 mm. Dốc nhất: 0–700 m từ A (≈132 m/700 m ≈ 19% ≈ 11°) so với toàn tuyến ≈ 7%. Mô tả: đỉnh A → sườn dốc đều hướng ĐN → chân sườn ~140 m → bậc thềm thoải 110–120 m lượn sóng → bãi bồi và lòng sông Dinh tại B. Sơ đồ: granit/diorit/gabro; rhyolit/andesit/basalt/obsidian/đá bọt; cuội kết/dăm kết, cát kết, bột–sét kết, đá vôi hóa thạch; slate, phyllit, schist, gneiss, marble, quartzit. Thi thử: chấm theo tên đúng + 2 dấu hiệu quan sát được.'],
+        7 => ['title' => 'Luyện thi cuối khóa – nhận diện khoáng vật & đá (3 phút/mẫu)',
+            'max_attempts' => 0, 'score_policy' => 'BEST',
+            'exam' => ['sec_per_sample' => 180, 'max_samples' => 10, 'grace_sec' => 60,
+                       'bonus' => ['step' => 5, 'add' => 0.25, 'cap' => 1.0, 'min_level' => 0.75], 'key' => []],
+            'sections' => [
+                ['id' => 'nhandien', 'type' => 'table', 'layout' => 'specimens', 'photos' => true,
+                 'title' => 'Bảng nhận diện khoáng vật / đá (theo mẫu bài thi ĐG1.1)',
+                 'columns' => array_values(KHTD_EXAM_FIELDS), 'fields' => array_keys(KHTD_EXAM_FIELDS),
+                 'rows' => array_map(fn($i) => 'Mẫu ' . $i, range(1, KHTD_EXAM_MAX_SAMPLES))],
+            ],
+            'rubric' => ['criteria' => array_map(fn($i) => ['id' => 'm' . $i, 'name' => 'Mẫu ' . $i, 'max' => 1], range(1, KHTD_EXAM_MAX_SAMPLES))],
+            'rubric_text' => [
+                'da' => ['1' => 'Đúng tên đá + có số hiệu + đúng nhóm đá + đúng kiến trúc + đủ và đúng khoáng vật chính + đúng đặc điểm nhận diện',
+                         '0.75' => 'Đúng tên + số hiệu + nhóm đá + kiến trúc + khoáng vật chính',
+                         '0.5' => 'Đúng tên + số hiệu + nhóm đá + kiến trúc', '0.25' => 'Đúng tên + có số hiệu', '0' => 'Sai tên đá hoặc không ghi số hiệu'],
+                'kv' => ['1' => 'Có số hiệu + đúng tên + thành phần hóa học + độ cứng + cát khai + (vết vạch / màu / tính chất khác)',
+                         '0.75' => 'Số hiệu + tên + thành phần hóa học + độ cứng + cát khai',
+                         '0.5' => 'Số hiệu + tên + thành phần hóa học + (độ cứng hoặc cát khai)',
+                         '0.25' => 'Số hiệu + tên + (thành phần hóa học hoặc độ cứng hoặc cát khai)', '0' => 'Không ghi số hiệu hoặc sai tên khoáng vật'],
+            ],
+            'reference' => 'Bộ tri thức chuẩn: api/lib/khtd_kb.php (giáo trình thực tập Địa chất đại cương – BM Địa chất cơ sở).',
+        ],
     ];
 }

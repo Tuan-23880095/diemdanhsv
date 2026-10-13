@@ -119,6 +119,10 @@ class APIService {
   khtdGrantRetake(token, submissionId)        { return this.post('khtdGrantRetake', { token, submissionId }); }
   khtdUploadPhoto(token, worksheetId, sectionId, row, image) { return this.post('khtdUploadPhoto', { token, worksheetId, sectionId, row, image }); }
   khtdStats(token, classId)                   { return this.get('khtdStats', { token, classId }); }
+  /* ---- Phiếu luyện thi cuối khóa (api/lib/khtd_exam.php, docs/04 mục 33) ---- */
+  khtdStartExam(token, worksheetId, count)    { return this.post('khtdStartExam', { token, worksheetId, count }); }
+  khtdSetExamKey(token, worksheetId, text)    { return this.post('khtdSetExamKey', { token, worksheetId, text }); }
+  khtdPracticeBoard(token, worksheetId)       { return this.get('khtdPracticeBoard', { token, worksheetId }); }
   /* ---- GĐ12: lưu trữ cuối học kỳ (api/lib/archive.php) ---- */
   archivePreview(token, classId)              { return this.get('archivePreview', { token, classId }); }
   archiveList(token)                          { return this.get('archiveList', { token }); }
