@@ -691,6 +691,18 @@ check('adminImportRoster chạy lại cùng file → idempotent (0 mới, 0 ghi 
     && $r['data']['counts']['enrollmentsInserted'] === 0, brief($r));
 check('adminImportRoster không có cột MSSV → error', err(api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => $c3, 'csv' => "STT,Ten\n1,X", 'dryRun' => true]), 'cột MSSV'));
 check('adminImportRoster lớp người khác → error', err(api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => 'SMOKE_C2', 'csv' => $csv2, 'dryRun' => true]), 'không có quyền'));
+// 14/10/2026: tên lỗi phông lần nhập đầu ('?', '�') được nhập lại sửa đúng; tên tốt vẫn không bị ghi đè.
+$pdo->exec("UPDATE students SET FullName = 'NGUY?N V\u{FFFD}N S?U' WHERE MSSV = '99000006'");
+$r = api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => $c3, 'csv' => "MSSV,Ho ten\n99000006,D??NG B?O\n", 'dryRun' => true]);
+check('adminImportRoster: họ tên trong file có ?/� → báo lỗi phông, không nhận dòng', ok($r) && $r['data']['validRows'] === 0
+    && str_contains((string) ($r['data']['errors'][0]['error'] ?? ''), 'lỗi phông'), brief($r));
+$r = api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => $c3, 'csv' => "MSSV,Ho ten\n99000006,Nguyễn Văn Sáu\n", 'dryRun' => false]);
+$nm = (string) $pdo->query("SELECT FullName FROM students WHERE MSSV = '99000006'")->fetchColumn();
+check('adminImportRoster: nhập lại file đúng → sửa tên lỗi phông (cập nhật 1)', ok($r) && $r['data']['counts']['studentsUpdated'] === 1 && $nm === 'Nguyễn Văn Sáu', brief($r) . " | $nm");
+$r = api('POST', ['action' => 'adminImportRoster', 'token' => $tok1, 'classId' => $c3, 'csv' => "MSSV,Ho ten\n99000006,Tên Khác Hẳn\n", 'dryRun' => false]);
+$nm = (string) $pdo->query("SELECT FullName FROM students WHERE MSSV = '99000006'")->fetchColumn();
+check('adminImportRoster: tên đang đúng KHÔNG bị ghi đè', ok($r) && $r['data']['counts']['studentsUpdated'] === 0 && $nm === 'Nguyễn Văn Sáu', brief($r) . " | $nm");
+check('adminEnroll họ tên lỗi phông → error', err(api('POST', ['action' => 'adminEnroll', 'token' => $tok1, 'classId' => $c3, 'mssv' => '99000008', 'fullName' => 'L? V?N']), 'lỗi phông'));
 $audit = (int) $pdo->query("SELECT COUNT(*) FROM audit_log WHERE Action LIKE 'ADMIN\\_%'")->fetchColumn();
 check('audit_log ghi mọi thao tác quản trị ghi', $audit >= 10, "có $audit dòng");
 

@@ -507,6 +507,15 @@ function action_admin_save_student(array $params): void
 }
 
 /**
+ * Họ tên bị hỏng phông khi nhập (file CSV không lưu UTF-8): có dấu '?' hoặc ký tự
+ * thay thế U+FFFD '�'. Tên người Việt không bao giờ chứa hai ký tự này.
+ */
+function admin_name_is_garbled(string $name): bool
+{
+    return $name !== '' && (str_contains($name, '?') || str_contains($name, "\u{FFFD}"));
+}
+
+/**
  * Lõi dùng chung cho adminEnroll và adminImportRoster: upsert một sinh viên
  * theo MSSV rồi ghi danh vào lớp. Trả về mã kết quả để đếm. KHÔNG tự mở
  * transaction — nơi gọi bọc.
@@ -539,7 +548,12 @@ function admin_upsert_enroll(PDO $pdo, string $classId, string $mssv, string $fu
         $studentId = (string) $student['StudentID'];
         $set = [];
         $bind = ['id' => $studentId];
-        if ($fullName !== '' && trim((string) $student['FullName']) === '') {
+        // Ngoại lệ có kiểm soát (14/10/2026): họ tên đang lưu bị HỎNG PHÔNG ('?', '�')
+        // thì cho tên đúng ghi đè — đây là sửa lỗi nhập, không phải đổi danh tính.
+        // Email vẫn chỉ điền chỗ trống như trên.
+        $oldName = trim((string) $student['FullName']);
+        if ($fullName !== '' && !admin_name_is_garbled($fullName)
+            && ($oldName === '' || admin_name_is_garbled($oldName))) {
             $set[] = 'FullName = :n';
             $bind['n'] = $fullName;
         }
@@ -586,6 +600,10 @@ function action_admin_enroll(array $params): void
         return;
     }
     $fullName = admin_str($params, 'fullName', 120);
+    if (admin_name_is_garbled($fullName)) {
+        api_fail('Họ tên có ký tự lỗi phông (? hoặc �). Gõ lại họ tên có dấu.');
+        return;
+    }
 
     $res = db_transaction(static fn (PDO $pdo): array => admin_upsert_enroll($pdo, $classId, $mssv, $fullName, $email));
 
@@ -683,6 +701,10 @@ function action_admin_import_roster(array $params): void
         $sid = $known[$r['mssv']] ?? null;
         if ($sid === null && $r['fullName'] === '') {
             $errors[] = ['line' => $r['line'], 'error' => 'MSSV ' . $r['mssv'] . ' chưa có trong hệ thống và dòng này thiếu họ tên.'];
+            continue;
+        }
+        if (admin_name_is_garbled($r['fullName'])) {
+            $errors[] = ['line' => $r['line'], 'error' => 'Họ tên "' . $r['fullName'] . '" bị lỗi phông (có ? hoặc �). Trong Excel chọn Lưu thành → "CSV UTF-8 (Comma delimited)" rồi nhập lại.'];
             continue;
         }
         $r['studentExists'] = $sid !== null;

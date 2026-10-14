@@ -164,10 +164,27 @@ class AdminView {
     this.el.csvFile.addEventListener('change', () => {
       const f = this.el.csvFile.files[0];
       if (!f) return;
-      const r = new FileReader();
-      r.onload = () => { this.el.csvText.value = String(r.result); h(String(r.result)); };
-      r.readAsText(f, 'UTF-8');
+      this._readCsvFile(f, text => { this.el.csvText.value = text; h(text); });
     });
+  }
+  /**
+   * Đọc file CSV: thử UTF-8 trước; nếu file lưu kiểu "CSV (Comma delimited)" của Excel
+   * (bảng mã Windows-1258/1252, không phải UTF-8) thì giải mã lại bằng Windows-1258
+   * để không ra chữ "D??NG B?O". Có '?' sẵn trong file (Excel đã làm mất dấu) thì
+   * máy chủ sẽ báo lỗi từng dòng khi Kiểm tra trước.
+   */
+  _readCsvFile(f, done) {
+    const r = new FileReader();
+    r.onload = () => {
+      const buf = new Uint8Array(r.result);
+      let text;
+      try { text = new TextDecoder('utf-8', { fatal: true }).decode(buf); }
+      catch (e) {
+        try { text = new TextDecoder('windows-1258').decode(buf); } catch (e2) { text = new TextDecoder('windows-1252').decode(buf); }
+      }
+      done(text.normalize('NFC'));
+    };
+    r.readAsArrayBuffer(f);
   }
   resetEnrollForm() { this.el.enrollForm.reset(); }
   setRosterVisible(v) { this.el.rosterBody.hidden = !v; if (!v) this.clearCsvReport(); }
@@ -275,9 +292,7 @@ class AdminView {
     this.el.gradeFile.addEventListener('change', () => {
       const f = this.el.gradeFile.files[0];
       if (!f) return;
-      const r = new FileReader();
-      r.onload = () => { this.el.gradeCsv.value = String(r.result); h(String(r.result)); };
-      r.readAsText(f, 'UTF-8');
+      this._readCsvFile(f, text => { this.el.gradeCsv.value = text; h(text); });
     });
   }
   setGradesVisible(v) {
