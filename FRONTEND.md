@@ -17,9 +17,9 @@ js/services/            APIService (gọi mạng), DeviceService (GPS/thiết b�
 js/views/               StudentView, RosterView — chỉ đụng DOM
 js/controllers/         StudentController, LecturerController — điều phối
 assets/logo/logo.png    Logo trường (tự thêm; thiếu thì header vẫn chạy)
-favicon.svg, favicon.ico Icon tab: hoa sen đọng sương, bản thu gọn (trắng trên nền lục)
-images/logo-sen.svg     Logo đầy đủ (dùng từ 64 px trở lên, vd. chân trang chủ)
-images/logo-sen-nho.svg Bản thu gọn cho header (40 px), đặt cạnh logo Trường
+images/logo-sen.svg     Logo DUY NHẤT của hệ thống — dùng cho mọi kích cỡ (header 32–40 px, chân trang 80 px)
+favicon.svg, favicon.ico Icon tab: chính hình images/logo-sen.svg trên ô nền trắng bo góc
+                        (không tạo thêm biến thể thu gọn nào khác)
 ```
 
 ## Cài đặt
