@@ -6,13 +6,23 @@
   var $ = function (id) { return document.getElementById(id); };
 
   var TABS = [
-    ['khoidong', 'Khởi động'], ['hinh', 'Hình khối'], ['muctieu', 'Mục tiêu'], ['eisen', 'Eisenhower'],
-    ['banhxe', 'Bánh xe'], ['camket', 'Cam kết'], ['hoi', 'Hỏi đáp'], ['danhgia', 'Góp ý'], ['pomo', '⏱ Pomodoro'], ['kehoach', '★ Kế hoạch của tôi']
+    ['nc0', '① Khảo sát đầu'], ['khoidong', 'Khởi động'], ['hinh', 'Hình khối'], ['muctieu', 'Mục tiêu'], ['eisen', 'Eisenhower'],
+    ['banhxe', 'Bánh xe'], ['camket', 'Cam kết'], ['hoi', 'Hỏi đáp'], ['nc1', 'Khảo sát cuối'], ['danhgia', 'Góp ý'], ['pomo', '⏱ Pomodoro'], ['kehoach', '★ Kế hoạch của tôi']
   ];
   var NAMES = {}; TABS.forEach(function (t) { NAMES[t[0]] = t[1]; });
   var current = null, liveAct = '';
 
-  function done(act) { return !!st.get('v.' + act, null); }
+  function done(act) { return /^nc/.test(act) ? WSS.done(act) : !!st.get('v.' + act, null); }
+  var style = document.createElement('style'); style.textContent = WSS.CSS; document.head.appendChild(style);
+  function mountNc(w) {
+    var box = $(w + 'Box');
+    if (WSS.declined()) {
+      box.innerHTML = '<div class="card"><p style="margin:0 0 10px">Bạn đã chọn <b>không tham gia</b> khảo sát nghiên cứu. Mọi hoạt động của workshop vẫn dùng bình thường.</p><button type="button" class="btn sm" id="' + w + 'Re">Tôi đổi ý, muốn tham gia</button></div>';
+      $(w + 'Re').onclick = function () { st.set('nc.no', 0); mountNc(w); };
+      return;
+    }
+    WSS.mount(box, w, { onDone: drawTabs, onDecline: function () { mountNc('nc0'); mountNc('nc1'); show('khoidong'); } });
+  }
   function drawTabs() {
     $('tabs').innerHTML = TABS.map(function (t) {
       return '<button type="button" data-t="' + t[0] + '" class="' + (t[0] === current ? 'on' : '') + (t[0] === liveAct && t[0] !== current ? ' live' : '') + '">' + t[1] + (done(t[0]) ? '<span class="ok">✓</span>' : '') + '</button>';
@@ -28,6 +38,7 @@
     $('liveBar').classList.toggle('on', !!liveAct && liveAct !== t);
     if (t === 'hoi') loadQ();
     if (t === 'kehoach') drawMine();
+    if (t === 'nc0' || t === 'nc1') mountNc(t);
     var hall = { khoidong: 'kdHall', hinh: 'hHall', eisen: 'eHall', muctieu: 'gHall', camket: 'cHall' }[t];
     if (hall && done(t)) loadHall(t, hall);
     if (t === 'banhxe' && done('banhxe')) loadWheelHall();
@@ -282,6 +293,7 @@
     var c = st.get('v.camket', null), fr = st.get('frog', '');
     h += '<dt>Cam kết 7 ngày</dt><dd>' + (c && c.pick != null ? '<b>' + WS.PLEDGES[c.pick] + '</b>' : '<span class="empty">Chưa chọn</span>') + '</dd>';
     h += '<dt>🐸 Con ếch ngày mai</dt><dd>' + (fr ? esc(fr) : '<span class="empty">Chưa ghi</span>') + '</dd>';
+    if (WSS.consented()) h += '<dt>Mã ẩn danh khảo sát</dt><dd><b style="letter-spacing:.1em">' + esc(WSS.sgic()) + '</b> — dùng lại ở khảo sát sau 2 tuần (' + WSR.WAVES.nc2.when + ') và 6 tuần (' + WSR.WAVES.nc3.when + ').</dd>';
     h += '<dt>Lịch tuần — 4 bước</dt><dd>1. Việc cố định → 2. Khối tự học vào giờ tỉnh táo → 3. Sức khỏe &amp; con người → 4. Chừa ~20% trống. Rà soát 20 phút tối Chủ nhật.</dd></dl>';
     $('mine').innerHTML = h;
   }
@@ -298,14 +310,18 @@
     var now = new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z';
     function ev(uid, dt, mins, rr, sum, desc) {
       var end = new Date(dt.getTime() + mins * 60000);
-      return ['BEGIN:VEVENT', 'UID:' + uid + '-' + CLIENT + '@diemdanhsv.com', 'DTSTAMP:' + now, 'DTSTART;TZID=Asia/Ho_Chi_Minh:' + icsDate(dt), 'DTEND;TZID=Asia/Ho_Chi_Minh:' + icsDate(end), 'RRULE:' + rr, 'SUMMARY:' + icsEsc(sum), 'DESCRIPTION:' + icsEsc(desc),
-        'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEsc(sum), 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT'].join('\r\n');
+      var rl = rr ? ['RRULE:' + rr] : [];
+      return ['BEGIN:VEVENT', 'UID:' + uid + '-' + CLIENT + '@diemdanhsv.com', 'DTSTAMP:' + now, 'DTSTART;TZID=Asia/Ho_Chi_Minh:' + icsDate(dt), 'DTEND;TZID=Asia/Ho_Chi_Minh:' + icsDate(end)].concat(rl, ['SUMMARY:' + icsEsc(sum), 'DESCRIPTION:' + icsEsc(desc),
+        'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEsc(sum), 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT']).join('\r\n');
     }
     var ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//diemdanhsv//Workshop K2026//VI', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
       'BEGIN:VTIMEZONE', 'TZID:Asia/Ho_Chi_Minh', 'BEGIN:STANDARD', 'DTSTART:19700101T000000', 'TZOFFSETFROM:+0700', 'TZOFFSETTO:+0700', 'TZNAME:ICT', 'END:STANDARD', 'END:VTIMEZONE',
       ev('camket', start, 15, 'FREQ=DAILY;COUNT=7', '✅ Cam kết 7 ngày: ' + title, 'Cam kết từ Workshop Quản lý thời gian K2026 (HCMUS). Làm nhỏ, làm đều — lỡ một ngày thì quay lại ngày hôm sau.'),
-      ev('rasoat', sun, 20, 'FREQ=WEEKLY;COUNT=8', '🔁 Rà soát tuần (20 phút)', '1. Nhìn lại: 3 việc đã làm được. 2. Gom mọi hạn chót về một chỗ. 3. Nhìn trước 2 tuần tới. 4. Chọn 3 việc quan trọng nhất tuần sau và đặt vào lịch.'),
-      'END:VCALENDAR'].join('\r\n');
+      ev('rasoat', sun, 20, 'FREQ=WEEKLY;COUNT=8', '🔁 Rà soát tuần (20 phút)', '1. Nhìn lại: 3 việc đã làm được. 2. Gom mọi hạn chót về một chỗ. 3. Nhìn trước 2 tuần tới. 4. Chọn 3 việc quan trọng nhất tuần sau và đặt vào lịch.')]
+      .concat(WSS.consented() ? [
+        ev('nc2', new Date(2026, 10, 1, 20, 0), 10, '', '📝 Khảo sát sau 2 tuần — Workshop K2026', 'Mã ẩn danh của bạn: ' + WSS.sgic() + '\nMở: ' + WSR.WAVES.nc2.url + '\nKhoảng 3 phút. Cảm ơn bạn!'),
+        ev('nc3', new Date(2026, 10, 29, 20, 0), 10, '', '📝 Khảo sát sau 6 tuần — Workshop K2026', 'Mã ẩn danh của bạn: ' + WSS.sgic() + '\nMở: ' + WSR.WAVES.nc3.url + '\nKhoảng 5 phút. Cảm ơn bạn!')] : [])
+      .concat(['END:VCALENDAR']).join('\r\n');
     var a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
     a.download = 'nhac-workshop-k26.ics'; document.body.appendChild(a); a.click(); a.remove();
@@ -328,7 +344,16 @@
   document.addEventListener('visibilitychange', function () { if (!document.hidden) { pollState(); if (current === 'hoi') loadQ(); } });
 
   if (!navigator.onLine) $('offline').classList.add('on');
-  show((location.hash || '').slice(1) || 'khoidong');
+  show((location.hash || '').slice(1) || (!WSS.done('nc0') && !WSS.declined() ? 'nc0' : 'khoidong'));
+  (function followBanner() {
+    if (!WSS.consented()) return;
+    var today = new Date().toISOString().slice(0, 10);
+    var w = ['nc3', 'nc2'].filter(function (k) { return today >= WSR.WAVES[k].open && !WSS.done(k); })[0];
+    if (!w) return;
+    var b = document.createElement('div'); b.className = 'card'; b.style.borderTop = '6px solid var(--son)';
+    b.innerHTML = '<b>📝 Đã đến ' + WSR.WAVES[w].name.toLowerCase() + '</b><p style="margin:6px 0 10px">Khoảng ' + WSR.WAVES[w].mins + ' phút. Mã của bạn: <b>' + esc(WSS.sgic()) + '</b></p><a class="btn pri" href="' + WSR.WAVES[w].url + '">Làm khảo sát</a>';
+    document.querySelector('main').insertBefore(b, document.querySelector('main').firstChild);
+  })();
   pollState();
   flushPending();
 })();
