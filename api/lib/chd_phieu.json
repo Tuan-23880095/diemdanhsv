@@ -147,11 +147,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
@@ -308,11 +308,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
@@ -453,11 +453,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
@@ -585,11 +585,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
@@ -742,11 +742,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
@@ -882,11 +882,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
@@ -1010,11 +1010,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   }
@@ -1124,11 +1124,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
@@ -1206,11 +1206,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
@@ -1343,11 +1343,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
@@ -1435,11 +1435,11 @@
   "mon": {
    "ma": "CHĐ",
    "ten": "Thực tập Cơ học đất",
-   "hoc_phan": "Cơ học đất (GEO20202)",
+   "hoc_phan": "Cơ học đất (GEO10404)",
    "url": "https://diemdanhsv.com/chd-tt/online.html"
   },
   "cham": {
-   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
    "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
