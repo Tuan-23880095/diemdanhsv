@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Workshop Kỹ Năng Quản Lý Thời Gian & Kế Hoạch Cá Nhân – Tân Sinh Viên K2026 | HCMUS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="tokens/brand.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20261014-logo">
+<link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="assets/favicon.ico?v=20261014-logo">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<!-- FIREBASE REALTIME DATABASE COMPAT SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<style>
+:root {
+  --b: #0b4f9e;       /* Lam HCMUS */
+  --b2: #0F6B55;      /* Lục Bồ Đề thương hiệu */
+  --bg: #F6F7F3;      /* Giấy thương hiệu */
+  --card: #ffffff;
+  --ink: #10212B;     /* Mực Lam thương hiệu */
+  --mute: #5b6b7c;
+  --line: #dde5ee;
+  --son: #D2492A;     /* Son điểm nhấn */
+  --vang: #D6A130;    /* Hoàng Thổ */
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+header {
+  background: linear-gradient(100deg, var(--b), var(--b2));
+  color: #fff;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+header .in {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+header img.logo-truong {
+  height: 52px;
+  width: auto;
+  background: #fff;
+  border-radius: 8px;
+  padding: 4px;
+  flex: none;
+}
+header h1 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.3;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+}
+header p {
+  margin: 3px 0 0;
+  font-size: 13px;
+  opacity: 0.95;
+}
+header .dqt-logo-o {
+  margin-left: auto;
+  width: 52px;
+  height: 52px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+header .dqt-logo-o img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+@media(max-width: 640px) {
+  header .dqt-logo-o { width: 44px; height: 44px; }
+  header img.logo-truong { height: 44px; }
+  header h1 { font-size: 16px; }
+}
+
+/* Tabs Bar */
+.tab-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 6px;
+  overflow-x: auto;
+}
+.tab-item {
+  padding: 8px 16px;
+  border-radius: 8px 8px 0 0;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--mute);
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.tab-item.active {
+  background: var(--b);
+  color: #fff;
+}
+.tab-item:hover:not(.active) {
+  background: rgba(11, 79, 158, 0.08);
+  color: var(--b);
+}
+
+/* Mode Switcher */
+.mode-btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  transition: all 0.2s;
+}
+.mode-btn.active {
+  background: var(--b2);
+  color: #fff;
+  border-color: var(--b2);
+  box-shadow: 0 2px 6px rgba(15,107,85,0.25);
+}
+
+/* Slide Deck Styles */
+.slide-container {
+  aspect-ratio: 16 / 9;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+.slide-content {
+  flex: 1;
+  padding: 32px 40px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+@media(max-width: 768px) {
+  .slide-container { aspect-ratio: auto; min-height: 560px; }
+  .slide-content { padding: 20px; }
+}
+
+/* Drag and Drop Quadrants */
+.quadrant-box {
+  min-height: 180px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 12px;
+  transition: all 0.2s;
+}
+.quadrant-box.drag-over {
+  border-color: var(--b2);
+  background: rgba(15, 107, 85, 0.06);
+}
+.task-badge {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: grab;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+  transition: all 0.15s;
+  user-select: none;
+}
+.task-badge:hover {
+  border-color: var(--b);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER CHUẨN THƯƠNG HIỆU -->
+<header>
+  <div class="in">
+    <img class="logo-truong" src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM"/>
+    <div>
+      <h1>Kỹ Năng Quản Lý Thời Gian &amp; Kế Hoạch Cá Nhân</h1>
+      <p>Workshop Tân Sinh Viên Khóa 2026 · Ngày 18/10/2026 · Cơ sở 2 Linh Trung, Thủ Đức · Diễn giả: <strong style="font-family:'Source Serif 4', Georgia, serif; font-size:14.5px; font-weight:600;">ThS. Đinh Quốc Tuấn</strong></p>
+    </div>
+    <span class="dqt-logo-o" title="Thương hiệu ThS. Đinh Quốc Tuấn">
+      <img src="assets/logo-sen.svg" alt="Logo hoa sen đọng sương"/>
+    </span>
+  </div>
+</header>
+
+<main class="max-w-[1200px] w-full mx-auto px-4 py-6 flex-1 flex flex-col">
+
+  <!-- TAB-BAR KẾ BÊN CHD-TT -->
+  <div class="tab-bar">
+    <a class="tab-item" href="../index.html"><i class="fa-solid fa-house mr-1.5"></i>Trang chủ</a>
+    <a class="tab-item" href="../khtd/index.html"><i class="fa-solid fa-globe mr-1.5"></i>KHTD-TT</a>
+    <a class="tab-item" href="../chd-tt/index.html"><i class="fa-solid fa-mountain mr-1.5"></i>CHĐ-TT</a>
+    <a class="tab-item active" href="index.html"><i class="fa-solid fa-bullseye mr-1.5"></i>WShop K2026</a>
+  </div>
+
+  <!-- BỘ CHUYỂN ĐỔI CHẾ ĐỘ & FIREBASE STATUS -->
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-6 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+    <div class="flex flex-wrap gap-2">
+      <button onclick="switchMode('slide')" id="btn-mode-slide" class="mode-btn active">
+        <i class="fa-solid fa-person-chalkboard text-emerald-600"></i> 📽️ 1. Trình Chiếu Slide
+      </button>
+      <button onclick="switchMode('slido')" id="btn-mode-slido" class="mode-btn">
+        <i class="fa-solid fa-mobile-screen-button text-blue-600"></i> 📱 2. Slido Tương Tác Trực Tiếp
+      </button>
+      <button onclick="switchMode('handbook')" id="btn-mode-handbook" class="mode-btn">
+        <i class="fa-solid fa-book-open text-amber-600"></i> 📚 3. Cẩm Nang &amp; Nghiên Cứu
+      </button>
+    </div>
+    <div class="flex items-center gap-2 text-xs font-semibold">
+      <!-- Firebase Live Status Pill -->
+      <span id="firebaseStatusPill" class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200 flex items-center gap-1.5 transition">
+        <span id="firebaseDot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span id="firebaseStatusText">Firebase Realtime DB: Đang kết nối...</span>
+      </span>
+      
+      <!-- Moderator Control Modal Toggle -->
+      <button onclick="toggleModPanel()" title="Quản trị viên / Diễn giả" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600 border border-slate-200">
+        <i class="fa-solid fa-sliders text-sm"></i>
+      </button>
+
+      <button onclick="toggleFullscreen()" title="Toàn màn hình" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600 border border-slate-200">
+        <i class="fa-solid fa-expand text-sm"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- MODERATOR / DIỄN GIẢ PANEL (ẨN/HIỆN) -->
+  <div id="modPanel" class="hidden mb-6 p-4 bg-slate-900 text-white rounded-2xl shadow-xl border border-slate-700 text-xs">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-700 mb-3">
+      <div class="font-bold text-sm text-amber-400 flex items-center gap-2">
+        <i class="fa-solid fa-user-shield text-base"></i> Bảng Điều Khiển Diễn Giả (ThS. Đinh Quốc Tuấn)
+      </div>
+      <button onclick="toggleModPanel()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-sm"></i></button>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="p-3 bg-slate-800 rounded-xl">
+        <div class="font-semibold text-slate-200 mb-1">Cấu hình Firebase Realtime DB</div>
+        <div class="text-[11px] text-slate-400 truncate">URL: <span id="modDbUrl">diemdanh-hcmus-default-rtdb</span></div>
+        <div class="text-[11px] text-slate-400 mt-1">Trạng thái: <span id="modDbStatus" class="text-emerald-400 font-bold">Khởi tạo</span></div>
+      </div>
+      <div class="p-3 bg-slate-800 rounded-xl flex flex-col justify-between">
+        <div class="font-semibold text-slate-200 mb-1">Quản lý Bình chọn (Poll)</div>
+        <button onclick="adminResetPoll()" class="mt-2 w-full py-1.5 px-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs">
+          🔄 Đặt lại Poll về 0 (Trước 18/10)
+        </button>
+      </div>
+      <div class="p-3 bg-slate-800 rounded-xl flex flex-col justify-between">
+        <div class="font-semibold text-slate-200 mb-1">Quản lý Câu hỏi (Q&A)</div>
+        <div class="flex gap-2 mt-2">
+          <button onclick="adminClearQA()" class="flex-1 py-1.5 px-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-xs">
+            🧹 Xóa hết câu hỏi
+          </button>
+          <button onclick="exportQAData()" class="flex-1 py-1.5 px-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-xs">
+            📥 Xuất JSON/CSV
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== KHỐI 1: TRÌNH CHIẾU SLIDE ==================== -->
+  <div id="view-slide" class="flex-1 flex flex-col justify-center">
+    <div class="slide-container" id="slideBox">
+      
+      <!-- Slide Nội dung thay đổi động -->
+      <div id="slideArea" class="slide-content">
+        <!-- Javascript sẽ nạp slide vào đây -->
+      </div>
+
+      <!-- Thanh điều hướng Slide dưới đáy -->
+      <div class="h-14 border-t border-slate-200 bg-slate-50 px-6 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <button onclick="prevSlide()" class="w-9 h-9 rounded-lg bg-white border border-slate-300 hover:bg-slate-100 flex items-center justify-center font-bold text-slate-700">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <span id="slideIndexIndicator" class="text-sm font-semibold text-slate-600">Slide 1 / 8</span>
+          <button onclick="nextSlide()" class="w-9 h-9 rounded-lg bg-white border border-slate-300 hover:bg-slate-100 flex items-center justify-center font-bold text-slate-700">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <select id="slideSelect" onchange="goToSlide(parseInt(this.value))" class="text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium text-slate-700">
+            <option value="0">1. Giới thiệu & Bìa Workshop</option>
+            <option value="1">2. Thách thức Quản lý Thời gian K26</option>
+            <option value="2">3. Trắc nghiệm Tâm lý - Hình học (Psycho-Geometrics)</option>
+            <option value="3">4. Phương pháp Thiết lập Mục tiêu (SMART & OKRs)</option>
+            <option value="4">5. Ma trận Eisenhower & Bẫy Khẩn cấp</option>
+            <option value="5">6. Kế hoạch Cá nhân & Bánh xe Cuộc đời</option>
+            <option value="6">7. Bộ Công cụ: Pomodoro, GTD, Eat That Frog</option>
+            <option value="7">8. Kế hoạch Hành động & Thử thách 21 Ngày</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== KHỐI 2: SLIDO TƯƠNG TÁC TRỰC TIẾP ==================== -->
+  <div id="view-slido" class="hidden flex-col gap-6">
+    
+    <!-- Hero Slido Barcode -->
+    <div class="bg-gradient-to-r from-blue-900 to-emerald-800 text-white p-6 rounded-2xl shadow-md flex flex-wrap items-center justify-between gap-6">
+      <div class="max-w-xl">
+        <span class="bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide">
+          <i class="fa-solid fa-bolt mr-1"></i> Firebase Realtime Sync Đang Hoạt Động
+        </span>
+        <h2 class="text-2xl font-bold mt-2 font-serif">Tham Gia Bình Chọn &amp; Đặt Câu Hỏi Tức Thì</h2>
+        <p class="text-sm text-slate-200 mt-1">Dữ liệu được đồng bộ hóa tức thì qua <strong>Firebase Realtime Database</strong>. Mọi câu hỏi và bình chọn của sinh viên được hiển thị trực tiếp lên màn hình LED hội trường.</p>
+      </div>
+      <div class="bg-white p-3 rounded-xl shadow-lg text-slate-800 text-center flex flex-col items-center">
+        <div class="w-28 h-28 bg-slate-100 border border-slate-300 rounded-lg flex items-center justify-center relative overflow-hidden">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://diemdanhsv.com/workshop/index.html" alt="QR Workshop" class="w-full h-full object-contain p-1"/>
+        </div>
+        <span class="text-[11px] font-bold mt-1.5 text-blue-700">MÃ: WSHOP-2026</span>
+      </div>
+    </div>
+
+    <!-- TƯƠNG TÁC 1: TRẮC NGHIỆM TÂM LÝ - HÌNH HỌC (PSYCHO-GEOMETRICS) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+        <div>
+          <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">HOẠT ĐỘNG 1 · 10 PHÚT</span>
+          <h3 class="text-lg font-bold text-slate-900 mt-1"><i class="fa-solid fa-shapes text-emerald-600 mr-2"></i>Bạn là Hình Khối nào trong Quản lý Thời gian?</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Nhấp chọn 1 hình đại diện rõ nhất cho phong cách làm việc của bạn (Dữ liệu nhảy Realtime)</p>
+        </div>
+        <span id="totalVotes" class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">0 Sinh viên đã chọn</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+        <!-- Hình Vuông -->
+        <button onclick="voteShape('vuong')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-blue-600 hover:bg-blue-50/50 transition flex flex-col items-center text-center group">
+          <div class="w-14 h-14 border-4 border-blue-600 rounded-sm mb-2 group-hover:scale-110 transition flex items-center justify-center font-bold text-blue-600">■</div>
+          <span class="font-bold text-sm text-slate-800">Hình Vuông</span>
+          <span class="text-[11px] text-slate-500 mt-1">Ngăn nắp, tỉ mỉ, thích quy trình</span>
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-3 overflow-hidden">
+            <div id="bar-vuong" class="bg-blue-600 h-full" style="width: 20%"></div>
+          </div>
+          <span id="pct-vuong" class="text-xs font-bold text-blue-700 mt-1">20% (0)</span>
+        </button>
+
+        <!-- Tam Giác -->
+        <button onclick="voteShape('tamgiac')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-red-600 hover:bg-red-50/50 transition flex flex-col items-center text-center group">
+          <div class="w-14 h-14 mb-2 group-hover:scale-110 transition flex items-center justify-center font-bold text-3xl text-red-600">▲</div>
+          <span class="font-bold text-sm text-slate-800">Tam Giác</span>
+          <span class="text-[11px] text-slate-500 mt-1">Mục tiêu, quyết đoán, lãnh đạo</span>
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-3 overflow-hidden">
+            <div id="bar-tamgiac" class="bg-red-600 h-full" style="width: 20%"></div>
+          </div>
+          <span id="pct-tamgiac" class="text-xs font-bold text-red-700 mt-1">20% (0)</span>
+        </button>
+
+        <!-- Chữ Nhật -->
+        <button onclick="voteShape('chunhat')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-amber-600 hover:bg-amber-50/50 transition flex flex-col items-center text-center group">
+          <div class="w-14 h-10 border-4 border-amber-600 rounded-sm my-2 group-hover:scale-110 transition"></div>
+          <span class="font-bold text-sm text-slate-800">Chữ Nhật</span>
+          <span class="text-[11px] text-slate-500 mt-1">Chuyển đổi, tò mò, biến động</span>
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-3 overflow-hidden">
+            <div id="bar-chunhat" class="bg-amber-600 h-full" style="width: 20%"></div>
+          </div>
+          <span id="pct-chunhat" class="text-xs font-bold text-amber-700 mt-1">20% (0)</span>
+        </button>
+
+        <!-- Hình Tròn -->
+        <button onclick="voteShape('tron')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-emerald-600 hover:bg-emerald-50/50 transition flex flex-col items-center text-center group">
+          <div class="w-14 h-14 border-4 border-emerald-600 rounded-full mb-2 group-hover:scale-110 transition"></div>
+          <span class="font-bold text-sm text-slate-800">Hình Tròn</span>
+          <span class="text-[11px] text-slate-500 mt-1">Gắn kết, tình cảm, dĩ hòa vi quý</span>
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-3 overflow-hidden">
+            <div id="bar-tron" class="bg-emerald-600 h-full" style="width: 20%"></div>
+          </div>
+          <span id="pct-tron" class="text-xs font-bold text-emerald-700 mt-1">20% (0)</span>
+        </button>
+
+        <!-- Lượn Sóng -->
+        <button onclick="voteShape('luonsong')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-purple-600 hover:bg-purple-50/50 transition flex flex-col items-center text-center group">
+          <div class="w-14 h-14 mb-2 group-hover:scale-110 transition flex items-center justify-center font-bold text-3xl text-purple-600">〰️</div>
+          <span class="font-bold text-sm text-slate-800">Lượn Sóng</span>
+          <span class="text-[11px] text-slate-500 mt-1">Sáng tạo, bứt phá, ghét gò bó</span>
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-3 overflow-hidden">
+            <div id="bar-luonsong" class="bg-purple-600 h-full" style="width: 20%"></div>
+          </div>
+          <span id="pct-luonsong" class="text-xs font-bold text-purple-700 mt-1">20% (0)</span>
+        </button>
+      </div>
+
+      <!-- Khung hiển thị lời khuyên giải mã -->
+      <div id="shapeAdviceBox" class="mt-5 p-4 rounded-xl bg-slate-50 border border-slate-200 text-sm hidden">
+        <div class="font-bold text-slate-900 flex items-center gap-2 mb-1">
+          <i class="fa-solid fa-lightbulb text-amber-500"></i> Lời khuyên Quản lý Thời gian cho bạn:
+        </div>
+        <p id="shapeAdviceText" class="text-slate-600 leading-relaxed"></p>
+      </div>
+    </div>
+
+    <!-- TƯƠNG TÁC 2: THỬ THÁCH MA TRẬN EISENHOWER (KÉO THẢ) -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+        <div>
+          <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md">HOẠT ĐỘNG 2 · 15 PHÚT</span>
+          <h3 class="text-lg font-bold text-slate-900 mt-1"><i class="fa-solid fa-table-cells-large text-blue-600 mr-2"></i>Thử Thách Ma Trận Eisenhower Của Tân Sinh Viên</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Kéo hoặc nhấp vào việc cần làm để xếp vào 4 góc phần tư phù hợp</p>
+        </div>
+        <button onclick="checkEisenhower()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-sm">
+          Kiểm Tra Đáp Án
+        </button>
+      </div>
+
+      <!-- Danh sách nhiệm vụ chờ xếp -->
+      <div class="mb-5">
+        <span class="text-xs font-bold text-slate-600 uppercase tracking-wide">Nhiệm vụ cần phân loại:</span>
+        <div id="pendingTasks" class="flex flex-wrap gap-2 mt-2 p-3 bg-slate-50 rounded-xl border border-slate-200 min-h-[60px]">
+          <div class="task-badge" draggable="true" ondragstart="drag(event)" id="task-1" data-correct="q1">🚨 Nộp bài tập lớn LMS trước 23h59 hôm nay</div>
+          <div class="task-badge" draggable="true" ondragstart="drag(event)" id="task-2" data-correct="q2">📘 Đọc giáo trình Giải tích 1 trước giờ lên lớp</div>
+          <div class="task-badge" draggable="true" ondragstart="drag(event)" id="task-3" data-correct="q3">📞 Cuộc gọi nhờ mua trà sữa hộ bạn cùng phòng</div>
+          <div class="task-badge" draggable="true" ondragstart="drag(event)" id="task-4" data-correct="q4">📱 Lướt TikTok xem clip vô định suốt 2 tiếng</div>
+          <div class="task-badge" draggable="true" ondragstart="drag(event)" id="task-5" data-correct="q2">🏃 Tập thể dục / Chạy bộ 30 phút rèn thể lực</div>
+          <div class="task-badge" draggable="true" ondragstart="drag(event)" id="task-6" data-correct="q3">💬 Hóng drama trong group chat trường không hồi kết</div>
+        </div>
+      </div>
+
+      <!-- 4 Góc Ma trận -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Q1: Khẩn cấp & Quan trọng -->
+        <div class="quadrant-box bg-red-50/40 border-red-200" ondragover="allowDrop(event)" ondrop="drop(event, 'q1')" id="zone-q1">
+          <div class="flex items-center justify-between font-bold text-red-700 text-sm mb-2">
+            <span>🔴 Q1: DO (LÀM NGAY)</span>
+            <span class="text-[11px] font-normal text-red-500">Khẩn cấp &amp; Quan trọng</span>
+          </div>
+          <div class="task-slot space-y-2"></div>
+        </div>
+
+        <!-- Q2: Không khẩn cấp & Quan trọng -->
+        <div class="quadrant-box bg-blue-50/40 border-blue-200" ondragover="allowDrop(event)" ondrop="drop(event, 'q2')" id="zone-q2">
+          <div class="flex items-center justify-between font-bold text-blue-700 text-sm mb-2">
+            <span>🔵 Q2: DECIDE (LÊN LỊCH CHỦ ĐỘNG)</span>
+            <span class="text-[11px] font-normal text-blue-500">Không khẩn cấp &amp; Quan trọng</span>
+          </div>
+          <div class="task-slot space-y-2"></div>
+        </div>
+
+        <!-- Q3: Khẩn cấp & Không quan trọng -->
+        <div class="quadrant-box bg-amber-50/40 border-amber-200" ondragover="allowDrop(event)" ondrop="drop(event, 'q3')" id="zone-q3">
+          <div class="flex items-center justify-between font-bold text-amber-700 text-sm mb-2">
+            <span>🟡 Q3: DELEGATE (ỦY THÁC / TỪ CHỐI)</span>
+            <span class="text-[11px] font-normal text-amber-500">Khẩn cấp &amp; Không quan trọng</span>
+          </div>
+          <div class="task-slot space-y-2"></div>
+        </div>
+
+        <!-- Q4: Không khẩn cấp & Không quan trọng -->
+        <div class="quadrant-box bg-slate-50 border-slate-300" ondragover="allowDrop(event)" ondrop="drop(event, 'q4')" id="zone-q4">
+          <div class="flex items-center justify-between font-bold text-slate-700 text-sm mb-2">
+            <span>⚪ Q4: DELETE (LOẠI BỎ TRIỆT ĐỂ)</span>
+            <span class="text-[11px] font-normal text-slate-500">Không khẩn cấp &amp; Không quan trọng</span>
+          </div>
+          <div class="task-slot space-y-2"></div>
+        </div>
+      </div>
+
+      <div id="eisenhowerResult" class="mt-4 p-3 rounded-lg text-sm hidden font-medium"></div>
+    </div>
+
+    <!-- TƯƠNG TÁC 3: ĐỒNG HỒ POMODORO STEM & SLIDO LIVE Q&A REALTIME -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <!-- Pomodoro Timer -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-bold text-red-700 bg-red-50 px-2.5 py-1 rounded-md">CÔNG CỤ THỰC HÀNH</span>
+          <h3 class="text-lg font-bold text-slate-900 mt-1"><i class="fa-solid fa-stopwatch text-red-600 mr-2"></i>Đồng Hồ Pomodoro Tập Trung Cao Độ</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Chọn chu kỳ chuẩn 25/5 hoặc chu kỳ STEM 50/10 khi giải toán & lập trình</p>
+        </div>
+
+        <div class="my-6 text-center">
+          <div class="inline-block p-6 rounded-full bg-slate-50 border-4 border-red-500 shadow-inner">
+            <span id="timerDisplay" class="font-mono text-5xl font-extrabold text-slate-800 tracking-wider">25:00</span>
+          </div>
+          <div class="mt-3 text-xs font-semibold text-slate-500" id="timerModeLabel">PHIÊN TẬP TRUNG (FOCUS)</div>
+        </div>
+
+        <div class="flex items-center justify-center gap-3">
+          <button onclick="setTimerMode(25, 5)" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">Chuẩn 25/5</button>
+          <button onclick="setTimerMode(50, 10)" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700">STEM 50/10</button>
+          <button onclick="toggleTimer()" id="btnStartTimer" class="text-xs font-bold px-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white shadow-sm">
+            <i class="fa-solid fa-play mr-1"></i> Bắt Đầu
+          </button>
+          <button onclick="resetTimer()" class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">Đặt lại</button>
+        </div>
+      </div>
+
+      <!-- Live Q&A Ẩn Danh Cùng Firebase Realtime Sync -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-md">SLIDO LIVE Q&amp;A</span>
+            <span id="qaRealtimeIndicator" class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Realtime Sync
+            </span>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mt-1"><i class="fa-solid fa-comments text-purple-600 mr-2"></i>Đặt Câu Hỏi Ẩn Danh Cho Diễn Giả</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Câu hỏi được lưu trực tiếp lên Firebase Realtime Database và tự động xếp hạng theo lượt upvote</p>
+        </div>
+
+        <!-- Khung nhập câu hỏi -->
+        <div class="my-4 flex gap-2">
+          <input type="text" id="qaInput" placeholder="Nhập câu hỏi của bạn (ví dụ: Làm sao cân bằng học và làm thêm?)..." class="flex-1 text-xs border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-purple-600"/>
+          <button onclick="submitQA()" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-lg shrink-0 flex items-center gap-1">
+            <i class="fa-solid fa-paper-plane text-xs"></i> Gửi
+          </button>
+        </div>
+
+        <!-- Danh sách câu hỏi upvote đồng bộ thời gian thực -->
+        <div id="qaList" class="space-y-2 overflow-y-auto max-h-[170px] pr-1">
+          <div class="text-center text-xs text-slate-400 py-4">Đang tải câu hỏi từ hệ thống...</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ==================== KHỐI 3: CẨM NANG & NGHIÊN CỨU ==================== -->
+  <div id="view-handbook" class="hidden flex-col gap-6">
+    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm leading-relaxed">
+      <div class="border-b border-slate-200 pb-4 mb-6">
+        <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-md">TÀI LIỆU SƯ PHẠM ĐỘC QUYỀN</span>
+        <h2 class="text-2xl font-bold text-slate-900 mt-2 font-serif">Cẩm Nang Phương Pháp Quản Lý Thời Gian Dành Cho Sinh Viên Khóa 2026</h2>
+        <p class="text-sm text-slate-500 mt-1">Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM · Lưu hành nội bộ Workshop</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-slate-700">
+        <div>
+          <h3 class="text-base font-bold text-blue-900 mb-2"><i class="fa-solid fa-bullseye text-blue-600 mr-2"></i>1. Phương pháp Thiết Lập Mục Tiêu SMART &amp; OKRs</h3>
+          <p class="mb-3">Tân sinh viên đại học thường rơi vào trạng thái mất phương hướng vì thiếu mục tiêu đo lường được. Áp dụng chuẩn SMARTER:</p>
+          <ul class="list-disc pl-5 space-y-1.5 text-xs text-slate-600 mb-4">
+            <li><strong>Specific:</strong> Điểm số môn đại cương cụ thể (Toán, Lý, Tin &ge; 8.0).</li>
+            <li><strong>Measurable:</strong> Số giờ tự học mỗi tuần (tối thiểu 15h ngoài giờ lên lớp).</li>
+            <li><strong>Achievable:</strong> Phù hợp năng lực, không đốt cháy giai đoạn.</li>
+            <li><strong>Relevant:</strong> Gắn liền với điều kiện giữ học bổng KKHT hoặc điều kiện vào chuyên ngành năm 2.</li>
+            <li><strong>Time-bound:</strong> Cột mốc tuần 5 (kiểm tra giữa kỳ), tuần 15 (thi cuối kỳ).</li>
+            <li><strong>Evaluated &amp; Reviewed:</strong> Rà soát mỗi tối Chủ Nhật.</li>
+          </ul>
+
+          <h3 class="text-base font-bold text-blue-900 mb-2"><i class="fa-solid fa-shapes text-emerald-600 mr-2"></i>2. Khám Phá Tâm Lý - Hình Học (Psycho-Geometrics)</h3>
+          <p class="text-xs text-slate-600 leading-relaxed mb-3">Dựa trên công trình của TS. Susan Dellinger, mỗi hình khối phản ánh một phong cách tiếp cận thời gian:</p>
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1">
+            <p><strong>■ Hình Vuông:</strong> Kỷ luật thép, cẩn thận, nhưng dễ sa vào cầu toàn (Perfectionism trap).</p>
+            <p><strong>▲ Tam Giác:</strong> Định hướng kết quả, tốc độ nhanh, nhưng dễ căng thẳng kiệt sức.</p>
+            <p><strong>▬ Chữ Nhật:</strong> Giai đoạn chuyển giao, tò mò đón nhận cái mới, kế hoạch cần người kèm cặp.</p>
+            <p><strong>● Hình Tròn:</strong> Rất tình cảm, dễ bị bẫy ôm đồm việc người khác vì không nỡ từ chối.</p>
+            <p><strong>〰️ Lượn Sóng:</strong> Trực giác sáng tạo cao, ghét sự lặp lại, cần kỷ luật bằng Gamification.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-base font-bold text-blue-900 mb-2"><i class="fa-solid fa-table-cells text-red-600 mr-2"></i>3. Chiến Lược Ma Trận Eisenhower</h3>
+          <p class="text-xs text-slate-600 leading-relaxed mb-3">Bẫy khẩn cấp (Urgency Trap) khiến sinh viên luôn bận rộn nhưng không hiệu quả. Chiến lược chuyển đổi:</p>
+          <ul class="list-disc pl-5 space-y-1.5 text-xs text-slate-600 mb-4">
+            <li><strong>Dịch chuyển sang Q2 (Decide):</strong> Biến việc quan trọng thành thói quen trước khi nó trở nên khẩn cấp (ví dụ: ôn bài mỗi ngày thay vì thức trắng trước ngày thi).</li>
+            <li><strong>Quy tắc đệm 24 Giờ:</strong> Luôn đặt hạn chót cá nhân sớm hơn deadline của giảng viên 24 tiếng.</li>
+            <li><strong>Bảo vệ khung giờ Deep Work:</strong> Tối thiểu 90 phút mỗi ngày ngắt hoàn toàn thông báo mạng xã hội.</li>
+          </ul>
+
+          <h3 class="text-base font-bold text-blue-900 mb-2"><i class="fa-solid fa-clock text-amber-600 mr-2"></i>4. Bộ Công Cụ Quản Trị Thời Gian Thực Chiến</h3>
+          <div class="space-y-2 text-xs text-slate-600">
+            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+              <strong>🍅 Pomodoro STEM (50/10):</strong> Phù hợp giải bài tập giải tích và lập trình C++/Python mà không ngắt quãng dòng suy nghĩ.
+            </div>
+            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+              <strong>🐸 Eat That Frog:</strong> Giải quyết bài toán khó nhất vào đầu buổi sáng khi năng lượng đạt 100%.
+            </div>
+            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
+              <strong>⚡ Nguyên tắc 2 Phút:</strong> Việc gì tốn dưới 2 phút (trả lời email thầy cô, nộp form khảo sát) thì làm ngay lập tức.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER BẢN QUYỀN THEO QUY CHUẨN TRƯỜNG -->
+<footer class="bg-white border-t border-slate-200 mt-auto py-4 px-4 text-center text-xs text-slate-500">
+  <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2">
+    <div>
+      © 2026 <strong>Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM</strong> · Cơ sở 2 Linh Trung, TP. Thủ Đức.
+    </div>
+    <div>
+      Phát triển bởi <strong style="font-family:'Source Serif 4', serif;">ThS. Đinh Quốc Tuấn</strong> · Hệ thống Điểm danh &amp; Hỗ trợ Sinh viên diemdanhsv.com
+    </div>
+  </div>
+</footer>
+
+<!-- JAVASCRIPT ĐIỀU KHIỂN SLIDE VÀ TƯƠNG TÁC + FIREBASE SYNC -->
+<script>
+// Dữ liệu 8 Slide trình chiếu
+const slides = [
+  {
+    title: "KỸ NĂNG QUẢN LÝ THỜI GIAN & THIẾT LẬP MỤC TIÊU",
+    subtitle: "Chuyên đề bồi dưỡng năng lực học đại học cho Tân Sinh viên Khóa 2026",
+    html: `
+      <div class="flex-1 flex flex-col justify-center items-center text-center max-w-3xl mx-auto">
+        <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mb-3">
+          Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM
+        </span>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-blue-950 font-serif leading-tight">
+          LÀM CHỦ THỜI GIAN – KIẾN TẠO TƯƠNG LAI
+        </h2>
+        <p class="text-base text-slate-600 mt-3 max-w-xl">
+          Phương pháp thiết lập mục tiêu, sắp xếp thứ tự ưu tiên và cân bằng cuộc sống tân sinh viên
+        </p>
+        <div class="mt-8 flex items-center gap-4 bg-slate-50 border border-slate-200 px-6 py-3 rounded-2xl shadow-sm">
+          <div class="w-12 h-12 rounded-full bg-emerald-700 text-white flex items-center justify-center font-serif font-bold text-lg">
+            QT
+          </div>
+          <div class="text-left">
+            <div class="font-bold text-slate-900 font-serif text-base">ThS. Đinh Quốc Tuấn</div>
+            <div class="text-xs text-slate-500">Giảng viên Khoa Địa chất · ĐH Khoa học Tự nhiên, ĐHQG-HCM</div>
+          </div>
+        </div>
+        <div class="mt-6 flex gap-2 text-xs font-semibold text-slate-500">
+          <span>📍 Hội trường Cơ sở 2 (Linh Trung)</span>
+          <span>•</span>
+          <span>📅 Chủ Nhật, 18/10/2026</span>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "BỨC TRANH TÂN SINH VIÊN: 4 CÚ SỐC THỜI GIAN",
+    subtitle: "Sự khác biệt mang tính bước ngoặt giữa Phổ thông và Đại học",
+    html: `
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 items-center">
+        <div class="p-4 rounded-xl border border-red-200 bg-red-50/50">
+          <div class="text-red-700 font-bold text-base mb-1"><i class="fa-solid fa-triangle-exclamation mr-2"></i>1. Cú Sốc Tự Do Học Tín Chỉ</div>
+          <p class="text-xs text-slate-600">Không còn chuông báo tiết, không còn thầy cô giám sát từng buổi. Tự do quá mức dẫn đến trì hoãn và mất phương hướng.</p>
+        </div>
+        <div class="p-4 rounded-xl border border-blue-200 bg-blue-50/50">
+          <div class="text-blue-700 font-bold text-base mb-1"><i class="fa-solid fa-bus mr-2"></i>2. Di Chuyển &amp; Địa Lý Hai Cơ Sở</div>
+          <p class="text-xs text-slate-600">Học ở Thủ Đức, tham gia Đoàn-Hội/CLB hoặc làm thêm ở Quận 5. Tuyến Bus 8/53 tốn 1.5 - 2 giờ mỗi ngày nếu không biết tối ưu.</p>
+        </div>
+        <div class="p-4 rounded-xl border border-amber-200 bg-amber-50/50">
+          <div class="text-amber-700 font-bold text-base mb-1"><i class="fa-solid fa-laptop-code mr-2"></i>3. Khối Lượng Kiến Thức STEM Nặng</div>
+          <p class="text-xs text-slate-600">Giải tích 1, Đại số tuyến tính, Nhập môn Lập trình... đòi hỏi 2 giờ tự học phòng lab/thư viện cho mỗi 1 giờ học trên lớp.</p>
+        </div>
+        <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50">
+          <div class="text-emerald-700 font-bold text-base mb-1"><i class="fa-solid fa-users mr-2"></i>4. Ma Trận Hoạt Động Ngoại Khóa</div>
+          <p class="text-xs text-slate-600">Hàng chục Câu lạc bộ, Đội, Nhóm mở đợt tuyển quân. Ôm đồm quá nhiều khiến kiệt sức và điểm số giảm sút.</p>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "TRẮC NGHIỆM TÂM LÝ - HÌNH HỌC (PSYCHO-GEOMETRICS)",
+    subtitle: "Thấu hiểu bản thân để định hình phong cách quản lý thời gian phù hợp",
+    html: `
+      <div class="flex-1 flex flex-col justify-center">
+        <div class="grid grid-cols-5 gap-3 text-center mb-4">
+          <div class="p-3 rounded-xl bg-blue-50 border border-blue-200">
+            <div class="text-2xl font-bold text-blue-700">■</div>
+            <div class="font-bold text-xs mt-1">Hình Vuông</div>
+            <div class="text-[10px] text-slate-500">Tỉ mỉ, quy trình</div>
+          </div>
+          <div class="p-3 rounded-xl bg-red-50 border border-red-200">
+            <div class="text-2xl font-bold text-red-700">▲</div>
+            <div class="font-bold text-xs mt-1">Tam Giác</div>
+            <div class="text-[10px] text-slate-500">Mục tiêu, tốc độ</div>
+          </div>
+          <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+            <div class="text-2xl font-bold text-amber-700">▬</div>
+            <div class="font-bold text-xs mt-1">Chữ Nhật</div>
+            <div class="text-[10px] text-slate-500">Chuyển đổi, tò mò</div>
+          </div>
+          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+            <div class="text-2xl font-bold text-emerald-700">●</div>
+            <div class="font-bold text-xs mt-1">Hình Tròn</div>
+            <div class="text-[10px] text-slate-500">Tình cảm, gắn kết</div>
+          </div>
+          <div class="p-3 rounded-xl bg-purple-50 border border-purple-200">
+            <div class="text-2xl font-bold text-purple-700">〰️</div>
+            <div class="font-bold text-xs mt-1">Lượn Sóng</div>
+            <div class="text-[10px] text-slate-500">Sáng tạo, bứt phá</div>
+          </div>
+        </div>
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed">
+          <strong>💡 Thông điệp từ Diễn giả:</strong> Tân sinh viên K26 đa phần nằm ở dạng <em>Hình Chữ Nhật</em> (đang bối rối tái định hình bản thân) và <em>Lượn Sóng</em> (nhiều ý tưởng nhưng thiếu khuôn khổ). Hiểu rõ hình khối giúp bạn xây dựng thời gian biểu tương thích với cá tính của chính mình.
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "PHƯƠNG PHÁP THIẾT LẬP MỤC TIÊU SMARTER & OKRs",
+    subtitle: "Biến ước mơ thành kế hoạch hành động cụ thể và đo lường được",
+    html: `
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 items-center">
+        <div class="space-y-2 text-xs">
+          <div class="p-2.5 rounded-lg bg-blue-50 border border-blue-200">
+            <strong class="text-blue-900">S - Specific:</strong> Đạt GPA Học kỳ I &ge; 8.0/10 (thay vì nói chung chung 'học tốt').
+          </div>
+          <div class="p-2.5 rounded-lg bg-blue-50 border border-blue-200">
+            <strong class="text-blue-900">M - Measurable:</strong> Giải đúng 100% bài tập thực hành phòng Lab; nộp bài sớm 24h.
+          </div>
+          <div class="p-2.5 rounded-lg bg-blue-50 border border-blue-200">
+            <strong class="text-blue-900">A - Achievable:</strong> Khả thi với số tín chỉ đăng ký (16 - 18 tín chỉ/học kỳ).
+          </div>
+          <div class="p-2.5 rounded-lg bg-blue-50 border border-blue-200">
+            <strong class="text-blue-900">R - Relevant:</strong> Phục vụ xét học bổng Khuyến khích học tập (KKHT).
+          </div>
+          <div class="p-2.5 rounded-lg bg-blue-50 border border-blue-200">
+            <strong class="text-blue-900">T - Time-bound:</strong> Hoàn thành ôn tập trước ngày thi 5 ngày.
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-900 text-white text-xs">
+          <div class="font-bold text-amber-400 mb-2 font-serif text-sm"><i class="fa-solid fa-crosshairs mr-1"></i> Ứng Dụng OKRs Cho K26</div>
+          <p class="text-slate-300 mb-3"><strong>Objective (Mục tiêu):</strong> Trở thành sinh viên thích ứng nhanh và giữ vững phong độ học thuật.</p>
+          <div class="space-y-1.5 text-slate-300">
+            <div>• <strong>KR1:</strong> Điểm trung bình các môn toán đại cương &ge; 8.0.</div>
+            <div>• <strong>KR2:</strong> Tham gia 01 CLB học thuật/kỹ năng trực thuộc Đoàn - Hội.</div>
+            <div>• <strong>KR3:</strong> Điểm rèn luyện học kỳ 1 đạt &ge; 80 điểm.</div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "MA TRẬN EISENHOWER & BẪY KHẨN CẤP (URGENCY TRAP)",
+    subtitle: "Sắp xếp thứ tự ưu tiên: Đừng để việc gấp lấn át việc quan trọng",
+    html: `
+      <div class="grid grid-cols-2 gap-3 flex-1 text-xs">
+        <div class="p-3 rounded-xl bg-red-50 border-2 border-red-300 flex flex-col justify-between">
+          <div>
+            <div class="font-bold text-red-700 text-sm mb-1">🔴 Q1: LÀM NGAY (DO)</div>
+            <div class="text-slate-600">Khẩn cấp &amp; Quan trọng: Deadline LMS hôm nay, ngày mai thi giữa kỳ, sốt phát ban cần khám ngay.</div>
+          </div>
+          <span class="font-bold text-red-600 mt-2">Giảm thiểu tối đa</span>
+        </div>
+        <div class="p-3 rounded-xl bg-blue-50 border-2 border-blue-300 flex flex-col justify-between">
+          <div>
+            <div class="font-bold text-blue-700 text-sm mb-1">🔵 Q2: LÊN LỊCH (DECIDE)</div>
+            <div class="text-slate-600">Không khẩn &amp; Quan trọng: Tự học bài trước, học Tiếng Anh, rèn luyện sức khỏe, xây dựng mối quan hệ.</div>
+          </div>
+          <span class="font-bold text-blue-700 mt-2">TẬP TRUNG 70% THỜI GIAN</span>
+        </div>
+        <div class="p-3 rounded-xl bg-amber-50 border-2 border-amber-300 flex flex-col justify-between">
+          <div>
+            <div class="font-bold text-amber-700 text-sm mb-1">🟡 Q3: ỦY THÁC / TỪ CHỐI (DELEGATE)</div>
+            <div class="text-slate-600">Khẩn nhưng Không quan trọng: Nhờ vả việc vặt, tin nhắn nhóm chat liên tục, việc đột xuất của người khác.</div>
+          </div>
+          <span class="font-bold text-amber-700 mt-2">Học cách nói 'KHÔNG'</span>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-100 border-2 border-slate-300 flex flex-col justify-between">
+          <div>
+            <div class="font-bold text-slate-700 text-sm mb-1">⚪ Q4: LOẠI BỎ (DELETE)</div>
+            <div class="text-slate-600">Không khẩn &amp; Không quan trọng: Lướt TikTok vô thức >2h, chơi game thâu đêm, hóng drama vô bổ.</div>
+          </div>
+          <span class="font-bold text-slate-600 mt-2">Cắt bỏ triệt để</span>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "KẾ HOẠCH CÁ NHÂN: BÁNH XE CUỘC ĐỜI & BUFFER TIME",
+    subtitle: "Duy trì sự cân bằng và dự phòng cho những biến cố bất ngờ",
+    html: `
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 items-center">
+        <div class="space-y-2.5 text-xs text-slate-700">
+          <div class="font-bold text-sm text-blue-900 mb-1"><i class="fa-solid fa-chart-pie mr-1 text-blue-600"></i> 8 Nan Hoa Bánh Xe Cuộc Đời K26:</div>
+          <p>1. Học thuật · 2. Thể chất tinh thần · 3. Quản lý tài chính · 4. Gia đình · 5. Bạn bè thầy cô · 6. Đoàn Hội · 7. Giải trí · 8. Góc sống KTX/trọ.</p>
+          <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-200 mt-3">
+            <strong class="text-emerald-900">Quy tắc Vùng Đệm 20% (Buffer Time):</strong><br/>
+            Nếu một tuần có 40 tiếng học tập, chỉ lên lịch cứng 32 tiếng. 8 tiếng dự phòng cho: Kẹt xe tuyến Bus, lỗi code máy tính, bài tập khó phát sinh.
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+          <div class="font-bold text-slate-900 mb-2"><i class="fa-solid fa-calendar-check mr-1 text-emerald-600"></i> Nghi Thức Chủ Nhật (Weekly Review - 30 Phút):</div>
+          <div class="space-y-2">
+            <div class="p-2 rounded bg-white border border-slate-200">
+              <strong>🏆 Win:</strong> Tuần qua mình hoàn thành tốt nhất bài tập/nhiệm vụ nào?
+            </div>
+            <div class="p-2 rounded bg-white border border-slate-200">
+              <strong>⏳ Drop:</strong> Khoảng thời gian nào mình bị phân tâm và lãng phí nhất?
+            </div>
+            <div class="p-2 rounded bg-white border border-slate-200">
+              <strong>🚀 Adjust:</strong> Tuần tới cần ưu tiên môn học nào trước lịch kiểm tra?
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "BỘ CÔNG CỤ THỰC CHIẾN: POMODORO, GTD, EAT THE FROG",
+    subtitle: "Các phương pháp kinh điển giúp tối ưu từng phút giây học tập",
+    html: `
+      <div class="grid grid-cols-3 gap-3 flex-1 items-center text-xs">
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm h-full flex flex-col justify-between">
+          <div>
+            <div class="text-2xl mb-1">🍅</div>
+            <div class="font-bold text-red-700 text-sm mb-1">Pomodoro STEM</div>
+            <p class="text-slate-600 leading-relaxed">Chu kỳ 50 phút tập trung sâu + 10 phút nghỉ ngơi. Duy trì trạng thái dòng chảy tư duy (Flow State) khi giải toán và code.</p>
+          </div>
+          <span class="text-[11px] font-bold text-slate-500">Tăng 200% độ tập trung</span>
+        </div>
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm h-full flex flex-col justify-between">
+          <div>
+            <div class="text-2xl mb-1">🐸</div>
+            <div class="font-bold text-emerald-700 text-sm mb-1">Eat That Frog</div>
+            <p class="text-slate-600 leading-relaxed">Làm bài tập khó nhất, đáng sợ nhất vào đầu buổi sáng khi não bộ 100% năng lượng. Sau đó cả ngày sẽ nhẹ nhõm.</p>
+          </div>
+          <span class="text-[11px] font-bold text-slate-500">Diệt trừ sự trì hoãn</span>
+        </div>
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm h-full flex flex-col justify-between">
+          <div>
+            <div class="text-2xl mb-1">⚡</div>
+            <div class="font-bold text-blue-700 text-sm mb-1">Nguyên Tắc 2 Phút</div>
+            <p class="text-slate-600 leading-relaxed">Nếu hành động tốn dưới 2 phút (phản hồi email giảng viên, nộp form khảo sát, lưu file Drive) -> Làm ngay lập tức!</p>
+          </div>
+          <span class="text-[11px] font-bold text-slate-500">Dọn sạch việc lặt vặt</span>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "KẾ HOẠCH HÀNH ĐỘNG & THỬ THÁCH 21 NGÀY K2026",
+    subtitle: "Biến kiến thức hôm nay thành phản xạ và phong cách sống của bạn",
+    html: `
+      <div class="flex-1 flex flex-col justify-center max-w-2xl mx-auto text-center">
+        <h3 class="text-xl font-bold text-blue-950 font-serif mb-3">THỬ THÁCH 21 NGÀY: THIẾT LẬP KỶ LUẬT TỰ THÂN</h3>
+        <p class="text-xs text-slate-600 mb-6">21 ngày kiên trì sẽ tạo nên một đường mòn dẫn truyền thần kinh mới trong não bộ. Hãy bắt đầu ngay hôm nay!</p>
+        
+        <div class="grid grid-cols-3 gap-3 text-left text-xs mb-6">
+          <div class="p-3 rounded-lg bg-blue-50 border border-blue-200">
+            <strong class="text-blue-900 block mb-1">Tuần 1: Rà soát</strong>
+            Ghi chép lại toàn bộ thời gian sử dụng trong ngày để tìm 'lỗ rò rỉ thời gian'.
+          </div>
+          <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+            <strong class="text-emerald-900 block mb-1">Tuần 2: Thiết lập</strong>
+            Áp dụng Eisenhower và Time-boxing trên Google Calendar/Notion.
+          </div>
+          <div class="p-3 rounded-lg bg-amber-50 border border-amber-200">
+            <strong class="text-amber-900 block mb-1">Tuần 3: Về đích</strong>
+            Hình thành thói quen rà soát tuần (Weekly Review) và Pomodoro 50/10.
+          </div>
+        </div>
+
+        <div class="p-4 bg-slate-900 text-white rounded-xl text-xs font-medium">
+          "Thời gian là tài nguyên công bằng nhất: Mỗi người đều có 24 giờ. Khác biệt nằm ở cách bạn làm chủ từng giờ ấy!"
+        </div>
+      </div>
+    `
+  }
+];
+
+let currentSlide = 0;
+
+function renderSlide() {
+  const slide = slides[currentSlide];
+  const container = document.getElementById('slideArea');
+  container.innerHTML = `
+    <div class="border-b border-slate-100 pb-3 mb-4 flex items-center justify-between">
+      <div>
+        <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">CHUYÊN ĐỀ WORKSHOP K2026</span>
+        <h2 class="text-lg md:text-xl font-bold text-slate-900 font-serif leading-tight mt-0.5">${slide.title}</h2>
+        <p class="text-xs text-slate-500">${slide.subtitle}</p>
+      </div>
+      <span class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">Slide ${currentSlide + 1} / ${slides.length}</span>
+    </div>
+    ${slide.html}
+  `;
+  document.getElementById('slideIndexIndicator').innerText = `Slide ${currentSlide + 1} / ${slides.length}`;
+  document.getElementById('slideSelect').value = currentSlide;
+}
+
+function nextSlide() {
+  if (currentSlide < slides.length - 1) {
+    currentSlide++;
+    renderSlide();
+  }
+}
+
+function prevSlide() {
+  if (currentSlide > 0) {
+    currentSlide--;
+    renderSlide();
+  }
+}
+
+function goToSlide(idx) {
+  currentSlide = idx;
+  renderSlide();
+}
+
+// Bàn phím điều khiển Slide
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('view-slide').classList.contains('hidden')) return;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+    nextSlide();
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    prevSlide();
+  }
+});
+
+// Chuyển Chế độ xem
+function switchMode(mode) {
+  document.getElementById('view-slide').classList.add('hidden');
+  document.getElementById('view-slido').classList.add('hidden');
+  document.getElementById('view-handbook').classList.add('hidden');
+
+  document.getElementById('btn-mode-slide').classList.remove('active');
+  document.getElementById('btn-mode-slido').classList.remove('active');
+  document.getElementById('btn-mode-handbook').classList.remove('active');
+
+  if (mode === 'slide') {
+    document.getElementById('view-slide').classList.remove('hidden');
+    document.getElementById('btn-mode-slide').classList.add('active');
+  } else if (mode === 'slido') {
+    document.getElementById('view-slido').classList.remove('hidden');
+    document.getElementById('btn-mode-slido').classList.add('active');
+  } else if (mode === 'handbook') {
+    document.getElementById('view-handbook').classList.remove('hidden');
+    document.getElementById('btn-mode-handbook').classList.add('active');
+  }
+}
+
+// Toàn màn hình
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
+// Moderator Panel
+function toggleModPanel() {
+  const p = document.getElementById('modPanel');
+  p.classList.toggle('hidden');
+}
+
+// ================= FIREBASE REALTIME DATABASE SYNC =================
+const defaultFirebaseConfig = {
+  databaseURL: "https://diemdanh-hcmus-default-rtdb.firebaseio.com",
+  projectId: "diemdanh-hcmus"
+};
+
+let db = null;
+let rtdbConnected = false;
+
+// Dữ liệu nội bộ khi offline
+let shapeStats = { vuong: 12, tamgiac: 15, chunhat: 11, tron: 8, luonsong: 4 };
+let localQuestions = [
+  { id: 'q-init-1', text: 'Em hay bị nợ deadline môn Giải tích vì bài tập quá khó thì nên chia nhỏ mục tiêu thế nào ạ?', upvotes: 42 },
+  { id: 'q-init-2', text: 'Di chuyển xe bus giữa cơ sở 1 (Q5) và cơ sở 2 (Thủ Đức) mất 1.5 tiếng thì tận dụng thời gian thế nào?', upvotes: 38 }
+];
+
+function updateConnectionStatus(isConnected) {
+  const pill = document.getElementById('firebaseStatusPill');
+  const dot = document.getElementById('firebaseDot');
+  const txt = document.getElementById('firebaseStatusText');
+  const ind = document.getElementById('qaRealtimeIndicator');
+  const modStatus = document.getElementById('modDbStatus');
+
+  if (isConnected) {
+    pill.className = "bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200 flex items-center gap-1.5";
+    dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+    txt.innerText = "Firebase Realtime: Đã kết nối";
+    if (ind) ind.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> Realtime Sync';
+    if (modStatus) { modStatus.innerText = "Đã kết nối"; modStatus.className = "text-emerald-400 font-bold"; }
+  } else {
+    pill.className = "bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full border border-amber-200 flex items-center gap-1.5";
+    dot.className = "w-2 h-2 rounded-full bg-amber-500";
+    txt.innerText = "Chế độ Cục bộ (Offline)";
+    if (ind) ind.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Bộ nhớ Cục bộ';
+    if (modStatus) { modStatus.innerText = "Chạy cục bộ / Offline"; modStatus.className = "text-amber-400 font-bold"; }
+  }
+}
+
+try {
+  if (typeof firebase !== 'undefined') {
+    firebase.initializeApp(defaultFirebaseConfig);
+    db = firebase.database();
+
+    // Lắng nghe trạng thái kết nối
+    db.ref(".info/connected").on("value", (snap) => {
+      rtdbConnected = snap.val() === true;
+      updateConnectionStatus(rtdbConnected);
+    });
+
+    // Lắng nghe Poll Hình học
+    db.ref("workshop_2026/poll_shapes").on("value", (snap) => {
+      const data = snap.val();
+      if (data) {
+        shapeStats = {
+          vuong: data.vuong || 0,
+          tamgiac: data.tamgiac || 0,
+          chunhat: data.chunhat || 0,
+          tron: data.tron || 0,
+          luonsong: data.luonsong || 0
+        };
+        updateShapeUI();
+      }
+    });
+
+    // Lắng nghe Q&A
+    db.ref("workshop_2026/questions").on("value", (snap) => {
+      const qList = [];
+      snap.forEach((child) => {
+        qList.push({ id: child.key, ...child.val() });
+      });
+      qList.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+      renderQAList(qList);
+    });
+  } else {
+    updateConnectionStatus(false);
+  }
+} catch (e) {
+  console.warn("Không khởi tạo được Firebase:", e);
+  updateConnectionStatus(false);
+}
+
+// ================= SLIDO POLL LOGIC =================
+const shapeAdvices = {
+  vuong: 'Hình Vuông: Bạn rất ngăn nắp và có trách nhiệm cao. Lời khuyên: Hãy cảnh giác với bẫy cầu toàn (Perfectionism). Đôi khi 80% đúng hạn tốt hơn 100% trễ deadline!',
+  tamgiac: 'Hình Tam Giác: Bạn quyết đoán và bám sát mục tiêu. Lời khuyên: Đừng biến mình thành kẻ nghiện việc (Workaholic), nhớ lên lịch cho cả giấc ngủ và ăn uống.',
+  chunhat: 'Hình Chữ Nhật: Bạn đang trong giai đoạn chuyển giao lớn. Lời khuyên: Chia mục tiêu thành từng bước cực nhỏ (Micro-goals) và tìm một bạn học (Study Buddy) cùng đồng hành.',
+  tron: 'Hình Tròn: Bạn giàu tình cảm và hòa đồng. Lời khuyên: Học cách nói KHÔNG với các lời nhờ vả việc vặt để bảo vệ quỹ thời gian học tập của chính mình!',
+  luonsong: 'Hình Lượn Sóng: Bạn tràn đầy ý tưởng đột phá. Lời khuyên: Biến việc học thành trò chơi (Gamification) và áp dụng chu kỳ 25 phút để không bị chán giữa chừng.'
+};
+
+function updateShapeUI() {
+  let total = Object.values(shapeStats).reduce((a, b) => a + b, 0);
+  document.getElementById('totalVotes').innerText = `${total} Sinh viên đã chọn`;
+
+  for (let k in shapeStats) {
+    let count = shapeStats[k] || 0;
+    let pct = total > 0 ? Math.round((count / total) * 100) : 0;
+    const bar = document.getElementById(`bar-${k}`);
+    const lbl = document.getElementById(`pct-${k}`);
+    if (bar) bar.style.width = `${pct}%`;
+    if (lbl) lbl.innerText = `${pct}% (${count})`;
+  }
+}
+
+function voteShape(shape) {
+  if (rtdbConnected && db) {
+    db.ref(`workshop_2026/poll_shapes/${shape}`).transaction((cur) => (cur || 0) + 1);
+  } else {
+    shapeStats[shape] = (shapeStats[shape] || 0) + 1;
+    updateShapeUI();
+  }
+
+  const box = document.getElementById('shapeAdviceBox');
+  const txt = document.getElementById('shapeAdviceText');
+  txt.innerText = shapeAdvices[shape];
+  box.classList.remove('hidden');
+}
+
+// Drag & Drop Eisenhower
+function allowDrop(ev) {
+  ev.preventDefault();
+  ev.currentTarget.classList.add('drag-over');
+}
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+function drop(ev, zoneId) {
+  ev.preventDefault();
+  ev.currentTarget.classList.remove('drag-over');
+  const data = ev.dataTransfer.getData("text");
+  const el = document.getElementById(data);
+  if (el) {
+    ev.currentTarget.querySelector('.task-slot').appendChild(el);
+  }
+}
+
+function checkEisenhower() {
+  const zones = ['q1', 'q2', 'q3', 'q4'];
+  let correct = 0;
+  let total = 6;
+
+  zones.forEach(z => {
+    const slot = document.querySelector(`#zone-${z} .task-slot`);
+    const items = slot.querySelectorAll('.task-badge');
+    items.forEach(item => {
+      if (item.getAttribute('data-correct') === z) {
+        item.style.borderColor = '#16a34a';
+        item.style.backgroundColor = '#f0fdf4';
+        correct++;
+      } else {
+        item.style.borderColor = '#dc2626';
+        item.style.backgroundColor = '#fef2f2';
+      }
+    });
+  });
+
+  const res = document.getElementById('eisenhowerResult');
+  res.classList.remove('hidden');
+  if (correct === total) {
+    res.className = 'mt-4 p-3 rounded-lg text-sm font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300';
+    res.innerHTML = `🎉 Xuất sắc! Bạn đã phân loại chính xác ${correct}/${total} nhiệm vụ vào đúng góc phần tư Eisenhower!`;
+  } else {
+    res.className = 'mt-4 p-3 rounded-lg text-sm font-semibold bg-amber-100 text-amber-800 border border-amber-300';
+    res.innerHTML = `⚠️ Bạn đã phân loại đúng ${correct}/${total} nhiệm vụ. Lưu ý: Đọc giáo trình & tập thể thao thuộc góc Q2 (Chủ động quan trọng), còn việc lướt TikTok thuộc góc Q4 (Cần loại bỏ)!`;
+  }
+}
+
+// Pomodoro Timer Logic
+let timerSeconds = 25 * 60;
+let timerInterval = null;
+let isRunning = false;
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+  const s = (timerSeconds % 60).toString().padStart(2, '0');
+  document.getElementById('timerDisplay').innerText = `${m}:${s}`;
+}
+
+function toggleTimer() {
+  const btn = document.getElementById('btnStartTimer');
+  if (!isRunning) {
+    isRunning = true;
+    btn.innerHTML = '<i class="fa-solid fa-pause mr-1"></i> Tạm Dừng';
+    btn.classList.replace('bg-red-600', 'bg-amber-600');
+    timerInterval = setInterval(() => {
+      if (timerSeconds > 0) {
+        timerSeconds--;
+        updateTimerDisplay();
+      } else {
+        clearInterval(timerInterval);
+        isRunning = false;
+        btn.innerHTML = '<i class="fa-solid fa-play mr-1"></i> Bắt Đầu';
+        alert('🔔 Hết giờ! Hãy nghỉ ngơi thư giãn 5 phút nhé.');
+      }
+    }, 1000);
+  } else {
+    clearInterval(timerInterval);
+    isRunning = false;
+    btn.innerHTML = '<i class="fa-solid fa-play mr-1"></i> Tiếp Tục';
+    btn.classList.replace('bg-amber-600', 'bg-red-600');
+  }
+}
+
+function setTimerMode(workMins, breakMins) {
+  if (isRunning) toggleTimer();
+  timerSeconds = workMins * 60;
+  document.getElementById('timerModeLabel').innerText = `PHIÊN TẬP TRUNG (${workMins} PHÚT)`;
+  updateTimerDisplay();
+}
+
+function resetTimer() {
+  if (isRunning) toggleTimer();
+  timerSeconds = 25 * 60;
+  updateTimerDisplay();
+}
+
+// ================= LIVE Q&A SYNC =================
+function renderQAList(items) {
+  const list = document.getElementById('qaList');
+  if (!items || items.length === 0) {
+    list.innerHTML = '<div class="text-center text-xs text-slate-400 py-4">Chưa có câu hỏi nào. Hãy là người đầu tiên đặt câu hỏi!</div>';
+    return;
+  }
+  list.innerHTML = items.map(item => `
+    <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between text-xs animate-fadeIn hover:bg-slate-100/60 transition">
+      <span class="text-slate-800 font-medium pr-3">${escapeHtml(item.text)}</span>
+      <button onclick="upvote('${item.id}', ${item.upvotes || 0})" class="flex items-center gap-1 font-bold text-purple-700 bg-purple-100 hover:bg-purple-200 px-2.5 py-1 rounded-md shrink-0">
+        ▲ <span class="vote-count">${item.upvotes || 0}</span>
+      </button>
+    </div>
+  `).join('');
+}
+
+function submitQA() {
+  const inp = document.getElementById('qaInput');
+  const txt = inp.value.trim();
+  if (!txt) return;
+
+  if (rtdbConnected && db) {
+    db.ref("workshop_2026/questions").push({
+      text: txt,
+      upvotes: 1,
+      createdAt: Date.now()
+    });
+  } else {
+    localQuestions.unshift({ id: 'loc-' + Date.now(), text: txt, upvotes: 1 });
+    renderQAList(localQuestions);
+  }
+  inp.value = '';
+}
+
+function upvote(id, currentVotes) {
+  if (rtdbConnected && db && !id.startsWith('loc-')) {
+    db.ref(`workshop_2026/questions/${id}/upvotes`).transaction(v => (v || 0) + 1);
+  } else {
+    const q = localQuestions.find(x => x.id === id);
+    if (q) {
+      q.upvotes++;
+      localQuestions.sort((a, b) => b.upvotes - a.upvotes);
+      renderQAList(localQuestions);
+    }
+  }
+}
+
+function escapeHtml(string) {
+  const div = document.createElement('div');
+  div.innerText = string;
+  return div.innerHTML;
+}
+
+// ================= ADMIN FUNCTIONS =================
+function adminResetPoll() {
+  if (confirm("Thầy Tuấn có chắc muốn đặt lại toàn bộ lượt bình chọn về 0 không?")) {
+    const zeroStats = { vuong: 0, tamgiac: 0, chunhat: 0, tron: 0, luonsong: 0 };
+    if (rtdbConnected && db) {
+      db.ref("workshop_2026/poll_shapes").set(zeroStats);
+    } else {
+      shapeStats = zeroStats;
+      updateShapeUI();
+    }
+    alert("✅ Đã làm mới số liệu bình chọn!");
+  }
+}
+
+function adminClearQA() {
+  if (confirm("Thầy Tuấn có chắc muốn xóa tất cả câu hỏi Q&A không?")) {
+    if (rtdbConnected && db) {
+      db.ref("workshop_2026/questions").remove();
+    } else {
+      localQuestions = [];
+      renderQAList(localQuestions);
+    }
+    alert("✅ Đã làm sạch danh sách câu hỏi Q&A!");
+  }
+}
+
+function exportQAData() {
+  let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localQuestions, null, 2));
+  let downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", "workshop_k26_qa_export.json");
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+}
+
+// Khởi chạy
+renderSlide();
+updateShapeUI();
+renderQAList(localQuestions);
+</script>
+</body>
+</html>
