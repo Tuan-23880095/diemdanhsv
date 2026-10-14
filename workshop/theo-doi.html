@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F6B55">
+<title>Khảo sát theo dõi — Workshop Tân sinh viên K2026 · HCMUS</title>
+<meta name="description" content="Khảo sát ngắn, ẩn danh sau workshop Quản lý thời gian dành cho tân sinh viên K2026, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20261014-logo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="ws.css?v=20261015">
+<style>
+body { font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 640px; margin: 0 auto; padding: 0 16px; }
+header.top { background: linear-gradient(110deg, var(--lam), var(--luc)); color: #fff; padding: 14px 0 16px; }
+header.top .wrap { display: flex; align-items: center; gap: 12px; }
+header.top img.hc { height: 40px; width: auto; background: #fff; border-radius: 8px; padding: 3px; }
+header.top .sen { width: 40px; height: 40px; background: #fff; border-radius: 20%; padding: 4px; margin-left: auto; flex: none; }
+header.top h1 { font: 700 18px/1.2 var(--serif); margin: 0; }
+header.top p { margin: 2px 0 0; font-size: 12.5px; opacity: .9; }
+main { padding: 18px 0 40px; }
+h2.ttl { font: 700 24px/1.2 var(--serif); margin: 0 0 6px; }
+p.lead { color: var(--mute); margin: 0 0 16px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+.card h3 { font: 700 18px var(--serif); margin: 0 0 8px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 600 15.5px var(--sans); border-radius: 12px; padding: 12px 18px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; min-height: 48px; text-decoration: none; color: var(--muc); white-space: nowrap; }
+.btn.pri { background: var(--luc); border-color: var(--luc); color: #fff; }
+.btn.wide { width: 100%; }
+.btn.sm { min-height: 36px; padding: 6px 12px; font-size: 14px; }
+.btn:disabled { opacity: .5; }
+.status { font-size: 14px; margin-top: 10px; min-height: 1.2em; }
+.status.ok { color: var(--luc); } .status.err { color: var(--son); }
+textarea, input[type=text] { width: 100%; font: 16px var(--sans); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #fff; color: var(--muc); }
+textarea { min-height: 90px; resize: vertical; }
+.hint { font-size: 13.5px; color: var(--mute); }
+.lb { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+.tips { margin: 6px 0 0; padding-left: 20px; }
+.tabs2 { display: flex; gap: 8px; margin-bottom: 14px; }
+.tabs2 a { flex: 1; text-align: center; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px; text-decoration: none; color: var(--muc); font-weight: 600; background: #fff; }
+.tabs2 a.on { background: var(--luc); color: #fff; border-color: var(--luc); }
+footer.ft { text-align: center; font-size: 12.5px; color: var(--mute); padding: 24px 16px 32px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <img class="hc" src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM">
+  <div><h1>Khảo sát theo dõi</h1><p>Workshop “Làm chủ thời gian” · Tân sinh viên K2026</p></div>
+  <img class="sen" src="assets/logo-sen.svg" alt="Logo hoa sen đọng sương">
+</div></header>
+<main class="wrap">
+  <div class="tabs2"><a href="?dot=2" id="t2">Sau 2 tuần</a><a href="?dot=3" id="t3">Sau 6 tuần</a></div>
+  <h2 class="ttl" id="ttl"></h2>
+  <p class="lead" id="lead"></p>
+  <div id="box"></div>
+</main>
+<footer class="ft">Nghiên cứu về kỹ năng quản lý thời gian của tân sinh viên · Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM<br>
+<a href="nghien-cuu.html">Thông tin nghiên cứu</a> · <a href="sv.html">Trang workshop</a></footer>
+<script src="ws-common.js?v=20261016"></script>
+<script src="ws-research.js?v=20261016"></script>
+<script src="ws-survey.js?v=20261016"></script>
+<script>
+(function () {
+  var s = document.createElement('style'); s.textContent = WSS.CSS; document.head.appendChild(s);
+  var q = new URLSearchParams(location.search).get('dot');
+  var today = new Date().toISOString().slice(0, 10);
+  var dot = q === '3' || (q !== '2' && today >= WSR.WAVES.nc3.open) ? 3 : 2;
+  var w = 'nc' + dot;
+  document.getElementById('t' + dot).classList.add('on');
+  document.getElementById('ttl').textContent = WSR.WAVES[w].name;
+  document.getElementById('lead').innerHTML = 'Dành cho tân sinh viên K2026 — <b>kể cả bạn không dự workshop</b>. Khoảng ' + WSR.WAVES[w].mins + ' phút, ẩn danh. Thời gian: ' + WSR.WAVES[w].when + '.';
+  WSS.mount(document.getElementById('box'), w, {});
+})();
+</script>
+</body>
+</html>

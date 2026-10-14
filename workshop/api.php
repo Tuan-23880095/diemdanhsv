@@ -34,7 +34,7 @@ const WS_PIN_HASH = '$2y$11$5Tu3CvRZ3LcshAWDAD4bD.E5AVP9xABQVabnSq7ev5cshySKuB8B
 const WS_SESSION_DEFAULT = 'k26-1810';
 const WS_SHAPES = ['vuong', 'tamgiac', 'chunhat', 'tron', 'luonsong'];
 const WS_EISEN_CARDS = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8'];
-const WS_ACTS = ['khoidong', 'hinh', 'muctieu', 'eisen', 'banhxe', 'camket', 'danhgia'];
+const WS_ACTS = ['khoidong', 'hinh', 'muctieu', 'eisen', 'banhxe', 'camket', 'danhgia', 'nc0', 'nc1', 'nc2', 'nc3'];
 const WS_ASK_PER_CLIENT = 6;     // câu hỏi / 10 phút / thiết bị
 const WS_WRITES_PER_IP = 3000;   // lượt ghi / 10 phút / IP (cả hội trường có thể chung một IP NAT)
 
@@ -157,6 +157,9 @@ function ws_guard_writes(string $sess): void
 /** Kiểm tra & chuẩn hoá phiếu theo từng hoạt động. Trả mảng sạch để lưu. */
 function ws_clean_vote(string $act, $d): array
 {
+    if (in_array($act, WS_NC_ACTS, true)) {
+        return ws_nc_clean($act, $d);
+    }
     if (!is_array($d)) {
         api_fail('Phiếu không hợp lệ.');
     }
@@ -387,6 +390,8 @@ function ws_check_pin(string $pin): void
     }
 }
 
+require __DIR__ . '/nc-lib.php';
+
 // ───────────────────────── Router ─────────────────────────
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 if ($method === 'GET') {
@@ -552,12 +557,18 @@ try {
                     $pdo->prepare('DELETE FROM ws_questions WHERE sess = ?')->execute([$sess]);
                 }
                 if ($what === 'all') {
-                    $pdo->prepare('DELETE FROM ws_votes WHERE sess = ?')->execute([$sess]);
+                    // "Tất cả" = dữ liệu hoạt động workshop; KHÔNG xóa phiếu nghiên cứu nc0–nc3.
+                    $pdo->prepare("DELETE FROM ws_votes WHERE sess = ? AND act NOT IN ('nc0','nc1','nc2','nc3')")->execute([$sess]);
+                } elseif ($what === 'nghiencuu') {
+                    $pdo->prepare("DELETE FROM ws_votes WHERE sess = ? AND act IN ('nc0','nc1','nc2','nc3')")->execute([$sess]);
                 } elseif (in_array($what, WS_ACTS, true)) {
                     $pdo->prepare('DELETE FROM ws_votes WHERE sess = ? AND act = ?')->execute([$sess, $what]);
                 }
             });
             api_ok(['ok' => true]);
+        }
+        if ($op === 'research_csv') {
+            api_ok(ws_nc_csv($sess));
         }
         if ($op === 'export') {
             $res = [];

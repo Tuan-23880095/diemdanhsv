@@ -263,6 +263,10 @@
       WS.render.bars(['★', '★★', '★★★', '★★★★', '★★★★★'], s, { colors: ['#D2492A', '#D6A130', '#D6A130', '#46A385', '#0F6B55'] }) + '</div></div>';
   };
 
+  WS.render.nc0 = WS.render.nc1 = function (d) {
+    return '<div class="ws-bignum" style="padding:40px 0"><b>' + d.n + '</b><span>phiếu khảo sát đã gửi · ẩn danh</span></div>';
+  };
+
   /* ---------- Dữ liệu minh họa (chỉ khi diễn giả bật chế độ DEMO — luôn ghi rõ trên màn hình) ---------- */
   WS.demo = function (act) {
     function r(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
@@ -274,6 +278,8 @@
       case 'muctieu': return { n: 84, f: [70, 49, 66, 72, 41], full: 33 };
       case 'camket': return { n: 102, count: [21, 14, 12, 19, 9, 8, 11, 8] };
       case 'danhgia': return { n: 90, sao: [1, 2, 9, 34, 44] };
+      case 'nc0': return { n: 87 };
+      case 'nc1': return { n: 74 };
     }
     return { n: r(0, 0) };
   };

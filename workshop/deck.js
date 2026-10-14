@@ -46,16 +46,24 @@
     'Thời lượng ghi bên phải là gợi ý; nếu trễ, rút bớt slide công cụ ở Phần 4 (đã có trong Cẩm nang).',
     html: '<div class="g2" style="grid-template-columns:1.25fr 1fr;gap:56px;flex:1">' +
       '<ol class="steps">' +
-      '<li><div><b>Khởi động — thời gian của bạn đang đi đâu?</b><span class="muted small">10 phút · bình chọn trên điện thoại</span></div></li>' +
-      '<li><div><b>Bạn là hình gì? — hiểu phong cách của mình</b><span class="muted small">12 phút · Tâm lý – Hình học</span></div></li>' +
+      '<li><div><b>Khảo sát đầu buổi · Khởi động</b><span class="muted small">12 phút · thời gian của bạn đang đi đâu?</span></div></li>' +
+      '<li><div><b>Bạn là hình gì? — hiểu phong cách của mình</b><span class="muted small">10 phút · Tâm lý – Hình học</span></div></li>' +
       '<li><div><b>Phần 1 · Thiết lập mục tiêu</b><span class="muted small">18 phút · viết một mục tiêu SMART</span></div></li>' +
       '<li><div><b>Phần 2 · Ma trận Eisenhower</b><span class="muted small">15 phút · xếp 8 việc vào 4 ô</span></div></li>' +
-      '<li><div><b>Phần 3 · Xây dựng kế hoạch cá nhân</b><span class="muted small">14 phút · bánh xe cuộc đời, lịch tuần</span></div></li>' +
-      '<li><div><b>Phần 4 · Phương pháp quản lý thời gian</b><span class="muted small">11 phút · Pomodoro, GTD, ăn con ếch</span></div></li>' +
-      '<li><div><b>Cam kết 7 ngày · Hỏi đáp</b><span class="muted small">10 phút</span></div></li></ol>' +
+      '<li><div><b>Phần 3 · Xây dựng kế hoạch cá nhân</b><span class="muted small">13 phút · bánh xe cuộc đời, lịch tuần</span></div></li>' +
+      '<li><div><b>Phần 4 · Phương pháp quản lý thời gian</b><span class="muted small">10 phút · Pomodoro, GTD, ăn con ếch</span></div></li>' +
+      '<li><div><b>Cam kết 7 ngày · Khảo sát cuối · Hỏi đáp</b><span class="muted small">12 phút</span></div></li></ol>' +
       '<div class="card" style="align-self:start;border-top:6px solid var(--luc)"><p class="tag">Bạn mang về</p><ul class="clean" style="margin-top:18px">' +
       '<li>Một <b>mục tiêu SMART</b> cho học kỳ này</li><li>Một <b>lịch tuần mẫu</b> có chỗ cho việc quan trọng</li><li>Một <b>cam kết 7 ngày</b> — nhỏ, cụ thể, làm được</li></ul>' +
       '<p class="meta">Tất cả lưu trên điện thoại của bạn, xem lại ở mục “Kế hoạch của tôi”.</p></div></div>'
+  });
+
+  add({ sec: 0, kicker: 'Trước khi bắt đầu · 5 phút', title: 'Giúp chúng tôi hiểu tân sinh viên hơn', act: 'nc0', notes:
+    'Đọc to phần đồng ý (khoảng 40 giây): khảo sát phục vụ một nghiên cứu giáo dục; hoàn toàn tự nguyện, ẩn danh; không tham gia không ảnh hưởng gì; chỉ dành cho bạn từ đủ 18 tuổi; có thể rút dữ liệu bằng mã ẩn danh trước 31/12/2026.\n' +
+    'Hướng dẫn tạo mã ẩn danh: 2 chữ cái đầu tên của mẹ + ngày sinh của bạn + 2 số cuối số điện thoại (ví dụ LA0739). Nhắc chụp màn hình mã.\n' +
+    'Nên mở slide này từ 10–15 phút trước giờ bắt đầu để sinh viên đến sớm làm trước. Bật đồng hồ 5 phút (gõ 5 rồi T).\n' +
+    'Lưu ý đạo đức: không nói hoặc ngụ ý rằng tham gia khảo sát được cộng điểm rèn luyện/điểm danh — điều đó làm mất tính tự nguyện.',
+    html: act('nc0', '<p><b>Khảo sát đầu buổi</b> — khoảng 5 phút, ẩn danh, tự nguyện, dành cho bạn từ đủ 18 tuổi.</p><p class="small">Tạo mã ẩn danh: 2 chữ cái đầu tên mẹ + ngày sinh + 2 số cuối SĐT. Ví dụ: <b>LA0739</b>.</p>')
   });
 
   add({ sec: 0, kicker: 'Khởi động', title: 'Thời gian của bạn đang đi đâu?', act: 'khoidong', notes:
@@ -351,6 +359,13 @@
     html: act('camket', '<p><b>Chọn MỘT việc cho 7 ngày tới.</b></p><p>Nhỏ, cụ thể, làm được mỗi ngày.</p><p class="small">Mẹo: chụp màn hình làm hình nền khóa cả tuần.</p>')
   });
 
+  add({ sec: 0, kicker: 'Trước khi hỏi đáp · 3 phút', title: 'Khảo sát cuối buổi', act: 'nc1', notes:
+    'Mời các bạn đã làm khảo sát đầu buổi làm tiếp khảo sát cuối (3 phút) — câu kiến thức giống đầu buổi để đo phần học được; sau khi gửi, điện thoại hiện đáp án.\n' +
+    'Nhắc: 2 khảo sát ngắn tiếp theo vào 01/11 và 29/11. Trong “Kế hoạch của tôi” có nút tải lịch nhắc kèm đường dẫn khảo sát.\n' +
+    'Có thể mở hỏi đáp song song: sinh viên vừa làm khảo sát vừa gửi câu hỏi.',
+    html: act('nc1', '<p><b>Khảo sát cuối buổi</b> — 3 phút. Gửi xong, điện thoại hiện đáp án phần kiến thức.</p><p class="small">Hẹn bạn ở khảo sát sau 2 tuần (01/11) và 6 tuần (29/11).</p>')
+  });
+
   add({ sec: 0, kicker: 'Hỏi đáp', title: 'Câu hỏi của bạn', act: 'hoi', notes:
     'Câu hỏi gửi ẩn danh từ điện thoại, xếp theo lượt bình chọn. Trả lời từ trên xuống; đánh dấu ✓ trong bảng Diễn giả (H) để câu đó mờ đi.\n' +
     'Câu hỏi không phù hợp: bấm "Ẩn" trong bảng Diễn giả — sẽ biến khỏi màn hình ngay.\n' +
@@ -371,6 +386,7 @@
   });
 
   add({ sec: 0, kicker: 'Góp ý · 30 giây', title: 'Buổi hôm nay có ích với bạn không?', act: 'danhgia', notes:
+    'Có thể bỏ qua slide này nếu đa số đã làm khảo sát cuối buổi (đã có phần nhận xét).\n' +
     'Phiếu góp ý ẩn danh — dữ liệu dùng làm minh chứng báo cáo sau workshop (xuất ở bảng Diễn giả → Tải CSV).\n' +
     'Đọc to 1–2 điều sinh viên "mang về" nếu có (bảng Diễn giả → Xem góp ý).',
     html: act('danhgia', '<p><b>Chấm 1–5 sao</b> và viết một điều bạn mang về.</p><p class="small">Ẩn danh. Giúp chúng tôi làm buổi sau tốt hơn.</p>')
@@ -380,6 +396,7 @@
     html: '<div style="display:grid;grid-template-columns:1fr 330px;gap:70px;align-items:center;flex:1"><div>' +
       '<div class="logos"><img class="hcmus" src="' + LOGO_HCMUS + '" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM"><span class="sep dqt-sen"></span><img class="sen dqt-sen" src="assets/logo-sen.svg" alt="Logo hoa sen đọng sương"></div>' +
       '<h1>Cảm ơn các bạn!</h1><p class="sub">Thời gian là thứ duy nhất ai cũng có như nhau. Khác nhau ở chỗ ai là người quyết định nó đi đâu.</p>' +
+      '<p class="cover-when" style="margin:-14px 0 28px">📝 Hẹn bạn ở khảo sát ngắn sau 2 tuần (01/11) và 6 tuần (29/11) — mở lại trang tham gia hoặc lịch nhắc.</p>' +
       '<div class="people"><div class="person"><span class="av" style="background:var(--luc)">KL</span><div><b>ThS. Đinh Thị Kim Liên</b><span>Diễn giả</span></div></div>' +
       '<div class="person"><span class="av" style="background:var(--lam)">QT</span><div><b>ThS. Đinh Quốc Tuấn</b><span>Trợ giảng · Khoa Địa chất</span></div></div></div></div>' +
       '<div>' + joinBox('Xem lại “Kế hoạch của tôi”') + '</div></div>'
@@ -589,10 +606,18 @@
       download('workshop-k26-' + stamp() + '.csv', csv, 'text/csv;charset=utf-8');
     }).catch(function (e) { msg('hostMsg', e.message, true); });
   };
+  document.getElementById('expNc').onclick = function () {
+    admin('research_csv').then(function (d) {
+      var c = d.counts;
+      msg('hostMsg', 'Dữ liệu nghiên cứu: ' + c.nguoi + ' người · đầu buổi ' + c.nc0 + ' · cuối buổi ' + c.nc1 + ' · sau 2 tuần ' + c.nc2 + ' · sau 6 tuần ' + c.nc3);
+      download('nghien-cuu-k26-' + stamp() + '.csv', d.csv, 'text/csv;charset=utf-8');
+    }).catch(function (e) { msg('hostMsg', e.message, true); });
+  };
   document.getElementById('rsGo').onclick = function () {
     var w = document.getElementById('rsWhat');
     var label = w.options[w.selectedIndex].text;
     if (!confirm('Xóa dữ liệu: ' + label + '?\nKhông khôi phục được. Nên tải CSV trước nếu cần.')) return;
+    if (w.value === 'nghiencuu' && prompt('Xóa TOÀN BỘ phiếu nghiên cứu (đầu buổi, cuối buổi, theo dõi)? Gõ XOA để xác nhận.') !== 'XOA') return;
     admin('reset', { what: w.value }).then(function () { msg('hostMsg', '✅ Đã xóa: ' + label); pollLive(); }).catch(function (e) { msg('hostMsg', e.message, true); });
   };
 

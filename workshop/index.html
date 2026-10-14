@@ -291,14 +291,15 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
       <div class="row"><button class="btn" type="button" data-detail="muctieu">Xem mục tiêu</button><button class="btn" type="button" data-detail="danhgia">Xem góp ý</button></div>
       <div id="hdList"></div>
       <h3>Xuất dữ liệu minh chứng</h3>
-      <div class="row"><button class="btn pri" type="button" id="expJson">Tải JSON</button><button class="btn pri" type="button" id="expCsv">Tải CSV (Excel)</button></div>
+      <div class="row"><button class="btn pri" type="button" id="expJson">Tải JSON</button><button class="btn pri" type="button" id="expCsv">Tải CSV (Excel)</button><button class="btn pri" type="button" id="expNc">Tải dữ liệu nghiên cứu (CSV)</button></div>
+      <p class="muted" style="margin:6px 0 0;font-size:13px">Dữ liệu nghiên cứu: mỗi dòng một người (theo mã ẩn danh), nối đầu buổi – cuối buổi – sau 2 tuần – sau 6 tuần. Chỉ gồm người đã đồng ý.</p>
       <h3>Xóa dữ liệu chạy thử</h3>
       <div class="row">
         <select id="rsWhat" class="btn">
-          <option value="all">Tất cả (phiếu + câu hỏi)</option>
+          <option value="all">Tất cả hoạt động + câu hỏi (giữ phiếu nghiên cứu)</option>
           <option value="khoidong">Khởi động</option><option value="hinh">Hình khối</option><option value="muctieu">Mục tiêu SMART</option>
           <option value="eisen">Eisenhower</option><option value="banhxe">Bánh xe cuộc đời</option><option value="camket">Cam kết</option>
-          <option value="danhgia">Góp ý</option><option value="hoi">Câu hỏi Q&amp;A</option>
+          <option value="danhgia">Góp ý</option><option value="hoi">Câu hỏi Q&amp;A</option><option value="nghiencuu">⚠ Phiếu nghiên cứu (đầu/cuối/theo dõi)</option>
         </select>
         <button class="btn warn" type="button" id="rsGo">Xóa</button>
         <button class="btn" type="button" id="pinOut" style="margin-left:auto">Đăng xuất</button>
@@ -309,7 +310,7 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 </div>
 
 <script src="vendor/qrcode-generator-1.4.4.js?v=20261015"></script>
-<script src="ws-common.js?v=20261015"></script>
-<script src="deck.js?v=20261015"></script>
+<script src="ws-common.js?v=20261016"></script>
+<script src="deck.js?v=20261016"></script>
 </body>
 </html>
