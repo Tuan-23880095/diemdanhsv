@@ -1,0 +1,35 @@
+/* Thương hiệu Đinh Quốc Tuấn — biến màu, phông và lớp dùng cho logo hoa sen.
+   Phông: thêm vào <head>
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"> */
+
+:root {
+  --dqt-luc-bo-de: #0F6B55;  /* màu chính: nút, liên kết */
+  --dqt-lam-ho-ve: #1F4E79;  /* tiêu đề phụ */
+  --dqt-muc-lam:   #10212B;  /* chữ, nền tối */
+  --dqt-giay:      #F6F7F3;  /* nền sáng */
+  --dqt-luc-non:   #46A385;
+  --dqt-ngoc-sang: #8FE0BD;
+  --dqt-lam-suong: #2F6DB0;
+  --dqt-bac-suong: #D5DCE1;  /* đường kẻ */
+  --dqt-son:       #D2492A;  /* điểm nhấn nhỏ */
+  --dqt-hoang-tho: #D6A130;  /* điểm nhấn nhỏ */
+
+  --dqt-font-ten: 'Source Serif 4', Georgia, serif;
+  --dqt-font-noi-dung: 'Be Vietnam Pro', system-ui, sans-serif;
+}
+
+/* Logo trên nền sáng: đặt trực tiếp */
+.dqt-logo { display: block; flex: none; aspect-ratio: 1 / 1; }
+
+/* Logo trên nền tối, nền màu, ảnh: ô trắng bo góc ~20% */
+.dqt-logo-o {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #FFFFFF; border-radius: 20%; padding: 6%;
+  flex: none;
+}
+.dqt-logo-o > img { display: block; width: 100%; height: 100%; }
+
+/* Bản in, PDF: chỉ logo Trường, ẩn logo sen */
+@media print {
+  .dqt-logo, .dqt-logo-o { display: none !important; }
+}
