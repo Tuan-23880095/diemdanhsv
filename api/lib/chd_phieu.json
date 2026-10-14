@@ -78,7 +78,7 @@
      "Độ bão hòa Sr (%)",
      "Chỉ số dẻo IP (%)",
      "Độ sệt IL",
-     "Tên đất và trạng thái (TCVN 5747:1993)"
+     "Tên đất và trạng thái (TCVN 9362:2012)"
     ],
     "photos": false
    },
@@ -576,7 +576,7 @@
    ]
   },
   "answer_key": {
-   "q1": "Hai phương pháp dùng đoạn khác nhau của đường cong (Casagrande dựa vào t₅₀ và giả thiết đoạn đầu tỷ lệ √t để tìm d₀; Taylor dựa vào t₉₀ trên đồ thị √t) và chịu ảnh hưởng khác nhau của nén thứ cấp, nên thường lệch nhau (Taylor thường cho cv lớn hơn). Khi dự báo lún nên chọn giá trị nhỏ hơn (an toàn, thời gian lún dài hơn) hoặc giá trị phù hợp đoạn cố kết sơ cấp rõ hơn, và nêu lý do.",
+   "q1": "Hai phương pháp dùng đoạn khác nhau của đường cong (Casagrande dựa vào t₅₀ và giả thiết đoạn đầu tỷ lệ √t để tìm d₀; Taylor dựa vào t₉₀ trên đồ thị √t) và chịu ảnh hưởng khác nhau của nén thứ cấp, nên thường lệch nhau (Taylor thường cho cv lớn hơn). Khi dự báo lún nên chọn giá trị nhỏ hơn (an toàn, thời gian lún dài hơn) hoặc giá trị phù hợp đoạn cố kết sơ cấp rõ hơn, và nêu lý do. Với số liệu chuẩn trong giáo trình (chuỗi đã làm trơn theo lời giải Terzaghi) hai giá trị gần trùng: Casagrande 2,12·10⁻⁴ cm²/s, Taylor 2,08·10⁻⁴ cm²/s (t₉₀ ≈ 63,6 phút).",
    "q2": "OCR = pc/σ′v0. OCR ≈ 1: cố kết bình thường, chưa từng chịu tải lớn hơn hiện tại. OCR > 1: quá cố kết, đã từng chịu tải lớn hơn (bào mòn lớp phủ, mực nước ngầm hạ thấp, khô hạn) nên lún nhỏ khi tải công trình chưa vượt pc.",
    "q3": "1 năm = 365,25 × 86 400 = 31 557 600 s; 1 cm² = 10⁻⁴ m². 1,0·10⁻⁴ cm²/s × 10⁻⁴ m²/cm² × 31 557 600 s/năm ≈ 0,316 m²/năm."
   },
