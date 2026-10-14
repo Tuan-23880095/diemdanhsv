@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cẩm nang Quản lý thời gian — Workshop Tân sinh viên K2026 · HCMUS</title>
+<meta name="description" content="Cẩm nang in được của Workshop Kỹ năng quản lý thời gian và kế hoạch cá nhân dành cho tân sinh viên K2026, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20261014-logo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="ws.css?v=20261015">
+<style>
+body { font-size: 16.5px; line-height: 1.6; background: #E7EAE5; }
+.page { max-width: 820px; margin: 24px auto; background: #fff; padding: 56px 64px; box-shadow: 0 10px 40px rgba(16,33,43,.1); border-radius: 6px; }
+.bar { position: sticky; top: 0; z-index: 5; background: var(--muc); color: #fff; }
+.bar .in { max-width: 820px; margin: 0 auto; display: flex; gap: 10px; align-items: center; padding: 10px 16px; font-size: 14px; flex-wrap: wrap; }
+.bar a, .bar button { color: #fff; background: rgba(255,255,255,.12); border: 0; border-radius: 8px; padding: 7px 12px; text-decoration: none; font: 600 14px var(--sans); cursor: pointer; }
+.bar .sp { flex: 1; }
+.cover-h { display: flex; align-items: center; gap: 18px; padding-bottom: 22px; border-bottom: 3px solid var(--luc); margin-bottom: 28px; }
+.cover-h img.hc { height: 64px; }
+.cover-h .sen { width: 58px; height: 58px; margin-left: auto; background: #fff; border: 1px solid var(--line); border-radius: 20%; padding: 5px; }
+.cover-h small { display: block; color: var(--mute); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+h1 { font: 700 38px/1.15 var(--serif); margin: 0 0 8px; }
+.sub { color: var(--mute); font-size: 18px; margin: 0 0 18px; }
+.who { font-size: 15px; color: var(--mute); }
+h2 { font: 700 26px/1.25 var(--serif); margin: 44px 0 12px; padding-top: 10px; border-top: 1px solid var(--line); display: flex; gap: 12px; align-items: baseline; }
+h2 .n { color: var(--luc); }
+h3 { font: 700 19px/1.3 var(--serif); margin: 24px 0 8px; }
+p { margin: 0 0 12px; }
+.toc { columns: 2; padding-left: 20px; margin: 0; }
+.box { border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin: 14px 0; background: var(--giay); }
+.box.ok { background: #E8F4EE; border-color: #BFE0CF; }
+.box.no { background: #FBEFEC; border-color: #F0C8BE; }
+.box.note { background: #FFF8E8; border-color: #F0DDB0; font-size: 15px; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 10px 0 14px; }
+th, td { border: 1px solid var(--line); padding: 8px 10px; vertical-align: top; text-align: left; }
+th { background: var(--giay); font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+.mx { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+.mx div { border-radius: 10px; padding: 12px 14px; border: 2px solid; font-size: 15px; }
+.mx b { display: block; font: 700 17px var(--serif); }
+.lines { border-bottom: 1px solid #AAB4BB; height: 30px; }
+.fill { margin: 8px 0 16px; }
+.fill label { font-weight: 600; font-size: 14.5px; }
+.week7 td { height: 34px; text-align: center; }
+.cite { color: var(--mute); font-size: 14px; }
+ol.ref { padding-left: 20px; font-size: 14.5px; }
+ol.ref li { margin-bottom: 8px; }
+.shape-row td:first-child { white-space: nowrap; font-weight: 700; }
+.wheel-blank { max-width: 380px; margin: 0 auto; }
+@media (max-width: 720px) { .page { padding: 28px 18px; margin: 0; border-radius: 0; } .toc { columns: 1; } .mx { grid-template-columns: 1fr; } table { font-size: 13.5px; } th, td { padding: 6px; } }
+@media print {
+  @page { size: A4; margin: 16mm 15mm; }
+  body { background: #fff; font-size: 11.5pt; }
+  .bar, .no-print { display: none !important; }
+  .page { box-shadow: none; margin: 0; padding: 0; max-width: none; }
+  .dqt-sen { display: none !important; }
+  h2, h3 { break-after: avoid; } .box, .mx, tr, .fill { break-inside: avoid; }
+  .pb { break-before: page; }
+  a { color: inherit; text-decoration: none; }
+}
+</style>
+</head>
+<body>
+<div class="bar no-print"><div class="in"><a href="index.html">← Slide</a><a href="sv.html">Trang tham gia</a><span class="sp"></span><button type="button" onclick="window.print()">In / Lưu PDF</button></div></div>
+
+<article class="page">
+  <header class="cover-h">
+    <img class="hc" src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM">
+    <div><small>Workshop Tân sinh viên Khóa 2026</small><span class="who">Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM · 18/10/2026</span></div>
+    <img class="sen dqt-sen" src="assets/logo-sen.svg" alt="Logo hoa sen đọng sương">
+  </header>
+
+  <h1>Cẩm nang Quản lý thời gian &amp; Kế hoạch cá nhân</h1>
+  <p class="sub">Bốn công cụ cho học kỳ đại học đầu tiên: thiết lập mục tiêu, ma trận Eisenhower, xây dựng kế hoạch cá nhân, và các phương pháp quản lý thời gian.</p>
+  <p class="who">Diễn giả: <b>ThS. Đinh Thị Kim Liên</b> · Trợ giảng: <b>ThS. Đinh Quốc Tuấn</b> (Khoa Địa chất)</p>
+
+  <ol class="toc">
+    <li><a href="#tuan">Một tuần đại học nặng bao nhiêu?</a></li>
+    <li><a href="#hinh">Hiểu mình: Tâm lý – Hình học</a></li>
+    <li><a href="#muctieu">Thiết lập mục tiêu</a></li>
+    <li><a href="#eisen">Ma trận Eisenhower</a></li>
+    <li><a href="#kehoach">Xây dựng kế hoạch cá nhân</a></li>
+    <li><a href="#pp">Phương pháp quản lý thời gian</a></li>
+    <li><a href="#7ngay">Phiếu 7 ngày</a></li>
+    <li><a href="#ref">Tài liệu tham khảo</a></li>
+  </ol>
+
+  <h2 id="tuan"><span class="n">1</span> Một tuần đại học nặng bao nhiêu?</h2>
+  <p>Theo Thông tư 17/2021/TT-BGDĐT (Điều 7), <b>một tín chỉ tương đương 50 giờ học tập định mức</b> của người học, gồm giờ lên lớp, tự học, chuẩn bị và kiểm tra; trong đó một tín chỉ lý thuyết yêu cầu tối thiểu 15 giờ giảng. Một học kỳ 18 tín chỉ vì vậy tương đương khoảng 900 giờ — chia cho khoảng 15 tuần học là <b>gần 60 giờ mỗi tuần</b>.</p>
+  <p>Thời khóa biểu chỉ cho bạn thấy phần lên lớp (khoảng 18–25 giờ/tuần). Phần lớn còn lại là tự học — và không ai xếp lịch đó thay bạn. Đó là lý do quản lý thời gian là kỹ năng đầu tiên của sinh viên năm nhất.</p>
+  <table>
+    <tr><th></th><th>Ở THPT</th><th>Ở đại học</th></tr>
+    <tr><td><b>Lịch</b></td><td>Trường xếp kín</td><td>Vài buổi trên lớp; phần lớn tự xếp</td></tr>
+    <tr><td><b>Người nhắc</b></td><td>Thầy cô, phụ huynh</td><td>Không ai nhắc — hạn chót trên Moodle, email, nhóm lớp</td></tr>
+    <tr><td><b>Cách học</b></td><td>Học trên lớp là chính</td><td>Tự học là chính</td></tr>
+    <tr><td><b>Đánh giá</b></td><td>Nhiều bài nhỏ, đều đặn</td><td>Ít cột điểm, mỗi cột nặng</td></tr>
+  </table>
+
+  <h2 id="hinh"><span class="n">2</span> Hiểu mình: Tâm lý – Hình học</h2>
+  <p>Psycho-Geometrics® của TS. Susan Dellinger mô tả năm kiểu phong cách qua năm hình: Vuông, Tam Giác, Chữ Nhật, Tròn, Lượn Sóng. Cách làm nhanh: chọn hình bạn thấy “là mình” nhất, rồi hình thứ hai. Bản tiếng Việt của bài trắc nghiệm và cẩm nang thuộc bản quyền của bà Nguyễn Thị Minh Tâm (Unity).</p>
+  <div class="box note"><b>Dùng đúng cách:</b> đây là công cụ tự soi chiếu và khởi động trò chuyện, không phải trắc nghiệm tâm lý chuẩn hóa. Mỗi người có cả năm hình, chỉ khác mức độ. Theo tài liệu gốc, <b>Chữ Nhật là một giai đoạn chuyển tiếp</b> chứ không phải tính cách cố định — rất thường gặp ở tân sinh viên. Đừng dùng hình để dán nhãn bạn bè.</div>
+  <table class="shape-row" id="shapeTable"><tr><th>Hình</th><th>Mạnh với thời gian</th><th>Bẫy thời gian</th><th>Thử ngay</th></tr></table>
+  <p class="cite">Cột “Mạnh” và “Bẫy” tóm lược từ mô tả trong tài liệu Psycho-Geometrics (bản Việt); cột “Thử ngay” là gợi ý ứng dụng vào quản lý thời gian của workshop. Bài làm đầy đủ 3 phần × 7 câu: <a href="https://tuan-23880095.github.io/khamphabanthan/">Khám phá bản thân</a>.</p>
+
+  <h2 id="muctieu"><span class="n">3</span> Thiết lập mục tiêu</h2>
+  <h3>Bốn tầng mục tiêu</h3>
+  <p>Paul (2008, tr. 170) đề nghị chia mục tiêu theo khoảng cách thời gian: <b>dài hạn</b> (5–10 năm), <b>trung hạn</b> (3–5 năm), <b>ngắn hạn</b> (1–2 năm) và <b>trước mắt</b> (tháng này, tuần này, hôm nay). Tầng dưới cùng phải đủ nhỏ để bắt đầu ngay. Tác giả nhấn mạnh: “Một mục tiêu nhỏ được hoàn thành trong 30 phút và đóng góp cho một mục tiêu lớn hơn sẽ là một trong những cách đánh bại sự trì hoãn hữu hiệu nhất.”</p>
+  <h3>SMART (Doran, 1981)</h3>
+  <table>
+    <tr><th>Chữ</th><th>Câu hỏi tự kiểm</th><th>Ví dụ</th></tr>
+    <tr><td><b>S</b> — Cụ thể</td><td>Làm gì, cho môn/việc nào?</td><td>Giải bài tập Giải tích 1</td></tr>
+    <tr><td><b>M</b> — Đo được</td><td>Con số nào cho biết đã đạt?</td><td>15 bài/tuần; từ 7 điểm giữa kỳ</td></tr>
+    <tr><td><b>A</b> — Khả thi</td><td>Vừa sức với thời gian hiện có?</td><td>Khoảng 2 bài/ngày</td></tr>
+    <tr><td><b>R</b> — Phù hợp</td><td>Phục vụ điều mình thật sự cần?</td><td>Môn nền tảng năm nhất</td></tr>
+    <tr><td><b>T</b> — Có hạn</td><td>Có mốc thời gian cụ thể?</td><td>6 tuần; tự chấm tối Chủ nhật</td></tr>
+  </table>
+  <div class="box no"><b>Mong muốn:</b> “Em sẽ cố gắng học tốt Giải tích.”</div>
+  <div class="box ok"><b>Mục tiêu SMART:</b> “Trong 6 tuần tới, mỗi tuần em giải 15 bài tập Giải tích 1 và tự chấm vào tối Chủ nhật, để đạt từ 7 điểm giữa kỳ trở lên.”</div>
+  <h3>Lỗi thường gặp — từ bài tập thật của sinh viên năm nhất</h3>
+  <p>Trích ẩn danh từ bài tập SMART của sinh viên năm nhất HCMUS (học phần Kỹ năng làm việc nhóm &amp; học tập, HK2 2025–26):</p>
+  <table>
+    <tr><th>Sinh viên viết</th><th>Vấn đề</th><th>Có thể sửa thành</th></tr>
+    <tr><td>“Ra trường đúng hạn.”</td><td>Quá xa, không có mốc đo trong học kỳ này</td><td>“Học kỳ 1: tích lũy đủ 18/18 tín chỉ đăng ký, không môn nào dưới 5 điểm.”</td></tr>
+    <tr><td>“Đạt 10.0 môn học này.”</td><td>Chỉ có kết quả, không có hành động; điểm tuyệt đối không hoàn toàn trong tầm tay</td><td>“Nộp đủ 100% bài tập trước hạn 24 giờ và sửa lỗi theo nhận xét → nhắm từ 8,5.”</td></tr>
+    <tr><td>“Chọn được chuyên ngành.”</td><td>Thiếu thời hạn và bước đi</td><td>“Trước 30/11: dự 2 buổi giới thiệu ngành, hỏi 2 anh chị khóa trên, ghi 3 ngành ưu tiên.”</td></tr>
+  </table>
+  <p><b>Nguyên tắc:</b> điểm số là <i>kết quả</i>; hãy gắn nó với <i>hành động</i> bạn kiểm soát được (số bài, số giờ, số buổi).</p>
+  <h3>OKR cá nhân</h3>
+  <p>OKR (Objectives &amp; Key Results) bắt nguồn từ Andy Grove ở Intel và được Doerr (2018) phổ biến. <b>O</b> trả lời “mình muốn tới đâu?”; <b>KR</b> là 2–3 con số chứng minh đã tới. Ví dụ — O: <i>Đứng vững ở học kỳ đại học đầu tiên</i>. KR1: không vắng buổi nào không phép; KR2: nộp 100% bài tập trước hạn ít nhất 24 giờ; KR3: ngủ từ 7 tiếng trở lên ít nhất 5 đêm/tuần.</p>
+  <div class="fill"><label>Mục tiêu SMART của tôi cho học kỳ này:</label><div class="lines"></div><div class="lines"></div><label>Việc đầu tiên tôi làm trong tuần này:</label><div class="lines"></div></div>
+
+  <h2 id="eisen"><span class="n">4</span> Ma trận Eisenhower</h2>
+  <p>Ma trận phân loại công việc theo hai câu hỏi: <b>có quan trọng không</b> (giúp mục tiêu của mình) và <b>có khẩn cấp không</b> (đòi hỏi làm ngay). Ý tưởng xuất phát từ câu nói của Tổng thống Dwight D. Eisenhower (1954), được Covey (1989) phổ biến thành “ma trận quản lý thời gian”.</p>
+  <div class="mx">
+    <div style="border-color:#E7A898;background:#FBEFEC"><b>Ô 1 · Làm ngay</b>Quan trọng · Khẩn cấp. Hạn chót hôm nay, thi ngày mai, sự cố thật. Làm xong — rồi hỏi vì sao nó lại thành gấp.</div>
+    <div style="border-color:#86C5A9;background:#E8F4EE"><b>Ô 2 · Lên lịch</b>Quan trọng · Không khẩn cấp. Đọc bài trước, ôn đều, tập thể dục, ngủ đủ, gặp cố vấn học tập. Đặt vào lịch như một cuộc hẹn.</div>
+    <div style="border-color:#E4C67F;background:#FBF4E3"><b>Ô 3 · Giảm, nhờ, từ chối</b>Không quan trọng · Khẩn cấp. Nhờ vả vặt, tin nhắn nhóm liên tục, cuộc gọi bất chợt — thường là “gấp của người khác”.</div>
+    <div style="border-color:#B5C0C8;background:#EEF1F3"><b>Ô 4 · Bỏ, hạn chế</b>Không quan trọng · Không khẩn cấp. Lướt mạng vô thức, “thêm một tập”. Giải trí có chủ đích thì không sai.</div>
+  </div>
+  <h3>Bẫy khẩn cấp</h3>
+  <p>Bỏ qua việc ô 2 → nó thành ô 1 → chạy deadline, kiệt sức → lướt mạng (ô 4) để “xả” → lại không còn sức cho ô 2. Đây là trạng thái “bận rộn giả”: làm nhiều nhưng hiệu quả không đáng kể. Ba lối thoát:</p>
+  <ol>
+    <li><b>Hẹn giờ cho ô 2</b> — khối giờ cố định trong lịch, có tên môn.</li>
+    <li><b>Hạn chót của mình sớm hơn 24 giờ</b> so với hạn trên Moodle.</li>
+    <li><b>Nói “không” mềm mỏng:</b> “Mình đang làm bài tới 17h, sau đó mình phụ bạn nhé.” · “Lần này mình xin phép không đi, lần sau rủ mình nha.” · “Mình làm được phần A, phần B nhờ bạn khác được không?”</li>
+  </ol>
+  <h3>8 tình huống trong workshop — gợi ý xếp ô</h3>
+  <table id="eisenTable"><tr><th>Việc</th><th>Gợi ý</th><th>Vì sao</th></tr></table>
+
+  <h2 id="kehoach"><span class="n">5</span> Xây dựng kế hoạch cá nhân</h2>
+  <h3>Bánh xe cuộc đời</h3>
+  <p>Chấm mức hài lòng hiện tại (1–10) cho 8 lĩnh vực, nối các điểm lại. Nan hoa thấp nhất là gợi ý cho kế hoạch tuần: đặt ít nhất một việc nhỏ, có ngày giờ cụ thể, cho lĩnh vực đó.</p>
+  <div class="wheel-blank" id="wheelBlank"></div>
+  <h3>Quy trình 4 bước</h3>
+  <ol>
+    <li><b>Chia nhỏ:</b> chia mục tiêu đến khi mỗi việc chỉ 30–60 phút (Paul, 2008, tr. 154).</li>
+    <li><b>Xếp lịch theo ưu tiên:</b> ô 1 làm ngay, ô 2 hẹn giờ.</li>
+    <li><b>Chuẩn bị nguồn lực:</b> tài liệu, dụng cụ, chỗ ngồi, người hỗ trợ.</li>
+    <li><b>Làm, theo dõi, điều chỉnh:</b> rà soát cuối tuần.</li>
+  </ol>
+  <h3>Lịch tuần: đặt “đá to” vào trước</h3>
+  <p>Paul (2008, tr. 190–193) đề nghị lập thời gian biểu tuần theo thứ tự: (1) việc cố định — lên lớp, thí nghiệm, làm thêm; (2) khối học tập vào giờ bạn tỉnh táo nhất; (3) hoạt động khác như thể thao; (4) <b>chừa khoảng trống</b>. Tác giả viết: “Tại sao hầu hết các thời gian biểu đều thất bại? Vì chúng quá kín.” Workshop gợi ý chừa khoảng 20% làm vùng đệm.</p>
+  <div class="box"><b>Mẹo:</b> Moodle có trang Lịch tổng hợp hạn nộp. Nếu Moodle của trường bật chức năng xuất lịch (Lịch → Xuất lịch / Export calendar), bạn có thể dán đường dẫn đó vào Google Calendar (“Thêm lịch từ URL”) để mọi hạn chót hiện cùng một chỗ.</div>
+  <h3>Rà soát tuần — 20 phút tối Chủ nhật</h3>
+  <ol>
+    <li><b>Nhìn lại:</b> tuần này mình làm được gì? Ghi 3 điều.</li>
+    <li><b>Gom về một chỗ:</b> hạn chót, tin nhắn, giấy tờ → một danh sách duy nhất.</li>
+    <li><b>Nhìn trước:</b> hai tuần tới có kiểm tra, nộp bài, sự kiện gì?</li>
+    <li><b>Chọn 3 việc lớn</b> cho tuần sau và đặt luôn vào lịch.</li>
+  </ol>
+
+  <h2 id="pp"><span class="n">6</span> Phương pháp quản lý thời gian</h2>
+  <table>
+    <tr><th>Phương pháp</th><th>Cách làm</th><th>Nguồn</th></tr>
+    <tr><td><b>Pomodoro</b></td><td>25 phút tập trung một việc, nghỉ 5 phút; sau 4 phiên nghỉ dài 15–30 phút. Chu kỳ có thể điều chỉnh (ví dụ 50/10 cho bài toán dài).</td><td>Cirillo (cuối thập niên 1980)</td></tr>
+    <tr><td><b>Quy tắc 2 phút</b></td><td>Việc dưới 2 phút thì làm luôn, không ghi vào danh sách.</td><td>Allen (2001)</td></tr>
+    <tr><td><b>Ăn con ếch</b></td><td>Việc khó và quan trọng nhất làm đầu tiên trong ngày.</td><td>Tracy (2001)</td></tr>
+    <tr><td><b>Chia nhỏ việc lớn</b></td><td>Mỗi bước 30–60 phút; bắt đầu bước đầu tiên ngay.</td><td>Paul (2008, tr. 154)</td></tr>
+  </table>
+  <h3>GTD — Getting Things Done (Allen, 2001)</h3>
+  <ol>
+    <li><b>Thu thập:</b> ghi mọi việc ra ngoài đầu — một ứng dụng hoặc một cuốn sổ duy nhất.</li>
+    <li><b>Làm rõ:</b> việc này là gì? Dưới 2 phút → làm luôn; lớn → bước đầu tiên là gì?</li>
+    <li><b>Sắp xếp:</b> gắn hạn, gắn môn, đưa vào lịch hoặc danh sách.</li>
+    <li><b>Rà soát:</b> mỗi sáng 2 phút, mỗi tuần 20 phút.</li>
+    <li><b>Thực hiện:</b> làm với tâm thế yên tâm vì không bỏ sót gì.</li>
+  </ol>
+  <h3>Năm cách vượt trì hoãn (Paul, 2008, tr. 185–186)</h3>
+  <ol>
+    <li><b>Chuẩn bị</b> chỗ ngồi và tâm trí; tắt thông báo, điện thoại úp xuống.</li>
+    <li><b>Đặt mục tiêu học tập nhỏ</b>, dễ bắt đầu và sớm hoàn thành.</li>
+    <li><b>Hình dung sự tổn hại</b> của việc trì hoãn.</li>
+    <li><b>Tưởng tượng niềm vui</b> khi hoàn thành — và tự thưởng thật.</li>
+    <li><b>Cho phép bản thân trì hoãn một số việc</b> không quan trọng.</li>
+  </ol>
+  <h3>Thói quen cần bao lâu?</h3>
+  <p>“21 ngày tạo thói quen” là ngộ nhận phổ biến. Trong nghiên cứu của Lally và cộng sự (2010), thời gian để một hành vi mới trở nên tự động dao động <b>18–254 ngày, trung vị 66 ngày</b>; lỡ một lần không làm hỏng quá trình hình thành thói quen. Hãy bắt đầu nhỏ, gắn với một thời điểm cố định, và kiên trì.</p>
+
+  <h2 id="7ngay" class="pb"><span class="n">7</span> Phiếu 7 ngày</h2>
+  <div class="fill"><label>Cam kết 7 ngày của tôi:</label><div class="lines"></div></div>
+  <table class="week7"><tr><th>Ngày</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+    <tr><td style="text-align:left"><b>Đã làm</b></td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td></tr>
+    <tr><td style="text-align:left"><b>🐸 Con ếch</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
+  <div class="fill"><label>Ba việc quan trọng nhất tuần tới:</label><div class="lines"></div><div class="lines"></div><div class="lines"></div></div>
+  <p class="no-print">Trên điện thoại: mở <a href="sv.html#kehoach">Kế hoạch của tôi</a> để tải lịch nhắc 7 ngày (.ics).</p>
+
+  <h2 id="ref"><span class="n">8</span> Tài liệu tham khảo</h2>
+  <ol class="ref">
+    <li>Allen, D. (2001). <i>Getting things done: The art of stress-free productivity</i>. Viking.</li>
+    <li>Bộ Giáo dục và Đào tạo. (2021). <i>Thông tư 17/2021/TT-BGDĐT quy định về chuẩn chương trình đào tạo; xây dựng, thẩm định và ban hành chương trình đào tạo các trình độ của giáo dục đại học</i> (Điều 7).</li>
+    <li>Cirillo, F. (2018). <i>The Pomodoro technique: The life-changing time-management system</i>. Virgin Books.</li>
+    <li>Covey, S. R. (1989). <i>The 7 habits of highly effective people</i>. Free Press.</li>
+    <li>Dellinger, S. (1989). <i>Psycho-Geometrics: How to use geometric psychology to influence people</i>. Prentice Hall. Bản Việt bài trắc nghiệm và cẩm nang: Nguyễn Thị Minh Tâm (Unity).</li>
+    <li>Doerr, J. (2018). <i>Measure what matters</i>. Portfolio/Penguin.</li>
+    <li>Doran, G. T. (1981). There’s a S.M.A.R.T. way to write management’s goals and objectives. <i>Management Review, 70</i>(11), 35–36.</li>
+    <li>Eisenhower, D. D. (1954, August 19). <i>Address at the Second Assembly of the World Council of Churches</i>, Evanston, Illinois.</li>
+    <li>Lally, P., van Jaarsveld, C. H. M., Potts, H. W. W., &amp; Wardle, J. (2010). How are habits formed: Modelling habit formation in the real world. <i>European Journal of Social Psychology, 40</i>(6), 998–1009. https://doi.org/10.1002/ejsp.674</li>
+    <li>Paul, K. (2008). <i>Học khôn ngoan mà không gian nan</i>. NXB Lao động – Xã hội. (Nguyên tác: <i>Study smarter, not harder</i>.)</li>
+    <li>Tracy, B. (2001). <i>Eat that frog! 21 great ways to stop procrastinating and get more done in less time</i>. Berrett-Koehler.</li>
+  </ol>
+  <p class="cite">Ví dụ sinh viên trích ẩn danh từ diễn đàn học phần Kỹ năng làm việc nhóm &amp; học tập (BAA00008), HK2 2025–26, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM.</p>
+</article>
+
+<script src="ws-common.js?v=20261015"></script>
+<script>
+(function () {
+  var WS = window.WS;
+  document.getElementById('shapeTable').insertAdjacentHTML('beforeend', WS.SHAPE_ORDER.map(function (k) {
+    var s = WS.SHAPES[k];
+    return '<tr><td><span style="display:inline-flex;gap:8px;align-items:center;color:' + s.color + '">' + WS.shapeSvg(k, 22) + s.name + '</span></td><td>' + s.strong + '</td><td>' + s.trap + '</td><td>' + s.tips.join('<br>') + '</td></tr>';
+  }).join(''));
+  document.getElementById('eisenTable').insertAdjacentHTML('beforeend', WS.EISEN.map(function (c) {
+    return '<tr><td>' + c.icon + ' ' + WS.esc(c.text) + '</td><td style="white-space:nowrap"><b>Ô ' + c.q + '</b></td><td>' + c.why + '</td></tr>';
+  }).join(''));
+  document.getElementById('wheelBlank').innerHTML = WS.render.radar([0, 0, 0, 0, 0, 0, 0, 0], { size: 360, series: [] });
+})();
+</script>
+</body>
+</html>

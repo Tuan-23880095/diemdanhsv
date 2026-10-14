@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F6B55">
+<title>Tham gia Workshop K2026 — Quản lý thời gian · HCMUS</title>
+<meta name="description" content="Trang tham gia trên điện thoại của Workshop Kỹ năng quản lý thời gian và kế hoạch cá nhân cho tân sinh viên K2026 — ẩn danh, không cần đăng nhập.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20261014-logo">
+<link rel="apple-touch-icon" href="assets/icon-tile-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="ws.css?v=20261015">
+<style>
+body { font-size: 16px; line-height: 1.5; padding-bottom: env(safe-area-inset-bottom); }
+.wrap { max-width: 640px; margin: 0 auto; padding: 0 16px; }
+header.top { background: linear-gradient(110deg, var(--lam), var(--luc)); color: #fff; padding: 14px 0 16px; }
+header.top .wrap { display: flex; align-items: center; gap: 12px; }
+header.top img.hc { height: 40px; width: auto; background: #fff; border-radius: 8px; padding: 3px; }
+header.top .sen { width: 40px; height: 40px; background: #fff; border-radius: 20%; padding: 4px; margin-left: auto; flex: none; }
+header.top h1 { font: 700 18px/1.2 var(--serif); margin: 0; }
+header.top p { margin: 2px 0 0; font-size: 12.5px; opacity: .9; }
+nav.tabs { position: sticky; top: 0; z-index: 10; background: var(--giay); border-bottom: 1px solid var(--line); }
+nav.tabs .wrap { display: flex; gap: 6px; overflow-x: auto; padding: 10px 16px; scrollbar-width: none; }
+nav.tabs .wrap::-webkit-scrollbar { display: none; }
+nav.tabs button { flex: none; border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 7px 13px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; position: relative; }
+nav.tabs button.on { background: var(--luc); border-color: var(--luc); color: #fff; }
+nav.tabs button .ok { color: var(--luc-non); margin-left: 3px; }
+nav.tabs button.on .ok { color: var(--ngoc); }
+nav.tabs button.live::after { content: ""; position: absolute; top: 3px; right: 3px; width: 8px; height: 8px; border-radius: 50%; background: var(--son); }
+#liveBar { display: none; background: #FFF6E5; border-bottom: 1px solid #F0DDB0; font-size: 14px; }
+#liveBar.on { display: block; }
+#liveBar .wrap { display: flex; align-items: center; gap: 10px; padding: 8px 16px; }
+#liveBar button { margin-left: auto; }
+main { padding: 18px 0 40px; }
+.panel { display: none; }
+.panel.on { display: block; animation: fade .25s; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+h2.ttl { font: 700 24px/1.2 var(--serif); margin: 0 0 6px; }
+p.lead { color: var(--mute); margin: 0 0 16px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+.card h3 { font: 700 18px var(--serif); margin: 0 0 8px; }
+.q { font-weight: 600; margin: 0 0 10px; }
+.opts { display: grid; gap: 8px; }
+.opt { display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #fff; cursor: pointer; text-align: left; width: 100%; font-size: 15.5px; min-height: 48px; }
+.opt.on { border-color: var(--luc); background: #E8F4EE; font-weight: 600; }
+.opt .rd { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--bac); flex: none; }
+.opt.on .rd { border: 6px solid var(--luc); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 600 15.5px var(--sans); border-radius: 12px; padding: 12px 18px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; min-height: 48px; text-decoration: none; color: var(--muc); }
+.btn.pri { background: var(--luc); border-color: var(--luc); color: #fff; }
+.btn.wide { width: 100%; }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn.sm { min-height: 36px; padding: 6px 12px; font-size: 14px; }
+.btn { white-space: nowrap; flex: none; }
+#liveBar span { line-height: 1.3; }
+.status { font-size: 14px; margin-top: 10px; min-height: 1.2em; }
+.status.ok { color: var(--luc); } .status.err { color: var(--son); }
+textarea, input[type=text] { width: 100%; font: 16px var(--sans); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #fff; color: var(--muc); }
+textarea:focus, input:focus { outline: 2px solid var(--luc-non); border-color: var(--luc-non); }
+textarea { min-height: 96px; resize: vertical; }
+.hint { font-size: 13.5px; color: var(--mute); }
+.hall { margin-top: 6px; }
+.hall h3 { display: flex; align-items: center; gap: 8px; }
+.hall h3 .n { margin-left: auto; font: 500 13px var(--sans); color: var(--mute); }
+
+/* hình khối */
+.shapes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px; }
+.shp { border: 1.5px solid var(--line); background: #fff; border-radius: 14px; padding: 10px 4px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; position: relative; font-size: 12.5px; font-weight: 600; }
+.shp.on { border-color: var(--c); background: color-mix(in srgb, var(--c) 8%, white); }
+.shp .badge { position: absolute; top: -8px; right: -6px; width: 24px; height: 24px; border-radius: 50%; background: var(--c); color: #fff; font: 700 13px/24px var(--sans); text-align: center; display: none; }
+.shp.on .badge { display: block; }
+.shape-res { border-top: 6px solid var(--c); }
+.shape-res .hd { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.shape-res h3 { color: var(--c); font-size: 22px; margin: 0; }
+.shape-res .motto { font: italic 16px var(--serif); color: var(--mute); margin: 0 0 10px; }
+.lb { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); margin-top: 10px; }
+.tips { margin: 6px 0 0; padding-left: 20px; }
+.tips li { margin-bottom: 4px; }
+
+/* SMART */
+.smart { display: grid; gap: 8px; margin-top: 12px; }
+.sm { display: grid; grid-template-columns: 40px 1fr 52px; align-items: center; gap: 10px; border: 1.5px solid var(--line); border-radius: 12px; padding: 8px 10px; background: #fff; cursor: pointer; text-align: left; width: 100%; }
+.sm b.k { font: 700 24px var(--serif); color: var(--lam); text-align: center; }
+.sm .tx { font-size: 14px; line-height: 1.35; }
+.sm .tx b { display: block; font-size: 15px; }
+.sm .sw { width: 46px; height: 28px; border-radius: 99px; background: var(--bac); position: relative; transition: background .2s; }
+.sm .sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.sm.on { border-color: var(--luc); }
+.sm.on .sw { background: var(--luc); }
+.sm.on .sw::after { left: 21px; }
+.auto { font-size: 13px; color: var(--luc); font-weight: 600; }
+
+/* Eisenhower */
+.ecard { border: 1.5px solid var(--line); border-radius: 14px; padding: 12px; background: #fff; margin-bottom: 10px; }
+.ecard .et { font-weight: 600; margin-bottom: 10px; }
+.qbtns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.qbtns button { border: 1.5px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 2px; font: 600 12px/1.2 var(--sans); cursor: pointer; min-height: 48px; }
+.qbtns button b { display: block; font-size: 16px; }
+.qbtns button.on { color: #fff; border-color: transparent; }
+.ecard .why { margin-top: 10px; font-size: 14px; padding: 10px 12px; border-radius: 10px; background: var(--giay); }
+.ecard .why.same { background: #E8F4EE; }
+.legend4 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 12.5px; margin-bottom: 12px; }
+.legend4 span { border-radius: 8px; padding: 6px 8px; color: #fff; font-weight: 600; }
+.progress { height: 6px; border-radius: 3px; background: var(--bac); overflow: hidden; margin: 6px 0 14px; }
+.progress div { height: 100%; background: var(--luc); transition: width .3s; }
+
+/* bánh xe */
+.sl { display: grid; grid-template-columns: 1fr 34px; gap: 4px 10px; align-items: center; margin-bottom: 10px; }
+.sl label { font-size: 14.5px; font-weight: 600; }
+.sl output { font: 700 18px var(--serif); color: var(--luc); text-align: right; }
+.sl input { grid-column: 1 / -1; width: 100%; accent-color: var(--luc); height: 28px; }
+.radar-box { max-width: 360px; margin: 0 auto; }
+.legend-r { display: flex; gap: 16px; justify-content: center; font-size: 13px; color: var(--mute); }
+.legend-r i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+
+/* Q&A */
+.qitem { display: grid; grid-template-columns: 1fr 64px; gap: 10px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.qitem.done { opacity: .55; }
+.qitem .vb { border: 1.5px solid var(--line); background: #fff; border-radius: 12px; min-height: 48px; font: 700 15px var(--sans); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
+.qitem .vb.on { border-color: var(--luc); color: var(--luc); background: #E8F4EE; }
+
+.stars { display: flex; gap: 6px; justify-content: center; margin: 6px 0 14px; }
+.stars button { font-size: 38px; line-height: 1; background: none; border: 0; cursor: pointer; color: var(--bac); padding: 4px; }
+.stars button.on { color: var(--tho); }
+
+/* kế hoạch của tôi */
+.mine dl { margin: 0; }
+.mine dt { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); margin-top: 14px; }
+.mine dd { margin: 4px 0 0; }
+.empty { color: var(--mute); font-style: italic; }
+.timer-big { font: 700 64px/1 var(--sans); text-align: center; font-variant-numeric: tabular-nums; margin: 10px 0; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+footer.ft { text-align: center; font-size: 12.5px; color: var(--mute); padding: 24px 16px 32px; border-top: 1px solid var(--line); }
+.offline { background: #FBEFEC; color: var(--son); border-radius: 10px; padding: 8px 12px; font-size: 14px; margin-bottom: 12px; display: none; }
+.offline.on { display: block; }
+
+@media print {
+  header.top, nav.tabs, #liveBar, footer.ft, .no-print, .panel:not(#p-kehoach) { display: none !important; }
+  #p-kehoach { display: block !important; }
+  body { background: #fff; }
+  .card { break-inside: avoid; }
+  header.top .sen, .dqt-sen { display: none !important; }
+  .print-head { display: flex !important; }
+}
+.print-head { display: none; align-items: center; gap: 12px; margin-bottom: 12px; }
+.print-head img { height: 44px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <img class="hc" src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM">
+    <div><h1>Làm chủ thời gian</h1><p>Workshop Tân sinh viên K2026 · 18/10/2026</p></div>
+    <img class="sen dqt-sen" src="assets/logo-sen.svg" alt="Logo hoa sen đọng sương">
+  </div>
+</header>
+<nav class="tabs" aria-label="Các hoạt động"><div class="wrap" id="tabs"></div></nav>
+<div id="liveBar" role="status"><div class="wrap"><span>📣 Diễn giả đang mở: <b id="liveName"></b></span><button class="btn sm pri" type="button" id="liveGo">Tham gia</button></div></div>
+
+<main class="wrap">
+  <div class="offline" id="offline">Mất kết nối mạng. Bài làm vẫn lưu trên máy — sẽ tự gửi lại khi có mạng.</div>
+
+  <section class="panel" id="p-khoidong">
+    <h2 class="ttl">Khởi động</h2>
+    <p class="lead">Hai câu, 30 giây. Ẩn danh hoàn toàn.</p>
+    <div class="card"><p class="q" id="kdCamQ"></p><div class="opts" id="kdCam"></div></div>
+    <div class="card"><p class="q" id="kdManQ"></p><div class="opts" id="kdMan"></div></div>
+    <button class="btn pri wide" type="button" id="kdSend">Gửi</button>
+    <div class="status" id="kdSt"></div>
+    <div class="hall" id="kdHall"></div>
+  </section>
+
+  <section class="panel" id="p-hinh">
+    <h2 class="ttl">Bạn là hình gì?</h2>
+    <p class="lead">Đừng nghĩ lâu. Chạm hình bạn thấy <b>giống mình nhất</b>, rồi chạm hình <b>thứ hai</b>.</p>
+    <div class="shapes" id="shapes"></div>
+    <button class="btn pri wide" type="button" id="hSend" disabled>Gửi và xem gợi ý</button>
+    <div class="status" id="hSt"></div>
+    <div id="hRes"></div>
+    <div class="hall" id="hHall"></div>
+    <p class="hint">Psycho-Geometrics® là công cụ tự soi chiếu của TS. Susan Dellinger (bản Việt: Nguyễn Thị Minh Tâm – Unity), không phải trắc nghiệm tâm lý chuẩn hóa. Mỗi người có cả 5 hình, chỉ khác mức độ.
+      Muốn làm bài đầy đủ 3 phần × 7 câu: <a href="https://tuan-23880095.github.io/khamphabanthan/" target="_blank" rel="noopener">Khám phá bản thân</a>.</p>
+  </section>
+
+  <section class="panel" id="p-muctieu">
+    <h2 class="ttl">Một mục tiêu SMART</h2>
+    <p class="lead">Viết một mục tiêu cho học kỳ này, rồi tự kiểm 5 tiêu chí.</p>
+    <div class="card">
+      <label class="q" for="goal">Mục tiêu của tôi</label>
+      <textarea id="goal" maxlength="300" placeholder="Ví dụ: Trong 6 tuần tới, mỗi tuần mình giải 15 bài tập Giải tích 1 và tự chấm vào tối Chủ nhật, để đạt từ 7 điểm giữa kỳ."></textarea>
+      <div class="hint" id="goalCount">0/300</div>
+      <div class="smart" id="smart"></div>
+    </div>
+    <button class="btn pri wide" type="button" id="gSend">Gửi mục tiêu</button>
+    <div class="status" id="gSt"></div>
+    <div id="gRes"></div>
+    <div class="hall" id="gHall"></div>
+    <p class="hint">Nội dung mục tiêu chỉ diễn giả thấy (ẩn danh), không chiếu lên màn hình. Màn hình chỉ hiện thống kê.</p>
+  </section>
+
+  <section class="panel" id="p-eisen">
+    <h2 class="ttl">Xếp 8 việc vào 4 ô</h2>
+    <p class="lead">Chạm số ô cho từng việc. Không có đáp án tuyệt đối — xếp theo hoàn cảnh của bạn.</p>
+    <div class="legend4" id="legend4"></div>
+    <div class="progress"><div id="eProg" style="width:0"></div></div>
+    <div id="ecards"></div>
+    <button class="btn pri wide" type="button" id="eSend" disabled>Gửi và xem gợi ý</button>
+    <div class="status" id="eSt"></div>
+    <div class="hall" id="eHall"></div>
+  </section>
+
+  <section class="panel" id="p-banhxe">
+    <h2 class="ttl">Bánh xe cuộc đời</h2>
+    <p class="lead">Mức hài lòng <b>hiện tại</b> của bạn ở 8 lĩnh vực, từ 1 (rất thấp) đến 10 (rất tốt).</p>
+    <div class="card"><div class="radar-box" id="radarMe"></div><div class="legend-r" id="radarLegend"><span><i style="background:var(--luc)"></i>Của bạn</span></div></div>
+    <div class="card" id="sliders"></div>
+    <button class="btn pri wide" type="button" id="bSend">Gửi và so với hội trường</button>
+    <div class="status" id="bSt"></div>
+    <div id="bRes"></div>
+  </section>
+
+  <section class="panel" id="p-camket">
+    <h2 class="ttl">Cam kết 7 ngày</h2>
+    <p class="lead">Chọn <b>một</b> việc nhỏ bạn sẽ làm mỗi ngày trong 7 ngày tới.</p>
+    <div class="opts" id="pledges"></div>
+    <div class="card" style="margin-top:14px">
+      <label class="q" for="frog">🐸 “Con ếch” ngày mai của tôi là…</label>
+      <input type="text" id="frog" maxlength="140" placeholder="Việc khó và quan trọng nhất ngày mai">
+      <p class="hint" style="margin:6px 0 0">Chỉ lưu trên điện thoại của bạn, không gửi đi.</p>
+    </div>
+    <button class="btn pri wide" type="button" id="cSend">Cam kết</button>
+    <div class="status" id="cSt"></div>
+    <div class="hall" id="cHall"></div>
+  </section>
+
+  <section class="panel" id="p-hoi">
+    <h2 class="ttl">Hỏi diễn giả</h2>
+    <p class="lead">Ẩn danh. Bấm ▲ cho câu bạn cũng muốn hỏi — câu nhiều ▲ được trả lời trước.</p>
+    <div class="card">
+      <textarea id="qText" maxlength="300" placeholder="Câu hỏi của bạn về quản lý thời gian, học tập, cân bằng cuộc sống…" style="min-height:76px"></textarea>
+      <div class="row" style="margin-top:10px;align-items:center"><span class="hint" id="qCount">0/300</span><button class="btn pri" type="button" id="qSend" style="margin-left:auto">Gửi câu hỏi</button></div>
+      <div class="status" id="qSt"></div>
+    </div>
+    <div class="card"><h3 style="display:flex">Câu hỏi của hội trường <button class="btn sm" type="button" id="qRefresh" style="margin-left:auto">Làm mới</button></h3><div id="qList"><p class="empty">Đang tải…</p></div></div>
+  </section>
+
+  <section class="panel" id="p-danhgia">
+    <h2 class="ttl">Góp ý 30 giây</h2>
+    <p class="lead">Buổi hôm nay có ích với bạn không?</p>
+    <div class="card">
+      <div class="stars" id="stars"></div>
+      <label class="q" for="fbText">Một điều bạn mang về (không bắt buộc)</label>
+      <textarea id="fbText" maxlength="300" style="min-height:76px"></textarea>
+    </div>
+    <button class="btn pri wide" type="button" id="fSend" disabled>Gửi góp ý</button>
+    <div class="status" id="fSt"></div>
+  </section>
+
+  <section class="panel" id="p-pomo">
+    <h2 class="ttl">Đồng hồ Pomodoro</h2>
+    <p class="lead">Tập trung một việc cho đến khi chuông reo. Điện thoại úp xuống.</p>
+    <div class="card">
+      <div class="row" id="pomoModes"><button class="btn sm pri" data-m="25,5">25 / 5</button><button class="btn sm" data-m="50,10">50 / 10</button><button class="btn sm" data-m="15,3">15 / 3</button></div>
+      <div class="timer-big" id="pomoV">25:00</div>
+      <p class="hint" id="pomoL" style="text-align:center;margin:0 0 12px">Phiên tập trung · đã xong 0 phiên</p>
+      <div class="row"><button class="btn pri" style="flex:1" id="pomoGo">Bắt đầu</button><button class="btn" id="pomoReset">Đặt lại</button></div>
+    </div>
+    <p class="hint">Chuẩn Pomodoro (F. Cirillo): 25 phút + nghỉ 5; sau 4 phiên nghỉ dài 15–30 phút. Để màn hình sáng để nghe chuông.</p>
+  </section>
+
+  <section class="panel" id="p-kehoach">
+    <div class="print-head"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt=""><div><b>Kế hoạch cá nhân — Workshop Tân sinh viên K2026</b><br><span class="hint">Quản lý thời gian &amp; kế hoạch cá nhân · 18/10/2026 · ĐH Khoa học Tự nhiên, ĐHQG-HCM</span></div></div>
+    <h2 class="ttl no-print">Kế hoạch của tôi</h2>
+    <p class="lead no-print">Mọi thứ bạn làm hôm nay, gom lại một trang. Chỉ lưu trên điện thoại này.</p>
+    <div class="card mine" id="mine"></div>
+    <div class="card no-print">
+      <h3>Nhắc mình trong 7 ngày tới</h3>
+      <p class="hint" style="margin-top:0">Tải tệp lịch (.ics) rồi mở bằng Lịch / Google Calendar: nhắc cam kết mỗi ngày trong 7 ngày + rà soát tuần tối Chủ nhật trong 8 tuần.</p>
+      <div class="row" style="align-items:center"><label for="remindAt" class="hint">Giờ nhắc cam kết</label><input type="time" id="remindAt" value="21:30" style="width:auto;padding:8px 10px;border:1.5px solid var(--line);border-radius:10px;font:16px var(--sans)"><button class="btn pri" type="button" id="icsGo">Tải lịch nhắc</button></div>
+    </div>
+    <div class="row no-print"><button class="btn" type="button" onclick="window.print()">In / Lưu PDF</button><a class="btn" href="cam-nang.html">Đọc Cẩm nang</a></div>
+  </section>
+</main>
+
+<footer class="ft">
+  Workshop do ThS. Đinh Thị Kim Liên &amp; ThS. Đinh Quốc Tuấn thực hiện · Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM<br>
+  Ẩn danh: trang chỉ lưu một mã ngẫu nhiên trên máy bạn để tránh bình chọn trùng. <a href="cam-nang.html">Cẩm nang</a> · <a href="index.html">Slide</a>
+</footer>
+
+<script src="ws-common.js?v=20261015"></script>
+<script src="sv.js?v=20261015"></script>
+</body>
+</html>

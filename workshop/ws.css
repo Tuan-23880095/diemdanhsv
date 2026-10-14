@@ -1,0 +1,88 @@
+/* ws.css — biến thương hiệu + thành phần dùng chung (slide, điện thoại, cẩm nang).
+   Màu/phông theo bộ nhận diện ThS. Đinh Quốc Tuấn (tokens/brand.css). */
+:root {
+  --luc: #0F6B55;        /* Lục Bồ Đề — màu chính */
+  --luc-non: #46A385;
+  --ngoc: #8FE0BD;
+  --lam: #1F4E79;        /* Lam Hộ Vệ */
+  --lam-suong: #2F6DB0;
+  --muc: #10212B;        /* Mực Lam — chữ */
+  --giay: #F6F7F3;       /* Giấy — nền */
+  --bac: #D5DCE1;        /* Bạc Sương — đường kẻ */
+  --son: #D2492A;
+  --tho: #D6A130;
+  --tim: #6B4A9E;
+  --mute: #4E5D68;
+  --line: #D5DCE1;
+  --card: #FFFFFF;
+  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--sans); color: var(--muc); background: var(--giay); -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; }
+.ws-shape { display: block; flex: none; }
+
+/* thanh ngang */
+.ws-bars { display: grid; gap: .55em; }
+.ws-bar { display: grid; grid-template-columns: minmax(7em, 34%) 1fr 4.6em; gap: .7em; align-items: center; }
+.ws-bar-l { font-weight: 500; line-height: 1.25; }
+.ws-bar.is-hi .ws-bar-l { font-weight: 700; }
+.ws-bar-t { height: 1.15em; background: #E9EDEA; border-radius: 99px; overflow: hidden; }
+.ws-bar-f { height: 100%; border-radius: 99px; transition: width .6s cubic-bezier(.2,.8,.2,1); min-width: 2px; }
+.ws-bar-v { display: flex; gap: .4em; align-items: baseline; justify-content: flex-end; font-variant-numeric: tabular-nums; }
+.ws-bar-v span { color: var(--mute); font-size: .8em; }
+.ws-h4 { margin: 0 0 .8em; font-size: 1em; font-weight: 600; color: var(--mute); }
+.ws-two { display: grid; grid-template-columns: 1fr 1fr; gap: 2.2em; align-items: start; }
+
+/* cột hình khối */
+.ws-shapecols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.4em; align-items: end; height: 100%; }
+.ws-shapecol { display: flex; flex-direction: column; align-items: center; gap: .45em; height: 100%; }
+.ws-shapecol-v { font-variant-numeric: tabular-nums; }
+.ws-shapecol-v b { font-size: 1.5em; }
+.ws-shapecol-v span { color: var(--mute); font-size: .85em; }
+.ws-shapecol-t { flex: 1; width: 62%; min-height: 4em; display: flex; align-items: flex-end; background: #EEF1EE; border-radius: .5em .5em 0 0; }
+.ws-shapecol-f { width: 100%; border-radius: .5em .5em 0 0; transition: height .6s cubic-bezier(.2,.8,.2,1); min-height: 3px; }
+.ws-shapecol-n { font-weight: 600; }
+
+/* phân bố Eisenhower */
+.ws-eisenres { display: grid; gap: .5em; }
+.ws-er { display: grid; grid-template-columns: 38% 1fr 8.5em; gap: .9em; align-items: center; }
+.ws-er-t { font-size: .92em; line-height: 1.25; }
+.ws-er-b { display: flex; height: 1.7em; border-radius: .4em; overflow: hidden; background: #EEF1EE; }
+.ws-er-b span { display: flex; align-items: center; justify-content: center; color: #fff; font-size: .72em; font-weight: 600; white-space: nowrap; overflow: hidden; transition: width .6s; }
+.ws-er-b em { color: var(--mute); font-size: .8em; padding: 0 .6em; align-self: center; }
+.ws-er-a { font-size: .85em; color: var(--mute); text-align: right; }
+.ws-er-a.is-split { color: var(--son); font-weight: 700; }
+
+/* radar */
+.ws-radar { width: 100%; height: auto; max-width: 30em; display: block; margin: 0 auto; overflow: visible; }
+.ws-radar-l { font: 600 12.5px var(--sans); fill: var(--muc); }
+.ws-two-radar { align-items: center; }
+.ws-lows { margin: 0; padding-left: 1.2em; display: grid; gap: .6em; line-height: 1.35; }
+
+/* SMART */
+.ws-smartres { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2em; align-items: end; }
+.ws-sr { display: flex; flex-direction: column; align-items: center; gap: .3em; }
+.ws-sr-k { font: 700 2em var(--serif); color: var(--luc); line-height: 1; }
+.ws-sr-n { font-size: .85em; color: var(--mute); }
+.ws-sr-t { width: 55%; height: 7em; background: #EEF1EE; border-radius: .4em; display: flex; align-items: flex-end; overflow: hidden; }
+.ws-sr-t > div { width: 100%; background: var(--luc); transition: height .6s; }
+.ws-sr-p { font-weight: 700; font-variant-numeric: tabular-nums; }
+.ws-sr-full { grid-column: 1 / -1; text-align: center; color: var(--mute); margin-top: .4em; }
+.ws-sr-full b { color: var(--muc); font-size: 1.2em; }
+
+.ws-bignum { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ws-bignum b { font: 700 4.5em var(--serif); color: var(--luc); line-height: 1; }
+.ws-bignum span { color: var(--mute); }
+
+@media (max-width: 640px) {
+  .ws-two { grid-template-columns: 1fr; gap: 1.4em; }
+  .ws-er { grid-template-columns: 1fr; gap: .3em; }
+  .ws-er-a { text-align: left; }
+  .ws-shapecols { gap: .5em; }
+  .ws-shapecol-n { font-size: .78em; text-align: center; }
+  .ws-bar { grid-template-columns: 1fr 4.2em; gap: .25em .6em; }
+  .ws-bar-l { grid-column: 1 / -1; font-size: .92em; }
+}
