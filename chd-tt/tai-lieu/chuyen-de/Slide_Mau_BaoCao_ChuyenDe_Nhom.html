@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLIDE BÁO CÁO CHUYÊN ĐỀ NHÓM - CƠ HỌC ĐẤT (GEO20202)</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0b132b;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  .slide-container {
+    width: 1280px;
+    height: 720px; /* 16:9 ratio */
+    background: #1c2541;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 60px;
+  }
+  .slide { display: none; height: 100%; flex-direction: column; justify-content: space-between; }
+  .slide.active { display: flex; animation: fadeIn 0.3s ease-in-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  
+  .slide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #3a506b;
+    padding-bottom: 12px;
+  }
+  .slide-header h2 { font-size: 24pt; color: #6fffe9; font-weight: 700; text-transform: uppercase; }
+  .badge { background: #3a506b; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 11pt; font-weight: bold; }
+  
+  .slide-body {
+    flex-grow: 1;
+    margin: 20px 0;
+    font-size: 14pt;
+    line-height: 1.5;
+    color: #e0e1dd;
+    display: flex;
+    gap: 30px;
+  }
+  .col-half { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  
+  .card-box {
+    background: #0b132b;
+    border: 1px solid #3a506b;
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 15px;
+  }
+  .card-box h3 { color: #5bc0be; font-size: 14pt; margin-bottom: 8px; }
+  .card-box p, .card-box li { font-size: 12pt; color: #e0e1dd; margin-bottom: 6px; }
+  
+  .kpi-row { display: flex; gap: 15px; margin: 15px 0; }
+  .kpi-card { flex: 1; background: #0b132b; border: 1.5px solid #5bc0be; border-radius: 8px; padding: 15px; text-align: center; }
+  .kpi-card .num { font-size: 26pt; font-weight: bold; color: #ff6b6b; margin-bottom: 4px; }
+  .kpi-card .label { font-size: 10.5pt; color: #aaa; text-transform: uppercase; }
+  
+  table.slide-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5pt;
+    margin: 10px 0;
+  }
+  table.slide-table th, table.slide-table td {
+    border: 1px solid #3a506b;
+    padding: 8px 12px;
+    text-align: left;
+  }
+  table.slide-table th { background: #0b132b; color: #6fffe9; font-weight: bold; text-align: center; }
+  
+  .slide-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #3a506b;
+    padding-top: 12px;
+    font-size: 10.5pt;
+    color: #8da9c4;
+  }
+  
+  /* Controls */
+  .controls {
+    margin-top: 15px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  .btn-nav {
+    background: #5bc0be;
+    color: #0b132b;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .btn-nav:hover { background: #6fffe9; }
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+  
+  <!-- Slide 1: Cover -->
+  <div class="slide active" id="s1">
+    <div style="text-align: center; margin: auto 0;">
+      <p style="font-size: 13pt; letter-spacing: 2px; color: #8da9c4; text-transform: uppercase;">TRƯỜNG ĐH KHOA HỌC TỰ NHIÊN — BỘ MÔN ĐỊA CHẤT CÔNG TRÌNH - ĐỊA CHẤT THỦY VĂN</p>
+      <h1 style="font-size: 32pt; color: #6fffe9; margin: 20px 0 10px 0; line-height: 1.2;">BÁO CÁO KỸ THUẬT CHUYÊN ĐỀ NHÓM</h1>
+      <h2 style="font-size: 20pt; color: #e0e1dd; font-weight: 400; margin-bottom: 25px;">HỌC PHẦN: CƠ HỌC ĐẤT (GEO20202) — CHƯƠNG 3 & CHƯƠNG 4</h2>
+      <div style="display: inline-block; background: #0b132b; border: 1px solid #5bc0be; border-radius: 8px; padding: 15px 40px; text-align: left; font-size: 12pt;">
+        <p><strong>Nhóm báo cáo:</strong> Nhóm 1 & Nhóm 2 — Lớp GEO20202</p>
+        <p><strong>Giảng viên phụ trách:</strong> ThS. Đinh Quốc Tuấn • ThS. Đỗ Ngọc Thanh • TS. Hồ Thu Hiền</p>
+        <p><strong>Thời gian thực hiện:</strong> Tháng 10/2026</p>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Bộ môn Địa chất Công trình - Địa chất Thủy văn</span>
+      <span>Trang 1 / 10 (Mẫu khung)</span>
+    </div>
+  </div>
+
+  <!-- Slide 2: Muc tieu & Ket noi PTN -->
+  <div class="slide" id="s2">
+    <div class="slide-header">
+      <h2>1. MỤC TIÊU & CĂN CỨ SỐ LIỆU TỪ 6 TUẦN THỰC TẬP PTN</h2>
+      <span class="badge">TỔNG QUAN</span>
+    </div>
+    <div class="slide-body">
+      <div class="col-half">
+        <div class="card-box">
+          <h3>Nguồn gốc số liệu thực nghiệm:</h3>
+          <ul>
+            <li><strong>Phiếu 1:</strong> Khối lượng thể tích tự nhiên $\gamma = 15.8	ext{ kN/m}^3$, độ ẩm $w = 58.5\%$.</li>
+            <li><strong>Phiếu 2:</strong> Phân tích hạt, giới hạn Atterberg ($w_L = 62.4\%, w_P = 29.1\%, I_P = 33.3\%$).</li>
+            <li><strong>Phiếu 3, 4:</strong> Thí nghiệm nén cố kết không nở hông ($e - \log p$), xác định $e_0 = 1.62, C_c = 0.58, C_r = 0.065, p_c = 42	ext{ kPa}$.</li>
+            <li><strong>Phiếu 5, 6:</strong> Thí nghiệm cắt phẳng và hệ số cố kết $c_v = 1.85 	imes 10^{-4}	ext{ cm}^2/	ext{s}$.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-half">
+        <div class="card-box">
+          <h3>Mục tiêu kỹ thuật cốt lõi:</h3>
+          <p>Chuyển hóa toàn bộ chuỗi số liệu đo đạc thực tế thành mô hình tính toán số trên Excel phục vụ 2 bài toán lớn:</p>
+          <ol style="margin-left: 20px;">
+            <li><strong>Nhóm 1 (Chương 3):</strong> Dự báo độ lún và thời gian cố kết nền đắp cao 3m trên bùn sét 15m; thiết kế Bấc thấm PVD.</li>
+            <li><strong>Nhóm 2 (Chương 4):</strong> Đánh giá sức chịu tải và tối ưu độ sâu đặt móng đơn $N=500	ext{ kN}$ cho 2 vùng địa chất đối lập.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Cơ học đất GEO20202 — Chuyên đề nhóm</span>
+      <span>Trang 2 / 10</span>
+    </div>
+  </div>
+
+  <!-- Slide 3: Nhom 1 - Bai toan nen dap -->
+  <div class="slide" id="s3">
+    <div class="slide-header">
+      <h2>2. NHÓM 1: ĐẶT BÀI TOÁN NỀN ĐẮP ĐƯỜNG ĐẦU CẦU (CHƯƠNG 3)</h2>
+      <span class="badge">NHÓM 1 — DỰ BÁO LÚN</span>
+    </div>
+    <div class="slide-body">
+      <div class="col-half">
+        <div class="card-box">
+          <h3>Thông số hình học & Tải trọng đắp:</h3>
+          <ul>
+            <li>Chiều cao đắp: $H_{dam} = 3.0	ext{ m}$.</li>
+            <li>Dung trọng đất đắp: $\gamma_{dam} = 19.0	ext{ kN/m}^3 	o q = 57.0	ext{ kPa}$.</li>
+            <li>Bề rộng đỉnh: $B = 12.0	ext{ m}$; Mái dốc $1:1.5 	o$ Đáy $b = 21.0	ext{ m}$.</li>
+          </ul>
+        </div>
+        <div class="card-box">
+          <h3>Mô hình địa tầng:</h3>
+          <ul>
+            <li>Đệm cát đỉnh: dày $0.5	ext{ m}$ (thoát nước tốt).</li>
+            <li>Bùn sét bão hòa: dày $H = 15.0	ext{ m}$, MNN sâu $1.0	ext{ m}$.</li>
+            <li>Tầng cuội sỏi đáy: thoát nước 2 phía $	o H_{dr} = 7.5	ext{ m}$.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-half">
+        <div class="card-box" style="border-color: #ff6b6b;">
+          <h3 style="color: #ff6b6b;">Ba câu hỏi Chủ đầu tư yêu cầu trả lời:</h3>
+          <p><strong>1. Độ lún tổng cộng:</strong> Nền lún bao nhiêu cm dưới tim đường?</p>
+          <p><strong>2. Thời gian lún tự nhiên:</strong> Bao lâu thì đạt độ cố kết $U \ge 90\%$?</p>
+          <p><strong>3. Tiến độ thảm nhựa 12 tháng:</strong> Có cần xử lý nền không? Đề xuất giải pháp định lượng.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Cơ học đất GEO20202 — Chuyên đề nhóm</span>
+      <span>Trang 3 / 10</span>
+    </div>
+  </div>
+
+  <!-- Slide 4: Nhom 1 - Ket qua tinh lun & Thoi gian -->
+  <div class="slide" id="s4">
+    <div class="slide-header">
+      <h2>3. NHÓM 1: KẾT QUẢ ĐỘ LÚN VÀ TIẾN TRÌNH CỐ KẾT TỰ NHIÊN</h2>
+      <span class="badge">KẾT QUẢ TÍNH TOÁN</span>
+    </div>
+    <div class="slide-body" style="flex-direction: column;">
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="num">84.6 cm</div>
+          <div class="label">Độ lún cuối cùng $S_c$ ($C_c, C_r$)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="num">76.2 cm</div>
+          <div class="label">Độ lún theo TCVN 9362:2012</div>
+        </div>
+        <div class="kpi-card">
+          <div class="num">81.9 năm</div>
+          <div class="label">Thời gian cố kết $t_{90}$ tự nhiên</div>
+        </div>
+      </div>
+      <div class="card-box">
+        <h3>Lập luận kỹ thuật:</h3>
+        <p>• Do tầng bùn quá dày ($15	ext{ m}$) và hệ số cố kết nhỏ ($c_v = 0.583	ext{ m}^2/	ext{năm}$), đường thoát nước tự nhiên $H_{dr} = 7.5	ext{ m}$ khiến nước lỗ rỗng thoát cực kỳ chậm trễ.</p>
+        <p>• <strong>Sau 12 tháng:</strong> Nền tự nhiên mới chỉ cố kết được <strong>$12.5\%$</strong> (lún đạt $10.6	ext{ cm}$), độ lún dư chưa xảy ra còn tới <strong>$74.0	ext{ cm}$</strong> $	o$ Nếu thảm bê tông nhựa, đường sẽ bị lún gãy hoàn toàn!</p>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Cơ học đất GEO20202 — Chuyên đề nhóm</span>
+      <span>Trang 4 / 10</span>
+    </div>
+  </div>
+
+  <!-- Slide 5: Nhom 1 - Giai phap Bac tham PVD -->
+  <div class="slide" id="s5">
+    <div class="slide-header">
+      <h2>4. NHÓM 1: THIẾT KẾ ĐỊNH LƯỢNG BẤC THẤM GIA TỐC CỐ KẾT (PVD)</h2>
+      <span class="badge">GIẢI PHÁP KỸ THUẬT</span>
+    </div>
+    <div class="slide-body">
+      <div class="col-half">
+        <div class="card-box">
+          <h3>Mô hình tính toán Barron - Hansbo:</h3>
+          <p>• Cự ly cắm bấc tam giác: $d = 1.2	ext{ m} 	o d_e = 1.05 	imes d = 1.26	ext{ m}$.</p>
+          <p>• Đường kính tương đương: $d_w = (a+b)/\pi = 33.1	ext{ mm} = 0.0331	ext{ m}$.</p>
+          <p>• Tỷ số thoát nước: $n = d_e / d_w = 38.07 	o F(n) = \ln(n) - 0.75 = 2.89$.</p>
+          <p>• Hệ số cố kết ngang: $c_h = 2.0 	imes c_v = 1.166	ext{ m}^2/	ext{năm}$.</p>
+        </div>
+      </div>
+      <div class="col-half">
+        <div class="card-box" style="border-color: #6fffe9;">
+          <h3 style="color: #6fffe9;">Hiệu quả vượt trội sau khi áp dụng PVD:</h3>
+          <table class="slide-table">
+            <tr><th>Thời gian chờ lún</th><th>Độ cố kết $U_h$</th><th>Độ lún tích lũy</th><th>Độ lún còn lại</th></tr>
+            <tr><td>3 tháng</td><td>64.1%</td><td>54.2 cm</td><td>30.4 cm</td></tr>
+            <tr><td>6 tháng</td><td>88.2%</td><td>74.6 cm</td><td>10.0 cm</td></tr>
+            <tr style="background: rgba(111,255,233,0.15); font-weight: bold;"><td>8 tháng</td><td>94.5%</td><td>79.9 cm</td><td>4.7 cm (ĐẠT)</td></tr>
+          </table>
+          <p style="margin-top: 8px; color: #6fffe9;">$	o$ Rút ngắn thời gian từ <strong>81.9 năm</strong> xuống còn <strong>6.5 – 8.0 tháng</strong>, hoàn toàn thỏa mãn tiến độ thảm nhựa sau 12 tháng!</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Cơ học đất GEO20202 — Chuyên đề nhóm</span>
+      <span>Trang 5 / 10</span>
+    </div>
+  </div>
+
+  <!-- Slide 6: Nhom 2 - Dat bai toan Mong nong -->
+  <div class="slide" id="s6">
+    <div class="slide-header">
+      <h2>5. NHÓM 2: BÀI TOÁN THIẾT KẾ MÓNG NÔNG ($N = 500	ext{ kN}$) (CHƯƠNG 4)</h2>
+      <span class="badge">NHÓM 2 — SỨC CHỊU TẢI</span>
+    </div>
+    <div class="slide-body">
+      <div class="col-half">
+        <div class="card-box">
+          <h3>Yêu cầu công trình & Tải trọng:</h3>
+          <ul>
+            <li>Tải trọng chân cột tiêu chuẩn: $N = 500	ext{ kN}$.</li>
+            <li>Kết cấu: Móng đơn vuông bê tông cốt thép $B 	imes B$.</li>
+            <li>Khảo sát biến thiên: $B = 1.0 \div 3.0	ext{ m}$, $D_f = 0.5 \div 2.5	ext{ m}$.</li>
+          </ul>
+        </div>
+        <div class="card-box">
+          <h3>Hai hồ sơ địa chất khảo sát đối lập:</h3>
+          <ul>
+            <li><strong>Hồ sơ A (Đất đỏ Bazan Tây Nguyên):</strong><br>
+            - Mùa khô: $\gamma = 17.5	ext{ kN/m}^3, c = 28	ext{ kPa}, arphi = 24^\circ$.<br>
+            - Mùa mưa: $\gamma_{sat} = 18.5	ext{ kN/m}^3, c = 10	ext{ kPa}, arphi = 14^\circ$, MNN dâng sát mặt đất ($0.5	ext{ m}$).</li>
+            <li><strong>Hồ sơ B (Bùn sét trầm tích trẻ TP.HCM):</strong><br>
+            - Tầng bùn $8	ext{ m}$, $\gamma_{sat} = 15.5	ext{ kN/m}^3, c_u = 12	ext{ kPa}, arphi = 0^\circ$.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-half">
+        <div class="card-box">
+          <h3>Mục tiêu phân tích:</h3>
+          <p>1. So sánh sức chịu tải giới hạn $q_{ult}$ (Terzaghi, Meyerhof) với Áp lực tính toán cho phép $R$ (TCVN 9362:2012).</p>
+          <p>2. Định lượng ảnh hưởng của hiện tượng bão hòa nước ngầm mùa mưa.</p>
+          <p>3. Phân tích bài học xương máu từ sự cố lật nghiêng Kho lúa mì Transcona (1913).</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Cơ học đất GEO20202 — Chuyên đề nhóm</span>
+      <span>Trang 6 / 10</span>
+    </div>
+  </div>
+
+  <!-- Slide 7: Nhom 2 - So sanh Ho so A mua kho vs mua mua -->
+  <div class="slide" id="s7">
+    <div class="slide-header">
+      <h2>6. NHÓM 2: MA TRẬN SỨC CHỊU TẢI HỒ SƠ A (MÙA KHÔ VS MÙA MƯA)</h2>
+      <span class="badge">KẾT QUẢ TÍNH TOÁN</span>
+    </div>
+    <div class="slide-body">
+      <div style="width: 100%;">
+        <table class="slide-table">
+          <thead>
+            <tr>
+              <th>Kịch bản địa chất</th>
+              <th>Kích thước móng ($B 	imes D_f$)</th>
+              <th>Ứng suất đáy $p_{tc}$</th>
+              <th>$q_{all} = q_{ult}/3$ (Terzaghi)</th>
+              <th>Áp lực $R$ (TCVN 9362)</th>
+              <th>Đánh giá kỹ thuật</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Bazan Mùa khô</strong> (Khô ẩm)</td>
+              <td>$B = 1.5	ext{ m}, D_f = 1.0	ext{ m}$</td>
+              <td>$222	ext{ kPa}$</td>
+              <td>$285	ext{ kPa}$</td>
+              <td>$268	ext{ kPa}$</td>
+              <td style="color: #6fffe9; font-weight: bold;">ĐẠT AN TOÀN ($FS > 3.8$)</td>
+            </tr>
+            <tr>
+              <td><strong>Bazan Mùa mưa</strong> (MNN dâng)</td>
+              <td>$B = 1.5	ext{ m}, D_f = 1.0	ext{ m}$</td>
+              <td>$222	ext{ kPa}$</td>
+              <td>$98	ext{ kPa}$</td>
+              <td>$86	ext{ kPa}$</td>
+              <td style="color: #ff6b6b; font-weight: bold;">NGUY HIỂM (Mất ổn định trượt)</td>
+            </tr>
+            <tr style="background: rgba(111,255,233,0.15); font-weight: bold;">
+              <td><strong>Bazan Mùa mưa</strong> (Tối ưu)</td>
+              <td>$B = 2.2	ext{ m}, D_f = 1.5	ext{ m}$</td>
+              <td>$103	ext{ kPa}$</td>
+              <td>$142	ext{ kPa}$</td>
+              <td>$118	ext{ kPa}$</td>
+              <td style="color: #6fffe9; font-weight: bold;">ĐẠT CẢ TRONG MÙA MƯA</td>
+            </tr>
+            <tr>
+              <td><strong>Bùn sét TP.HCM</strong> (Hồ sơ B)</td>
+              <td>$B = 3.0	ext{ m}, D_f = 1.0	ext{ m}$</td>
+              <td>$55.6	ext{ kPa}$</td>
+              <td>$26.4	ext{ kPa}$</td>
+              <td>$21.5	ext{ kPa}$</td>
+              <td style="color: #ff6b6b; font-weight: bold;">PHÁ HOẠI CẮT (Cấm dùng móng nông)</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="card-box" style="margin-top: 15px;">
+          <h3>Nhận định sống còn:</h3>
+          <p>• Khi đất bão hòa và MNN dâng sát mặt đất, sức chịu tải cho phép của móng giảm tới <strong>$58.6\%$</strong>!</p>
+          <p>• Nếu chỉ tính toán theo mùa khô với $B=1.5	ext{ m}$, công trình sẽ bị sụt lún nghiêm trọng ngay trong mùa mưa đầu tiên!</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Cơ học đất GEO20202 — Chuyên đề nhóm</span>
+      <span>Trang 7 / 10</span>
+    </div>
+  </div>
+
+  <!-- Slide 8: Nhom 2 - Su co Transcona -->
+  <div class="slide" id="s8">
+    <div class="slide-header">
+      <h2>7. BÀI HỌC KINH ĐIỂN TỪ SỰ CỐ KHO LÚA MÌ TRANSCONA (1913)</h2>
+      <span class="badge">CASE STUDY</span>
+    </div>
+    <div class="slide-body">
+      <div class="col-half">
+        <div class="card-box">
+          <h3>Thông số sự cố thực tế:</h3>
+          <ul>
+            <li>Móng bè: $B = 23.5	ext{ m}, L = 59.4	ext{ m}, D_f = 3.66	ext{ m}$.</li>
+            <li>Địa chất: Sét bão hòa dẻo mềm, $c_u = 48	ext{ kPa}, arphi = 0^\circ$.</li>
+            <li>Tải trọng khi chứa đầy 875.000 giạ lúa mì: $p_{thuc} = 306	ext{ kPa}$.</li>
+          </ul>
+        </div>
+        <div class="card-box" style="border-color: #ff6b6b;">
+          <h3 style="color: #ff6b6b;">Tính toán kiểm chứng:</h3>
+          <p>• Sức chịu tải giới hạn Prandtl/Terzaghi:</p>
+          <p style="text-align: center; font-size: 13pt;">$q_{ult} = 5.14 \cdot c_u + \gamma D_f = 5.14 	imes 48 + 18 	imes 3.66 = 312	ext{ kPa}$</p>
+          <p>• Nếu không tính ma sát thành hố đào: $q_{ult} pprox 286.7	ext{ kPa}$.</p>
+          <p>• <strong>Hệ số an toàn thực tế:</strong> $FS = rac{286.7}{306} = 0.94 < 1.0$ (Phá hoại cắt tổng thể)!</p>
+        </div>
+      </div>
+      <div class="col-half">
+        <div class="card-box">
+          <h3>Cơ chế phá hoại & Bài học:</h3>
+          <p>• Toàn bộ 65 ống silo bằng bê tông cốt thép bị lật nghiêng $27^\circ$ theo mặt trượt trụ tròn sâu chỉ trong vài giờ.</p>
+          <p>• <strong>Bài học xương máu:</strong> Tuyệt đối không được bỏ qua điều kiện không thoát nước $arphi_u = 0$ khi gia tải nhanh; luôn duy trì hệ số an toàn $FS \ge 2.5 - 3.0$ đối với móng nông trên sét yếu.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Cơ học đất GEO20202 — Chuyên đề nhóm</span>
+      <span>Trang 8 / 10</span>
+    </div>
+  </div>
+
+  <!-- Slide 9: Tong ket & Khuyen nghi -->
+  <div class="slide" id="s9">
+    <div class="slide-header">
+      <h2>8. TỔNG KẾT & ĐỀ XUẤT HÀNH ĐỘNG CHO CHỦ ĐẦU TƯ</h2>
+      <span class="badge">KHUYẾN NGHỊ</span>
+    </div>
+    <div class="slide-body">
+      <div class="col-half">
+        <div class="card-box" style="border-color: #6fffe9;">
+          <h3 style="color: #6fffe9;">Khuyến nghị cho Dự án Nền đắp (Nhóm 1):</h3>
+          <ul>
+            <li><strong>Tuyệt đối không đắp tự nhiên:</strong> Lún dư sau 1 năm lên tới $74	ext{ cm}$.</li>
+            <li><strong>Giải pháp bắt buộc:</strong> Cắm Bấc thấm PVD cự ly tam giác $d = 1.2	ext{ m}$, trải đệm cát $50	ext{ cm}$ và đắp gia tải trước $H_{phu} = 0.8	ext{ m}$.</li>
+            <li>Thời gian chờ cố kết: <strong>7.0 tháng</strong> để đạt $U \ge 92\%$, đảm bảo an toàn tuyệt đối cho lớp áo đường.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-half">
+        <div class="card-box" style="border-color: #ff6b6b;">
+          <h3 style="color: #ff6b6b;">Khuyến nghị cho Dự án Móng nông (Nhóm 2):</h3>
+          <ul>
+            <li><strong>Vùng đất đỏ bazan:</strong> Thiết kế móng vuông $B = 2.2	ext{ m}, D_f = 1.5	ext{ m}$ theo kịch bản mùa mưa ngập úng; làm rãnh thoát nước mặt.</li>
+            <li><strong>Vùng bùn sét ven sông:</strong> KHÔNG ĐƯỢC dùng móng nông; chuyển sang phương án <strong>Móng cọc ép BTCT</strong> ngàm vào tầng sét cứng chịu lực.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Cơ học đất GEO20202 — Chuyên đề nhóm</span>
+      <span>Trang 9 / 10</span>
+    </div>
+  </div>
+
+  <!-- Slide 10: Ket thuc & Q&A -->
+  <div class="slide" id="s10">
+    <div style="text-align: center; margin: auto 0;">
+      <h1 style="font-size: 36pt; color: #6fffe9; margin-bottom: 20px;">XIN TRÂN TRỌNG CẢM ƠN!</h1>
+      <h2 style="font-size: 22pt; color: #e0e1dd; font-weight: 400; margin-bottom: 30px;">KÍNH MỜI THẦY CÔ VÀ CÁC BẠN SINH VIÊN ĐẶT CÂU HỎI PHẢN BIỆN</h2>
+      <div style="background: #0b132b; border: 1px solid #3a506b; border-radius: 8px; padding: 20px 40px; display: inline-block; font-size: 13pt;">
+        <p>Phiên chất vấn kỹ thuật: <strong>10 phút</strong></p>
+        <p style="color: #8da9c4; font-size: 11pt; margin-top: 6px;">Tất cả 4 thành viên nhóm sẵn sàng bảo vệ phần việc chuyên môn</p>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Bộ môn Địa chất Công trình - Địa chất Thủy văn — Trường ĐH KHTN</span>
+      <span>Trang 10 / 10</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation Controls -->
+<div class="controls">
+  <button class="btn-nav" onclick="prevSlide()">◀ Slide trước (Phím ⬅)</button>
+  <span id="slide-num" style="font-size: 13pt; font-weight: bold; min-width: 100px; text-align: center;">1 / 10</span>
+  <button class="btn-nav" onclick="nextSlide()">Slide tiếp theo (Phím ➡) ▶</button>
+</div>
+
+<script>
+  let currentSlide = 1;
+  const totalSlides = 10;
+  
+  function showSlide(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.getElementById('s' + n).classList.add('active');
+    document.getElementById('slide-num').innerText = n + ' / ' + totalSlides;
+  }
+  
+  function nextSlide() {
+    if (currentSlide < totalSlides) {
+      currentSlide++;
+      showSlide(currentSlide);
+    }
+  }
+  
+  function prevSlide() {
+    if (currentSlide > 1) {
+      currentSlide--;
+      showSlide(currentSlide);
+    }
+  }
+  
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+  });
+</script>
+
+</body>
+</html>

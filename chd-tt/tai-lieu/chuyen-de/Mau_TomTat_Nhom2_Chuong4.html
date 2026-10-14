@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BÁO CÁO TÓM TẮT DỰ ÁN (EXECUTIVE SUMMARY) - NHÓM 2</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+  @media print {
+    body { margin: 0; background: #fff; font-size: 10.5pt; }
+    .no-print { display: none; }
+    .page-box { box-shadow: none; border: none; padding: 0; margin: 0; width: 100%; }
+  }
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11pt;
+    line-height: 1.35;
+    color: #111;
+    background-color: #e9ecef;
+    margin: 0;
+    padding: 20px 0;
+  }
+  .page-box {
+    background: #fff;
+    width: 210mm;
+    height: 297mm;
+    margin: 0 auto;
+    padding: 15mm 15mm;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    overflow: hidden;
+    position: relative;
+  }
+  .header {
+    border-bottom: 2px solid #0b2545;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .header-left { font-size: 9.5pt; text-transform: uppercase; font-weight: bold; color: #0b2545; }
+  .header-right { font-size: 9.5pt; font-style: italic; color: #555; text-align: right; }
+  .doc-title { text-align: center; margin: 6px 0 10px 0; }
+  .doc-title h1 { font-size: 13.5pt; font-weight: bold; text-transform: uppercase; margin: 0; color: #0b2545; }
+  .doc-title h2 { font-size: 10.5pt; font-weight: bold; margin: 2px 0 0 0; color: #134074; }
+  
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    background: #f0f4f8;
+    border: 1px solid #bcccdc;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 9.5pt;
+    margin-bottom: 10px;
+  }
+  
+  .sec-title {
+    font-size: 10.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #0b2545;
+    border-left: 4px solid #134074;
+    padding-left: 6px;
+    margin: 8px 0 4px 0;
+  }
+  
+  table.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin: 4px 0 6px 0;
+  }
+  table.summary-table th, table.summary-table td {
+    border: 1px solid #666;
+    padding: 3px 5px;
+    text-align: left;
+  }
+  table.summary-table th {
+    background-color: #dbe4ee;
+    color: #0b2545;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .highlight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 6px 0;
+  }
+  .kpi-card {
+    border: 1px solid #8da9c4;
+    background: #fdfdfe;
+    border-radius: 4px;
+    padding: 5px 6px;
+    text-align: center;
+  }
+  .kpi-val { font-size: 12.5pt; font-weight: bold; color: #0077b6; margin: 2px 0; }
+  .kpi-lbl { font-size: 8pt; text-transform: uppercase; color: #495057; font-weight: bold; }
+  
+  .recommend-box {
+    border: 1.5px solid #c1121f;
+    background: #fff5f5;
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin-top: 6px;
+    font-size: 9.2pt;
+  }
+  .recommend-box strong { color: #c1121f; }
+  
+  .case-study {
+    background: #fbfbfb;
+    border: 1px dashed #666;
+    padding: 5px 8px;
+    font-size: 9pt;
+    margin-bottom: 6px;
+  }
+  
+  .signatures {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 9pt;
+    text-align: center;
+  }
+  .signatures div { width: 45%; }
+</style>
+<style>
+.dv3{text-align:center;white-space:nowrap;font-family:"Times New Roman",Times,serif;font-size:12pt;line-height:1.25;color:#000}
+.dv3 .ct{text-transform:uppercase;font-weight:normal}
+.dv3 .bh{text-transform:uppercase;font-weight:bold}
+.dv3 .bh span{display:inline-block}
+.dv3 .bh span::after{content:"";display:block;width:45%;margin:1.5pt auto 0;border-top:.75pt solid #000}
+.qh3{text-align:center;white-space:nowrap;font-family:"Times New Roman",Times,serif;line-height:1.25;color:#000}
+.qh3 .qh{font-weight:bold;text-transform:uppercase;font-size:12pt}
+.qh3 .tn{font-weight:bold;font-size:13pt}
+.qh3 .tn span{display:inline-block;border-bottom:.75pt solid #000;padding-bottom:.5pt}
+@media print{.btn-print{display:none!important}}
+</style>
+</head>
+<body>
+
+<div class="page-box">
+  <div class="header">
+    <div class="header-left">
+      <div class="dv3"><div class="ct">Trường Đại học Khoa học Tự nhiên</div><div class="ct">Khoa Địa chất</div><div class="bh"><span>Bộ môn Địa chất Công trình - Địa chất Thủy văn</span></div></div>
+    </div>
+    <div class="header-right">
+      HỌC PHẦN: CƠ HỌC ĐẤT (GEO20202)<br>MẪU BÁO CÁO TÓM TẮT 1 TRANG (EXECUTIVE SUMMARY)
+    </div>
+  </div>
+
+  <div class="doc-title">
+    <h1>BÁO CÁO ĐÁNH GIÁ SỨC CHỊU TẢI & TỐI ƯU HÓA ĐỘ SÂU ĐẶT MÓNG NÔNG</h1>
+    <h2>SO SÁNH ĐỐI LẬP HAI HỒ SƠ ĐỊA CHẤT VÀ BÀI HỌC TỪ SỰ CỐ TRANSCONA</h2>
+  </div>
+
+  <div class="meta-grid">
+    <div>
+      <strong>Đơn vị tư vấn:</strong> Nhóm 2 - Lớp GEO20202 (SV1: Trưởng nhóm, SV2: Dữ liệu, SV3: Tính toán, SV4: Báo cáo)<br>
+      <strong>Đề bài thiết kế:</strong> Móng đơn vuông chịu tải đúng tâm $N = 500	ext{ kN}$ cho cụm nhà xưởng công nghiệp.
+    </div>
+    <div style="text-align: right;">
+      <strong>Ngày lập:</strong> 14/10/2026<br>
+      <strong>Mã hồ sơ:</strong> EXS-N02-CH4
+    </div>
+  </div>
+
+  <div class="sec-title">1. SO SÁNH MA TRẬN SỨC CHỊU TẢI GIỮA HAI VÙNG ĐỊA CHẤT ĐỐI LẬP ($N = 500	ext{ kN}$)</div>
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Hồ sơ Địa chất & Trạng thái</th>
+        <th>Chỉ tiêu cơ lý chính</th>
+        <th>Quy cách móng ($B 	imes D_f$)</th>
+        <th>$p_{tc} = rac{N}{B^2}$</th>
+        <th>$q_{all} = rac{q_{ult}}{3}$ (Terzaghi)</th>
+        <th>Áp lực $R$ (TCVN 9362)</th>
+        <th>Đánh giá kỹ thuật</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Hồ sơ A (Đất đỏ Bazan)</strong><br>- Mùa khô (Khô ẩm tự nhiên)</td>
+        <td>$\gamma = 17{,}5	ext{ kN/m}^3$<br>$c = 28	ext{ kPa}, arphi = 24^\circ$</td>
+        <td>$B = 1{,}5	ext{ m}, D_f = 1{,}0	ext{ m}$</td>
+        <td>$222	ext{ kPa}$</td>
+        <td>$285	ext{ kPa}$</td>
+        <td>$268	ext{ kPa}$</td>
+        <td style="color: green; font-weight: bold;">ĐẠT AN TOÀN ($FS > 3{,}8$)</td>
+      </tr>
+      <tr>
+        <td><strong>Hồ sơ A (Đất đỏ Bazan)</strong><br>- Mùa mưa (Bão hòa, MNN cao)</td>
+        <td>$\gamma_{sat} = 18{,}5	ext{ kN/m}^3$<br>$c = 10	ext{ kPa}, arphi = 14^\circ$</td>
+        <td>$B = 1{,}5	ext{ m}, D_f = 1{,}0	ext{ m}$<br><strong>Tăng $B = 2{,}2	ext{ m}, D_f = 1{,}5	ext{ m}$</strong></td>
+        <td>$222	ext{ kPa}$<br><strong>$103	ext{ kPa}$</strong></td>
+        <td>$98	ext{ kPa}$<br><strong>$142	ext{ kPa}$</strong></td>
+        <td>$86	ext{ kPa}$<br><strong>$118	ext{ kPa}$</strong></td>
+        <td><span style="color: red; font-weight: bold;">KHÔNG ĐẠT ($FS = 1{,}3$)</span><br><span style="color: green; font-weight: bold;">ĐẠT AN TOÀN MỚI</span></td>
+      </tr>
+      <tr>
+        <td><strong>Hồ sơ B (Bùn sét TP.HCM)</strong><br>- Tầng bùn yếu dày $8	ext{ m}$</td>
+        <td>$\gamma_{sat} = 15{,}5	ext{ kN/m}^3$<br>$c_u = 12	ext{ kPa}, arphi_u = 0^\circ$</td>
+        <td>Thử $B = 3{,}0	ext{ m}, D_f = 1{,}0	ext{ m}$</td>
+        <td>$55{,}6	ext{ kPa}$</td>
+        <td>$26{,}4	ext{ kPa}$</td>
+        <td>$21{,}5	ext{ kPa}$</td>
+        <td style="color: red; font-weight: bold;">PHÁ HOẠI TRƯỢT CẮT (Móng nông bất khả thi)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sec-title">2. PHÂN TÍCH HIỆN TƯỢNG NƯỚC NGẦM VÀ BÀI HỌC SỰ CỐ TRANSCONA (1913)</div>
+  <div class="case-study">
+    <strong>Bản chất vật lý của sự cố Transcona:</strong> Móng bè đặt trên đất sét dẻo mềm có sức kháng cắt $c_u = 48	ext{ kPa}$. Áp lực tác dụng khi đầy tải là $306	ext{ kPa}$, trong khi sức chịu tải giới hạn theo Prandtl/Terzaghi là $q_{ult} = 5{,}14 \cdot c_u + q = 5{,}14 	imes 48 + 40 = 286{,}7	ext{ kPa}$. Tải trọng vượt sức chịu tải ($FS = 0,94 < 1.0$) dẫn đến phá hoại cắt tổng thể trượt xoay trụ tròn, làm công trình lật nghiêng $27^\circ$.<br>
+    <strong>Ảnh hưởng của MNN dâng:</strong> Đối với đất bazan Hồ sơ A, khi bão hòa và MNN dâng, thành phần ma sát $(\gamma' B N_\gamma)$ bị giảm hơn một nửa và lực dính xi măng bị hòa tan $	o$ sức chịu tải tổng thể sụt giảm tới <strong>58,6%</strong>!
+  </div>
+
+  <div class="sec-title">3. KẾT LUẬN & GIẢI PHÁP THIẾT KẾ ĐỀ XUẤT CHO CHỦ ĐẦU TƯ</div>
+  <div class="recommend-box">
+    <strong>ĐỐI VỚI VÙNG ĐỒI ĐẤT ĐỎ BAZAN (HỒ SƠ A):</strong><br>
+    - <em>Kích thước móng khuyến nghị:</em> Chọn móng vuông <strong>$B = 2{,}2	ext{ m} 	imes 2{,}2	ext{ m}$, chiều sâu chôn móng $D_f = 1{,}5	ext{ m}$</strong> để đảm bảo an toàn tuyệt đối cả trong kịch bản mùa mưa bão hòa ngập nước ($p_{tc} = 103	ext{ kPa} \le R = 118	ext{ kPa}$).<br>
+    - <em>Biện pháp thủy văn:</em> Bắt buộc thiết kế hệ thống rãnh thu nước mặt xung quanh chân móng và đầm chặt đất sét chống thấm trên mặt để ngăn chặn nước mưa ngấm trực tiếp làm giảm góc ma sát và lực dính của đất.<br>
+    <strong>ĐỐI VỚI VÙNG BÙN SÉT YẾU VEN SÔNG (HỒ SƠ B):</strong><br>
+    - <em>Khẳng định dứt khoát:</em> <strong>TUYỆT ĐỐI KHÔNG DÙNG MÓNG NÔNG TRỰC TIẾP</strong>. Sức chịu tải của bùn sét chỉ đạt $26	ext{ kPa}$, ngay cả mở rộng móng $3	ext{ m} 	imes 3	ext{ m}$ vẫn không đạt an toàn.<br>
+    - <em>Phương án nền móng đề xuất:</em> Chuyển sang phương án <strong>Móng cọc ép bê tông cốt thép</strong> cắm qua tầng bùn $8	ext{ m}$ ngàm vào lớp cát pha dẻo cứng bên dưới; hoặc xử lý nền bằng cọc xi măng đất (CDM) trước khi đặt móng nông.
+  </div>
+
+  <div class="signatures">
+    <div>
+      <strong>KỸ SƯ TÍNH TOÁN & DỮ LIỆU</strong><br>
+      <span style="font-size: 8.5pt; font-style: italic;">(Ký và ghi rõ họ tên)</span><br><br><br>
+      <strong>SV2 & SV3</strong>
+    </div>
+    <div>
+      <strong>TRƯỞNG NHÓM TƯ VẤN (SV1)</strong><br>
+      <span style="font-size: 8.5pt; font-style: italic;">(Ký và xác nhận cam kết số liệu)</span><br><br><br>
+      <strong>SV1</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

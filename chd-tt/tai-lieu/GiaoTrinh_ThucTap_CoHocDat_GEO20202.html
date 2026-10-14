@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Giáo trình Thực tập Cơ học đất (GEO20202) - ThS. Đinh Quốc Tuấn, ThS. Đỗ Ngọc Thanh, TS. Hồ Thu Hiền</title>
+<style>
+:root {
+  --terra: #B85042;
+  --brown: #5A3E2B;
+  --sage: #2E7D32;
+  --slate: #1F4E79;
+  --sand: #F4EFE6;
+  --ink: #111111;
+  --bg-page: #ffffff;
+  --line-color: #666666;
+}
+* { box-sizing: border-box; }
+html { background: #8a8f94; }
+body {
+  margin: 0;
+  font-family: "Times New Roman", Times, "DejaVu Serif", serif;
+  font-size: 12.5pt;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 10mm auto;
+  background: var(--bg-page);
+  padding: 20mm 20mm 20mm 30mm;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  position: relative;
+  box-sizing: border-box;
+}
+@page { size: A4 portrait; margin: 20mm 15mm 20mm 25mm;
+  @bottom-center { content: counter(page); font-family: "Times New Roman", serif; font-size: 11pt; } }
+@page :first { @bottom-center { content: none; } }
+@media print {
+  html, body { background: none; }
+  .page {
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    box-shadow: none;
+    page-break-after: always;
+    padding: 0;
+  }
+  .page:last-child { page-break-after: auto; }
+  .ftr { display: none !important; }
+}
+.hdr {
+  font-size: 9.5pt;
+  color: #555;
+  border-bottom: 0.6pt solid #aaa;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 2mm;
+  margin-bottom: 6mm;
+  font-style: italic;
+}
+.ftr {
+  font-size: 9.5pt;
+  color: #555;
+  border-top: 0.6pt solid #aaa;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 2mm;
+  margin-top: 8mm;
+}
+/* Cover Page */
+.cover-page {
+  border: 2.5pt double var(--brown);
+  padding: 15mm 12mm;
+  text-align: center;
+  min-height: 255mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+.cv-header .org-sup { font-size: 12pt; text-transform: uppercase; font-weight: normal; margin: 0; }
+.cv-header .org-main { font-size: 13pt; text-transform: uppercase; font-weight: bold; margin: 3pt 0 0; color: #000; }
+.cv-header .org-dept { font-size: 11.5pt; text-transform: uppercase; font-weight: bold; margin: 4pt 0 0; color: var(--brown); }
+.cv-header .line-decor { width: 50%; height: 1.2pt; background: var(--brown); margin: 5pt auto 0; }
+.cv-title-block { margin: 25mm 0 15mm; }
+.cv-type { font-size: 14pt; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5pt; color: #333; }
+.cv-main-title { font-size: 24pt; font-weight: bold; text-transform: uppercase; color: var(--slate); margin: 10pt 0 6pt; line-height: 1.25; }
+.cv-sub-title { font-size: 14pt; font-style: italic; color: var(--terra); margin: 0; }
+.cv-course-code { font-size: 12.5pt; font-weight: bold; color: #444; margin-top: 8pt; }
+.cv-authors { margin-top: 20mm; font-size: 13pt; line-height: 1.6; }
+.cv-authors .au-title { font-weight: bold; color: var(--brown); font-size: 13.5pt; margin-bottom: 4pt; }
+.cv-footer { margin-top: 15mm; font-size: 12pt; font-weight: bold; }
+
+/* Headings */
+h1.chap-title {
+  font-size: 16pt;
+  text-transform: uppercase;
+  color: var(--slate);
+  text-align: center;
+  margin: 10pt 0 14pt;
+  line-height: 1.3;
+  border-bottom: 1.5pt solid var(--slate);
+  padding-bottom: 5pt;
+}
+h2 {
+  font-size: 13.5pt;
+  color: var(--terra);
+  margin: 14pt 0 6pt;
+  line-height: 1.3;
+}
+h3 {
+  font-size: 12.5pt;
+  color: var(--brown);
+  margin: 10pt 0 4pt;
+}
+p {
+  margin: 0 0 6pt;
+  text-align: justify;
+  text-indent: 1.2cm;
+}
+p.no-indent { text-indent: 0; }
+ul, ol { margin: 0 0 8pt; padding-left: 1.2cm; }
+li { margin-bottom: 3pt; text-align: justify; }
+
+/* Academic Boxes */
+.box {
+  border: 0.8pt solid #ccc;
+  border-radius: 4px;
+  padding: 7pt 10pt 5pt;
+  margin: 10pt 0 12pt;
+  background: #fafafa;
+}
+.box .bt {
+  font-weight: bold;
+  margin-bottom: 4pt;
+  font-size: 12pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+}
+.box.muctieu { background: #f0f8f0; border-color: var(--sage); }
+.box.muctieu .bt { color: var(--sage); }
+.box.vidu { background: #fffcf5; border-color: var(--terra); }
+.box.vidu .bt { color: var(--terra); }
+.box.tomtat { background: #f0f4f8; border-color: var(--slate); }
+.box.tomtat .bt { color: var(--slate); }
+.box.note { background: #fbfbf0; border-color: #c98b2b; }
+.box.note .bt { color: #a06000; }
+.box.mindmap { background: #fdfbf7; border: 1pt dashed var(--brown); }
+.box.mindmap .bt { color: var(--brown); }
+
+/* Math equation display */
+.eq {
+  font-family: "Cambria Math", "Times New Roman", serif;
+  background: #f7f7f9;
+  border: 0.6pt dashed #aaa;
+  padding: 5pt 10pt;
+  margin: 6pt 5mm 8pt;
+  text-align: center;
+  font-size: 12.5pt;
+}
+
+/* Tables */
+table.t-data {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8pt 0 12pt;
+  font-size: 11pt;
+  line-height: 1.35;
+}
+table.t-data th, table.t-data td {
+  border: 0.6pt solid #555;
+  padding: 4.5pt 5pt;
+  vertical-align: top;
+}
+table.t-data th {
+  background: #eef2f7;
+  color: var(--slate);
+  font-weight: bold;
+  text-align: center;
+}
+table.t-data tr:nth-child(even) td { background: #fafbfc; }
+.tcap {
+  font-weight: bold;
+  text-align: center;
+  font-size: 11pt;
+  margin: 8pt 0 3pt;
+  color: var(--slate);
+}
+
+/* Mindmap / Diagram styling */
+.diagram-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 6pt;
+  margin: 8pt 0;
+}
+.diagram-node {
+  background: #fff;
+  border: 1pt solid var(--slate);
+  border-radius: 4px;
+  padding: 5pt 8pt;
+  font-size: 11pt;
+}
+.diagram-arrow {
+  text-align: center;
+  color: var(--slate);
+  font-weight: bold;
+  font-size: 12pt;
+}
+.step-card {
+  border-left: 3pt solid var(--slate);
+  background: #fdfdfd;
+  padding: 6pt 10pt;
+  margin: 6pt 0 8pt;
+}
+.step-title {
+  font-weight: bold;
+  color: var(--slate);
+  margin-bottom: 2pt;
+}
+.center { text-align: center; }
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+</style>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="page">
+  <div class="cover-page">
+    <div class="cv-header">
+      <div class="org-sup">TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN</div>
+      <div class="org-sup">KHOA ĐỊA CHẤT</div>
+      <div class="org-main">BỘ MÔN ĐỊA CHẤT CÔNG TRÌNH - ĐỊA CHẤT THỦY VĂN</div>
+      <div class="line-decor"></div>
+    </div>
+    
+    <div class="cv-title-block">
+      <div class="cv-type">GIÁO TRÌNH THỰC TẬP CHUYÊN SÂU</div>
+      <div class="cv-main-title">CƠ HỌC ĐẤT</div>
+      <div class="cv-sub-title">THÍ NGHIỆM ĐỊA KỸ THUẬT, NÉN CỐ KẾT &amp; CHUYỂN ĐỔI SỐ DỰ BÁO BIẾN DẠNG CÔNG TRÌNH</div>
+      <div class="cv-course-code">MÃ HỌC PHẦN: GEO20202 (3 TÍN CHỈ: 30 LT – 30 TH – 45 TỰ HỌC)</div>
+    </div>
+    
+    <div class="cv-authors">
+      <div class="au-title">CÁC TÁC GIẢ BIÊN SOẠN:</div>
+      <div><b>ĐINH QUỐC TUẤN</b> (Chủ biên phần Thực hành &amp; Chuyển đổi số)</div>
+      <div><b>ĐỖ NGỌC THANH</b> (Đồng tác giả phần Thí nghiệm phòng &amp; Hiện trường)</div>
+      <div><b>HỒ THU HIỀN</b> (Chủ biên lý thuyết &amp; Điều phối học phần)</div>
+    </div>
+    
+    <div class="cv-footer">
+      <div style="font-size:13pt;letter-spacing:1pt">LƯU HÀNH NỘI BỘ</div>
+      <div>THÀNH PHỐ HỒ CHÍ MINH – 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- PREFACE & USER GUIDE -->
+<div class="page">
+  <div class="hdr">
+    <span>TRƯỜNG ĐH KHTN – KHOA ĐỊA CHẤT</span>
+    <span>GIÁO TRÌNH THỰC TẬP CƠ HỌC ĐẤT (GEO20202)</span>
+    <span>LỜI NÓI ĐẦU</span>
+  </div>
+  
+  <h1 class="chap-title">LỜI NÓI ĐẦU</h1>
+  <p>Giáo trình <b>"Thực tập Cơ học đất (GEO20202)"</b> được biên soạn nhằm phục vụ công tác giảng dạy và học tập cho sinh viên chuyên ngành Địa chất Thủy văn – Địa chất Công trình, Địa kỹ thuật và các ngành liên quan thuộc Khoa Địa chất, Trường Đại học Khoa học Tự nhiên, Đại học Quốc gia TP. Hồ Chí Minh. Nội dung giáo trình được thiết kế bám sát Đề cương chi tiết học phần cập nhật năm 2026, đáp ứng định hướng chuyển đổi số mạnh mẽ trong đào tạo kỹ sư và cử nhân Địa kỹ thuật hiện đại.</p>
+  
+  <p>Học phần Cơ học đất giữ vị trí then chốt trong khối kiến thức cơ sở ngành và chuyên ngành. Nếu phần lý thuyết do TS. Hồ Thu Hiền phụ trách cung cấp nền tảng vật lý – cơ học về trạng thái ứng suất, quy luật biến dạng và sức chịu tải của môi trường đất, thì phần thực hành do ThS. Đinh Quốc Tuấn và ThS. Đỗ Ngọc Thanh phụ trách chính là cầu nối biến các công thức lý thuyết trừu tượng thành kỹ năng thực tế. Trọng tâm của giáo trình thực hành này không chỉ dừng lại ở việc sinh viên thuần thục thao tác các thí nghiệm vật lý và nén cố kết trong phòng thí nghiệm (TCVN 4195–4202:2012, ASTM D2435), mà còn nhấn mạnh vào <b>Năng lực số (Digital Competence)</b>: Sinh viên được hướng dẫn số hóa quy trình thu thập dữ liệu, chuẩn hóa cấu trúc bảng tính, sử dụng các thuật toán giải đoán tự động trên máy tính để xác định áp lực tiền cố kết $p_c$, hệ số cố kết $c_v$ và mô phỏng dự báo quá trình lún công trình theo thời gian.</p>
+  
+  <p>Mỗi chương trong giáo trình tương ứng với một buổi học thực hành tập trung (5 tiết), được thiết kế theo cấu trúc sư phạm chuẩn mực: (1) Mục tiêu học tập gắn với Chuẩn đầu ra (CĐR/CLO) và thang đo tư duy Bloom; (2) Sơ đồ tư duy (Mindmap) và lưu đồ quy trình thí nghiệm; (3) Tóm tắt lý thuyết chuyên sâu có trích dẫn tác giả – năm theo chuẩn APA 7th; (4) Hướng dẫn thực hành chi tiết từng bước (Step-by-step) có lưu ý kiểm soát sai số; (5) Ví dụ tính toán mẫu có lời giải; (6) Bộ câu hỏi ôn tập và bài tập củng cố phân tầng Bloom; (7) Hướng dẫn hoàn thành Phiếu thực hành trực tuyến trên hệ thống web portal.</p>
+  
+  <p><b>Về liêm chính học thuật và bản quyền:</b> Toàn bộ nội dung giáo trình được nhóm tác giả tự biên soạn trên cơ sở kế thừa và tổng hợp có chọn lọc từ các giáo trình kinh điển trong nước và quốc tế: <i>Principles of Geotechnical Engineering</i> (Das &amp; Sobhan, 2022), <i>Cơ học đất</i> (Lê Quý An, Nguyễn Công Mẫn, Nguyễn Văn Quì, 1995), <i>Cẩm nang dùng cho kỹ sư Địa kỹ thuật</i> (Trần Văn Việt, 2004), <i>Basic Soil Mechanics</i> (R. Whitlow, 2004), cùng các tài liệu hướng dẫn kỹ thuật của Cục Công binh Lục quân Hoa Kỳ (USACE EM 1110-1-1804) và Cục Hải quân Hoa Kỳ (NAVFAC DM-7.01). Các hình ảnh, sơ đồ và biểu đồ minh họa do nhóm tác giả tự thiết kế hoặc phỏng theo ý tưởng khoa học với đầy đủ trích dẫn xuất xứ.</p>
+  
+  <p>Nhóm tác giả xin chân thành cảm ơn Ban Giám hiệu Trường ĐH Khoa học Tự nhiên, Ban Chủ nhiệm Khoa Địa chất và Bộ môn Địa chất Thủy văn – Địa chất Công trình đã tạo mọi điều kiện thuận lợi để giáo trình được hoàn thiện. Chúng tôi rất mong nhận được những ý kiến đóng góp quý báu từ các đồng nghiệp và các thế hệ sinh viên để giáo trình ngày càng hoàn thiện hơn.</p>
+  
+  <div style="display:flex; justify-content:flex-end; margin-top:15pt;">
+    <div style="text-align:right;">
+      <div><i>TP. Hồ Chí Minh, tháng 10 năm 2026</i></div>
+      <div style="font-weight:bold; margin-top:4pt;">CÁC TÁC GIẢ BIÊN SOẠN</div>
+      <div style="margin-top:2pt;"><b>ThS. Đinh Quốc Tuấn – ThS. Đỗ Ngọc Thanh – TS. Hồ Thu Hiền</b></div>
+    </div>
+  </div>
+
+  <div class="ftr">
+    <span>TRƯỜNG ĐH KHTN – ĐHQG-HCM</span>
+  </div>
+</div>
+
+<!-- CLO MATRIX & USER GUIDE -->
+<div class="page">
+  <div class="hdr">
+    <span>TRƯỜNG ĐH KHTN – KHOA ĐỊA CHẤT</span>
+    <span>GIÁO TRÌNH THỰC TẬP CƠ HỌC ĐẤT (GEO20202)</span>
+    <span>MA TRẬN CHUẨN ĐẦU RA &amp; HƯỚNG DẪN HỌC TẬP</span>
+  </div>
+
+  <h2>HƯỚNG DẪN SỬ DỤNG GIÁO TRÌNH VÀ PHƯƠNG PHÁP HỌC TẬP</h2>
+  <div class="box note">
+    <div class="bt">Quy trình 5 bước để hoàn thành xuất sắc môn học thực hành:</div>
+    <ol style="margin:2pt 0 4pt; padding-left:1cm;">
+      <li><b>Chuẩn bị trước buổi học (Tự học):</b> Đọc kỹ phần lý thuyết chuyên sâu và quy trình thí nghiệm trong giáo trình; xem video thao tác mẫu trên web portal; tải bản in Phiếu thực hành A4.</li>
+      <li><b>Trong buổi thực hành tại phòng Lab:</b> Tuân thủ nghiêm ngặt quy định an toàn; trực tiếp thao tác chuẩn xác dưới sự hướng dẫn của giảng viên; ghi chép số liệu thô trung thực vào sổ tay thí nghiệm.</li>
+      <li><b>Chuyển đổi số dữ liệu:</b> Nhập số liệu thô vào bảng tính điện tử; áp dụng các công thức số học và phương pháp đồ họa số trên máy tính để xử lý kết quả, tính toán các chỉ tiêu $p_c, C_c, c_v$.</li>
+      <li><b>Hoàn thành Phiếu thực hành trực tuyến:</b> Truy cập <a href="https://diemdanhsv.com/cohocdat-tt/index.html">diemdanhsv.com/cohocdat-tt</a>, chọn phiếu tương ứng, nhập số liệu kiểm tra, giải thích kết quả và nộp bài đúng hạn.</li>
+      <li><b>Tự đánh giá và mở rộng:</b> Đối chiếu bài làm với Bảng Rubric đánh giá theo thang Bloom; trả lời câu hỏi nâng cao để chuẩn bị cho kỳ thi kết thúc học phần.</li>
+    </ol>
+  </div>
+
+  <h2>MA TRẬN CHUẨN ĐẦU RA HỌC PHẦN (CLO) GẮN VỚI THANG BLOOM</h2>
+  <p class="tcap">Bảng 0.1. Liên kết các chủ đề thực hành với chuẩn đầu ra học phần GEO20202</p>
+  <table class="t-data">
+    <thead>
+      <tr>
+        <th style="width:12%">Buổi / Tuần</th>
+        <th style="width:36%">Chủ đề thực hành trọng tâm</th>
+        <th style="width:22%">Chuẩn đầu ra (CĐR)</th>
+        <th style="width:15%">Thang Bloom</th>
+        <th style="width:15%">Bài đánh giá</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="center bold">Tuần 1</td>
+        <td>Xác định các chỉ tiêu vật lý và trạng thái đất; mô tả đất hiện trường; tỷ trọng, dung trọng, độ ẩm, thành phần hạt.</td>
+        <td class="center">G1.1, G1.2, G1.3, G6.1</td>
+        <td class="center">3,0 (Vận dụng)</td>
+        <td class="center">Phiếu TH 1</td>
+      </tr>
+      <tr>
+        <td class="center bold">Tuần 2</td>
+        <td>Thí nghiệm nén cố kết một chiều (Oedometer): Lắp mẫu nguyên dạng, kỹ thuật gia tải 25–800 kPa, đọc biến dạng theo chuỗi thời gian.</td>
+        <td class="center">G1.1, G1.2, G2.1, G6.1</td>
+        <td class="center">3,5 (Vận dụng cao)</td>
+        <td class="center">Phiếu TH 2</td>
+      </tr>
+      <tr>
+        <td class="center bold">Tuần 3</td>
+        <td>Theo dõi biến dạng cố kết áp lực cao và dỡ tải đàn hồi; Chuyển đổi số dữ liệu địa kỹ thuật trên Excel/Web.</td>
+        <td class="center">G1.1, G1.2, G2.1, G6.1</td>
+        <td class="center">4,0 (Phân tích)</td>
+        <td class="center">Phiếu TH 3</td>
+      </tr>
+      <tr>
+        <td class="center bold">Tuần 4</td>
+        <td>Xử lý dữ liệu cố kết chuyên sâu: Vẽ đường cong $e - \log p$, xác định $p_c$ (Casagrande/Pacheco Silva), $OCR, C_c, C_s, c_v$.</td>
+        <td class="center">G4.1, G4.3, G5.1, G6.1</td>
+        <td class="center">4,5 (Phân tích - ĐG)</td>
+        <td class="center">Phiếu TH 4</td>
+      </tr>
+      <tr>
+        <td class="center bold">Tuần 5</td>
+        <td>Dự báo biến dạng và độ lún công trình theo thời gian bằng công cụ số ($S_c, U_v, T_v, S_t, t_{50}, t_{90}$).</td>
+        <td class="center">G4.1, G4.3, G5.1, G6.1</td>
+        <td class="center">4,5 (Đánh giá - Dán nhãn)</td>
+        <td class="center">Phiếu TH 5</td>
+      </tr>
+      <tr>
+        <td class="center bold">Tuần 6</td>
+        <td>Tổng hợp dữ liệu ĐCCT, thí nghiệm SPT, đánh giá sức chịu tải nền móng và đề xuất giải pháp kỹ thuật.</td>
+        <td class="center">CHP1, CHP2, CHP3</td>
+        <td class="center">5,0 (Tổng hợp - Sáng tạo)</td>
+        <td class="center">Phiếu TH 6</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="ftr">
+    <span>TRƯỜNG ĐH KHTN – ĐHQG-HCM</span>
+  </div>
+</div>
+
+<!-- CHAPTER 1: TUẦN 1 -->
+<div class="page">
+  <div class="hdr">
+    <span>TRƯỜNG ĐH KHTN – KHOA ĐỊA CHẤT</span>
+    <span>GIÁO TRÌNH THỰC TẬP CƠ HỌC ĐẤT (GEO20202)</span>
+    <span>CHƯƠNG 1 – TUẦN 1</span>
+  </div>
+
+  <h1 class="chap-title">CHƯƠNG 1: XÁC ĐỊNH CÁC CHỈ TIÊU VẬT LÝ VÀ TRẠNG THÁI CỦA ĐẤT<br/>
+  <span style="font-size:13pt; text-transform:none; font-weight:normal; color:#444;">
+  (NHẬN BIẾT MÔ TẢ ĐẤT HIỆN TRƯỜNG &amp; THÍ NGHIỆM CƠ LÝ PHÒNG LAB)
+  </span></h1>
+
+  <div class="box muctieu">
+    <div class="bt">MỤC TIÊU HỌC TẬP (CLO &amp; THANG BLOOM)</div>
+    <p class="no-indent">Sau khi hoàn thành chương này, người học có khả năng:</p>
+    <ul>
+      <li><b>1. Về kiến thức (Bloom 3.0):</b> Nắm vững bản chất mô hình 3 pha của đất (hạt khoáng rắn, nước, khí); giải thích ý nghĩa vật lý của 3 chỉ tiêu cơ bản xác định trong phòng thí nghiệm ($w, \rho, \rho_s$) và các chỉ tiêu phái sinh ($e, n, S_r, \rho_d, \gamma, \gamma_d, I_P, I_L$) theo TCVN 4195–4202:2012 và ASTM D2487.</li>
+      <li><b>2. Về kỹ năng thực hành (Bloom 3.5):</b> Nhận biết, mô tả chính xác đất tại hiện trường bằng các phép thử nhanh (vê tay, lắc mẫu, độ bền khô); thực hiện chuẩn xác các thao tác thí nghiệm: sấy mẫu xác định độ ẩm, cắt gọt dao vòng đo khối lượng thể tích, đuổi khí bình tỷ trọng và phân tích thành phần hạt bằng phương pháp rây.</li>
+      <li><b>3. Về năng lực tính toán và chuyển đổi số (Bloom 3.5):</b> Sử dụng bảng tính số hóa để giải bài toán tương quan khối lượng – thể tích; tự động kiểm tra tính hợp lý của số liệu thí nghiệm; hoàn thành Phiếu thực hành số 1 trên web portal.</li>
+      <li><b>4. Về thái độ (Bloom 4.0):</b> Tuân thủ nghiêm ngặt quy định an toàn phòng thí nghiệm nhiệt độ và dụng cụ thủy tinh; bảo đảm tính trung thực tuyệt đối của số liệu đo đạc.</li>
+    </ul>
+  </div>
+
+  <div class="box mindmap">
+    <div class="bt">SƠ ĐỒ TƯ DUY NỘI DUNG CHƯƠNG 1</div>
+    <div class="diagram-flow">
+      <div class="diagram-node"><b>1. KHẢO SÁT &amp; MÔ TẢ HIỆN TRƯỜNG (ASTM D2488):</b> Màu sắc, mùi, cấu trúc $\to$ Thí nghiệm vê con giun dẻo $\to$ Lắc mẫu (Dilatancy) $\to$ Độ bền khô $\to$ Phân loại sơ bộ (Cát/Bụi/Sét).</div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>2. BỘ 3 THÍ NGHIỆM TRỰC TIẾP TẠI LAB:</b>
+        <ul>
+          <li>Độ ẩm tự nhiên $w$ (TCVN 4196): Phương pháp sấy khô $105 - 110^\circ\text{C}$ đến khối lượng không đổi.</li>
+          <li>Khối lượng thể tích $\rho$ (TCVN 4197): Phương pháp dao vòng gọt mẫu nguyên dạng $V = 60\text{ cm}^3$.</li>
+          <li>Khối lượng riêng hạt đất $\rho_s$ (TCVN 4195): Bình đo tỷ trọng (Pycnometer) kết hợp đun sôi/hút chân không.</li>
+        </ul>
+      </div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>3. CHUYỂN ĐỔI SỐ TÍNH TOÁN CÁC THAM SỐ PHÁI SINH:</b>
+        Khối lượng thể tích khô $\rho_d = \frac{\rho}{1+w} \to$ Hệ số rỗng $e = \frac{\rho_s}{\rho_d}-1 \to$ Độ rỗng $n = \frac{e}{1+e} \to$ Độ bão hòa $S_r = \frac{w \cdot G_s}{e}$.
+      </div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>4. GIỚI HẠN ATTERBERG &amp; PHÂN LOẠI TRẠNG THÁI:</b>
+        Xác định giới hạn chảy $W_L$ (chùy Vassiliev hoặc bát Casagrande) &amp; giới hạn dẻo $W_P$ $\to$ Chỉ số dẻo $I_P = W_L - W_P \to$ Độ sệt $I_L = \frac{w - W_P}{I_P} \to$ Đánh giá trạng thái chịu tải của nền đất.
+      </div>
+    </div>
+  </div>
+
+  <h2>1.1. CƠ SỞ LÝ THUYẾT: MÔ HÌNH BA PHA VÀ CÁC QUY LUẬT TƯƠNG QUAN VẬT LÝ</h2>
+  <p>Đất trong tự nhiên là một hệ phân tán đa pha phức tạp gồm ba pha cơ bản cùng tồn tại và tương tác chặt chẽ với nhau: <b>Pha rắn</b> (hạt khoáng vật hoặc chất hữu cơ cấu thành nên khung xương đất), <b>Pha lỏng</b> (nước tự do, nước mao dẫn, nước liên kết hóa – lý nằm trong các lỗ rỗng giữa các hạt) và <b>Pha khí</b> (không khí, khí sinh học chiếm khoảng không gian rỗng chưa bị nước lấp đầy) (Das &amp; Sobhan, 2022; Lê Quý An et al., 1995).</p>
+  
+  <p>Để định lượng trạng thái vật lý của đất, mô hình thể tích – khối lượng (Phase diagram) được thiết lập với tổng thể tích $V = V_s + V_v = V_s + V_w + V_a$ (trong đó $V_s$ là thể tích hạt khoáng, $V_v$ là thể tích lỗ rỗng, $V_w$ là thể tích nước, $V_a$ là thể tích khí) và tổng khối lượng $M = M_s + M_w$ (khối lượng pha khí $M_a \approx 0$ trong điều kiện khí áp thông thường).</p>
+
+  <p class="tcap">Bảng 1.1. Định nghĩa và công thức toán học các chỉ tiêu vật lý cơ bản của đất</p>
+  <table class="t-data">
+    <thead>
+      <tr>
+        <th style="width:25%">Tên chỉ tiêu</th>
+        <th style="width:15%">Ký hiệu &amp; Đơn vị</th>
+        <th style="width:30%">Công thức định nghĩa</th>
+        <th style="width:30%">Khoảng biến thiên thực tế</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>Độ ẩm tự nhiên</b> (Water content)</td>
+        <td class="center">$w$ (%)</td>
+        <td>$w = \frac{M_w}{M_s} \times 100 = \frac{M - M_s}{M_s} \times 100$</td>
+        <td>Cát: 5 – 25%; Sét dẻo mềm: 30 – 80%; Bùn sét yếu: 80 – 150%.</td>
+      </tr>
+      <tr>
+        <td><b>Khối lượng thể tích tự nhiên</b> (Bulk density)</td>
+        <td class="center">$\rho$ ($\text{g/cm}^3$)</td>
+        <td>$\rho = \frac{M}{V} = \frac{M_s + M_w}{V_s + V_v}$</td>
+        <td>Đất cát/cuội: 1,70 – 2,15; Đất sét: 1,60 – 2,05; Bùn yếu: 1,30 – 1,65.</td>
+      </tr>
+      <tr>
+        <td><b>Trọng lượng riêng tự nhiên</b> (Unit weight)</td>
+        <td class="center">$\gamma$ ($\text{kN/m}^3$)</td>
+        <td>$\gamma = \rho \times g = \rho \times 9{,}81$</td>
+        <td>Thường dao động từ 14 đến 21 $\text{kN/m}^3$.</td>
+      </tr>
+      <tr>
+        <td><b>Khối lượng riêng hạt đất</b> (Specific gravity)</td>
+        <td class="center">$\rho_s$ ($\text{g/cm}^3$)<br/>$G_s$ (không thứ nguyên)</td>
+        <td>$\rho_s = \frac{M_s}{V_s}$; $G_s = \frac{\rho_s}{\rho_w}$</td>
+        <td>Cát thạch anh: 2,65; Sét illite/kaolinite: 2,68 – 2,74; Sét hữu cơ: 2,50 – 2,60.</td>
+      </tr>
+      <tr>
+        <td><b>Khối lượng thể tích khô</b> (Dry density)</td>
+        <td class="center">$\rho_d$ ($\text{g/cm}^3$)</td>
+        <td>$\rho_d = \frac{M_s}{V} = \frac{\rho}{1 + w}$</td>
+        <td>Đất xốp: 1,10 – 1,40; Đất chặt: 1,60 – 1,95 $\text{g/cm}^3$.</td>
+      </tr>
+      <tr>
+        <td><b>Hệ số rỗng</b> (Void ratio)</td>
+        <td class="center">$e$ (không thứ nguyên)</td>
+        <td>$e = \frac{V_v}{V_s} = \frac{\rho_s}{\rho_d} - 1 = \frac{G_s \cdot \rho_w (1+w)}{\rho} - 1$</td>
+        <td>Cát chặt: 0,45 – 0,65; Cát xốp: 0,70 – 0,95; Sét mềm: 0,90 – 1,80; Bùn: > 2,0.</td>
+      </tr>
+      <tr>
+        <td><b>Độ rỗng</b> (Porosity)</td>
+        <td class="center">$n$ (%)</td>
+        <td>$n = \frac{V_v}{V} \times 100 = \frac{e}{1+e} \times 100$</td>
+        <td>Thường dao động từ 25% đến 65%.</td>
+      </tr>
+      <tr>
+        <td><b>Độ bão hòa</b> (Degree of saturation)</td>
+        <td class="center">$S_r$ (%)</td>
+        <td>$S_r = \frac{V_w}{V_v} \times 100 = \frac{w \cdot G_s}{e} \times 100$</td>
+        <td>Đất ẩm ít: $S_r \le 50\%$; Đất ẩm: $50 < S_r \le 80\%$; Bão hòa: $S_r > 80\%$.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Đối với đất loại sét (hạt mịn dính), các trạng thái vật lý biến đổi sâu sắc theo hàm lượng nước $w$. Nhà thổ nhưỡng học Albert Atterberg (1911) và sau đó được Arthur Casagrande chuẩn hóa (1932) đã phân chia các ranh giới chuyển tiếp trạng thái thành ba giới hạn Atterberg:</p>
+  <ul>
+    <li><b>Giới hạn chảy $W_L$ (Liquid Limit):</b> Độ ẩm ranh giới mà tại đó đất chuyển từ trạng thái dẻo sang trạng thái chảy (mất hoàn toàn cường độ chống cắt tức thời).</li>
+    <li><b>Giới hạn dẻo $W_P$ (Plastic Limit):</b> Độ ẩm ranh giới mà tại đó đất chuyển từ trạng thái nửa cứng/nửa rắn sang trạng thái dẻo (đất bắt đầu rạn nứt khi vê thành sợi có đường kính 3 mm).</li>
+    <li><b>Chỉ số dẻo $I_P$ (Plasticity Index):</b> Đại lượng thể hiện độ rộng của khoảng độ ẩm mà đất thể hiện tính dẻo:
+      <div class="eq">$$I_P = W_L - W_P$$</div>
+      Theo TCVN 5747:1993, đất loại sét được định danh: Cát pha ($1 < I_P \le 7$), Sét pha ($7 < I_P \le 17$), Sét ($I_P > 17$).
+    </li>
+    <li><b>Độ sệt $I_L$ (Liquidity Index):</b> Đại lượng phản ánh trạng thái hiện hữu của đất tại độ ẩm tự nhiên $w$:
+      <div class="eq">$$I_L = \frac{w - W_P}{I_P}$$</div>
+      Phân loại trạng thái đất sét theo $I_L$: $I_L < 0$ (Cứng); $0 \le I_L \le 0.25$ (Nửa cứng); $0.25 < I_L \le 0.50$ (Dẻo cứng); $0.50 < I_L \le 0.75$ (Dẻo mềm); $0.75 < I_L \le 1.00$ (Dẻo chảy); $I_L > 1,00$ (Chảy).
+    </li>
+  </ul>
+
+  <h2>1.2. KỸ THUẬT NHẬN BIẾT VÀ MÔ TẢ ĐẤT TẠI HIỆN TRƯỜNG (ASTM D2488)</h2>
+  <p>Kỹ năng nhận biết và mô tả đất bằng phương pháp trực quan – xúc giác tại thực địa là năng lực bắt buộc của kỹ sư địa kỹ thuật trước khi mẫu được gửi về phòng thí nghiệm. Quy trình mô tả hiện trường tuân theo tiêu chuẩn ASTM D2488 bao gồm 5 bước đánh giá định tính nhưng cực kỳ chuẩn xác:</p>
+  
+  <div class="step-card">
+    <div class="step-title">Bước 1: Quan sát màu sắc, mùi và thành phần thạch học tổng quát</div>
+    <p>Ghi nhận màu sắc chủ đạo và màu phụ (ví dụ: xám đen, nâu vàng đốm nâu gụ, xám xanh). Đất có mùi bùn thối hoặc mùi phân hủy hữu cơ đặc trưng cho đất than bùn hoặc bùn hữu cơ (rất yếu). Tách các hạt thô quan sát góc cạnh hạt khoáng (tròn cạnh, góc cạnh).</p>
+  </div>
+  
+  <div class="step-card">
+    <div class="step-title">Bước 2: Thí nghiệm vê con giun dẻo (Plasticity Test)</div>
+    <p>Lấy một cục đất ẩm nhỏ bằng hạt bi, nhào kỹ trên lòng bàn tay rồi dùng lòng bàn tay lăn đều trên tấm kính phẳng hoặc mặt phẳng sạch để tạo thành sợi đất (con giun). Nếu đất dễ dàng vê thành sợi có đường kính 3 mm mà không bị đứt gãy, sau đó nhào lại và vê tiếp vẫn được $\to$ Đất có tính dẻo cao ($I_P > 17$, đất sét). Nếu đất vừa lăn đến đường kính 3 mm thì lập tức nứt vụn $\to$ Đất có tính dẻo vừa (sét pha). Nếu đất vỡ vụn trước khi đạt 3 mm hoặc không thể vê thành con giun $\to$ Đất cát pha hoặc cát rời.</p>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Bước 3: Thí nghiệm lắc mẫu (Dilatancy Test)</div>
+    <p>Lấy mẫu đất bão hòa nước nặn thành viên tròn phẳng cỡ 1 cm trên lòng bàn tay. Lắc mạnh bàn tay theo phương ngang và đập nhẹ vào cạnh bàn tay kia. Nếu bề mặt viên đất nhanh chóng tiết nước sáng bóng mượt, và khi bóp nhẹ viên đất thì nước biến mất, bề mặt trở nên mờ khô $\to$ Phản ứng lắc nhanh, đặc trưng của đất bụi (silt) hoặc cát rất mịn. Nếu bề mặt viên đất không thay đổi hoặc phản ứng cực kỳ chậm chạp $\to$ Đặc trưng của đất sét hạt mịn (clay).</p>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Bước 4: Thí nghiệm độ bền khô (Dry Strength Test)</div>
+    <p>Phơi khô hoặc sấy nhẹ một viên đất đường kính 1 cm. Dùng ngón tay cái và ngón trỏ bóp vỡ viên đất. Nếu viên đất không thể bóp vỡ bằng lực ngón tay, chỉ có thể đập vỡ bằng vật cứng $\to$ Độ bền khô rất cao (đất sét dẻo cao, thành phần khoáng vật montmorillonite/illite). Nếu viên đất vỡ vụn dễ dàng dưới lực ép nhẹ $\to$ Độ bền khô thấp đến trung bình (bụi hoặc sét pha). Nếu viên đất tự rã thành bột rời khi khô $\to$ Cát hoặc cát pha.</p>
+  </div>
+
+  <h2>1.3. QUY TRÌNH THÍ NGHIỆM PHÒNG LAB CHUẨN XÁC (TCVN &amp; ASTM)</h2>
+  
+  <h3>A. Thí nghiệm xác định độ ẩm tự nhiên (TCVN 4196:2012 / ASTM D2216)</h3>
+  <ol>
+    <li>Lấy hộp nhôm thí nghiệm đã rửa sạch, sấy khô, cân xác định khối lượng hộp nhôm chính xác đến 0,01 g ($m_0$).</li>
+    <li>Lấy mẫu đất đại diện (khối lượng tối thiểu 15–30 g đối với đất dính, 50–100 g đối với cát), cho vào hộp nhôm, đậy nắp và cân khối lượng hộp + đất ẩm ($m_1$).</li>
+    <li>Mở nắp hộp, đưa vào tủ sấy điện duy trì nhiệt độ ổn định $105 \pm 5^\circ\text{C}$ trong thời gian tối thiểu 8–10 giờ (đối với đất dính) hoặc đến khi khối lượng không đổi giữa hai lần cân cách nhau 2 giờ. <i>(Lưu ý: Với đất có chứa chất hữu cơ, thạch cao, nhiệt độ sấy chỉ duy trì ở mức $60 - 80^\circ\text{C}$ để tránh phân hủy cấu trúc khoáng).</i></li>
+    <li>Lấy hộp ra khỏi tủ sấy, đậy nắp, đưa vào bình hút ẩm làm nguội về nhiệt độ phòng trong khoảng 30–45 phút, sau đó cân khối lượng hộp + đất khô ($m_2$).</li>
+    <li>Độ ẩm được tính toán theo công thức:
+      <div class="eq">$$w = \frac{m_1 - m_2}{m_2 - m_0} \times 100\quad (\%)$$</div>
+      Thực hiện song song tối thiểu 2 mẫu thử, sai số chênh lệch không được vượt quá 1% (đất dính) hoặc 0,5% (đất cát).
+    </li>
+  </ol>
+
+  <h3>B. Thí nghiệm xác định khối lượng thể tích bằng dao vòng (TCVN 4197:2012 / ASTM D2937)</h3>
+  <ol>
+    <li>Cân khối lượng dao vòng kim loại sạch và khô bằng cân kỹ thuật chính xác 0,01 g ($m_v$). Dùng thước kẹp caliper đo đường kính trong $D$ và chiều cao trong $H$ của dao vòng tại 3 vị trí khác nhau để tính thể tích trong của dao vòng $V = \frac{\pi D^2 H}{4}$ (thông thường dao vòng tiêu chuẩn có $D = 60\text{ mm}, H = 20\text{ mm} \to V = 56{,}55\text{ cm}^3$).</li>
+    <li>Bôi một lớp dầu nhờn mỏng lên thành trong của dao vòng. Đặt lưỡi cắt sắc bén của dao vòng vuông góc với bề mặt mẫu đất nguyên dạng (trên thớt gọt đất).</li>
+    <li>Dùng dao gọt đất gọt dần phần đất thừa xung quanh chu vi dao vòng, đồng thời ấn nhẹ dao vòng xuống theo phương thẳng đứng cho đến khi đất nhô lên cao hơn miệng trên của dao vòng khoảng 2–3 mm. Tuyệt đối không ấn mạnh làm phá vỡ kết cấu tự nhiên của mẫu.</li>
+    <li>Dùng thước gạt kim loại sắc gạt phẳng hai mặt đất ngang bằng với hai mép dao vòng. Lau sạch đất bám ở thành ngoài dao vòng.</li>
+    <li>Cân khối lượng dao vòng chứa đất ẩm ($m_v+d$). Khối lượng thể tích tự nhiên:
+      <div class="eq">$$\rho = \frac{m_{v+d} - m_v}{V}\quad (\text{g/cm}^3)$$</div>
+    </li>
+  </ol>
+
+  <h3>C. Thí nghiệm xác định khối lượng riêng hạt đất bằng bình tỷ trọng (TCVN 4195:2012 / ASTM D854)</h3>
+  <ol>
+    <li>Dùng bình đo tỷ trọng (Pycnometer) dung tích 100 ml đã được hiệu chuẩn nhiệt độ và khối lượng bình khô rỗng ($m_b$).</li>
+    <li>Lấy khoảng 15–20 g đất đã sấy khô hoàn toàn ở $105^\circ\text{C}$, nghiền mịn qua rây 2 mm, cho vào bình tỷ trọng và cân ($m_{b+s}$). Khối lượng đất khô là $m_s = m_{b+s} - m_b$.</li>
+    <li>Đổ nước cất vào bình tỷ trọng ngập khoảng 1/2 đến 2/3 thể tích bình. Đưa bình lên bếp cát hoặc bếp điện đun sôi nhẹ và lắc đều trong 30–45 phút (hoặc đặt trong bình hút chân không) để loại bỏ hoàn toàn bọt khí bám quanh các hạt đất mịn.</li>
+    <li>Để bình nguội về nhiệt độ phòng, thêm nước cất khử khí đến vạch mức quy định của bình. Dùng giấy thấm lau khô mặt ngoài và cổ bình, cân chính xác khối lượng bình + đất + nước ($m_1$).</li>
+    <li>Đổ hết hỗn hợp, rửa sạch bình, nạp đầy nước cất khử khí đến vạch mức ở cùng nhiệt độ thử nghiệm và cân khối lượng bình + nước ($m_2$).</li>
+    <li>Khối lượng riêng hạt đất $\rho_s$ tính theo công thức:
+      <div class="eq">$$\rho_s = \frac{m_s}{m_s + m_2 - m_1} \times \rho_{w(T)}\quad (\text{g/cm}^3)$$</div>
+      (trong đó $\rho_{w(T)}$ là khối lượng riêng của nước cất ở nhiệt độ thí nghiệm $T^\circ\text{C}$).
+    </li>
+  </ol>
+
+  <div class="box vidu">
+    <div class="bt">VÍ DỤ TÍNH TOÁN TOÀN DIỆN CHỈ TIÊU VẬT LÝ</div>
+    <p class="no-indent"><b>Đề bài:</b> Một mẫu đất sét gần bão hòa nước lấy từ hố khoan khảo sát tại TP. Thủ Đức được tiến hành thí nghiệm dao vòng và bình tỷ trọng thu được các kết quả sau: Dao vòng có đường kính $D = 60\text{ mm}$, chiều cao $H = 20\text{ mm}$, khối lượng dao vòng $m_v = 45{,}20\text{ g}$. Khối lượng dao vòng chứa đất ẩm $m_{v+d} = 148{,}12\text{ g}$. Cân độ ẩm thu được $m_0 = 12{,}50\text{ g}$, $m_1 = 48{,}60\text{ g}$, $m_2 = 38{,}80\text{ g}$. Thí nghiệm bình tỷ trọng xác định được tỷ trọng hạt $G_s = 2{,}70$. Giới hạn Atterberg đo được: $W_L = 45{,}2\%$, $W_P = 22{,}8\%$.</p>
+    <p class="no-indent"><b>Yêu cầu:</b> Hãy tính các chỉ tiêu: $w, \rho, \rho_d, e, n, S_r, \gamma, \gamma_d, I_P, I_L$ và gọi tên trạng thái đất.</p>
+    <p class="no-indent"><b>Lời giải chi tiết:</b></p>
+    <ol>
+      <li>Thể tích mẫu đất: $V = \frac{\pi \times 6{,}0^2 \times 2{,}0}{4} = 56{,}55\text{ cm}^3$.</li>
+      <li>Khối lượng mẫu đất tự nhiên: $M = 148{,}12 - 45{,}20 = 102{,}92\text{ g}$.</li>
+      <li>Khối lượng thể tích tự nhiên: $\rho = \frac{102{,}92}{56{,}55} = 1{,}820\text{ g/cm}^3 \to \gamma = 1{,}820 \times 9{,}81 = 17{,}85\text{ kN/m}^3$.</li>
+      <li>Độ ẩm tự nhiên: $w = \frac{48{,}60 - 38{,}80}{38{,}80 - 12{,}50} \times 100 = \frac{9{,}80}{26{,}30} \times 100 = 37{,}26\%$.</li>
+      <li>Khối lượng thể tích khô: $\rho_d = \frac{\rho}{1 + w} = \frac{1{,}820}{1 + 0{,}3726} = 1{,}326\text{ g/cm}^3 \to \gamma_d = 13{,}01\text{ kN/m}^3$.</li>
+      <li>Hệ số rỗng: $e = \frac{G_s \times \rho_w}{\rho_d} - 1 = \frac{2{,}70 \times 1{,}0}{1{,}326} - 1 = 1{,}036$.</li>
+      <li>Độ rỗng: $n = \frac{e}{1+e} = \frac{1{,}036}{2{,}036} \times 100 = 50{,}89\%$.</li>
+      <li>Độ bão hòa: $S_r = \frac{w \times G_s}{e} = \frac{0{,}3726 \times 2{,}70}{1{,}036} \times 100 = 97{,}1\%$ — đất gần bão hòa (kiểm tra hợp lý: $S_r \le 100\%$; nếu tính ra lớn hơn 100 % phải đo lại khối lượng, thể tích dao vòng hoặc độ ẩm).</li>
+      <li>Chỉ số dẻo: $I_P = W_L - W_P = 45{,}2 - 22{,}8 = 22{,}4\% > 17\% \to$ Định danh đất là <b>Sét (Clay)</b>.</li>
+      <li>Độ sệt: $I_L = \frac{w - W_P}{I_P} = \frac{37{,}26 - 22{,}8}{22{,}4} = \frac{14{,}46}{22{,}4} = 0{,}646$. Vì $0,50 < I_L \le 0.75$, kết luận đất ở trạng thái <b>Dẻo mềm (Soft-plastic)</b>.</li>
+    </ol>
+  </div>
+
+  <div class="box tomtat">
+    <div class="bt">TÓM TẮT CỐT LÕI &amp; THUẬT NGỮ CHUYÊN NGÀNH ANH – VIỆT</div>
+    <p class="no-indent">Bộ 3 chỉ tiêu gốc đo trực tiếp tại phòng thí nghiệm là Độ ẩm ($w$), Khối lượng thể tích ($\rho$) và Khối lượng riêng hạt ($\rho_s$). Toàn bộ các chỉ tiêu trạng thái khác ($e, n, S_r, \rho_d, I_P, I_L$) đều suy ra từ 3 thông số này. Đối với đất sét, chỉ số dẻo $I_P$ quyết định tên đất, còn độ sệt $I_L$ quyết định trạng thái chịu lực của đất nền.</p>
+    <p class="no-indent"><b>Thuật ngữ chuyên ngành:</b> Phase relationships (Mối quan hệ các pha), Void ratio (Hệ số rỗng), Porosity (Độ rỗng), Degree of saturation (Độ bão hòa), Atterberg limits (Giới hạn Atterberg), Liquid limit (Giới hạn chảy), Plastic limit (Giới hạn dẻo), Liquidity index (Độ sệt), Specific gravity (Tỷ trọng hạt đất), Hydrometer test (Thí nghiệm tỷ trọng kế phân tích hạt mịn).</p>
+  </div>
+
+  <h2>CÂU HỎI ÔN TẬP VÀ PHIẾU THỰC HÀNH 1</h2>
+  <ol>
+    <li><b>[Nhớ - Bloom 1.0]:</b> Nêu tên và đơn vị đo của 3 chỉ tiêu vật lý xác định trực tiếp bằng thí nghiệm trong phòng cơ học đất.</li>
+    <li><b>[Hiểu - Bloom 2.0]:</b> Tại sao khi sấy mẫu đất hữu cơ hoặc đất bùn than bùn, nhiệt độ tủ sấy không được vượt quá $60 - 80^\circ\text{C}$?</li>
+    <li><b>[Vận dụng - Bloom 3.0]:</b> Phân tích ý nghĩa của độ bão hòa $S_r$. Khi tính toán mà $S_r > 100\%$ thì nguyên nhân sai số xuất phát từ khâu thao tác nào?</li>
+    <li><b>[Phân tích - Bloom 4.0]:</b> Cho hai lớp đất có cùng độ ẩm $w = 32\%$, lớp A có $I_P = 8$, lớp B có $I_P = 25$ ($W_P = 18\%$). Hãy tính độ sệt của hai lớp đất và nhận xét lớp nào có khả năng chịu tải tốt hơn cho công trình?</li>
+    <li><b>[Thực hành]:</b> Nhập toàn bộ dữ liệu thí nghiệm của nhóm vào <b>Phiếu thực hành số 1</b> trên hệ thống trực tuyến <a href="https://diemdanhsv.com/cohocdat-tt/index.html">diemdanhsv.com/cohocdat-tt</a> để kiểm tra sai số và nộp bài.</li>
+  </ol>
+
+  <div class="ftr">
+    <span>TRƯỜNG ĐH KHTN – ĐHQG-HCM</span>
+  </div>
+</div>
+
+<!-- CHAPTER 2: TUẦN 2 -->
+<div class="page">
+  <div class="hdr">
+    <span>TRƯỜNG ĐH KHTN – KHOA ĐỊA CHẤT</span>
+    <span>GIÁO TRÌNH THỰC TẬP CƠ HỌC ĐẤT (GEO20202)</span>
+    <span>CHƯƠNG 2 – TUẦN 2</span>
+  </div>
+
+  <h1 class="chap-title">CHƯƠNG 2: THÍ NGHIỆM NÉN CỐ KẾT MỘT CHIỀU (OEDOMETER TEST)<br/>
+  <span style="font-size:13pt; text-transform:none; font-weight:normal; color:#444;">
+  (QUY TRÌNH LẮP MẪU NGUYÊN DẠNG, KỸ THUẬT GIA TẢI &amp; THU THẬP SỐ LIỆU BIẾN DẠNG THÔ)
+  </span></h1>
+
+  <div class="box muctieu">
+    <div class="bt">MỤC TIÊU HỌC TẬP (CLO &amp; THANG BLOOM)</div>
+    <p class="no-indent">Sau khi hoàn thành chương này, người học có khả năng:</p>
+    <ul>
+      <li><b>1. Về kiến thức (Bloom 3.0):</b> Trình bày tường tận bản chất hiện tượng nén cố kết một chiều theo mô hình cơ học Terzaghi; hiểu rõ nguyên lý phân bố ứng suất hữu hiệu $\sigma' = \sigma - u$ trong suốt quá trình tiêu tán áp lực nước lỗ rỗng; giải thích chức năng từng bộ phận trong thiết bị nén Oedometer theo TCVN 4200:2012 và ASTM D2435.</li>
+      <li><b>2. Về kỹ năng thao tác (Bloom 3.5):</b> Gọt và lắp mẫu đất nguyên dạng vào dao vòng nén cố kết không bị xáo động kết cấu; căn chỉnh thăng bằng đòn bẩy; thao tác chất tải êm, không gây xung kích; đọc chính xác đồng hồ so đo biến dạng theo chuỗi thời gian logarithm chuẩn quốc tế.</li>
+      <li><b>3. Về ghi nhận dữ liệu (Bloom 3.5):</b> Lập sổ nhật trình thí nghiệm chuẩn hóa; phát hiện và loại bỏ các lỗi thao tác cơ học tại chỗ; hoàn thành Phiếu thực hành số 2 (Báo cáo số liệu thô).</li>
+      <li><b>4. Về phẩm chất nghề nghiệp (Bloom 4.0):</b> Rèn luyện tính kiên trì, kỷ luật và tính chuẩn xác tuyệt đối về mặt thời gian khi quan sát thí nghiệm kéo dài.</li>
+    </ul>
+  </div>
+
+  <div class="box mindmap">
+    <div class="bt">SƠ ĐỒ TƯ DUY NỘI DUNG CHƯƠNG 2</div>
+    <div class="diagram-flow">
+      <div class="diagram-node"><b>1. CƠ CHẾ CỐ KẾT TERZAGHI:</b> Tải trọng ngoài gia tải $\to$ Ban đầu nước gánh toàn bộ áp lực ($u = \Delta \sigma$, $\sigma' = 0$) $\to$ Nước thoát dần qua đá thấm $\to$ Áp lực nước giảm ($u \to 0$) $\to$ Ứng suất hữu hiệu tăng dần ($\sigma' \to \Delta \sigma$) $\to$ Khung hạt đất co cụm, gây lún cố kết.</div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>2. CHUẨN BỊ MẪU &amp; LẮP RÁP THIẾT BỊ NÉN:</b> Mẫu nguyên dạng $\to$ Gọt vào dao vòng tiêu chuẩn ($D=60\text{ mm}, H=20\text{ mm}$) $\to$ Bão hòa 2 viên đá thấm $\to$ Lắp thứ tự: Đá thấm đáy $\to$ Giấy thấm $\to$ Dao vòng đất $\to$ Giấy thấm $\to$ Đá thấm đỉnh $\to$ Bi truyền lực $\to$ Chỉnh đòn bẩy tỷ lệ 1:10 thăng bằng bọt nước.</div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>3. QUY TRÌNH GIA TẢI THEO CẤP ÁP LỰC:</b>
+        Gia tải theo các cấp áp lực tiêu chuẩn: $25 \to 50 \to 100 \to 200 \to 400 \to 800\text{ kPa}$ (tỷ lệ tăng tải $\Delta p / p = 1$). Mỗi cấp áp lực duy trì tối thiểu 24 giờ.
+      </div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>4. CHUỖI THỜI GIAN ĐỌC ĐỒNG HỒ BIẾN DẠNG:</b>
+        Đọc biến dạng tại các mốc thời gian logarithm: $0{,}1, 0{,}25, 0{,}5, 1, 2, 4, 8, 15, 30$ phút, $1, 2, 4, 8, 24$ giờ $\to$ Ghi vào Sổ nhật trình thí nghiệm nén cố kết.
+      </div>
+    </div>
+  </div>
+
+  <h2>2.1. CƠ SỞ KHOA HỌC: HIỆN TƯỢNG CỐ KẾT MỘT CHIỀU VÀ NGUYÊN LÝ THIẾT BỊ NÉN</h2>
+  <p>Khi một công trình xây dựng (nhà cao tầng, đê đập, đường đắp) được xây dựng trên nền đất sét bão hòa nước, tải trọng công trình truyền xuống nền sẽ làm phát sinh ứng suất nén trong đất. Do hệ số thấm của đất sét rất bé ($k \approx 10^{-7} - 10^{-10}\text{ cm/s}$), nước trong các lỗ rỗng không thể thoát ra ngay lập tức. Theo nguyên lý ứng suất hữu hiệu do Karl Terzaghi (1925) đề xuất:</p>
+  
+  <div class="eq">$$\sigma = \sigma' + u$$</div>
+  
+  <p>Tại thời điểm $t = 0$ ngay sau khi đặt tải trọng $\Delta \sigma$, toàn bộ tải trọng ngoài được gánh chịu bởi áp lực nước lỗ rỗng thặng dư ($u = \Delta \sigma$), trong khi ứng suất hữu hiệu trong khung khoáng chưa kịp thay đổi ($\Delta \sigma' = 0$). Theo thời gian, dưới gradient thủy lực, nước lỗ rỗng sẽ từ từ thoát ra khỏi các khe rỗng về phía các tầng thoát nước (các lớp cát hoặc bề mặt thoát nước tự do). Quá trình này làm áp lực nước lỗ rỗng tiêu tán dần ($u \to 0$), kéo theo sự chuyển hóa tương ứng làm tăng ứng suất hữu hiệu giữa các hạt đất ($\Delta \sigma' \to \Delta \sigma$). Sự gia tăng ứng suất hữu hiệu làm các hạt khoáng xích lại gần nhau, thể tích lỗ rỗng thu hẹp lại, sinh ra hiện tượng biến dạng nén lún của nền đất kéo dài theo thời gian, được gọi là <b>quá trình cố kết (Consolidation)</b> (Terzaghi &amp; Peck, 1967; Whitlow, 2004).</p>
+
+  <p><b>Điều kiện nén cố kết một chiều (1D Consolidation):</b> Trong phòng thí nghiệm, bài toán được mô phỏng bằng thiết bị nén Oedometer với các giả thiết vật lý chuẩn xác:</p>
+  <ul>
+    <li>Mẫu đất có dạng hình trụ tròn được bao bọc khít khao trong một dao vòng kim loại thành dày có độ cứng rất lớn $\to$ Biến dạng nở hông của đất bị triệt tiêu hoàn toàn ($\varepsilon_x = \varepsilon_y = 0$), đất chỉ biến dạng duy nhất theo phương thẳng đứng ($\varepsilon_z \ne 0$). Trạng thái ứng suất này tương ứng với trạng thái ứng suất tĩnh $K_0$.</li>
+    <li>Đường thấm của nước chỉ diễn ra theo phương thẳng đứng (1 chiều dọc trục $z$). Mẫu đất được kẹp giữa hai viên đá thấm có độ thấm rất lớn đặt ở đỉnh và đáy (điều kiện thoát nước hai mặt, chiều dài đường thấm dài nhất là nửa chiều cao mẫu: $H_{dr} = H/2$).</li>
+    <li>Hạt khoáng và nước được giả thiết là hoàn toàn không nén được; biến dạng thể tích của mẫu đất hoàn toàn do sự thoát nước và sự giảm thể tích lỗ rỗng gây ra.</li>
+  </ul>
+
+  <h2>2.2. CẤU TẠO CHI TIẾT CỦA THIẾT BỊ NÉN OEDOMETER</h2>
+  <p>Thiết bị nén cố kết một chiều tiêu chuẩn (Oedometer) bao gồm các cụm bộ phận chức năng chính sau:</p>
+  
+  <div class="step-card">
+    <div class="step-title">1. Buồng nén (Consolidation Cell)</div>
+    <p>Gồm đế buồng bằng kim loại chống ăn mòn (đồng thau hoặc thép không gỉ), vòng giữ dao vòng (cố định hoặc nổi), hai viên đá thấm xốp bão hòa nước và ống cấp/thoát nước. Xung quanh buồng có gờ chứa nước để ngập mẫu đất, bảo đảm mẫu luôn ở trạng thái bão hòa 100% trong suốt quá trình thử nghiệm nhiều ngày, tránh hiện tượng co ngót do mẫu bị khô.</p>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">2. Hệ thống đòn bẩy gia tải (Lever Arm Loading System)</div>
+    <p>Sử dụng cơ cấu đòn bẩy bậc một hoặc bậc hai với tỷ số truyền lực cơ học chuẩn xác (thường là $1:10$ hoặc $1:11$). Cơ cấu này cho phép sử dụng các quả cân có khối lượng nhỏ (1–5 kg) trên giá treo để tạo ra áp lực nén rất lớn (lên tới 800–1600 kPa) tác dụng trực tiếp lên diện tích mẫu đất ($A = 28{,}27\text{ cm}^2$). Cánh tay đòn có gắn đối trọng cân bằng và bọt thủy kiểm tra thăng bằng.</p>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">3. Thiết bị đo biến dạng lún (Deformation Measurement)</div>
+    <p>Đồng hồ so cơ học (Dial Gauge) có hành trình 10 mm, vạch chia $0{,}001\text{ mm}$ (hoặc $0{,}01\text{ mm}$) hoặc cảm biến đo chuyển vị điện tử LVDT (Linear Variable Differential Transformer) kết nối với hệ thống máy tính thu thập dữ liệu tự động (Data Logger). Đầu đo tựa trực tiếp lên tâm viên bi truyền lực của nắp buồng nén.</p>
+  </div>
+
+  <h2>2.3. HƯỚNG DẪN THỰC HÀNH TỪNG BƯỚC: LẮP MẪU VÀ KỸ THUẬT GIA TẢI</h2>
+  
+  <div class="step-card">
+    <div class="step-title">Bước 1: Chuẩn bị mẫu đất nguyên dạng vào dao vòng</div>
+    <ol>
+      <li>Lấy ống mẫu nguyên dạng (ống Shelby) từ hiện trường được bảo quản kín bằng sáp nến. Dùng máy đùn thủy lực nhẹ nhàng đùn thỏi đất ra ngoài thớt gọt mẫu.</li>
+      <li>Cắt bỏ lớp đất dày 2–3 cm ở đầu ống mẫu vì phần này thường bị xáo động hoặc mất ẩm.</li>
+      <li>Lấy dao vòng nén cố kết tiêu chuẩn đã được lau sạch, cân khối lượng ($m_v$) và đo kích thước ($D = 60\text{ mm}, H_0 = 20\text{ mm}$). Bôi một lớp dầu vaseline cực mỏng vào thành trong dao vòng.</li>
+      <li>Đặt mép vát sắc của dao vòng lên bề mặt mẫu đất. Dùng dao gọt đất gọt gọt dần từng lớp đất thừa xung quanh chu vi bên ngoài dao vòng (đường kính gọt lớn hơn đường kính dao vòng khoảng 1 mm). Vừa gọt nhẹ nhàng vừa ấn dao vòng xuống theo phương thẳng đứng cho đến khi đất nhô lên khỏi mép trên của dao vòng 2 mm.</li>
+      <li>Dùng thước gạt kim loại sắc gạt phẳng hai mặt đáy và mặt trên của dao vòng. Lau sạch đất bám ở thành ngoài và cân khối lượng dao vòng + đất ẩm ($m_{v+d0}$). Lấy phần đất thừa vụn xung quanh để xác định độ ẩm ban đầu ($w_0$).</li>
+    </ol>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Bước 2: Lắp đặt cụm buồng nén và căn chỉnh thiết bị</div>
+    <ol>
+      <li>Đá thấm phải được luộc trong nước cất sôi khoảng 15 phút để loại bỏ bọt khí và ngâm nguội trong nước cất trước khi lắp.</li>
+      <li>Đặt viên đá thấm đáy vào lòng đế buồng nén, trải một tờ giấy thấm ướt lên trên viên đá thấm để tránh đất sét chui vào làm tắc lỗ rỗng của đá thấm.</li>
+      <li>Đặt dao vòng chứa mẫu đất lên giấy thấm đáy đúng vị trí định vị. Đặt tiếp một tờ giấy thấm ướt lên mặt trên của mẫu đất, sau đó đặt viên đá thấm đỉnh lên trên giấy thấm.</li>
+      <li>Đậy nắp định tâm và đặt viên bi truyền lực bằng thép vào đúng tâm nắp nén. Vặn chặt các ốc vít cố định buồng nén để dao vòng không bị xê dịch.</li>
+      <li>Đưa toàn bộ buồng nén lên bàn nén cố kết, đặt đúng dưới trục truyền lực của đòn bẩy. Đổ nước cất vào buồng nén để ngập mẫu đất.</li>
+      <li>Chỉnh bọt thủy của cánh tay đòn về vị trí thăng bằng nằm ngang bằng vít điều chỉnh đối trọng. Điều chỉnh vít tiếp xúc của trục truyền lực chạm nhẹ vào viên bi thép.</li>
+      <li>Lắp đồng hồ so đo biến dạng vào giá đỡ cứng vững, chỉnh kim đồng hồ chạm vào đầu nắp nén, đặt kim về vị trí 0 hoặc ghi nhận chỉ số ban đầu ($R_0$).</li>
+    </ol>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Bước 3: Kỹ thuật gia tải và chuỗi thời gian đọc đồng hồ so</div>
+    <p>Thí nghiệm gia tải qua các cấp áp lực tiêu chuẩn: $p = 25, 50, 100, 200, 400, 800\text{ kPa}$. Mỗi cấp áp lực duy trì trong 24 giờ. Tại mỗi cấp gia tải, quy trình kích tải và đọc số liệu tiến hành như sau:</p>
+    <ol>
+      <li>Tính toán khối lượng quả cân cần đặt lên giá treo đòn bẩy theo tỷ lệ đòn bẩy $K = 1:10$:
+        <div class="eq">$$M_{qc} = \frac{p \times A}{g \times 10} = \frac{p\,(\text{kPa}) \times 2{,}827\times 10^{-3}\,(\text{m}^2)}{9{,}81\,(\text{m/s}^2) \times 10}$$</div>
+      </li>
+      <li>Tay giữ nhẹ giá treo, đặt quả cân êm dịu lên giá treo, không thả rơi tự do gây chấn động làm phá hủy kết cấu mẫu.</li>
+      <li>Bấm đồng hồ bấm giây (Stopwatch) ngay khoảnh khắc tải trọng bắt đầu truyền vào mẫu đất.</li>
+      <li>Quan sát và đọc chỉ số trên đồng hồ so (chính xác đến $0{,}001\text{ mm}$) tại các thời điểm logarithm quy định:
+        <div class="center bold" style="background:#eef; padding:4pt; margin:4pt 0;">
+          0,1 phút (6s) &nbsp;|&nbsp; 0,25 phút (15s) &nbsp;|&nbsp; 0,5 phút (30s) &nbsp;|&nbsp; 1 phút &nbsp;|&nbsp; 2 phút &nbsp;|&nbsp; 4 phút &nbsp;|&nbsp; 8 phút &nbsp;|&nbsp; 15 phút &nbsp;|&nbsp; 30 phút &nbsp;|&nbsp; 1 giờ &nbsp;|&nbsp; 2 giờ &nbsp;|&nbsp; 4 giờ &nbsp;|&nbsp; 8 giờ &nbsp;|&nbsp; 24 giờ.
+        </div>
+      </li>
+      <li>Ghi chép số liệu đọc tức thời vào Sổ nhật trình thí nghiệm. Sau 24 giờ, đọc số đo cuối cùng của cấp tải đó trước khi chuyển sang cấp tải kế tiếp.</li>
+    </ol>
+  </div>
+
+  <h2>2.4. MẪU SỔ NHẬT TRÌNH THÍ NGHIỆM VÀ KIỂM SOÁT LỖI KỸ THUẬT</h2>
+  <p class="tcap">Bảng 2.1. Trích lục dữ liệu thô biến dạng theo thời gian cho cấp áp lực $p = 100\text{ kPa}$ (Mẫu ST-01)</p>
+  <table class="t-data">
+    <thead>
+      <tr>
+        <th>Thời gian $t$</th>
+        <th>Thời gian (phút)</th>
+        <th>$\sqrt{t}$ ($\text{min}^{0{,}5}$)</th>
+        <th>$\log t$</th>
+        <th>Số đọc đồng hồ ($R_t$, mm)</th>
+        <th>Độ lún $\Delta h_t$ (mm)</th>
+        <th>Ghi chú</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="center">0</td><td class="center">0</td><td class="center">0</td><td class="center">—</td><td class="center">0,312</td><td class="center">0,000</td><td>Bắt đầu cấp tải 100 kPa</td></tr>
+      <tr><td class="center">6 giây</td><td class="center">0,10</td><td class="center">0,316</td><td class="center">-1,000</td><td class="center">0,358</td><td class="center">0,046</td><td>Lún tức thời khung hạt</td></tr>
+      <tr><td class="center">15 giây</td><td class="center">0,25</td><td class="center">0,500</td><td class="center">-0,602</td><td class="center">0,384</td><td class="center">0,072</td><td>Bắt đầu thoát nước</td></tr>
+      <tr><td class="center">30 giây</td><td class="center">0,50</td><td class="center">0,707</td><td class="center">-0,301</td><td class="center">0,410</td><td class="center">0,098</td><td>Tốc độ lún nhanh</td></tr>
+      <tr><td class="center">1 phút</td><td class="center">1,00</td><td class="center">1,000</td><td class="center">0,000</td><td class="center">0,442</td><td class="center">0,130</td><td>Giai đoạn cố kết sơ cấp</td></tr>
+      <tr><td class="center">2 phút</td><td class="center">2,00</td><td class="center">1,414</td><td class="center">0,301</td><td class="center">0,485</td><td class="center">0,173</td><td>Đường thấm phát triển</td></tr>
+      <tr><td class="center">4 phút</td><td class="center">4,00</td><td class="center">2,000</td><td class="center">0,602</td><td class="center">0,536</td><td class="center">0,224</td><td>Tiêu tán áp lực kẽ rỗng</td></tr>
+      <tr><td class="center">8 phút</td><td class="center">8,00</td><td class="center">2,828</td><td class="center">0,903</td><td class="center">0,598</td><td class="center">0,286</td><td>Quan sát bọt khí thoát</td></tr>
+      <tr><td class="center">15 phút</td><td class="center">15,00</td><td class="center">3,873</td><td class="center">1,176</td><td class="center">0,655</td><td class="center">0,343</td><td>Tốc độ lún giảm dần</td></tr>
+      <tr><td class="center">30 phút</td><td class="center">30,00</td><td class="center">5,477</td><td class="center">1,477</td><td class="center">0,718</td><td class="center">0,406</td><td>Nước thoát chậm lại</td></tr>
+      <tr><td class="center">1 giờ</td><td class="center">60,00</td><td class="center">7,746</td><td class="center">1,778</td><td class="center">0,782</td><td class="center">0,470</td><td>Cuối cố kết sơ cấp</td></tr>
+      <tr><td class="center">2 giờ</td><td class="center">120,00</td><td class="center">10,954</td><td class="center">2,079</td><td class="center">0,834</td><td class="center">0,522</td><td>Chuyển sang cố kết thứ cấp</td></tr>
+      <tr><td class="center">4 giờ</td><td class="center">240,00</td><td class="center">15,492</td><td class="center">2,380</td><td class="center">0,875</td><td class="center">0,563</td><td>Biến dạng trườn từ biến</td></tr>
+      <tr><td class="center">8 giờ</td><td class="center">480,00</td><td class="center">21,909</td><td class="center">2,681</td><td class="center">0,910</td><td class="center">0,598</td><td>Tốc độ biến dạng rất bé</td></tr>
+      <tr><td class="center">24 giờ</td><td class="center">1440,00</td><td class="center">37,947</td><td class="center">3,158</td><td class="center">0,945</td><td class="center">0,633</td><td>Hoàn thành cấp tải 100 kPa</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box note">
+    <div class="bt">CÁC LỖI THAO TÁC THƯỜNG GẶP VÀ CÁCH KHẮC PHỤC</div>
+    <ul>
+      <li><b>Hiện tượng mẫu đất bị trồi qua khe hở đá thấm:</b> Thường xảy ra với bùn sét quá mềm khi gia tải cấp áp lực ban đầu quá lớn. Khắc phục: Phải bắt đầu bằng cấp áp lực nhỏ (12,5 hoặc 25 kPa) để đất đặc chắc lại trước khi tăng tải.</li>
+      <li><b>Kẹt cánh tay đòn bẩy:</b> Khi đất lún nhiều, đòn bẩy bị nghiêng chúc xuống chạm vào khung máy làm mất một phần lực truyền vào mẫu đất. Khắc phục: Phải định kỳ kiểm tra vít cân bằng và nâng nhẹ đòn bẩy về vị trí nằm ngang thăng bằng bọt thủy.</li>
+      <li><b>Bọt khí làm tắc đá thấm:</b> Làm cản trở dòng thoát nước, dẫn đến tốc độ cố kết tính toán bị sai lệch nghiêm trọng. Khắc phục: Luôn luộc sôi đá thấm và ngâm trong nước cất khử khí trước khi tiến hành thí nghiệm.</li>
+    </ul>
+  </div>
+
+  <h2>CÂU HỎI ÔN TẬP VÀ PHIẾU THỰC HÀNH 2</h2>
+  <ol>
+    <li><b>[Nhớ - Bloom 1.0]:</b> Nêu dãy cấp áp lực tiêu chuẩn dùng trong thí nghiệm nén cố kết một chiều Oedometer.</li>
+    <li><b>[Hiểu - Bloom 2.0]:</b> Tại sao trong thí nghiệm nén cố kết Oedometer, đường kính mẫu đất $D = 60\text{ mm}$ nhưng chiều cao mẫu chỉ chọn $H_0 = 20\text{ mm}$ mà không chọn cao hơn?</li>
+    <li><b>[Vận dụng - Bloom 3.0]:</b> Hãy giải thích tại sao các mốc thời gian đọc đồng hồ so biến dạng lại được phân bố theo chuỗi logarithm ($0{,}1, 0{,}25, 0{,}5, 1, 2, ...$) thay vì đọc đều đặn mỗi 10 phút một lần?</li>
+    <li><b>[Phân tích - Bloom 4.0]:</b> Phân tích sự khác biệt cơ bản giữa "biến dạng lún tức thời", "cố kết sơ cấp" và "cố kết thứ cấp" trong quá trình nén của đất sét.</li>
+    <li><b>[Thực hành]:</b> Hoàn thiện bảng số liệu thô thu thập được từ máy nén Oedometer của nhóm và nhập vào <b>Phiếu thực hành số 2</b> trên web portal <a href="https://diemdanhsv.com/cohocdat-tt/index.html">diemdanhsv.com/cohocdat-tt</a>.</li>
+  </ol>
+
+  <div class="ftr">
+    <span>TRƯỜNG ĐH KHTN – ĐHQG-HCM</span>
+  </div>
+</div>
+
+<!-- CHAPTER 3: TUẦN 3 -->
+<div class="page">
+  <div class="hdr">
+    <span>TRƯỜNG ĐH KHTN – KHOA ĐỊA CHẤT</span>
+    <span>GIÁO TRÌNH THỰC TẬP CƠ HỌC ĐẤT (GEO20202)</span>
+    <span>CHƯƠNG 3 – TUẦN 3</span>
+  </div>
+
+  <h1 class="chap-title">CHƯƠNG 3: THEO DÕI BIẾN DẠNG CỐ KẾT &amp; CHUYỂN ĐỔI SỐ DỮ LIỆU ĐỊA KỸ THUẬT<br/>
+  <span style="font-size:13pt; text-transform:none; font-weight:normal; color:#444;">
+  (THEO DÕI CẤP TẢI CAO, CHU TRÌNH DỠ TẢI ĐÀN HỒI &amp; XÂY DỰNG BẢNG TÍNH SỐ HÓA EXCEL/WEB)
+  </span></h1>
+
+  <div class="box muctieu">
+    <div class="bt">MỤC TIÊU HỌC TẬP (CLO &amp; THANG BLOOM)</div>
+    <p class="no-indent">Sau khi hoàn thành chương này, người học có khả năng:</p>
+    <ul>
+      <li><b>1. Về kiến thức (Bloom 3.0):</b> Phân tích quy luật biến dạng của đất dưới các cấp áp lực nén cao (400–800 kPa) và cơ chế hồi phục đàn hồi khi dỡ tải; hiểu sâu sắc tại sao biến dạng của đất là biến dạng đàn dẻo không thuận nghịch (Elastoplastic behavior) (Das &amp; Sobhan, 2022; Trần Văn Việt, 2004).</li>
+      <li><b>2. Về kỹ năng chuyển đổi số (Bloom 4.0):</b> Thiết kế cấu trúc bảng tính kỹ thuật số (Excel/Sheets/JSON) theo chuẩn dữ liệu địa kỹ thuật AGS; lập trình các công thức tự động tính toán chiều cao hạt khoáng $h_s$, hệ số rỗng $e_i$ và biến dạng tích lũy $\Delta h_i$; thực hiện làm sạch dữ liệu và hiệu chuẩn biến dạng thiết bị (Apparatus calibration).</li>
+      <li><b>3. Về ứng dụng thực hành (Bloom 3.5):</b> Nhập liệu và trực quan hóa toàn bộ chuỗi số liệu nén – dỡ tải; kiểm soát tiến độ trên hệ thống web portal; hoàn thành Phiếu thực hành số 3.</li>
+      <li><b>4. Về tư duy phản biện (Bloom 4.0):</b> Phát hiện các điểm dữ liệu dị biệt (Outliers) do rung động cơ học hoặc thay đổi nhiệt độ phòng thí nghiệm; đề xuất phương án hiệu chỉnh toán học chuẩn xác.</li>
+    </ul>
+  </div>
+
+  <div class="box mindmap">
+    <div class="bt">SƠ ĐỒ TƯ DUY NỘI DUNG CHƯƠNG 3</div>
+    <div class="diagram-flow">
+      <div class="diagram-node"><b>1. DIỄN BIẾN CẤP ÁP LỰC CAO (400 - 800 kPa):</b> Áp lực vượt qua sức chống cắt liên kết hạt $\to$ Phá vỡ cấu trúc trầm tích tự nhiên $\to$ Đất bị nén ép chặt chẽ dọc theo đường nén trinh nguyên (Virgin compression line).</div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>2. CHU TRÌNH DỠ TẢI ĐÀN HỒI (800 $\to$ 400 $\to$ 200 $\to$ 100 $\to$ 0 kPa):</b>
+        Giảm tải từng cấp $\to$ Khung hạt nở đàn hồi trở lại $\to$ Độ nở rất bé so với độ lún ban đầu $\to$ Xác định độ dốc đường dỡ tải (Chỉ số hồi phục $C_s$).
+      </div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>3. THUẬT TOÁN CHUYỂN ĐỔI SỐ HÓA HỆ SỐ RỖNG:</b>
+        Khối lượng hạt rắn $M_s = \text{hằng số} \to$ Chiều cao hạt $h_s = \frac{M_s}{A \cdot \rho_s} \to$ Chiều cao mẫu lún $H_i = H_0 - \Delta h_i \to$ Hệ số rỗng tại mọi cấp áp lực $e_i = \frac{H_i - h_s}{h_s} = e_0 - \frac{\Delta h_i}{h_s}$.
+      </div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>4. LÀM SẠCH DỮ LIỆU &amp; TRỰC QUAN HÓA SỐ TRÊN WEB:</b>
+        Hiệu chỉnh độ võng máy nén $\Delta h_{\text{calib}} \to$ Lọc nhiễu thời gian $\to$ Số hóa bảng tính $\to$ Cập nhật hệ thống Phiếu thực hành 3 tại diemdanhsv.com/cohocdat-tt.
+      </div>
+    </div>
+  </div>
+
+  <h2>3.1. QUY LUẬT BIẾN DẠNG Ở CẤP TẢI CAO VÀ CHU TRÌNH DỠ TẢI ĐÀN HỒI</h2>
+  <p>Khi tải trọng nén tăng dần từ $p = 200\text{ kPa}$ lên $400\text{ kPa}$ và đạt cực đại tại $800\text{ kPa}$, ứng suất nén vượt qua khả năng chịu tải liên kết giữa các hạt sét (áp lực tiền cố kết tự nhiên). Cấu trúc khung hạt bị phá vỡ, các hạt sét bị tái sắp xếp lại theo hướng vuông góc với phương lực nén, nước lỗ rỗng bị ép đẩy ra tối đa, hệ số rỗng giảm nhanh chóng theo đường dốc lớn (đường nén trinh nguyên). Giai đoạn này mô phỏng ứng xử của nền đất dưới chân các công trình trọng tải nặng hoặc đê kè đắp cao (Whitlow, 2004; Das &amp; Sobhan, 2022).</p>
+
+  <p>Sau khi kết thúc cấp tải $800\text{ kPa}$ (đã duy trì đủ 24 giờ), thí nghiệm tiến hành <b>chu trình dỡ tải đàn hồi (Unloading / Swelling stage)</b> theo các cấp: $800 \to 400 \to 200 \to 100 \to 0\text{ kPa}$. Mỗi cấp dỡ tải duy trì tối thiểu 4–6 giờ (hoặc 24 giờ) để đọc độ nở của mẫu đất.</p>
+  
+  <p><b>Bản chất vật lý của biến dạng hồi phục:</b> Đất đá trong tự nhiên không phải là vật liệu đàn hồi lý tưởng tuân theo định luật Hooke, mà là <i>vật liệu đàn dẻo phi tuyến (Nonlinear Elastoplastic Material)</i>. Tổng biến dạng lún của đất gồm hai thành phần:</p>
+  
+  <div class="eq">$$\Delta h_{\text{total}} = \Delta h_{\text{plastic}} + \Delta h_{\text{elastic}}$$</div>
+  
+  <p>Trong đó $\Delta h_{\text{plastic}}$ là biến dạng dẻo (biến dạng không thuận nghịch, vĩnh cửu do hạt bị trượt, vỡ và sắp xếp lại kết cấu), chiếm khoảng 80–90% tổng biến dạng lún; còn $\Delta h_{\text{elastic}}$ là biến dạng đàn hồi thuần túy (thuận nghịch do biến dạng đàn hồi của bản thân hạt khoáng và màng nước liên kết), chỉ chiếm 10–20%. Do đó, khi dỡ tải hoàn toàn về $0\text{ kPa}$, mẫu đất chỉ nở hồi phục lại một đoạn rất nhỏ. Độ dốc của đường dỡ tải thể hiện <b>chỉ số nở/hồi phục $C_s$ (Swelling Index)</b>, thường có giá trị nhỏ hơn chỉ số nén $C_c$ từ 5 đến 10 lần ($C_s \approx 0{,}1 - 0{,}2 C_c$).</p>
+
+  <h2>3.2. CƠ SỞ TOÁN HỌC VÀ THUẬT TOÁN CHUYỂN ĐỔI SỐ BẢNG TÍNH ĐỊA KỸ THUẬT</h2>
+  <p>Trước kỷ nguyên chuyển đổi số, sinh viên và kỹ sư phải thực hiện hàng trăm phép tính thủ công bằng máy tính cầm tay, dễ dẫn đến sai số lan truyền và thất lạc dữ liệu. Phương pháp số hóa hiện đại chuẩn hóa toàn bộ thuật toán biến đổi số học theo các bước chặt chẽ sau:</p>
+
+  <div class="step-card">
+    <div class="step-title">Bước 1: Tính toán các đại lượng bất biến của mẫu đất</div>
+    <p>Trong suốt quá trình nén và dỡ tải, khối lượng hạt khoáng rắn $M_s$ và thể tích hạt khoáng rắn $V_s$ là các đại lượng bảo toàn (không thay đổi):</p>
+    <div class="eq">$$M_s = \frac{M_0}{1 + w_0} = \frac{m_{v+d0} - m_v}{1 + w_0}$$</div>
+    <div class="eq">$$h_s = \frac{V_s}{A} = \frac{M_s}{A \times \rho_s}$$</div>
+    <p>Trong đó $A$ là diện tích tiết diện ngang của dao vòng ($A = \frac{\pi D^2}{4}$), $\rho_s$ là khối lượng riêng hạt đất determined từ thí nghiệm bình tỷ trọng (Chương 1). $h_s$ được gọi là <b>chiều cao quy đổi của pha rắn</b> (cm).</p>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Bước 2: Xác định hệ số rỗng ban đầu $e_0$</div>
+    <p>Chiều cao phần lỗ rỗng ban đầu của mẫu đất:</p>
+    <div class="eq">$$h_{v0} = H_0 - h_s$$</div>
+    <div class="eq">$$e_0 = \frac{h_{v0}}{h_s} = \frac{H_0 - h_s}{h_s}$$</div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Bước 3: Thuật toán tính toán hệ số rỗng $e_i$ tại cấp áp lực $p_i$ bất kỳ</div>
+    <p>Gọi $R_0$ là chỉ số đọc đồng hồ so ban đầu trước khi gia tải (mm), $R_i$ là chỉ số đọc đồng hồ so sau 24 giờ ở cấp tải $p_i$ (mm). Biến dạng nén tích lũy của mẫu đất:</p>
+    <div class="eq">$$\Delta h_i = R_i - R_0\quad (\text{mm})$$</div>
+    <p>Chiều cao của mẫu đất tại cuối cấp áp lực $p_i$:</p>
+    <div class="eq">$$H_i = H_0 - \Delta h_i\quad (\text{mm})$$</div>
+    <p>Chiều cao lỗ rỗng tương ứng:</p>
+    <div class="eq">$$h_{vi} = H_i - h_s = (H_0 - \Delta h_i) - h_s$$</div>
+    <p>Hệ số rỗng $e_i$ tương ứng cấp áp lực $p_i$ được tính bằng công thức lập trình tự động trên ô Excel:</p>
+    <div class="eq">$$e_i = \frac{h_{vi}}{h_s} = \frac{H_i - h_s}{h_s} = e_0 - \frac{\Delta h_i}{h_s}$$</div>
+    <p>Hoặc tính qua độ biến dạng tỷ đối $\varepsilon_i = \frac{\Delta h_i}{H_0}$:</p>
+    <div class="eq">$$e_i = e_0 - \varepsilon_i \times (1 + e_0)$$</div>
+  </div>
+
+  <h2>3.3. HIỆU CHUẨN ĐỘ VÕNG THIẾT BỊ NÉN (APPARATUS COMPRESSIBILITY)</h2>
+  <p>Ở các cấp áp lực nén rất cao (400, 800 kPa), bản thân các viên đá thấm xốp, giấy thấm và các khớp nối cơ học của máy nén Oedometer cũng bị nén đàn hồi một lượng nhỏ $\Delta h_{\text{calib}}$. Nếu không hiệu chuẩn, số đọc đồng hồ so sẽ ghi nhận cả biến dạng của thiết bị, làm giá trị lún của đất bị phóng đại.</p>
+  <div class="box note">
+    <div class="bt">QUY TRÌNH THỰC HIỆN THÍ NGHIỆM MẪU GIẢ (BLANK CALIBRATION)</div>
+    <p class="no-indent">Thay mẫu đất bằng một khối trụ thép hoặc nhôm chuẩn (hoàn toàn không biến dạng dưới tải trọng thường) có cùng kích thước $D=60\text{ mm}, H=20\text{ mm}$. Kẹp khối trụ giữa hai viên đá thấm ướt và giấy thấm trong buồng nén. Gia tải theo đúng các cấp áp lực $25 \to 800\text{ kPa}$ và ghi nhận độ võng của thiết bị $\Delta h_{\text{app}}(p_i)$.</p>
+    <p class="no-indent">Số liệu biến dạng thực của mẫu đất được làm sạch theo công thức số hóa:</p>
+    <div class="eq">$$\Delta h_{\text{true}}(p_i) = \Delta h_{\text{measured}}(p_i) - \Delta h_{\text{app}}(p_i)$$</div>
+  </div>
+
+  <h2>3.4. BẢNG DỮ LIỆU SỐ HÓA VÀ KẾT QUẢ THÍ NGHIỆM ĐIỂN HÌNH</h2>
+  <p class="tcap">Bảng 3.1. Bảng tính chuyển đổi số toàn diện thí nghiệm nén cố kết (Mẫu Sét ST-01, $H_0 = 20{,}00\text{ mm}, D = 60{,}0\text{ mm}, G_s = 2{,}70, w_0 = 36{,}8\%, m_{v+d0} = 153{,}20\text{ g}, m_v = 45{,}20\text{ g}$)</p>
+  <table class="t-data">
+    <thead>
+      <tr>
+        <th>Giai đoạn</th>
+        <th>Áp lực nén $p$ (kPa)</th>
+        <th>Chỉ số đồng hồ $R_i$ (mm)</th>
+        <th>Lún đo được $\Delta h_{\text{meas}}$ (mm)</th>
+        <th>Hiệu chỉnh máy $\Delta h_{\text{app}}$ (mm)</th>
+        <th>Lún thực $\Delta h$ (mm)</th>
+        <th>Chiều cao mẫu $H_i$ (mm)</th>
+        <th>Hệ số rỗng $e_i$</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="center">Ban đầu</td>
+        <td class="center">0</td>
+        <td class="center">0,000</td>
+        <td class="center">0,000</td>
+        <td class="center">0,000</td>
+        <td class="center">0,000</td>
+        <td class="center">20,000</td>
+        <td class="center bold">0,925</td>
+      </tr>
+      <tr>
+        <td rowspan="6" class="center bold" style="background:#f5f8ff">Gia tải<br/>(Loading)</td>
+        <td class="center">25</td>
+        <td class="center">0,145</td>
+        <td class="center">0,145</td>
+        <td class="center">0,005</td>
+        <td class="center">0,140</td>
+        <td class="center">19,860</td>
+        <td class="center bold">0,912</td>
+      </tr>
+      <tr>
+        <td class="center">50</td>
+        <td class="center">0,325</td>
+        <td class="center">0,325</td>
+        <td class="center">0,010</td>
+        <td class="center">0,315</td>
+        <td class="center">19,685</td>
+        <td class="center bold">0,895</td>
+      </tr>
+      <tr>
+        <td class="center">100</td>
+        <td class="center">0,655</td>
+        <td class="center">0,655</td>
+        <td class="center">0,018</td>
+        <td class="center">0,637</td>
+        <td class="center">19,363</td>
+        <td class="center bold">0,864</td>
+      </tr>
+      <tr>
+        <td class="center">200</td>
+        <td class="center">1,220</td>
+        <td class="center">1,220</td>
+        <td class="center">0,028</td>
+        <td class="center">1,192</td>
+        <td class="center">18,808</td>
+        <td class="center bold">0,810</td>
+      </tr>
+      <tr>
+        <td class="center">400</td>
+        <td class="center">2,080</td>
+        <td class="center">2,080</td>
+        <td class="center">0,042</td>
+        <td class="center">2,038</td>
+        <td class="center">17,962</td>
+        <td class="center bold">0,729</td>
+      </tr>
+      <tr>
+        <td class="center">800</td>
+        <td class="center">3,110</td>
+        <td class="center">3,110</td>
+        <td class="center">0,060</td>
+        <td class="center">3,050</td>
+        <td class="center">16,950</td>
+        <td class="center bold">0,631</td>
+      </tr>
+      <tr>
+        <td rowspan="4" class="center bold" style="background:#fffaf0">Dỡ tải<br/>(Unloading)</td>
+        <td class="center">400</td>
+        <td class="center">3,020</td>
+        <td class="center">3,020</td>
+        <td class="center">0,042</td>
+        <td class="center">2,978</td>
+        <td class="center">17,022</td>
+        <td class="center bold">0,638</td>
+      </tr>
+      <tr>
+        <td class="center">200</td>
+        <td class="center">2,880</td>
+        <td class="center">2,880</td>
+        <td class="center">0,028</td>
+        <td class="center">2,852</td>
+        <td class="center">17,148</td>
+        <td class="center bold">0,650</td>
+      </tr>
+      <tr>
+        <td class="center">100</td>
+        <td class="center">2,710</td>
+        <td class="center">2,710</td>
+        <td class="center">0,018</td>
+        <td class="center">2,692</td>
+        <td class="center">17,308</td>
+        <td class="center bold">0,666</td>
+      </tr>
+      <tr>
+        <td class="center">0</td>
+        <td class="center">2,520</td>
+        <td class="center">2,520</td>
+        <td class="center">0,000</td>
+        <td class="center">2,520</td>
+        <td class="center">17,480</td>
+        <td class="center bold">0,682</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box vidu">
+    <div class="bt">HƯỚNG DẪN CÔNG THỨC EXCEL ĐỂ SINH VIÊN TỰ ĐỘNG HÓA</div>
+    <p class="no-indent">Giả sử ô <b>C2</b> chứa $H_0 = 20$, ô <b>C3</b> chứa $A = 28{,}27$, ô <b>C4</b> chứa $\rho_s = 2{,}70$, ô <b>C5</b> chứa $M_s = 78{,}95$.</p>
+    <ul>
+      <li>Ô tính chiều cao hạt $h_s$: <code>=C5/(C3*C4)</code> (Kết quả: $10{,}385\text{ mm} = 1{,}0385\text{ cm}$).</li>
+      <li>Ô tính hệ số rỗng ban đầu $e_0$: <code>=(C2-h_s)/h_s</code> (Kết quả: $0{,}925$).</li>
+      <li>Cột Lún thực (ô F8): <code>=D8-E8</code> (Lún đo trừ hiệu chỉnh máy).</li>
+      <li>Cột Hệ số rỗng $e_i$ (ô H8): <code>=$e$0-(F8/h_s)</code>. Kéo công thức xuống toàn bộ bảng, kết quả tự động cập nhật chính xác tuyệt đối.</li>
+    </ul>
+  </div>
+
+  <h2>CÂU HỎI ÔN TẬP VÀ PHIẾU THỰC HÀNH 3</h2>
+  <ol>
+    <li><b>[Nhớ - Bloom 1.0]:</b> Nêu định nghĩa chiều cao quy đổi của hạt khoáng rắn $h_s$ và giải thích tại sao $h_s$ không đổi trong suốt quá trình nén?</li>
+    <li><b>[Hiểu - Bloom 2.0]:</b> Tại sao khi dỡ tải từ $800\text{ kPa}$ về $0\text{ kPa}$, hệ số rỗng của mẫu đất trong Bảng 3.1 chỉ hồi phục từ $0{,}631$ lên $0{,}682$ mà không quay trở về giá trị ban đầu $e_0 = 0{,}925$?</li>
+    <li><b>[Vận dụng - Bloom 3.0]:</b> Một sinh viên quên trừ biến dạng của thiết bị $\Delta h_{\text{app}}$ ở cấp tải $800\text{ kPa}$. Hãy cho biết giá trị hệ số rỗng $e$ tính ra sẽ lớn hơn hay nhỏ hơn giá trị thực? Giải thích định lượng.</li>
+    <li><b>[Phân tích - Bloom 4.0]:</b> So sánh ưu thế của việc chuyển đổi số dữ liệu địa kỹ thuật so với phương pháp ghi chép nhật trình truyền thống đối với công tác kiểm soát chất lượng dữ liệu dự án xây dựng.</li>
+    <li><b>[Thực hành]:</b> Tải file mẫu bảng tính số hóa từ web portal, nhập số liệu nén và dỡ tải của nhóm mình, hoàn thành <b>Phiếu thực hành số 3</b> trên trang web <a href="https://diemdanhsv.com/cohocdat-tt/index.html">diemdanhsv.com/cohocdat-tt</a>.</li>
+  </ol>
+
+  <div class="ftr">
+    <span>TRƯỜNG ĐH KHTN – ĐHQG-HCM</span>
+  </div>
+</div>
+
+<!-- CHAPTER 4: TUẦN 4 -->
+<div class="page">
+  <div class="hdr">
+    <span>TRƯỜNG ĐH KHTN – KHOA ĐỊA CHẤT</span>
+    <span>GIÁO TRÌNH THỰC TẬP CƠ HỌC ĐẤT (GEO20202)</span>
+    <span>CHƯƠNG 4 – TUẦN 4</span>
+  </div>
+
+  <h1 class="chap-title">CHƯƠNG 4: XỬ LÝ DỮ LIỆU CỐ KẾT CHUYÊN SÂU<br/>
+  <span style="font-size:13pt; text-transform:none; font-weight:normal; color:#444;">
+  (DỰNG ĐƯỜNG CONG NÉN LÚN $e - \log p$, XÁC ĐỊNH $p_c$, $OCR$, $C_c$, $C_s$ VÀ HỆ SỐ CỐ KẾT $c_v$)
+  </span></h1>
+
+  <div class="box muctieu">
+    <div class="bt">MỤC TIÊU HỌC TẬP (CLO &amp; THANG BLOOM)</div>
+    <p class="no-indent">Sau khi hoàn thành chương này, người học có khả năng:</p>
+    <ul>
+      <li><b>1. Về kiến thức lý thuyết (Bloom 3.5):</b> Hiểu sâu sắc ý nghĩa địa chất – cơ học của áp lực tiền cố kết $p_c$ ($\sigma'_p$) và lịch sử ứng suất của nền đất; phân biệt rạch ròi ba trạng thái cố kết: Cố kết bình thường (NC), Quá cố kết (OC) và Chưa cố kết hoàn toàn (UC) thông qua chỉ số $OCR$ (Das &amp; Sobhan, 2022; Lê Quý An et al., 1995).</li>
+      <li><b>2. Về kỹ năng giải đoán đồ thị số (Bloom 4.5):</b> Dựng chuẩn xác đường cong nén lún $e - \log p$ trên tọa độ bán logarithm; áp dụng thuần thục phương pháp hình học Casagrande (1936) và Pacheco Silva (1970) để xác định $p_c$; tính toán chính xác chỉ số nén $C_c$, chỉ số nở $C_s$, hệ số nén thể tích $m_v$.</li>
+      <li><b>3. Về xác định tốc độ cố kết (Bloom 4.0):</b> Giải đoán đồ thị thời gian theo phương pháp Casagrande ($\log t$) và phương pháp Taylor ($\sqrt{t}$) để xác định $t_{50}, t_{90}$, từ đó tính toán chính xác hệ số cố kết $c_v$ phục vụ bài toán dự báo lún.</li>
+      <li><b>4. Về năng lực số hóa (Bloom 4.0):</b> Lập trình thuật toán đồ họa trên Excel/Python để tự động tìm tiếp tuyến và giao điểm; hoàn thành Phiếu thực hành số 4.</li>
+    </ul>
+  </div>
+
+  <div class="box mindmap">
+    <div class="bt">SƠ ĐỒ TƯ DUY NỘI DUNG CHƯƠNG 4</div>
+    <div class="diagram-flow">
+      <div class="diagram-node"><b>1. DỰNG ĐỒ THỊ $e - \log p$:</b> Trục hoành $\log p$ (chu kỳ log: 10, 100, 1000 kPa), trục tung $e$ (tỷ lệ đều) $\to$ Nối các điểm thực nghiệm tạo đường cong nén - dỡ tải.</div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>2. XÁC ĐỊNH ÁP LỰC TIỀN CỐ KẾT $p_c$ (CASAGRANDE 1936):</b>
+        Tìm điểm $T$ có độ cong lớn nhất $\to$ Kẻ đường ngang $\to$ Kẻ tiếp tuyến $\to$ Kẻ phân giác $\to$ Kéo dài đoạn nén trinh nguyên cắt phân giác tại $K \to$ Chiếu xuống hoành độ tìm $p_c$.
+      </div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>3. ĐÁNH GIÁ LỊCH SỬ ỨNG SUẤT &amp; CÁC CHỈ SỐ NÉN:</b>
+        $OCR = \frac{p_c}{\sigma'_{v0}} \to$ Phân loại đất (NC: $OCR \approx 1$, OC: $OCR > 1$) $\to$ Tính chỉ số nén $C_c = -\frac{\Delta e}{\Delta \log p}$, chỉ số nở $C_s$, hệ số nén thể tích $m_v$.
+      </div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>4. XÁC ĐỊNH HỆ SỐ CỐ KẾT $c_v$:</b>
+        Phương pháp Casagrande ($\log t \to d_0, d_{100}, d_{50} \to t_{50} \to c_v = \frac{0{,}197 H_{dr}^2}{t_{50}}$) &amp; Phương pháp Taylor ($\sqrt{t} \to \sqrt{t_{90}} \to c_v = \frac{0{,}848 H_{dr}^2}{t_{90}}$).
+      </div>
+    </div>
+  </div>
+
+  <h2>4.1. PHƯƠNG PHÁP XÂY DỰNG ĐƯỜNG CONG NÉN LÚN $e - \log p$</h2>
+  <p>Đường cong nén lún biểu diễn mối quan hệ giữa hệ số rỗng $e$ và áp lực nén thẳng đứng hữu hiệu $p$ (hoặc $\sigma'_v$). Do áp lực $p$ biến thiên trong một phạm vi rất rộng (từ $25\text{ kPa}$ đến $800 - 1600\text{ kPa}$), nếu vẽ trên hệ trục tọa độ Decartes thông thường, đường cong sẽ có dạng hyperbol dốc đứng ở đoạn đầu và nằm ngang ở đoạn sau, rất khó quan sát và giải đoán. Vì vậy, theo thông lệ quốc tế và tiêu chuẩn TCVN 4200:2012, đường cong nén lún luôn được biểu diễn trên <b>hệ trục tọa độ bán logarithm (Semi-logarithmic plot)</b>:</p>
+  <ul>
+    <li><b>Trục hoành (Trục hoành độ $X$):</b> Biểu diễn áp lực nén hữu hiệu $p$ theo thang đo logarithm cơ số 10 ($\log_{10} p$), đơn vị là $\text{kPa}$. Thang đo thường gồm 2 hoặc 3 chu kỳ logarit ($10 - 100\text{ kPa}$, $100 - 1000\text{ kPa}$, $1000 - 10000\text{ kPa}$).</li>
+    <li><b>Trục tung (Trục tung độ $Y$):</b> Biểu diễn hệ số rỗng $e$ theo tỷ lệ tuyến tính số học đều đặn (Arithmetical scale), thường chọn tỷ lệ sao cho độ dốc của đoạn nén trinh nguyên nghiêng khoảng $30^\circ - 45^\circ$ để dễ giải đoán hình học.</li>
+  </ul>
+
+  <h2>4.2. KỸ THUẬT HÌNH HỌC XÁC ĐỊNH ÁP LỰC TIỀN CỐ KẾT $p_c$</h2>
+  <p><b>Áp lực tiền cố kết $p_c$ (Preconsolidation pressure / $\sigma'_p$):</b> Là giá trị ứng suất hữu hiệu lớn nhất mà mẫu đất đã từng trải qua trong toàn bộ lịch sử địa chất hình thành của nó (Casagrande, 1936; Trần Văn Việt, 2004). Đây là một trong những tham số địa kỹ thuật quan trọng nhất của đất sét, quyết định hoàn toàn phương trình tính toán độ lún của công trình.</p>
+
+  <div class="step-card">
+    <div class="step-title">Phương pháp hình học Casagrande (1936) – Chuẩn mực quốc tế</div>
+    <p>Quy trình thực hiện gồm 6 thao tác hình học chuẩn xác:</p>
+    <ol>
+      <li>Trên đường cong nén $e - \log p$, xác định bằng mắt hoặc bằng thuật toán đạo hàm điểm $T$ có <i>bán kính cong nhỏ nhất</i> (tức là điểm có độ cong uốn lớn nhất, nằm ở vị trí chuyển tiếp giữa đoạn nén chậm ban đầu và đoạn dốc nén nhanh).</li>
+      <li>Qua điểm $T$, kẻ một đường thẳng nằm ngang $T H$ (song song với trục hoành).</li>
+      <li>Qua điểm $T$, kẻ một đường tiếp tuyến $T L$ với nhánh cong của đồ thị.</li>
+      <li>Vẽ đường phân giác $T B$ của góc tạo bởi đường nằm ngang và đường tiếp tuyến (góc $\angle H T L$).</li>
+      <li>Kéo dài đoạn đường thẳng dốc phía sau của đường cong nén (gọi là <b>Đường nén trinh nguyên – Virgin Compression Line</b>). Đoạn thẳng kéo dài này sẽ cắt đường phân giác $T B$ tại một điểm, ký hiệu là điểm $K$.</li>
+      <li>Từ điểm $K$, dóng một đường thẳng đứng vuông góc xuống trục hoành. Giá trị đọc được trên thang đo logarithm của trục hoành chính là <b>áp lực tiền cố kết $p_c$</b> (kPa).</li>
+    </ol>
+  </div>
+
+  <h2>4.3. ĐÁNH GIÁ LỊCH SỬ ỨNG SUẤT VÀ TỶ SỐ TIỀN CỐ KẾT ($OCR$)</h2>
+  <p>Sau khi xác định được $p_c$, kỹ sư tiến hành so sánh $p_c$ với ứng suất hiệu dụng hiện tại do trọng lượng bản thân các lớp đất phía trên gây ra tại độ sâu lấy mẫu ($\sigma'_{v0} = \sum \gamma'_i h_i$). Tỷ số giữa chúng được định nghĩa là <b>Tỷ số tiền cố kết OCR (Overconsolidation Ratio)</b>:</p>
+
+  <div class="eq">$$OCR = \frac{p_c}{\sigma'_{v0}}$$</div>
+
+  <p class="tcap">Bảng 4.1. Phân loại trạng thái lịch sử ứng suất nền đất dựa trên chỉ số OCR</p>
+  <table class="t-data">
+    <thead>
+      <tr>
+        <th style="width:20%">Trạng thái đất</th>
+        <th style="width:15%">Giá trị $OCR$</th>
+        <th style="width:35%">Bản chất địa chất &amp; Đặc điểm cơ học</th>
+        <th style="width:30%">Ứng xử khi chịu tải công trình</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>Đất cố kết bình thường</b><br/>(Normally Consolidated - NC)</td>
+        <td class="center bold">$OCR \approx 1{,}0$<br/>($0{,}9 \le OCR \le 1{,}1$)</td>
+        <td>Ứng suất hữu hiệu hiện tại $\sigma'_{v0}$ chính là ứng suất lớn nhất trong lịch sử. Đất chưa từng chịu tải trọng nào lớn hơn.</td>
+        <td>Khi công trình xây dựng đè thêm tải $\Delta \sigma$, đất lập tức bị lún dọc theo đường nén trinh nguyên $\to$ <b>Độ lún rất lớn, tốc độ lún chậm</b>.</td>
+      </tr>
+      <tr>
+        <td><b>Đất quá cố kết</b><br/>(Overconsolidated - OC)</td>
+        <td class="center bold">$OCR > 1{,}0$<br/>(thường $1{,}5 - 10$)</td>
+        <td>Trong quá khứ, đất từng chịu tải trọng lớn hơn hiện tại do các lớp đất đá phía trên đã bị xói mòn bào mòn, hoặc do mực nước ngầm từng hạ thấp.</td>
+        <td>Nếu tải trọng công trình gia tăng còn nằm dưới $p_c$ ($\\sigma'_{v0} + \Delta \sigma \le p_c$), đất lún theo chỉ số nở $C_s$ $\to$ <b>Độ lún rất nhỏ, nền đất rất an toàn</b>.</td>
+      </tr>
+      <tr>
+        <td><b>Đất chưa cố kết hoàn toàn</b><br/>(Underconsolidated - UC)</td>
+        <td class="center bold">$OCR < 1.0$<br/>($OCR < 0.8$)</td>
+        <td>Đất mới lắng đọng tại các bãi bồi, cửa sông ven biển, bùn nạo vét. Áp lực nước lỗ rỗng thặng dư vẫn chưa tiêu tán hết dưới trọng lượng bản thân.</td>
+        <td><b>Rất nguy hiểm</b>: Ngay cả khi chưa xây công trình, nền đất vẫn tự lún theo thời gian; gây ra hiện tượng <i>ma sát âm</i> nguy hiểm cho cọc móng.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4.4. XÁC ĐỊNH CHỈ SỐ NÉN LÚN $C_c$, CHỈ SỐ NỞ $C_s$ VÀ HỆ SỐ NÉN THỂ TÍCH $m_v$</h2>
+  
+  <h3>1. Chỉ số nén lún $C_c$ (Compression Index)</h3>
+  <p>Chỉ số nén lún $C_c$ chính là độ dốc của đoạn đường thẳng nén trinh nguyên trên đồ thị $e - \log p$. Chọn hai điểm bất kỳ $(p_1, e_1)$ và $(p_2, e_2)$ trên đoạn thẳng dốc này:</p>
+  <div class="eq">$$C_c = -\frac{e_1 - e_2}{\log p_2 - \log p_1} = \frac{e_1 - e_2}{\log (p_2 / p_1)}$$</div>
+  <p>Trong thực tế khảo sát, các công thức tương quan kinh nghiệm thường được sử dụng để kiểm tra chéo giá trị $C_c$ thí nghiệm với giới hạn chảy $W_L$:</p>
+  <ul>
+    <li>Công thức Skempton (1944) cho đất sét nguyên dạng: $C_c \approx 0{,}009 \times (W_L - 10)$.</li>
+    <li>Công thức Terzaghi &amp; Peck (1967) cho đất sét xáo động nhào lại: $C_c \approx 0{,}007 \times (W_L - 10)$.</li>
+  </ul>
+
+  <h3>2. Chỉ số nở / hồi phục $C_s$ (Swelling / Recompression Index)</h3>
+  <p>Chỉ số nở $C_s$ (hoặc $C_r$) là độ dốc trung bình của đường cong dỡ tải đàn hồi:</p>
+  <div class="eq">$$C_s = -\frac{e_3 - e_4}{\log p_4 - \log p_3} = \frac{e_4 - e_3}{\log (p_3 / p_4)}$$</div>
+  <p>Thông thường đối với đất sét Việt Nam: $C_s \approx \frac{1}{5} C_c$ đến $\frac{1}{10} C_c$.</p>
+
+  <h3>3. Hệ số nén thể tích $m_v$ (Coefficient of Volume Compressibility)</h3>
+  <p>Hệ số nén thể tích thể hiện lượng biến dạng thể tích tương đối trên một đơn vị gia tăng áp lực hữu hiệu trong một khoảng tải trọng từ $p_1$ đến $p_2$:</p>
+  <div class="eq">$$a_v = -\frac{e_2 - e_1}{p_2 - p_1} = \frac{e_1 - e_2}{p_2 - p_1}\quad (\text{kPa}^{-1}\text{ hoặc }\text{cm}^2/\text{N})$$</div>
+  <div class="eq">$$m_v = \frac{a_v}{1 + e_0} = \frac{e_1 - e_2}{(1 + e_0)(p_2 - p_1)}\quad (\text{kPa}^{-1}\text{ hoặc }\text{m}^2/\text{MN})$$</div>
+
+  <h2>4.5. PHƯƠNG PHÁP XÁC ĐỊNH HỆ SỐ CỐ KẾT $c_v$</h2>
+  <p>Hệ số cố kết $c_v$ (Coefficient of Consolidation, đơn vị $\text{cm}^2/\text{s}$ hoặc $\text{m}^2/\text{năm}$) là thông số cơ học đặc trưng cho tốc độ tiêu tán áp lực nước lỗ rỗng và tốc độ hoàn thành độ lún của đất nền theo thời gian. Tiêu chuẩn ASTM D2435 và TCVN 4200 quy định hai phương pháp đồ họa số để xác định $c_v$ từ đường cong biến dạng theo thời gian của một cấp áp lực:</p>
+
+  <div class="step-card">
+    <div class="step-title">Phương pháp 1: Phương pháp Casagrande (Đồ thị biến dạng – Logarithm thời gian $\log t$)</div>
+    <ol>
+      <li>Vẽ đồ thị chuyển vị lún $R_t$ theo trục hoành $\log t$. Đường cong thực tế có dạng chữ S ngược.</li>
+      <li><b>Xác định điểm kết thúc cố kết sơ cấp $d_{100}$:</b> Kẻ hai đường tiếp tuyến thẳng: một đường tiếp tuyến với đoạn dốc chuyển tiếp của đường cong nén và một đường tiếp tuyến với nhánh tiệm cận nằm ngang phía sau (giai đoạn cố kết thứ cấp). Giao điểm của hai đường tiếp tuyến này dóng sang trục tung cho giá trị biến dạng $d_{100}$ (hoàn thành 100% cố kết sơ cấp).</li>
+      <li><b>Xác định điểm biến dạng lý thuyết ban đầu $d_0$:</b> Trên đoạn cong ban đầu, chọn thời điểm $t_1$ (ví dụ 0,1 phút). Chọn thời điểm $t_2 = 4 t_1$ (0,4 phút). Khoảng cách biến dạng giữa $t_1$ và $t_2$ là $\Delta d = R(t_2) - R(t_1)$. Từ điểm $R(t_1)$, lấy ngược lên phía trên một đoạn bằng đúng $\Delta d$, điểm nhận được chính là $d_0$ (thời điểm 0% cố kết sơ cấp, đã loại bỏ lún nén khí tức thời).</li>
+      <li><b>Xác định thời gian đạt 50% cố kết $t_{50}$:</b> Tính biến dạng tại mức cố kết 50%:
+        <div class="eq">$$d_{50} = \frac{d_0 + d_{100}}{2}$$</div>
+        Từ $d_{50}$ trên trục tung, dóng nằm ngang cắt đường cong thực nghiệm, sau đó dóng thẳng đứng xuống trục hoành thu được thời gian $t_{50}$ (phút).
+      </li>
+      <li><b>Tính hệ số cố kết $c_v$:</b> Dựa trên lý thuyết Terzaghi với nhân tố thời gian $T_{50} = 0{,}197$:
+        <div class="eq">$$c_v = \frac{T_{50} \times H_{dr}^2}{t_{50}} = \frac{0{,}197 \times H_{dr}^2}{t_{50}}$$</div>
+        (trong đó $H_{dr} = \frac{H_{\text{tb}}}{2} = \frac{H_0 - \Delta h_{\text{tb}}}{2}$ là chiều dài đường thấm lớn nhất đối với điều kiện thoát nước hai mặt).
+      </li>
+    </ol>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Phương pháp 2: Phương pháp Taylor (Đồ thị biến dạng – Căn bậc hai thời gian $\sqrt{t}$)</div>
+    <ol>
+      <li>Vẽ đồ thị biến dạng $R_t$ theo trục hoành là $\sqrt{t}$ (với $t$ tính bằng phút).</li>
+      <li>Đoạn đầu của đồ thị là một đường thẳng. Kẻ đường thẳng tiếp tuyến kéo dài cắt trục tung tại điểm $d_0$.</li>
+      <li>Từ điểm $d_0$, vẽ một đường thẳng thứ hai có hệ số góc nghịch đảo bằng $1{,}15$ lần hệ số góc của đường thẳng ban đầu (tức là tại cùng một tung độ biến dạng, hoành độ của đường thẳng thứ hai bằng $1{,}15$ lần hoành độ đường thẳng ban đầu).</li>
+      <li>Đường thẳng thứ hai này cắt đường cong thực nghiệm tại một điểm. Tung độ điểm này tương ứng với mức cố kết 90% ($d_{90}$), và hoành độ tương ứng chính là giá trị $\sqrt{t_{90}}$. Bình phương giá trị này để thu được thời gian $t_{90}$.</li>
+      <li><b>Tính hệ số cố kết $c_v$:</b> Với nhân tố thời gian $T_{90} = 0{,}848$:
+        <div class="eq">$$c_v = \frac{T_{90} \times H_{dr}^2}{t_{90}} = \frac{0{,}848 \times H_{dr}^2}{t_{90}}$$</div>
+      </li>
+    </ol>
+  </div>
+
+  <div class="box vidu">
+    <div class="bt">VÍ DỤ TÍNH TOÁN TOÀN DIỆN THÔNG SỐ CỐ KẾT TỪ SỐ LIỆU THỰC NGHIỆM</div>
+    <p class="no-indent"><b>Số liệu từ Bảng 3.1:</b> Mẫu sét tại độ sâu $8{,}5\text{ m}$ có ứng suất bản thân $\sigma'_{v0} = 85{,}0\text{ kPa}$. Đường cong $e - \log p$ thu được các cặp điểm: $(25\text{ kPa}, 0{,}912)$, $(50\text{ kPa}, 0{,}895)$, $(100\text{ kPa}, 0{,}864)$, $(200\text{ kPa}, 0{,}810)$, $(400\text{ kPa}, 0{,}729)$, $(800\text{ kPa}, 0{,}631)$. Đường dỡ tải từ $800\text{ kPa}$ về $100\text{ kPa}$ có $e$ tăng từ $0{,}631$ lên $0{,}666$.</p>
+    <p class="no-indent"><b>Thực hiện giải đoán hình học:</b></p>
+    <ol>
+      <li><b>Xác định $p_c$ theo Casagrande:</b> Điểm uốn có độ cong lớn nhất nằm tại lân cận $p = 100 - 150\text{ kPa}$. Kẻ phân giác và giao điểm với đường nén trinh nguyên cho kết quả:
+        <div class="eq">$$p_c = 135{,}0\text{ kPa}$$</div>
+      </li>
+      <li><b>Tính tỷ số tiền cố kết $OCR$:</b>
+        <div class="eq">$$OCR = \frac{p_c}{\sigma'_{v0}} = \frac{135{,}0}{85{,}0} = 1{,}588 > 1{,}0$$</div>
+        $\to$ Kết luận: Lớp đất ở trạng thái <b>Quá cố kết nhẹ (Slightly Overconsolidated - OC)</b>.
+      </li>
+      <li><b>Tính chỉ số nén lún $C_c$ trên đoạn nén trinh nguyên ($200 \to 800\text{ kPa}$):</b>
+        <div class="eq">$$C_c = \frac{e_{200} - e_{800}}{\log 800 - \log 200} = \frac{0{,}810 - 0{,}631}{\log(800/200)} = \frac{0{,}179}{\log 4} = \frac{0{,}179}{0{,}602} = 0{,}297$$</div>
+      </li>
+      <li><b>Tính chỉ số hồi phục $C_s$ trên nhánh dỡ tải ($800 \to 100\text{ kPa}$):</b>
+        <div class="eq">$$C_s = \frac{e_{100} - e_{800}}{\log 800 - \log 100} = \frac{0{,}666 - 0{,}631}{\log(800/100)} = \frac{0{,}035}{\log 8} = \frac{0{,}035}{0{,}903} = 0{,}0387$$</div>
+        Nhận xét: $C_s / C_c = 0{,}0387 / 0{,}297 = 0{,}130 \approx 1/7{,}7$ (hoàn toàn phù hợp quy luật thực tế).
+      </li>
+      <li><b>Tính hệ số cố kết $c_v$ ở cấp tải $100\text{ kPa}$ (từ Bảng 2.1):</b>
+        Từ đồ thị $\log t$ xác định được $t_{50} = 14{,}5\text{ phút} = 870\text{ s}$. Chiều cao mẫu trung bình $H_{\text{tb}} = 19{,}36\text{ mm} \to H_{dr} = 0{,}968\text{ cm}$.
+        <div class="eq">$$c_v = \frac{0{,}197 \times (0{,}968)^2}{870} = \frac{0{,}1846}{870} = 2{,}12 \times 10^{-4}\text{ cm}^2/\text{s} = 2{,}12 \times 10^{-4} \times 10^{-4} \times 31\,557\,600 = 0{,}669\text{ m}^2/\text{năm}$$</div>
+      </li>
+    </ol>
+  </div>
+
+  <h2>CÂU HỎI ÔN TẬP VÀ PHIẾU THỰC HÀNH 4</h2>
+  <ol>
+    <li><b>[Nhớ - Bloom 1.0]:</b> Nêu định nghĩa áp lực tiền cố kết $p_c$ và phân loại 3 trạng thái của đất theo giá trị $OCR$.</li>
+    <li><b>[Hiểu - Bloom 2.0]:</b> Tại sao khi xây dựng công trình trên nền đất quá cố kết (OC) với tải trọng gia tăng $\Delta \sigma < p_c - \sigma'_{v0}$, độ lún của công trình lại rất nhỏ và diễn ra rất nhanh?</li>
+    <li><b>[Vận dụng - Bloom 3.5]:</b> Trình bày chi tiết từng bước dựng hình học theo phương pháp Casagrande để xác định $p_c$. Bước nào dễ gây ra sai số chủ quan nhất giữa các kỹ sư?</li>
+    <li><b>[Phân tích - Bloom 4.0]:</b> So sánh ưu nhược điểm của phương pháp Casagrande ($\log t$) và phương pháp Taylor ($\sqrt{t}$) trong việc xác định hệ số cố kết $c_v$. Khi đồ thị $\log t$ không xuất hiện rõ nhánh tiệm cận thứ cấp thì nên ưu tiên phương pháp nào?</li>
+    <li><b>[Thực hành]:</b> Dựng đường cong $e - \log p$ của nhóm mình trên công cụ đồ họa số, xác định các thông số $p_c, OCR, C_c, C_s, c_v$ và nộp <b>Phiếu thực hành số 4</b> trên <a href="https://diemdanhsv.com/cohocdat-tt/index.html">diemdanhsv.com/cohocdat-tt</a>.</li>
+  </ol>
+
+  <div class="ftr">
+    <span>TRƯỜNG ĐH KHTN – ĐHQG-HCM</span>
+  </div>
+</div>
+
+<!-- CHAPTER 5: TUẦN 5 -->
+<div class="page">
+  <div class="hdr">
+    <span>TRƯỜNG ĐH KHTN – KHOA ĐỊA CHẤT</span>
+    <span>GIÁO TRÌNH THỰC TẬP CƠ HỌC ĐẤT (GEO20202)</span>
+    <span>CHƯƠNG 5 – TUẦN 5</span>
+  </div>
+
+  <h1 class="chap-title">CHƯƠNG 5: DỰ BÁO BIẾN DẠNG &amp; ĐỘ LÚN CÔNG TRÌNH THEO THỜI GIAN<br/>
+  <span style="font-size:13pt; text-transform:none; font-weight:normal; color:#444;">
+  (TÍNH TOÁN ĐỘ LÚN CỐ KẾT SƠ CẤP $S_c$, LÝ THUYẾT TERZAGHI &amp; MÔ PHỎNG SỐ HÓA TIẾN TRÌNH LÚN THEO THỜI GIAN)
+  </span></h1>
+
+  <div class="box muctieu">
+    <div class="bt">MỤC TIÊU HỌC TẬP (CLO &amp; THANG BLOOM)</div>
+    <p class="no-indent">Sau khi hoàn thành chương này, người học có khả năng:</p>
+    <ul>
+      <li><b>1. Về kiến thức lý thuyết (Bloom 3.5):</b> Nắm vững phương pháp phân bố ứng suất gia tăng $\Delta \sigma_z$ trong nền đất do tải trọng móng công trình; hiểu rõ nguyên lý tích phân tính lún cố kết sơ cấp $S_c$ cho cả hai trường hợp đất NC và đất OC theo tiêu chuẩn TCVN 9362:2012 và Eurocode 7 (Das &amp; Sobhan, 2022; Trần Văn Việt, 2004).</li>
+      <li><b>2. Về năng lực tính toán và lập trình (Bloom 4.5):</b> Vận dụng lý thuyết cố kết một chiều Terzaghi, giải thuật nghiệm Fourier và các phương trình xấp xỉ liên tục $U_v - T_v$ để tính toán độ lún tại thời điểm $t$ bất kỳ ($S_t$) và dự báo thời gian đạt 50%, 90% độ lún thiết kế ($t_{50}, t_{90}$); xây dựng bảng tính tự động nhiều phân lớp trên Excel/Python.</li>
+      <li><b>3. Về đánh giá kỹ thuật (Bloom 4.5):</b> So sánh độ lún dự báo với giới hạn lún cho phép của quy chuẩn xây dựng ($S_{\text{cp}} = 8 - 10\text{ cm}$); đề xuất các giải pháp xử lý thoát nước gia tốc (bấc thấm PVD) khi thời gian lún kéo dài nhiều năm.</li>
+      <li><b>4. Về thực hành số (Bloom 4.0):</b> Trực quan hóa đường cong tiến trình lún theo thời gian ($S - t$) trên hệ thống web portal; hoàn thành Phiếu thực hành số 5.</li>
+    </ul>
+  </div>
+
+  <div class="box mindmap">
+    <div class="bt">SƠ ĐỒ TƯ DUY NỘI DUNG CHƯƠNG 5</div>
+    <div class="diagram-flow">
+      <div class="diagram-node"><b>1. PHÂN BỐ ỨNG SUẤT TRONG NỀN:</b> Ứng suất bản thân hữu hiệu $\sigma'_{v0} = \sum \gamma'_i h_i$ &amp; Ứng suất gia tăng $\Delta \sigma_z$ do tải móng (Phương pháp góc mở tải 2:1 hoặc Boussinesq).</div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>2. TÍNH ĐỘ LÚN CỐ KẾT CUỐI CÙNG $S_c$:</b>
+        Chia nền thành các phân lớp mỏng $\to$ Kiểm tra trạng thái ứng suất từng lớp ($OCR$):
+        <ul>
+          <li>Đất NC ($\sigma'_{v0} \approx p_c$): $S_c = \sum \frac{C_c}{1+e_0} h_i \log\left(\frac{\sigma'_{v0i} + \Delta \sigma_{zi}}{\sigma'_{v0i}}\right)$.</li>
+          <li>Đất OC ($\sigma'_{v0} + \Delta \sigma_z \le p_c$): $S_c = \sum \frac{C_s}{1+e_0} h_i \log\left(\frac{\sigma'_{v0i} + \Delta \sigma_{zi}}{\sigma'_{v0i}}\right)$.</li>
+          <li>Đất OC vượt $p_c$: Tính lún kết hợp qua $C_s$ và $C_c$.</li>
+        </ul>
+      </div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>3. TIẾN TRÌNH LÚN THEO THỜI GIAN (LÝ THUYẾT TERZAGHI):</b>
+        Hệ số cố kết $c_v$, chiều dài thoát nước $H_{dr} \to$ Nhân tố thời gian $T_v = \frac{c_v t}{H_{dr}^2} \to$ Độ cố kết trung bình $U_v = f(T_v) \to$ Độ lún tại thời điểm $t$: $S_t = U_v \times S_c$.
+      </div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>4. DỰ BÁO THỜI GIAN HOÀN THÀNH LÚN:</b>
+        Thời gian đạt 50% lún: $t_{50} = \frac{0{,}197 H_{dr}^2}{c_v}$ &amp; Thời gian đạt 90% lún: $t_{90} = \frac{0{,}848 H_{dr}^2}{c_v} \to$ Hoàn thành Phiếu thực hành 5.
+      </div>
+    </div>
+  </div>
+
+  <h2>5.1. PHÂN BỐ ỨNG SUẤT TRONG NỀN ĐẤT DƯỚI ĐÁY MÓNG CÔNG TRÌNH</h2>
+  <p>Trước khi công trình được xây dựng, tại mỗi điểm ở độ sâu $z$ trong lòng đất đã tồn tại sẵn một trạng thái ứng suất do chính trọng lượng bản thân của các lớp đất đá nằm phía trên tạo nên, gọi là <b>Ứng suất bản thân hữu hiệu (Effective overburden pressure)</b>:</p>
+  
+  <div class="eq">$$\sigma'_{v0}(z) = \sum_{j=1}^{k} \gamma'_j h_j$$</div>
+  
+  <p>(trong đó $\gamma'_j = \gamma_{\text{sat}} - \gamma_w$ là trọng lượng thể tích có hiệu/đẩy nổi đối với các lớp đất nằm dưới mực nước ngầm, và $\gamma'_j = \gamma$ đối với các lớp đất nằm trên mực nước ngầm).</p>
+
+  <p>Khi công trình xây dựng xong, tải trọng đáy móng truyền xuống nền sẽ làm gia tăng thêm một lượng ứng suất thẳng đứng $\Delta \sigma_z$ suy giảm dần theo độ sâu $z$. Để tính toán $\Delta \sigma_z$, hai phương pháp được sử dụng phổ biến nhất trong thực tế kỹ thuật:</p>
+  
+  <div class="step-card">
+    <div class="step-title">Phương pháp 1: Phương pháp gần đúng góc mở tải 2:1 (Phương pháp 2V:1H)</div>
+    <p>Giả thiết tải trọng đáy móng truyền xuống nền đất lan tỏa rộng ra theo hình chóp cụt có góc dốc mở tải là 2 đứng : 1 ngang (tương đương góc mở $\theta \approx 26{,}5^\circ$ so với phương thẳng đứng). Với móng đơn chữ nhật có kích thước đáy $B \times L$ đặt tại độ sâu $D_f$, chịu tải trọng thẳng đứng $P$:</p>
+    <div class="eq">$$\Delta \sigma_z = \frac{P}{(B + z)(L + z)}$$</div>
+    <p>Nếu biết áp lực đáy móng thực tế $p_0 = \frac{P}{B \times L}$ thì:</p>
+    <div class="eq">$$\Delta \sigma_z = p_0 \times \frac{B \times L}{(B + z)(L + z)}$$</div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Phương pháp 2: Phương pháp lý thuyết đàn hồi Boussinesq (Tra bảng Fadum / Newmark)</div>
+    <p>Áp dụng tích phân nghiệm Boussinesq cho diện tích chữ nhật chịu tải trọng phân bố đều $p_0$. Ứng suất thẳng đứng tại góc móng được xác định bằng:</p>
+    <div class="eq">$$\Delta \sigma_z = I_z \times p_0$$</div>
+    <p>(trong đó hệ số ảnh hưởng $I_z$ là hàm phụ thuộc vào tỷ số $m = B/z$ và $n = L/z$). Ứng suất tại điểm tâm móng được tính bằng cách chia móng thành 4 hình chữ nhật nhỏ bằng nhau và cộng tác dụng: $\Delta \sigma_{z(\text{tâm})} = 4 \times I_z \times p_0$.</p>
+  </div>
+
+  <h2>5.2. THUẬT TOÁN TÍNH ĐỘ LÚN CỐ KẾT SƠ CẤP CUỐI CÙNG $S_c$ CHO NỀN NHIỀU LỚP</h2>
+  <p>Để tính độ lún chính xác của một tầng đất sét dày chịu tác động của tải trọng công trình, toàn bộ tầng đất phải được chia nhỏ thành $n$ phân lớp mỏng, mỗi phân lớp có chiều dày $h_i \le 1{,}0\text{ m}$ (đảm bảo ứng suất trong từng phân lớp có thể coi là phân bố đều hoặc tuyến tính). Tại trọng tâm của mỗi phân lớp thứ $i$, xác định ứng suất bản thân $\sigma'_{v0i}$, ứng suất gia tăng $\Delta \sigma_{zi}$, áp lực tiền cố kết $p_{ci}$, hệ số rỗng $e_{0i}$, chỉ số nén $C_{ci}$ và chỉ số nở $C_{si}$. Phương trình tính lún phân lớp $S_{c(i)}$ phụ thuộc chặt chẽ vào trạng thái cố kết của từng lớp đất (Lê Quý An et al., 1995; Das &amp; Sobhan, 2022):</p>
+
+  <div class="step-card">
+    <div class="step-title">Trường hợp 1: Đất cố kết bình thường (Normally Consolidated - NC, $\sigma'_{v0} \approx p_c$)</div>
+    <p>Ứng suất hiện tại đã chạm áp lực tiền cố kết. Mọi gia tải ngoài $\Delta \sigma_z$ đều đẩy đất lún theo đường nén trinh nguyên:</p>
+    <div class="eq">$$S_{c(i)} = \frac{C_{ci}}{1 + e_{0i}} \times h_i \times \log_{10} \left( \frac{\sigma'_{v0i} + \Delta \sigma_{zi}}{\sigma'_{v0i}} \right)$$</div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Trường hợp 2: Đất quá cố kết (Overconsolidated - OC) với $\sigma'_{v0} + \Delta \sigma_z \le p_c$</div>
+    <p>Ứng suất tổng cộng sau khi công trình truyền tải vẫn nhỏ hơn hoặc bằng áp lực tiền cố kết trong lịch sử địa chất. Đất chỉ biến dạng nhẹ dọc theo đường hồi phục đàn hồi:</p>
+    <div class="eq">$$S_{c(i)} = \frac{C_{si}}{1 + e_{0i}} \times h_i \times \log_{10} \left( \frac{\sigma'_{v0i} + \Delta \sigma_{zi}}{\sigma'_{v0i}} \right)$$</div>
+    <p><i>(Trong trường hợp này độ lún tính ra rất bé, thường chỉ bằng 10–20% so với đất NC).</i></p>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Trường hợp 3: Đất quá cố kết (Overconsolidated - OC) với $\sigma'_{v0} < p_c < \sigma'_{v0} + \Delta \sigma_z$</div>
+    <p>Tải trọng công trình vượt qua áp lực tiền cố kết lịch sử. Quá trình lún diễn ra qua hai chặng: Chặng 1 lún theo chỉ số nở $C_s$ từ $\sigma'_{v0}$ đến $p_c$; Chặng 2 lún theo chỉ số nén trinh nguyên $C_c$ từ $p_c$ đến ứng suất cuối cùng $\sigma'_{v0} + \Delta \sigma_z$:</p>
+    <div class="eq">$$S_{c(i)} = \frac{C_{si}}{1 + e_{0i}} h_i \log \left( \frac{p_{ci}}{\sigma'_{v0i}} \right) + \frac{C_{ci}}{1 + e_{0i}} h_i \log \left( \frac{\sigma'_{v0i} + \Delta \sigma_{zi}}{p_{ci}} \right)$$</div>
+  </div>
+
+  <p>Tổng độ lún cố kết sơ cấp cuối cùng của toàn bộ nền móng là tổng tích lũy độ lún của tất cả các phân lớp nằm trong chiều sâu vùng ảnh hưởng nén lún (với ranh giới đáy vùng nén lún $H_a$ là nơi có $\Delta \sigma_z \le 0{,}1 - 0{,}2 \sigma'_{v0}$):</p>
+  <div class="eq">$$S_c = \sum_{i=1}^{n} S_{c(i)}$$</div>
+
+  <h2>5.3. TIẾN TRÌNH LÚN THEO THỜI GIAN – PHƯƠNG TRÌNH VI PHÂN TERZAGHI</h2>
+  <p>Lý thuyết cố kết một chiều kinh điển của Karl Terzaghi (1925) thiết lập phương trình vi phân mô tả sự tiêu tán áp lực nước lỗ rỗng thặng dư $u(z, t)$ theo không gian tọa độ thẳng đứng $z$ và thời gian $t$:</p>
+
+  <div class="eq">$$\frac{\partial u}{\partial t} = c_v \frac{\partial^2 u}{\partial z^2}$$</div>
+
+  <p>Áp dụng khai triển chuỗi lượng giác Fourier với điều kiện biên thoát nước hai mặt ($H_{dr} = H/2$) hoặc thoát nước một mặt ($H_{dr} = H$), nghiệm giải tích cho <b>Độ cố kết trung bình $U_v$</b> (Average Degree of Consolidation) tại thời điểm $t$:</p>
+
+  <div class="eq">$$U_v = 1 - \sum_{m=0}^{\infty} \frac{2}{M^2} \exp(-M^2 T_v)$$</div>
+
+  <p>Trong đó:</p>
+  <ul>
+    <li>$M = \frac{(2m + 1)\pi}{2}$ (với $m = 0, 1, 2, ...$).</li>
+    <li>$T_v$ là đại lượng không thứ nguyên, được gọi là <b>Nhân tố thời gian (Time factor)</b>:
+      <div class="eq">$$T_v = \frac{c_v \times t}{H_{dr}^2}$$</div>
+      (trong đó $c_v$ là hệ số cố kết đo được ở Chương 4, $t$ là thời gian công trình chịu tải, $H_{dr}$ là chiều dài đường thoát nước dài nhất của tầng sét).
+    </li>
+  </ul>
+
+  <p>Để phục vụ tính toán nhanh và lập trình số hóa, các công thức giải tích xấp xỉ liên tục cực kỳ chuẩn xác của Casagrande và Taylor được sử dụng:</p>
+  <div class="eq">
+    $$\begin{cases}
+      T_v = \frac{\pi}{4} \left( \frac{U_v\%}{100} \right)^2 & \text{khi } U_v \le 60\% \\
+      T_v = 1{,}781 - 0{,}933 \log_{10} (100 - U_v\%) & \text{khi } U_v > 60\%
+    \end{cases}$$
+  </div>
+
+  <p>Từ độ cố kết trung bình $U_v(t)$, độ lún của công trình tại thời điểm $t$ bất kỳ được xác định trực tiếp bằng:</p>
+  <div class="eq">$$S_t = U_v(t) \times S_c$$</div>
+
+  <p>Thời gian cần thiết để nền đất đạt được một độ lún quy định (ví dụ $50\%$ hoặc $90\%$ độ lún cuối cùng) được tính đảo ngược lại:</p>
+  <div class="eq">$$t = \frac{T_v \times H_{dr}^2}{c_v}$$</div>
+  <ul>
+    <li>Để đạt 50% độ lún ($U_v = 0{,}50$): $T_{50} = \frac{\pi}{4} (0{,}50)^2 = 0{,}197 \to t_{50} = \frac{0{,}197 H_{dr}^2}{c_v}$.</li>
+    <li>Để đạt 90% độ lún ($U_v = 0{,}90$): $T_{90} = 1{,}781 - 0{,}933 \log_{10}(10) = 0{,}848 \to t_{90} = \frac{0{,}848 H_{dr}^2}{c_v}$.</li>
+  </ul>
+
+  <div class="box vidu">
+    <div class="bt">VÍ DỤ TÍNH TOÁN DỰ BÁO LÚN TOÀN DIỆN CHO CÔNG TRÌNH THỰC TẾ</div>
+    <p class="no-indent"><b>Điều kiện bài toán:</b> Một móng băng công trình nhà xưởng kích thước $B = 3{,}0\text{ m}$, tải trọng phân bố đều dưới đáy móng $p_0 = 150\text{ kPa}$, đặt tại độ sâu $D_f = 1{,}5\text{ m}$. Địa tầng dưới đáy móng gồm một lớp sét dẻo dày $H = 6{,}0\text{ m}$ kẹp giữa hai tầng cát thấm nước tốt (thoát nước hai mặt $\to H_{dr} = 6{,}0 / 2 = 3{,}0\text{ m} = 300\text{ cm}$). Các chỉ tiêu thí nghiệm: $e_0 = 0{,}95$, $C_c = 0{,}32$, $C_s = 0{,}04$, $\rho = 1{,}85\text{ g/cm}^3$ ($\gamma = 18{,}15\text{ kN/m}^3$), mực nước ngầm tại đáy móng $\to \gamma' = 18{,}15 - 9{,}81 = 8{,}34\text{ kN/m}^3$. Hệ số cố kết $c_v = 3{,}2 \times 10^{-4}\text{ cm}^2/\text{s} = 3{,}2 \times 10^{-4} \times 10^{-4}\text{ m}^2/\text{s} \times 31\,557\,600\text{ s/năm} = 1{,}01\text{ m}^2/\text{năm}$ (lưu ý: 1 cm²/s = 3 155,76 m²/năm; đổi sai 10 lần là lỗi hay gặp). Áp lực tiền cố kết $p_c = 65\text{ kPa}$.</p>
+    <p class="no-indent"><b>Thực hiện tính toán dự báo:</b></p>
+    <ol>
+      <li><b>Chia lớp sét làm 3 phân lớp, mỗi phân lớp dày $h_i = 2{,}0\text{ m}$.</b></li>
+      <li><b>Tính toán tại trọng tâm phân lớp 1 (độ sâu $z_1 = 1{,}0\text{ m}$ dưới đáy móng):</b>
+        <ul>
+          <li>Ứng suất bản thân: $\sigma'_{v01} = 1,5 \times 18,15 + 1,0 \times 8,34 = 27,23 + 8,34 = 35,57\text{ kPa} < p_c = 65\text{ kPa}$.</li>
+          <li>Ứng suất gia tăng theo phương pháp 2:1 (móng băng $L \to \infty$): $\Delta \sigma_{z1} = p_0 \times \frac{B}{B + z_1} = 150 \times \frac{3{,}0}{3{,}0 + 1{,}0} = 112{,}50\text{ kPa}$.</li>
+          <li>Ứng suất tổng cộng: $\sigma'_{v01} + \Delta \sigma_{z1} = 35{,}57 + 112{,}50 = 148{,}07\text{ kPa} > p_c = 65\text{ kPa}$ (Thuộc Trường hợp 3: OC vượt $p_c$).</li>
+          <li>Độ lún phân lớp 1:
+            $$S_{c1} = \frac{0{,}04}{1{,}95} \times 2{,}0 \times \log\left(\frac{65}{35{,}57}\right) + \frac{0{,}32}{1{,}95} \times 2{,}0 \times \log\left(\frac{148{,}07}{65}\right) = 0{,}0108 + 0{,}1173 = 0{,}1281\text{ m} = 12{,}81\text{ cm}.$$
+          </li>
+        </ul>
+      </li>
+      <li><b>Phân lớp 2 ($z_2 = 3{,}0\text{ m}$ dưới đáy móng):</b>
+        <ul>
+          <li>$\sigma'_{v02} = 1{,}5 \times 18{,}15 + 3{,}0 \times 8{,}34 = 27{,}23 + 25{,}02 = 52{,}25\text{ kPa} < p_c = 65\text{ kPa}$.</li>
+          <li>$\Delta \sigma_{z2} = 150 \times \frac{3{,}0}{3{,}0 + 3{,}0} = 75{,}00\text{ kPa}$; $\sigma'_{v02} + \Delta \sigma_{z2} = 127{,}25\text{ kPa} > p_c$ (OC vượt $p_c$).</li>
+          <li>$$S_{c2} = \frac{0{,}04}{1{,}95} \times 2{,}0 \times \log\left(\frac{65}{52{,}25}\right) + \frac{0{,}32}{1{,}95} \times 2{,}0 \times \log\left(\frac{127{,}25}{65}\right) = 0{,}0039 + 0{,}0958 = 0{,}0997\text{ m} = 9{,}97\text{ cm}.$$</li>
+        </ul>
+      </li>
+      <li><b>Phân lớp 3 ($z_3 = 5{,}0\text{ m}$ dưới đáy móng):</b>
+        <ul>
+          <li>$\sigma'_{v03} = 1{,}5 \times 18{,}15 + 5{,}0 \times 8{,}34 = 27{,}23 + 41{,}70 = 68{,}93\text{ kPa} > p_c = 65\text{ kPa}$ → đất cố kết bình thường (NC) ở độ sâu này.</li>
+          <li>$\Delta \sigma_{z3} = 150 \times \frac{3{,}0}{3{,}0 + 5{,}0} = 56{,}25\text{ kPa}$; $\sigma'_{v03} + \Delta \sigma_{z3} = 125{,}18\text{ kPa}$.</li>
+          <li>$$S_{c3} = \frac{0{,}32}{1{,}95} \times 2{,}0 \times \log\left(\frac{125{,}18}{68{,}93}\right) = 0{,}3282 \times 0{,}2591 = 0{,}0851\text{ m} = 8{,}51\text{ cm}.$$</li>
+        </ul>
+      </li>
+      <li><b>Tổng độ lún cố kết sơ cấp cuối cùng:</b>
+        <div class="eq">$$S_c = S_{c1} + S_{c2} + S_{c3} = 12{,}81 + 9{,}97 + 8{,}51 = 31{,}29 \approx 31{,}3\text{ cm}$$</div>
+      </li>
+      <li><b>Dự báo thời gian hoàn thành độ lún</b> ($c_v = 1{,}01\text{ m}^2/\text{năm}$, $H_{dr} = 3{,}0\text{ m}$):
+        <ul>
+          <li>Thời gian đạt 50% độ lún ($S_{50} = 15{,}6\text{ cm}$):
+            $$t_{50} = \frac{0{,}197 \times (3{,}0)^2}{1{,}01\text{ m}^2/\text{năm}} = \frac{1{,}773}{1{,}01} = 1{,}76\text{ năm} \approx 21\text{ tháng}.$$
+          </li>
+          <li>Thời gian đạt 90% độ lún ($S_{90} = 28{,}2\text{ cm}$):
+            $$t_{90} = \frac{0{,}848 \times (3{,}0)^2}{1{,}01\text{ m}^2/\text{năm}} = \frac{7{,}632}{1{,}01} = 7{,}56\text{ năm} \approx 91\text{ tháng}.$$
+          </li>
+          <li>Độ lún của công trình sau 6 tháng ($t = 0{,}5\text{ năm}$):
+            $$T_v = \frac{1,01 \times 0,5}{(3,0)^2} = 0,056 < 0.283 \to U_v = \sqrt{\frac{4 T_v}{\pi}} = \sqrt{\frac{4 \times 0.056}{3.1416}} = 0.267 = 26.7\%.$$
+            $$S(6\text{ tháng}) = 0.267 \times 31.3\text{ cm} = 8.4\text{ cm}.$$
+            Sau 7,56 năm nền mới lún được 90 % — quá chậm cho công trình; vì vậy thực tế phải dùng bấc thấm (PVD) kết hợp gia tải trước để rút ngắn thời gian cố kết (Chương 6).
+          </li>
+        </ul>
+      </li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+  <h2>CÂU HỎI ÔN TẬP VÀ PHIẾU THỰC HÀNH 5</h2>
+  <ol>
+    <li><b>[Nhớ - Bloom 1.0]:</b> Nêu công thức tính độ lún cố kết sơ cấp $S_c$ cho đất cố kết bình thường (NC) và viết phương trình vi phân Terzaghi.</li>
+    <li><b>[Hiểu - Bloom 2.0]:</b> Tại sao khi lớp đất sét chỉ thoát nước một mặt ($H_{dr} = H$) thì thời gian lún của công trình lại kéo dài gấp 4 lần so với trường hợp thoát nước hai mặt ($H_{dr} = H/2$)?</li>
+    <li><b>[Vận dụng - Bloom 3.5]:</b> Một công trình có độ lún cuối cùng dự báo là $S_c = 15\text{ cm}$. Sau 1 năm xây dựng, công trình đo được lún $6\text{ cm}$. Hãy dự báo độ lún của công trình sau 4 năm (áp dụng quan hệ gần đúng giữa $U_v$ và $\sqrt{t}$)?</li>
+    <li><b>[Đánh giá - Bloom 4.5]:</b> Nếu độ lún dự báo của công trình là $31{,}3\text{ cm}$ (vượt quá giới hạn cho phép $S_{\text{cp}} = 8\text{ cm}$), hãy đề xuất 2 giải pháp kỹ thuật địa kỹ thuật phù hợp nhất để giảm lún hoặc tăng tốc độ lún trước khi xây dựng công trình.</li>
+    <li><b>[Thực hành]:</b> Dùng bảng tính Excel hoặc module tính toán trên web portal, nhập thông số của nhóm mình, lập biểu đồ dự báo lún theo thời gian ($S - t$) và hoàn thành <b>Phiếu thực hành số 5</b> trên trang <a href="https://diemdanhsv.com/cohocdat-tt/index.html">diemdanhsv.com/cohocdat-tt</a>.</li>
+  </ol>
+
+  <div class="ftr">
+    <span>TRƯỜNG ĐH KHTN – ĐHQG-HCM</span>
+  </div>
+</div>
+
+<!-- CHAPTER 6: TUẦN 6 -->
+<div class="page">
+  <div class="hdr">
+    <span>TRƯỜNG ĐH KHTN – KHOA ĐỊA CHẤT</span>
+    <span>GIÁO TRÌNH THỰC TẬP CƠ HỌC ĐẤT (GEO20202)</span>
+    <span>CHƯƠNG 6 – TUẦN 6</span>
+  </div>
+
+  <h1 class="chap-title">CHƯƠNG 6: TÍCH HỢP DỮ LIỆU ĐỊA CHẤT CÔNG TRÌNH &amp; ĐÁNH GIÁ SỨC CHỊU TẢI NỀN MÓNG<br/>
+  <span style="font-size:13pt; text-transform:none; font-weight:normal; color:#444;">
+  (THÍ NGHIỆM HIỆN TRƯỜNG SPT, ĐÁNH GIÁ $q_{ult}, q_a$, QUẢN TRỊ RỦI RO ĐỊA KỸ THUẬT &amp; BÁO CÁO TỔNG KẾT)
+  </span></h1>
+
+  <div class="box muctieu">
+    <div class="bt">MỤC TIÊU HỌC TẬP (CLO &amp; THANG BLOOM)</div>
+    <p class="no-indent">Sau khi hoàn thành chương này, người học có khả năng:</p>
+    <ul>
+      <li><b>1. Về kiến thức tổng hợp (Bloom 4.0):</b> Tích hợp toàn diện các chỉ tiêu vật lý, chỉ tiêu nén cố kết phòng thí nghiệm với kết quả thí nghiệm hiện trường xuyên tiêu chuẩn SPT ($N_{30}$); hiểu rõ quy trình hiệu chuẩn chỉ số búa $(N_1)_{60}$ theo áp lực phủ và hiệu suất thiết bị theo ASTM D1586 và TCVN 9351:2012 (Das &amp; Sobhan, 2022; USACE EM 1110-1-1804).</li>
+      <li><b>2. Về năng lực tính toán và đánh giá (Bloom 4.5):</b> Tính toán sức chịu tải giới hạn $q_{ult}$ và sức chịu tải cho phép $q_a$ của nền đất theo lý thuyết Terzaghi và phương pháp thực nghiệm Meyerhof; kiểm tra đồng thời hai điều kiện ổn định: Điều kiện cường độ (Sức chịu tải) và Điều kiện biến dạng (Độ lún giới hạn).</li>
+      <li><b>3. Về đề xuất giải pháp kỹ thuật (Bloom 5.0):</b> Nhận diện chính xác các nguy cơ tai biến địa kỹ thuật (lún lệch nứt nhà, trượt vách hố đào, bùng nền do nước ngầm); lựa chọn giải pháp nền móng tối ưu (móng nông, móng cọc, đệm cát, bấc thấm PVD gia tải trước).</li>
+      <li><b>4. Về kỹ năng giao tiếp chuyên môn (Bloom 3.5):</b> Sử dụng chuẩn xác thuật ngữ tiếng Anh chuyên ngành Địa kỹ thuật &amp; Phương pháp điều tra ĐCCT; hoàn thành Phiếu thực hành số 6 (Báo cáo tổng kết môn học).</li>
+    </ul>
+  </div>
+
+  <div class="box mindmap">
+    <div class="bt">SƠ ĐỒ TƯ DUY NỘI DUNG CHƯƠNG 6</div>
+    <div class="diagram-flow">
+      <div class="diagram-node"><b>1. TỔNG HỢP HỒ SƠ ĐỊA KỸ THUẬT:</b> Hình trụ lỗ khoan $\to$ Địa tầng $\to$ Chỉ tiêu cơ lý phòng ($w, \rho, e, I_L, C_c, p_c, c, \varphi$) $\to$ Thí nghiệm hiện trường SPT ($N_{30}$).</div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>2. THÍ NGHIỆM XUYÊN TIÊU CHUẨN SPT:</b> Búa $63{,}5\text{ kg}$ rơi $76\text{ cm} \to$ Đóng ống mẫu chẻ đôi $\to$ Hiệu chỉnh năng lượng $N_{60} \to$ Hiệu chỉnh áp lực phủ $(N_1)_{60} \to$ Đánh giá độ chặt và cường độ chống cắt.</div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>3. TÍNH TOÁN SỨC CHỊU TẢI $q_{ult}$ &amp; $q_a$:</b>
+        Công thức tổng quát Terzaghi ($q_{ult} = c N_c s_c + q N_q + 0{,}5 \gamma B N_\gamma s_\gamma$) &amp; Phương pháp Meyerhof dựa trên $N_{60} \to$ Sức chịu tải cho phép $q_a = \frac{q_{ult}}{FS}$ ($FS = 2{,}5 - 3{,}0$).
+      </div>
+      <div class="diagram-arrow">⬇</div>
+      <div class="diagram-node"><b>4. ĐỀ XUẤT GIẢI PHÁP &amp; BÁO CÁO TỔNG KẾT:</b>
+        Lựa chọn loại móng (Nông / Cọc) $\to$ Biện pháp xử lý nền đất yếu $\to$ Báo cáo tổng hợp $\to$ Hoàn thành Phiếu thực hành 6 tại diemdanhsv.com/cohocdat-tt.
+      </div>
+    </div>
+  </div>
+
+  <h2>6.1. TÍCH HỢP HỒ SƠ ĐỊA KỸ THUẬT VÀ THÍ NGHIỆM HIỆN TRƯỜNG SPT</h2>
+  <p>Một báo cáo điều tra địa kỹ thuật hoàn chỉnh (Geotechnical Investigation Report) không chỉ dựa vào các thí nghiệm trong phòng mà luôn đòi hỏi sự kết hợp chặt chẽ với các thí nghiệm tại hiện trường (In-situ Testing). Trong đó, <b>Thí nghiệm xuyên tiêu chuẩn SPT (Standard Penetration Test)</b> theo TCVN 9351:2012 và ASTM D1586 là phương pháp phổ biến và kinh điển nhất trên toàn cầu (USACE EM 1110-1-1804; Tran Van Viet, 2004).</p>
+
+  <div class="step-card">
+    <div class="step-title">Nguyên lý và quy trình thí nghiệm SPT</div>
+    <ol>
+      <li>Sau khi khoan đến độ sâu khảo sát trong lỗ khoan, làm sạch cặn lắng ở đáy lỗ khoan.</li>
+      <li>Hạ ống lấy mẫu bổ đôi tiêu chuẩn (Split-spoon sampler có đường kính ngoài $51\text{ mm}$, đường kính trong $35\text{ mm}$, chiều dài $650\text{ mm}$) gắn vào đầu cần khoan xuống đáy hố.</li>
+      <li>Dùng búa tạ có khối lượng chuẩn $63{,}5\text{ kg}$ (140 lbs), cho rơi tự do từ độ cao chính xác $760\text{ mm}$ (30 inches) đập vào đe truyền lực trên đầu cần khoan.</li>
+      <li>Đóng mẫu qua 3 hiệp liên tiếp, mỗi hiệp sâu $150\text{ mm}$ (tổng chiều sâu đóng là $450\text{ mm}$):
+        <ul>
+          <li>Hiệp 1 ($150\text{ mm}$ đầu): Coi là hiệp đóng mồi qua vùng đất bị xáo động đáy hố khoan (ghi nhận số búa $N_1$, không dùng để tính toán sức chịu tải).</li>
+          <li>Hiệp 2 ($150\text{ mm}$ tiếp theo): Ghi nhận số búa $N_2$.</li>
+          <li>Hiệp 3 ($150\text{ mm}$ cuối cùng): Ghi nhận số búa $N_3$.</li>
+        </ul>
+      </li>
+      <li><b>Chỉ số xuyên tiêu chuẩn $N_{SPT}$ (hoặc $N_{30}$):</b> Là tổng số búa của hai hiệp sau:
+        <div class="eq">$$N = N_2 + N_3$$</div>
+      </li>
+      <li>Kéo ống mẫu lên mặt đất, mở ống bổ đôi, quan sát mô tả địa tầng và lấy mẫu đất lưu giữ trong hộp mẫu.</li>
+    </ol>
+  </div>
+
+  <div class="step-card">
+    <div class="step-title">Kỹ thuật hiệu chuẩn chỉ số SPT $(N_{60})$ và $((N_1)_{60})$</div>
+    <p>Do hiệu suất truyền năng lượng búa thực tế tại công trường thay đổi tùy loại búa (búa rơi tự do kiểu xích, búa tự động, búa kéo dây vòng), chỉ số thô $N$ phải được quy đổi về chỉ số năng lượng chuẩn $60\%$ ($N_{60}$):</p>
+    <div class="eq">$$N_{60} = N \times \frac{E_m \times C_B \times C_S \times C_R}{0{,}60}$$</div>
+    <p>(với $E_m$ là hiệu suất búa, thường $0{,}60 - 0{,}80$; $C_B$ là hệ số hiệu chỉnh đường kính hố khoan; $C_S$ là hệ số ống mẫu có ống lót; $C_R$ là hệ số chiều dài cần khoan).</p>
+    <p>Đối với đất cát hạt thô, chỉ số $N_{60}$ tiếp tục được hiệu chỉnh theo áp lực hữu hiệu tầng phủ $\sigma'_{v0}$:</p>
+    <div class="eq">$$(N_1)_{60} = C_N \times N_{60} = \sqrt{\frac{100\,\text{kPa}}{\sigma'_{v0}}} \times N_{60}\quad (C_N \le 1{,}7)$$</div>
+  </div>
+
+  <p class="tcap">Bảng 6.1. Tương quan kỹ thuật giữa chỉ số $(N_1)_{60}$ với độ chặt cát và góc ma sát trong $\varphi$ (Peck et al., 1974; Das &amp; Sobhan, 2022)</p>
+  <table class="t-data">
+    <thead>
+      <tr>
+        <th style="width:20%">Chỉ số $(N_1)_{60}$</th>
+        <th style="width:25%">Độ chặt tương đối ($D_r$, %)</th>
+        <th style="width:25%">Trạng thái độ chặt của cát</th>
+        <th style="width:30%">Góc ma sát trong $\varphi$ (độ)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="center bold">0 – 4</td><td class="center">0 – 15%</td><td>Rất xốp (Very loose)</td><td class="center">&lt; 28°</td></tr>
+      <tr><td class="center bold">4 – 10</td><td class="center">15 – 35%</td><td>Xốp (Loose)</td><td class="center">28° – 30°</td></tr>
+      <tr><td class="center bold">10 – 30</td><td class="center">35 – 65%</td><td>Chặt vừa (Medium dense)</td><td class="center">30° – 36°</td></tr>
+      <tr><td class="center bold">30 – 50</td><td class="center">65 – 85%</td><td>Chặt (Dense)</td><td class="center">36° – 41°</td></tr>
+      <tr><td class="center bold">&gt; 50</td><td class="center">&gt; 85%</td><td>Rất chặt (Very dense)</td><td class="center">&gt; 41°</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6.2. ĐÁNH GIÁ SỨC CHỊU TẢI GIỚI HẠN VÀ CHO PHÉP CỦA NỀN ĐẤT</h2>
+  <p>Sức chịu tải của đất nền là cường độ tải trọng lớn nhất mà nền đất có thể chịu đựng được mà không bị phá hoại do trượt cắt hoặc biến dạng quá mức. Theo phương trình sức chịu tải kinh điển của Karl Terzaghi (1943) cho móng nông:</p>
+
+  <div class="eq">$$q_{ult} = c \cdot N_c \cdot s_c + q \cdot N_q + 0{,}5 \cdot \gamma \cdot B \cdot N_\gamma \cdot s_\gamma$$</div>
+
+  <p>Trong đó:</p>
+  <ul>
+    <li>$c$: Lực dính đơn vị của đất (kPa) từ thí nghiệm cắt phẳng hoặc nén ba trục.</li>
+    <li>$q = \gamma D_f$: Áp lực phủ tại cao trình đáy móng đặt ở độ sâu $D_f$ (kPa).</li>
+    <li>$\gamma$: Trọng lượng thể tích của lớp đất nằm dưới đáy móng ($\text{kN/m}^3$).</li>
+    <li>$B$: Bề rộng đáy móng (m).</li>
+    <li>$N_c, N_q, N_\gamma$: Các hệ số sức chịu tải không thứ nguyên, là hàm số phụ thuộc duy nhất vào góc ma sát trong $\varphi$ của đất:
+      <div class="eq">$$N_q = \exp(\pi \tan \varphi) \times \tan^2\left(45^\circ + \frac{\varphi}{2}\right)$$</div>
+      <div class="eq">$$N_c = (N_q - 1) \cot \varphi\quad (\text{khi } \varphi = 0: N_c = 5{,}14, N_q = 1{,}0, N_\gamma = 0)$$</div>
+      <div class="eq">$$N_\gamma = 2 (N_q + 1) \tan \varphi\quad (\text{theo Caquot-K&eacute;risel / Vesic})$$</div>
+    </li>
+    <li>$s_c, s_\gamma$: Các hệ số hình dạng móng ($s_c = 1 + 0{,}2 \frac{B}{L}$, $s_\gamma = 1 - 0{,}4 \frac{B}{L}$ đối với móng chữ nhật).</li>
+  </ul>
+
+  <p><b>Sức chịu tải cho phép của nền đất $q_a$ (Allowable bearing capacity):</b> Được xác định bằng cách chia sức chịu tải giới hạn cho một hệ số an toàn $FS$ (Factor of Safety), thường chọn $FS = 2{,}5 - 3{,}0$:</p>
+  <div class="eq">$$q_a = \frac{q_{ult}}{FS}$$</div>
+
+  <p><b>Phương pháp thực nghiệm Meyerhof (1965) dựa trên chỉ số $N_{SPT}$ cho móng trên cát:</b> Đối với độ lún giới hạn cho phép $S_{\text{cp}} = 25\text{ mm}$ (1 inch):</p>
+  <div class="eq">
+    $$\begin{cases}
+      q_a = \frac{N_{60}}{0{,}05} \times K_d & \text{với } B \le 1{,}2\text{ m} \\
+      q_a = \frac{N_{60}}{0{,}08} \times \left( \frac{B + 0{,}3}{B} \right)^2 \times K_d & \text{với } B > 1{,}2\text{ m}
+    \end{cases}$$
+  </div>
+  <p>(trong đó $K_d = 1 + 0{,}33 \frac{D_f}{B} \le 1{,}33$ là hệ số xét đến chiều sâu chôn móng, $q_a$ tính bằng kPa).</p>
+
+  <h2>6.3. PHÂN TÍCH RỦI RO ĐỊA KỸ THUẬT VÀ ĐỀ XUẤT GIẢI PHÁP NỀN MÓNG THỰC TẾ</h2>
+  <div class="box note">
+    <div class="bt">MA TRẬN NHẬN DIỆN VÀ XỬ LÝ RỦI RO ĐỊA KỸ THUẬT CÔNG TRÌNH</div>
+    <table class="t-data">
+      <thead>
+        <tr>
+          <th>Loại hình rủi ro địa kỹ thuật</th>
+          <th>Điều kiện địa tầng phát sinh</th>
+          <th>Hậu quả đối với công trình</th>
+          <th>Giải pháp kỹ thuật khuyến nghị</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Lún lệch quá mức</b><br/>(Differential settlement)</td>
+          <td>Tầng sét bùn dày phân bố không đều, địa tầng vát góc hoặc nửa móng đặt trên cát, nửa móng đặt trên sét.</td>
+          <td>Nứt tường, nghiêng lệch kết cấu, gãy dầm giằng, kẹt thang máy.</td>
+          <td>Thay móng đơn bằng <b>móng bè toàn diện</b> hoặc dùng <b>móng cọc bê tông cốt thép</b> cắm vào tầng chịu lực sâu.</td>
+        </tr>
+        <tr>
+          <td><b>Mất ổn định trượt mái hố móng</b><br/>(Slope failure)</td>
+          <td>Hố móng sâu đào trong đất dính mềm, góc dốc đào quá lớn, mưa làm bão hòa nước giảm lực dính $c$.</td>
+          <td>Sạt lở hố đào, phá hủy công trình lân cận, nguy hiểm tính mạng công nhân.</td>
+          <td>Thiết kế <b>tường cừ larsen</b>, tường vây barrette kết hợp hệ thanh chống văng thép (Struts) hoặc neo đất (Ground anchor).</td>
+        </tr>
+        <tr>
+          <td><b>Cát chảy, bùng nền</b><br/>(Quick sand / Piping)</td>
+          <td>Đáy hố đào nằm trên tầng cát mịn bão hòa, có gradient thủy lực thấm ngược từ dưới lên vượt hạn mức $i > i_{cr}$.</td>
+          <td>Bùng đáy hố móng, cát và nước trào ngược dữ dội làm rỗng nền xung quanh.</td>
+          <td>Hạ mực nước ngầm bằng <b>hệ thống ống kim lọc (Wellpoint dewatering)</b> hoặc đóng cừ chắn nước sâu qua tầng thấm.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>6.4. HỆ THỐNG THUẬT NGỮ TIẾNG ANH CHUYÊN NGÀNH ĐỊA KỸ THUẬT QUỐC TẾ</h2>
+  <p class="tcap">Bảng 6.2. Bảng đối chiếu thuật ngữ chuyên ngành Anh – Việt dùng trong môn học</p>
+  <table class="t-data">
+    <thead>
+      <tr>
+        <th style="width:40%">Thuật ngữ tiếng Anh (English Term)</th>
+        <th style="width:60%">Ý nghĩa tiếng Việt chuẩn mực</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Engineering Geology Investigation</td><td>Khảo sát / Điều tra Địa chất công trình</td></tr>
+      <tr><td>Standard Penetration Test (SPT)</td><td>Thí nghiệm xuyên tiêu chuẩn</td></tr>
+      <tr><td>Split-spoon sampler / Shelby tube</td><td>Ống lấy mẫu bổ đôi / Ống nòng mỏng lấy mẫu nguyên dạng</td></tr>
+      <tr><td>Ultimate bearing capacity ($q_{ult}$)</td><td>Sức chịu tải giới hạn của đất nền</td></tr>
+      <tr><td>Allowable bearing capacity ($q_a$)</td><td>Sức chịu tải cho phép của đất nền</td></tr>
+      <tr><td>Differential settlement</td><td>Độ lún không đều / Lún lệch</td></tr>
+      <tr><td>Prefabricated Vertical Drain (PVD)</td><td>Bấc thấm thoát nước thẳng đứng</td></tr>
+      <tr><td>Vacuum preloading</td><td>Gia tải trước kết hợp hút chân không</td></tr>
+      <tr><td>Cement Deep Mixing (CDM)</td><td>Cọc xi măng đất / Trộn sâu</td></tr>
+      <tr><td>Bored pile / Driven pile</td><td>Cọc khoan nhồi / Cọc đóng, ép tĩnh</td></tr>
+    </tbody>
+  </table>
+
+  <h2>CÂU HỎI TỔNG KẾT VÀ PHIẾU THỰC HÀNH 6</h2>
+  <ol>
+    <li><b>[Nhớ - Bloom 1.0]:</b> Nêu quy chuẩn của búa và ống lấy mẫu trong thí nghiệm xuyên tiêu chuẩn SPT. Tại sao số búa ở hiệp đầu $150\text{ mm}$ không được tính vào chỉ số $N_{SPT}$?</li>
+    <li><b>[Hiểu - Bloom 2.0]:</b> Phân tích sự ảnh hưởng của mực nước ngầm đến sức chịu tải giới hạn $q_{ult}$ của móng nông. Tại sao khi mực nước ngầm dâng lên sát đáy móng, sức chịu tải có thể giảm tới gần một nửa?</li>
+    <li><b>[Vận dụng - Bloom 3.5]:</b> Một móng vuông kích thước $B = 2{,}0\text{ m}$, chôn sâu $D_f = 1{,}0\text{ m}$ trong tầng đất sét thuần nhất bão hòa nước có $c = 35\text{ kPa}, \varphi = 0^\circ, \gamma = 18{,}5\text{ kN/m}^3$. Áp dụng công thức Terzaghi ($N_c = 5{,}14, N_q = 1{,}0, N_\gamma = 0, s_c = 1{,}3$), hãy tính sức chịu tải cho phép của móng với hệ số an toàn $FS = 3{,}0$?</li>
+    <li><b>[Sáng tạo - Bloom 5.0]:</b> Một dự án đường cao tốc đi qua vùng đồng bằng sông Cửu Long gặp tầng bùn sét yếu dày $15\text{ m}$. Hãy đề xuất một giải pháp tổng thể kết hợp giữa bấc thấm PVD, gia tải trước và quan trắc lún bằng bàn đo lún để xử lý nền đường đảm bảo yêu cầu kỹ thuật và kinh tế.</li>
+    <li><b>[Báo cáo tổng kết]:</b> Tổng hợp toàn bộ kết quả 6 buổi thực hành, lập báo cáo kỹ thuật địa chất công trình hoàn chỉnh và nộp <b>Phiếu thực hành số 6</b> trên web portal <a href="https://diemdanhsv.com/cohocdat-tt/index.html">diemdanhsv.com/cohocdat-tt</a>.</li>
+  </ol>
+
+  <div class="ftr">
+    <span>TRƯỜNG ĐH KHTN – ĐHQG-HCM</span>
+  </div>
+</div>
+
+<!-- BACK MATTER: REFERENCES & APPENDICES -->
+<div class="page">
+  <div class="hdr">
+    <span>TRƯỜNG ĐH KHTN – KHOA ĐỊA CHẤT</span>
+    <span>GIÁO TRÌNH THỰC TẬP CƠ HỌC ĐẤT (GEO20202)</span>
+    <span>TÀI LIỆU THAM KHẢO &amp; PHỤ LỤC</span>
+  </div>
+
+  <h1 class="chap-title">TÀI LIỆU THAM KHẢO</h1>
+  <p class="no-indent"><b>I. Giáo trình và Sách chuyên khảo trong nước và quốc tế:</b></p>
+  <ul style="padding-left:1cm; line-height:1.6;">
+    <li>Das, B. M., &amp; Sobhan, K. (2022). <i>Principles of geotechnical engineering</i> (10th ed.). Cengage Learning.</li>
+    <li>Knappett, J., &amp; Craig, R. F. (2019). <i>Craig's soil mechanics</i> (9th ed.). CRC Press.</li>
+    <li>Lê Quý An, Nguyễn Công Mẫn, &amp; Nguyễn Văn Quì. (1995). <i>Cơ học đất</i>. Nhà xuất bản Giáo Dục, Hà Nội.</li>
+    <li>Trần Văn Việt. (2004). <i>Cẩm nang dùng cho kỹ sư Địa kỹ thuật</i>. Nhà xuất bản Xây dựng, Hà Nội.</li>
+    <li>Whitlow, R. (2004). <i>Basic Soil Mechanics</i> (4th ed.). Prentice Hall, Pearson Education, London, UK.</li>
+    <li>Terzaghi, K., Peck, R. B., &amp; Mesri, G. (1996). <i>Soil Mechanics in Engineering Practice</i> (3rd ed.). John Wiley &amp; Sons, New York.</li>
+    <li>Casagrande, A. (1936). The determination of the pre-consolidation load and its practical significance. <i>Proceedings of the 1st International Conference on Soil Mechanics and Foundation Engineering</i>, Cambridge, MA, Vol. 3, pp. 60–64.</li>
+    <li>Taylor, D. W. (1948). <i>Fundamentals of Soil Mechanics</i>. John Wiley &amp; Sons, New York.</li>
+    <li>Meyerhof, G. G. (1963). Some recent research on the bearing capacity of foundations. <i>Canadian Geotechnical Journal</i>, 1(1), 16–26.</li>
+    <li>Vesić, A. S. (1973). Analysis of ultimate loads of shallow foundations. <i>Journal of the Soil Mechanics and Foundations Division</i>, 99(SM1), 45–73.</li>
+  </ul>
+
+  <p class="no-indent"><b>II. Tiêu chuẩn kỹ thuật và Cẩm nang hướng dẫn chuyên ngành:</b></p>
+  <ul style="padding-left:1cm; line-height:1.6;">
+    <li>Bộ Khoa học và Công nghệ. (2012). <i>TCVN 4195:2012 – Đất xây dựng: Phương pháp xác định khối lượng riêng</i>. Hà Nội.</li>
+    <li>Bộ Khoa học và Công nghệ. (2012). <i>TCVN 4196:2012 – Đất xây dựng: Phương pháp xác định độ ẩm và độ hút ẩm</i>. Hà Nội.</li>
+    <li>Bộ Khoa học và Công nghệ. (2012). <i>TCVN 4197:2012 – Đất xây dựng: Phương pháp xác định khối lượng thể tích</i>. Hà Nội.</li>
+    <li>Bộ Khoa học và Công nghệ. (2012). <i>TCVN 4198:2012 – Đất xây dựng: Phương pháp phân tích thành phần hạt</i>. Hà Nội.</li>
+    <li>Bộ Khoa học và Công nghệ. (2012). <i>TCVN 4200:2012 – Đất xây dựng: Phương pháp xác định tính nén lún trong phòng thí nghiệm (Oedometer)</i>. Hà Nội.</li>
+    <li>Bộ Khoa học và Công nghệ. (2012). <i>TCVN 9351:2012 – Đất xây dựng: Phương pháp thí nghiệm xuyên tiêu chuẩn (SPT)</i>. Hà Nội.</li>
+    <li>Bộ Khoa học và Công nghệ. (2012). <i>TCVN 9362:2012 – Tiêu chuẩn thiết kế nền nhà và công trình</i>. Hà Nội.</li>
+    <li>ASTM International. (2020). <i>ASTM D2435/D2435M-11(2020): Standard Test Methods for One-Dimensional Consolidation Properties of Soils Using Incremental Loading</i>. West Conshohocken, PA.</li>
+    <li>ASTM International. (2017). <i>ASTM D1586-11: Standard Test Method for Standard Penetration Test (SPT) and Split-Barrel Sampling of Soils</i>. West Conshohocken, PA.</li>
+    <li>US Army Corps of Engineers (USACE). (2001). <i>Geotechnical Investigations</i> (Engineer Manual EM 1110-1-1804). Washington, DC.</li>
+    <li>Naval Facilities Engineering Command (NAVFAC). (1986). <i>Soil Mechanics</i> (Design Manual 7,01). Alexandria, VA.</li>
+  </ul>
+
+  <h1 class="chap-title" style="margin-top:20pt;">PHỤ LỤC: BẢNG TRA CỨU HỆ SỐ CỐ KẾT VÀ SỨC CHỊU TẢI</h1>
+  <p class="tcap">Bảng Phụ lục 1. Giá trị nhân tố thời gian $T_v$ theo độ cố kết trung bình $U_v$ (Lý thuyết Terzaghi)</p>
+  <table class="t-data">
+    <thead>
+      <tr>
+        <th>$U_v$ (%)</th><th>$T_v$</th>
+        <th>$U_v$ (%)</th><th>$T_v$</th>
+        <th>$U_v$ (%)</th><th>$T_v$</th>
+        <th>$U_v$ (%)</th><th>$T_v$</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="center">10</td><td class="center">0,008</td><td class="center">35</td><td class="center">0,096</td><td class="center">60</td><td class="center">0,286</td><td class="center">85</td><td class="center">0,684</td></tr>
+      <tr><td class="center">15</td><td class="center">0,018</td><td class="center">40</td><td class="center">0,126</td><td class="center">65</td><td class="center">0,342</td><td class="center">90</td><td class="center bold">0,848</td></tr>
+      <tr><td class="center">20</td><td class="center">0,031</td><td class="center">45</td><td class="center">0,159</td><td class="center">70</td><td class="center">0,403</td><td class="center">92</td><td class="center">0,938</td></tr>
+      <tr><td class="center">25</td><td class="center">0,049</td><td class="center">50</td><td class="center bold">0,197</td><td class="center">75</td><td class="center">0,477</td><td class="center">95</td><td class="center">1,129</td></tr>
+      <tr><td class="center">30</td><td class="center">0,071</td><td class="center">55</td><td class="center">0,238</td><td class="center">80</td><td class="center">0,567</td><td class="center">99</td><td class="center">1,781</td></tr>
+    </tbody>
+  </table>
+
+  <p class="tcap">Bảng Phụ lục 2. Các hệ số sức chịu tải theo Vesić (1973) $N_c, N_q, N_\gamma$ ($N_c$, $N_q$ theo Prandtl – Reissner) theo góc ma sát trong $\varphi$</p>
+  <table class="t-data">
+    <thead>
+      <tr>
+        <th>$\varphi$ (độ)</th><th>$N_c$</th><th>$N_q$</th><th>$N_\gamma$</th>
+        <th>$\varphi$ (độ)</th><th>$N_c$</th><th>$N_q$</th><th>$N_\gamma$</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="center">0</td><td class="center">5,14</td><td class="center">1,00</td><td class="center">0,00</td><td class="center">25</td><td class="center">20,72</td><td class="center">10,66</td><td class="center">10,88</td></tr>
+      <tr><td class="center">5</td><td class="center">6,49</td><td class="center">1,57</td><td class="center">0,45</td><td class="center">30</td><td class="center">30,14</td><td class="center">18,40</td><td class="center">22,40</td></tr>
+      <tr><td class="center">10</td><td class="center">8,35</td><td class="center">2,47</td><td class="center">1,22</td><td class="center">35</td><td class="center">46,12</td><td class="center">33,30</td><td class="center">48,03</td></tr>
+      <tr><td class="center">15</td><td class="center">10,98</td><td class="center">3,94</td><td class="center">2,65</td><td class="center">40</td><td class="center">75,31</td><td class="center">64,20</td><td class="center">109,41</td></tr>
+      <tr><td class="center">20</td><td class="center">14,83</td><td class="center">6,40</td><td class="center">5,39</td><td class="center">45</td><td class="center">133,88</td><td class="center">134,88</td><td class="center">271,76</td></tr>
+    </tbody>
+  </table>
+
+  <div style="display:flex; justify-content:space-between; margin-top:25pt; text-align:center;">
+    <div style="width:45%;">
+      <div style="font-weight:bold;">TRƯỞNG BỘ MÔN</div>
+      <div style="font-style:italic;font-size:11pt">(ký, ghi rõ họ tên)</div>
+      <div style="height:55pt;"></div>
+      <div style="font-weight:bold;">Hồ Thu Hiền</div>
+    </div>
+    <div style="width:45%;">
+      <div style="font-weight:bold;">TRƯỞNG KHOA</div>
+      <div style="font-style:italic;font-size:11pt">(ký, ghi rõ họ tên)</div>
+      <div style="height:55pt;"></div>
+      <div style="font-weight:bold;">Phạm Trung Hiếu</div>
+    </div>
+  </div>
+
+  <div class="ftr">
+    <span>TRƯỜNG ĐH KHTN – ĐHQG-HCM</span>
+  </div>
+</div>
+
+</body>
+</html>

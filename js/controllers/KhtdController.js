@@ -249,7 +249,14 @@ class KhtdController {
   }
 
   async loadClasses() {
-    try { const d = await this.api.listClasses(this.token); this.view.renderClassOptions(Array.isArray(d) ? d : (d.classes || [])); }
+    try {
+      const d = await this.api.listClasses(this.token);
+      const all = Array.isArray(d) ? d : (d.classes || []);
+      // Trang của từng môn (vd chd-tt/quanly.html) đặt window.KHTD_CLASS_FILTER để chỉ hiện lớp của môn đó; không lớp nào khớp thì hiện tất cả.
+      const f = window.KHTD_CLASS_FILTER ? new RegExp(window.KHTD_CLASS_FILTER, 'i') : null;
+      const mine = f ? all.filter((c) => f.test(`${c.ClassCode || c.classCode || ''} ${c.CourseName || c.courseName || ''} ${c.CourseCode || c.courseCode || ''}`)) : all;
+      this.view.renderClassOptions(mine.length ? mine : all);
+    }
     catch (err) { this.view.msg(err.message, 'err'); }
   }
 
@@ -306,7 +313,7 @@ class KhtdController {
 
   async seed() {
     if (!this.classId) return this.view.msg('Chọn lớp trước.', 'err');
-    try { const d = await this.api.khtdSeedWorksheets(this.token, this.classId); this.view.msg(d.created.length ? `Đã tạo ${d.created.length} phiếu mặc định (phiếu số ${d.created.map((x) => x.no).join(', ')}).` : 'Lớp đã đủ các phiếu mặc định.', 'ok'); this.loadClass(); }
+    try { const d = await this.api.khtdSeedWorksheets(this.token, this.classId, window.KHTD_BO || ''); this.view.msg(d.created.length ? `Đã tạo ${d.created.length} phiếu mặc định (phiếu số ${d.created.map((x) => x.no).join(', ')}).` : 'Lớp đã đủ các phiếu mặc định.', 'ok'); this.loadClass(); }
     catch (err) { this.view.msg(err.message, 'err'); }
   }
 
