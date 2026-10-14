@@ -73,8 +73,8 @@ $ins = static function (string $table, array $row) use ($pdo): void {
 };
 $ins('users', ['UserID' => 'CHT_U1', 'Username' => 'cht_gv1', 'FullName' => 'GV Thử CHĐ', 'Email' => 'gv@example.invalid',
     'PasswordHash' => password_hash('x', PASSWORD_DEFAULT), 'Role' => 'LECTURER', 'Status' => 'ACTIVE']);
-$ins('courses', ['CourseID' => 'CHT_CO1', 'CourseCode' => 'GEO20202', 'CourseName' => 'Cơ học đất (thử)']);
-$ins('classes', ['ClassID' => 'CHT_C1', 'CourseID' => 'CHT_CO1', 'LecturerID' => 'CHT_U1', 'ClassCode' => 'GEO20202-THU']);
+$ins('courses', ['CourseID' => 'CHT_CO1', 'CourseCode' => 'GEO10404', 'CourseName' => 'Cơ học đất (thử)']);
+$ins('classes', ['ClassID' => 'CHT_C1', 'CourseID' => 'CHT_CO1', 'LecturerID' => 'CHT_U1', 'ClassCode' => 'GEO10404-THU']);
 $ins('classes', ['ClassID' => 'CHT_C2', 'CourseID' => 'CHT_CO1', 'LecturerID' => 'CHT_U1', 'ClassCode' => 'KHTD-THU']);
 $ins('students', ['StudentID' => 'CHT_S1', 'MSSV' => '99200001', 'FullName' => 'SV Thử CHĐ', 'Email' => '']);
 $ins('enrollments', ['EnrollmentID' => 'CHT_E1', 'StudentID' => 'CHT_S1', 'ClassID' => 'CHT_C1']);
@@ -148,7 +148,7 @@ check('SV không mở được mốc đang ẩn', !ok($r) || empty($r['data']['w
 echo "== Chấm theo môn ==\n";
 $wsRow = khtd_worksheet($ids[1]);
 $sys = khtd_grade_system($wsRow['schema']);
-check('lời dặn Gemini: vai trò môn Cơ học đất', str_contains($sys, 'môn Cơ học đất (GEO20202') && !str_contains($sys, 'Khoa học Trái đất'), mb_substr($sys, 0, 160));
+check('lời dặn Gemini: vai trò môn Cơ học đất', str_contains($sys, 'môn Cơ học đất (GEO10404') && !str_contains($sys, 'Khoa học Trái đất'), mb_substr($sys, 0, 160));
 check('lời dặn Gemini: quy tắc tự tính lại số liệu và đổi đơn vị cv', str_contains($sys, 'TỰ TÍNH LẠI') && str_contains($sys, '3 155,76'));
 check('lời dặn Gemini: vẫn giữ khuôn JSON và cấm nhắc AI trong nhận xét', str_contains($sys, '"criteria"') && str_contains($sys, 'TUYỆT ĐỐI không nhắc tới AI'));
 $kh = khtd_default_worksheets()[1];

@@ -25,6 +25,9 @@ RewriteRule ^api/lib(/|$) - [F,L]
 RewriteRule ^khtd/_gv(/|$) - [F,L]
 # Tài liệu giảng viên học phần Cơ học đất (kế hoạch, đáp án, đề kiểm tra): chỉ qua chd-tt/tai-lieu.php.
 RewriteRule ^chd-tt/_gv(/|$) - [F,L]
+# Mã học phần đổi GEO20202 → GEO10404 (14/10/2026): giữ link cũ đã gửi sinh viên.
+RewriteRule ^chd-tt/tai-lieu/GiaoTrinh_ThucTap_CoHocDat_GEO20202\.html$ /chd-tt/tai-lieu/GiaoTrinh_ThucTap_CoHocDat_GEO10404.html [R=301,L]
+RewriteRule ^chd-tt/tai-lieu/Rubric_DanhGia_ThangBloom_GEO20202\.html$ /chd-tt/tai-lieu/Rubric_DanhGia_ThangBloom_GEO10404.html [R=301,L]
 
 # File log lỗi PHP mặc định của shared hosting (tên 'error_log', không có
 # đuôi .log) — có thể chứa thông tin nhạy cảm (GĐ5 review bảo mật, H2)

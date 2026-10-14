@@ -1,6 +1,6 @@
 <?php
 /**
- * api/lib/chd.php — Bộ phiếu online "Thực tập Cơ học đất" (GEO20202) chạy trên module phiếu học tập khtd
+ * api/lib/chd.php — Bộ phiếu online "Thực tập Cơ học đất" (GEO10404) chạy trên module phiếu học tập khtd
  * (docs/04-API-PHP.md mục 34). Không thêm bảng, không thêm action: dùng lại khtd_worksheets/khtd_submissions,
  * ảnh minh chứng (khtd_photos), chấm Gemini, phiếu điểm PDF.
  *

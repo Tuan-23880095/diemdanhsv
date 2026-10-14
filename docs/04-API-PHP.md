@@ -1254,7 +1254,7 @@ Mục đích: hết học kỳ, giảng viên tải toàn bộ dữ liệu của
 
 ## 34. GĐ13 — Thực tập Cơ học đất `chd-tt/` trên module phiếu online (14/10/2026) — `api/lib/chd.php`, `api/lib/chd_phieu.json`
 
-Mục đích: học phần Cơ học đất GEO20202 (Bộ môn Địa chất Công trình - Địa chất Thủy văn) dùng chung hệ thống phiếu học tập online của KHTĐ: đăng nhập MSSV + mã buổi, ảnh minh chứng theo từng hàng bảng, Gemini chấm theo rubric, phiếu điểm PDF, thống kê, lưu trữ. **Không thêm bảng, không thêm action, không migration.**
+Mục đích: học phần Cơ học đất GEO10404 (Bộ môn Địa chất Công trình - Địa chất Thủy văn) dùng chung hệ thống phiếu học tập online của KHTĐ: đăng nhập MSSV + mã buổi, ảnh minh chứng theo từng hàng bảng, Gemini chấm theo rubric, phiếu điểm PDF, thống kê, lưu trữ. **Không thêm bảng, không thêm action, không migration.**
 
 **Bộ phiếu** (`api/lib/chd_phieu.json`, sinh từ nguồn chung với bản in A4; thư mục `api/lib` bị `.htaccess` chặn web nên đáp án không lộ): số 1–6 = phiếu báo cáo thực hành 6 buổi (mỗi phiếu có ít nhất một bảng `photos: true`, nhãn cột `photo_label` = "Ảnh minh chứng", hướng dẫn chụp `photo_hint`; MaxAttempts 2, BEST); số 11–15 = các mốc **chuyên đề thuyết trình nhóm** theo lộ trình của phiếu giao nhiệm vụ (mốc 1 buổi 5, mốc 2 buổi 7/9, tóm tắt trước buổi trình bày 2 ngày, trình bày buổi 8/10, bản sửa 3 ngày sau; ScorePolicy LAST). Tệp slide/Excel/PDF nộp bằng liên kết Drive/OneDrive (ô chữ), ảnh biên bản họp/minh chứng nộp vào cột ảnh — không lưu tệp văn phòng trên host.
 
@@ -1268,4 +1268,4 @@ Mục đích: học phần Cơ học đất GEO20202 (Bộ môn Địa chất C�
 
 **Trang**: `chd-tt/index.html` (trang lớp: làm phiếu, giáo trình, phiếu in A4, rubric, lộ trình chuyên đề), `chd-tt/online.html` (SV), `chd-tt/quanly.html` (GV, `KHTD_BO='chd'`), `chd-tt/gv.html` + `chd-tt/tai-lieu.php` (tài liệu khoá trong `chd-tt/_gv/`: kế hoạch giảng dạy, đáp án 6 phiếu, đề kiểm tra và đáp án — `.htaccess` gốc thêm `RewriteRule ^chd-tt/_gv(/|$) - [F,L]`), `chd-tt/anh.php`, `chd-tt/xuat-pdf.php` (gọi lại bản trong `khtd/`). Trang chủ: tab **CHĐ-TT** cạnh KHTD-TT và thẻ “Thực tập Cơ học đất”; `pages/lecturer.html`: nút CHĐ-TT. `?v=20261014-chdtt`.
 
-**Vận hành**: Quản trị → tạo lớp GEO20202 (tên học phần có “Cơ học đất”), nhập danh sách → `chd-tt/quanly.html` chọn lớp → “Tạo / bổ sung phiếu CHĐ” → mở mã vào lớp như KHTD. Kiểm thử: `php tools/smoke_chd.php --config=<CSDL thử>` (33 ca); `tools/smoke_khtd_attempts.php` vẫn 67/67.
+**Vận hành**: Quản trị → tạo lớp GEO10404 (tên học phần có “Cơ học đất”), nhập danh sách → `chd-tt/quanly.html` chọn lớp → “Tạo / bổ sung phiếu CHĐ” → mở mã vào lớp như KHTD. Kiểm thử: `php tools/smoke_chd.php --config=<CSDL thử>` (33 ca); `tools/smoke_khtd_attempts.php` vẫn 67/67.
