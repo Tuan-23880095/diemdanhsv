@@ -23,6 +23,8 @@ RewriteRule ^api/lib(/|$) - [F,L]
 # Hồ sơ nộp Khoa + đề thi của học phần KHTĐ (GĐ11): chỉ phục vụ qua
 # khtd/tai-lieu.php sau khi kiểm tra token giảng viên — chặn URL trực tiếp.
 RewriteRule ^khtd/_gv(/|$) - [F,L]
+# Tài liệu giảng viên học phần Cơ học đất (kế hoạch, đáp án, đề kiểm tra): chỉ qua chd-tt/tai-lieu.php.
+RewriteRule ^chd-tt/_gv(/|$) - [F,L]
 
 # File log lỗi PHP mặc định của shared hosting (tên 'error_log', không có
 # đuôi .log) — có thể chứa thông tin nhạy cảm (GĐ5 review bảo mật, H2)

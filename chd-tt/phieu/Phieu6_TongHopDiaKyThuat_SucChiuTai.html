@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tổng hợp địa kỹ thuật, SPT và đánh giá sức chịu tải</title><style>
+:root{--le-tren:20mm;--le-duoi:20mm;--le-phai:15mm;--le-trai:25mm;--co-chu:12pt;--co-dau:12pt}
+@page{size:A4 portrait;margin:var(--le-tren) var(--le-phai) var(--le-duoi) var(--le-trai);
+  @top-center{content:counter(page);font-family:"Times New Roman",Times,serif;font-size:13pt;vertical-align:bottom;padding-bottom:4mm}}
+@page :first{@top-center{content:none}}
+@page ngang{size:A4 landscape;margin:20mm 15mm 20mm 20mm}
+.trang-ngang{page:ngang}
+html{background:#8a8a8a}
+body{margin:0;color:#000;font-family:"Times New Roman",Times,"Liberation Serif",serif;font-size:var(--co-chu);line-height:1.3}
+.to-a4{width:210mm;min-height:297mm;box-sizing:border-box;background:#fff;padding:var(--le-tren) var(--le-phai) var(--le-duoi) var(--le-trai);margin:8mm auto}
+@media print{html{background:#fff}.to-a4{margin:0;padding:0;width:auto;min-height:0}.khong-in{display:none!important}}
+.dau-vb{width:100%;border-collapse:collapse;table-layout:auto;font-size:var(--co-dau)}
+.dau-vb td{vertical-align:top;text-align:center;padding:0 2mm 0 0;border:0;white-space:nowrap}
+.dau-vb td+td{padding:0 0 0 2mm}
+.don-vi .cap-tren{text-transform:uppercase;font-weight:normal;line-height:1.25}
+.don-vi .ban-hanh{text-transform:uppercase;font-weight:bold;line-height:1.25}
+.don-vi .ban-hanh span{display:inline-block}
+.don-vi .ban-hanh span::after{content:"";display:block;width:45%;margin:1.5pt auto 0;border-top:.75pt solid #000}
+.quoc-hieu{font-weight:bold;text-transform:uppercase;line-height:1.25}
+.tieu-ngu{font-weight:bold;font-size:calc(var(--co-dau) + 1pt);line-height:1.25}
+.tieu-ngu span{display:inline-block;border-bottom:.75pt solid #000;padding-bottom:.5pt}
+.hoc-phan{line-height:1.3;font-size:11.5pt}
+.ten-loai{text-align:center;font-weight:bold;font-size:14pt;text-transform:uppercase;margin:14pt 0 4pt}
+.trich-yeu{text-align:center;font-weight:bold;font-size:13pt;margin:0 0 10pt}
+.trich-yeu span{display:inline-block}
+.trich-yeu span::after{content:"";display:block;width:40%;margin:2pt auto 0;border-top:.75pt solid #000}
+.noi-dung p{margin:0 0 4pt;text-align:justify}
+.noi-dung p.muc{font-weight:bold;margin:9pt 0 4pt;text-align:left;break-after:avoid}
+.noi-dung p.nho{font-size:11pt}
+.noi-dung ul,.noi-dung ol{margin:0 0 4pt;padding-left:1cm}
+.noi-dung table{width:100%;border-collapse:collapse;margin:3pt 0 8pt;font-size:11pt}
+.noi-dung th,.noi-dung td{border:.6pt solid #000;padding:2pt 3pt;vertical-align:top;text-align:left}
+.noi-dung th{text-align:center;vertical-align:middle;background:#f2f2f2}
+.noi-dung thead{display:table-header-group}
+.noi-dung tr{break-inside:avoid}
+.noi-dung td.o{height:7mm}
+.noi-dung td.anh{width:16mm;text-align:center;color:#555;font-size:9pt}
+.dong{border-bottom:.6pt dotted #000;height:7mm}
+.ky-ten{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:14pt;break-inside:avoid}
+.ky-ten td{vertical-align:top;text-align:center;padding:0}
+.ky-ten .ngay-ky{font-style:italic;white-space:nowrap}
+.ky-ten .chuc-vu{font-weight:bold;text-transform:uppercase}
+.ky-ten .ghi-chu{font-style:italic;font-size:11pt}
+.ky-ten .cho-ky{height:22mm}
+.ky-ten .ho-ten{font-weight:bold}
+.thong-tin td{border:0!important;padding:1pt 0!important}
+.dap-an{border:.6pt solid #000;padding:4pt 6pt;margin:3pt 0 6pt;break-inside:avoid}
+</style></head><body class="giang-day"><div class="to-a4"><table class="dau-vb"><tr><td class="don-vi"><div class="cap-tren">Trường Đại học Khoa học Tự nhiên</div><div class="cap-tren">Khoa Địa chất</div><div class="ban-hanh"><span>Bộ môn Địa chất Công trình - Địa chất Thủy văn</span></div></td><td><div class="hoc-phan">Học phần: <b>Cơ học đất (GEO20202)</b></div><div class="hoc-phan">Học kỳ 1 – Năm học 2026 – 2027</div></td></tr></table><div class="ten-loai">Phiếu báo cáo thực hành số 6</div><div class="trich-yeu"><span>Tổng hợp địa kỹ thuật, SPT và đánh giá sức chịu tải</span></div><div class="noi-dung"><table class="thong-tin"><tr><td>Họ và tên sinh viên: ……………………………………</td><td>MSSV: ……………………</td></tr><tr><td>Nhóm / tổ: ………… Thành viên cùng làm: ……………………………</td><td>Ngày thực hành: ……/……/20……</td></tr><tr><td colspan="2">Mã hiệu mẫu / lỗ khoan / độ sâu: ……………………………………………………………</td></tr></table><p class="nho"><i>Buổi 6 · Chuẩn đầu ra: G4.1, G5.1, G6.1, CHP3 · Làm và nộp bản online tại diemdanhsv.com/chd-tt (đăng nhập bằng MSSV và mã buổi học); bản in dùng ghi chép tại phòng thí nghiệm.</i></p><p class="muc">I. Tổng hợp hồ sơ địa kỹ thuật</p><p class="nho"><i>Ảnh minh chứng: Chụp hình trụ hố khoan, mẫu SPT hoặc bảng tổng hợp chỉ tiêu nhóm đã lập. Nộp ảnh trên trang làm phiếu online, đánh dấu ☐ khi đã nộp.</i></p><table><thead><tr><th style="width:26%">Nội dung</th><th>Độ sâu (m)</th><th>Mô tả đất</th><th>N_SPT</th><th>N₆₀</th><th>w (%)</th><th>γ (kN/m³)</th><th>c (kPa)</th><th>φ (độ)</th><th>pc (kPa) / Cc</th><th class="anh">Ảnh minh chứng (web)</th></tr></thead><tbody><tr><td>Lớp 1</td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="anh">☐</td></tr><tr><td>Lớp 2</td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="anh">☐</td></tr><tr><td>Lớp 3</td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="anh">☐</td></tr><tr><td>Lớp 4</td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="o"></td><td class="anh">☐</td></tr></tbody></table><p class="muc">II. Sức chịu tải nền dưới móng</p><table><thead><tr><th style="width:26%">Nội dung</th><th>Giá trị</th><th>Công thức, hệ số tra (ghi nguồn bảng)</th></tr></thead><tbody><tr><td>Thông số móng: B, L, Df; MNN</td><td class="o"></td><td class="o"></td></tr><tr><td>Hệ số Nc, Nq, Nγ dùng (tác giả)</td><td class="o"></td><td class="o"></td></tr><tr><td>Sức chịu tải giới hạn qu (kPa)</td><td class="o"></td><td class="o"></td></tr><tr><td>Sức chịu tải cho phép qa = qu/FS, FS = 3 (kPa)</td><td class="o"></td><td class="o"></td></tr><tr><td>Áp lực tính toán R theo TCVN 9362:2012 (kPa)</td><td class="o"></td><td class="o"></td></tr><tr><td>Áp lực đáy móng thực tế p (kPa) và kết luận</td><td class="o"></td><td class="o"></td></tr></tbody></table><p class="muc">III. Đề xuất phương án nền móng</p><p>Chọn loại móng (móng đơn nông / móng bè / móng cọc) và biện pháp xử lý nền hoặc thi công hố móng; lập luận bằng số liệu ở mục I và II.</p><div class="dong"></div><div class="dong"></div><div class="dong"></div><div class="dong"></div><div class="dong"></div><p class="muc">IV. Câu hỏi phân tích – vận dụng</p><p><b>Câu 1.</b> Vì sao qu/FS và R theo TCVN 9362:2012 khác nhau về bản chất?</p><div class="dong"></div><div class="dong"></div><div class="dong"></div><div class="dong"></div><p><b>Câu 2.</b> Mực nước ngầm dâng lên đến đáy móng thì sức chịu tải thay đổi thế nào? Giải thích bằng số hạng nào trong công thức.</p><div class="dong"></div><div class="dong"></div><div class="dong"></div><div class="dong"></div><p class="muc">V. Tự đánh giá (Chưa / Tạm được / Tự tin)</p><table><thead><tr><th>Nội dung tự đánh giá</th><th style="width:15%">Chưa</th><th style="width:15%">Tạm được</th><th style="width:15%">Tự tin</th></tr></thead><tbody><tr><td>Tổng hợp đúng các lớp đất từ hồ sơ</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>Tra hệ số sức chịu tải đúng tác giả</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>Tính qu, qa, R</td><td>☐</td><td>☐</td><td>☐</td></tr><tr><td>Đề xuất phương án có lập luận</td><td>☐</td><td>☐</td><td>☐</td></tr></tbody></table><p class="muc">Thang điểm (rubric của phiếu)</p><table><thead><tr><th>Tiêu chí</th><th style="width:14%">Điểm tối đa</th><th style="width:18%">Điểm đạt</th></tr></thead><tbody><tr><td>Tổng hợp hồ sơ đủ, nhất quán, có ảnh</td><td style="text-align:center">3</td><td></td></tr><tr><td>Tính đúng qu, qa, R; ghi nguồn hệ số</td><td style="text-align:center">4</td><td></td></tr><tr><td>Phương án nền móng có lập luận</td><td style="text-align:center">1,5</td><td></td></tr><tr><td>Câu hỏi vận dụng</td><td style="text-align:center">1,5</td><td></td></tr><tr><td><b>Tổng</b></td><td style="text-align:center"><b>10</b></td><td></td></tr></tbody></table><table class="ky-ten"><tr><td><div class="ngay-ky">&nbsp;</div><div class="chuc-vu">Sinh viên</div><div class="ghi-chu">(ký, ghi rõ họ tên)</div><div class="cho-ky"></div><div class="ho-ten"></div></td><td><div class="ngay-ky">Thành phố Hồ Chí Minh, ngày …… tháng …… năm 20……</div><div class="chuc-vu">Giảng viên hướng dẫn</div><div class="ghi-chu">(ký, ghi rõ họ tên)</div><div class="cho-ky"></div><div class="ho-ten"></div></td></tr></table></div></div><script>
+(function(){var b=document.querySelector('.dau-vb');if(!b)return;var k=b.parentElement;function t(){return b.scrollWidth>k.clientWidth+1}
+var c=12;while(t()&&c>11){c-=.25;b.style.fontSize=c+'pt'}if(t())console.warn('THE THUC: dau van ban van tran o '+c+'pt');
+['.quoc-hieu','.tieu-ngu','.don-vi .cap-tren','.don-vi .ban-hanh','.ky-ten .ngay-ky'].forEach(function(s){document.querySelectorAll(s).forEach(function(e){
+var h=parseFloat(getComputedStyle(e).lineHeight);if(e.getBoundingClientRect().height>h*1.6)console.warn('THE THUC: '+s+' bi xuong dong')})});})();
+</script></body></html>

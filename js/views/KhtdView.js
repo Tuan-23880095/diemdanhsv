@@ -167,8 +167,11 @@ class KhtdView {
         const rows = s.rows.map((r, ri) => `<tr><th class="border px-2 py-1 text-left bg-slate-50 whitespace-nowrap">${this._esc(r)}</th>` +
           (s.photos ? this._photoCell(s.id, ri, editable) : '') +
           s.columns.map((c, ci) => `<td class="border p-0"><textarea data-sec="${s.id}" data-r="${ri}" data-c="${ci}" rows="2" ${locked ? 'disabled' : ''} class="w-full resize-y border-0 p-1 text-sm focus:ring-1 focus:ring-blue-300">${this._esc(((a[s.id] || [])[ri] || [])[ci] || '')}</textarea></td>`).join('') + '</tr>').join('');
-        const hint = s.photos ? '<p class="text-xs text-slate-600">Mỗi mẫu chụp 1–3 ảnh rõ nét (toàn mẫu và cận cảnh mặt vỡ, cát khai, kiến trúc); ảnh được nén tự động trước khi gửi.</p>' : '';
-        return `<section class="mt-5"><h3 class="font-bold">${this._esc(s.title)}</h3>${hint}<div class="table-wrap mt-2 overflow-x-auto"><table class="w-full border text-sm"><thead><tr><th class="border px-2 py-1 bg-slate-100"></th>${s.photos ? '<th class="border px-2 py-1 bg-green-50 text-left">Ảnh mẫu</th>' : ''}${s.columns.map((c) => `<th class="border px-2 py-1 bg-slate-100 text-left">${this._esc(c)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div></section>`;
+        const hint = s.photos ? `<p class="text-xs text-slate-600">${this._esc(s.photo_hint || 'Mỗi mẫu chụp 1–3 ảnh rõ nét (toàn mẫu và cận cảnh mặt vỡ, cát khai, kiến trúc); ảnh được nén tự động trước khi gửi.')}</p>` : '';
+        return `<section class="mt-5"><h3 class="font-bold">${this._esc(s.title)}</h3>${hint}<div class="table-wrap mt-2 overflow-x-auto"><table class="w-full border text-sm"><thead><tr><th class="border px-2 py-1 bg-slate-100"></th>${s.photos ? `<th class="border px-2 py-1 bg-green-50 text-left">${this._esc(s.photo_label || 'Ảnh mẫu')}</th>` : ''}${s.columns.map((c) => `<th class="border px-2 py-1 bg-slate-100 text-left">${this._esc(c)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div></section>`;
+      }
+      if (s.type === 'info') {   // mục chỉ đọc (vd lộ trình nộp bài chuyên đề CHĐ) — không có ô nhập
+        return `<section class="mt-3 rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900"><h3 class="font-bold">${this._esc(s.title)}</h3><ul class="mt-1 list-disc space-y-1 pl-5">${(s.lines || []).map((x) => `<li>${this._esc(x)}</li>`).join('')}</ul></section>`;
       }
       if (s.type === 'questions') {
         return `<section class="mt-5"><h3 class="font-bold">${this._esc(s.title)}</h3>` + s.items.map((q, i) => `<div class="mt-3"><label class="block text-sm"><b>Câu ${i + 1}.</b> ${this._esc(q.text)}</label><textarea data-q="${q.id}" rows="3" ${locked ? 'disabled' : ''} class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-sm">${this._esc(a[q.id] || '')}</textarea></div>`).join('') + '</section>';
@@ -226,7 +229,7 @@ class KhtdView {
       if (info.emptyQ) blanks.push(`${info.emptyQ} câu trả lời`);
       if (info.emptyCells) blanks.push(`${info.emptyCells} ô trong bảng`);
       if (info.emptySelf) blanks.push(`${info.emptySelf} mục tự đánh giá`);
-      if (info.noPhoto) blanks.push(`${info.noPhoto} mẫu chưa có ảnh`);
+      if (info.noPhoto) blanks.push(`${info.noPhoto} hàng chưa có ảnh`);
       let after;
       if (info.allowed === 1 && !info.extra) after = '<b>Phiếu này chỉ nộp một lần</b> — sau khi nộp không sửa được nữa.';
       else if (info.remainingAfter === 0) after = '<b>Đây là lần nộp cuối cùng</b> — sau khi nộp không làm lại được nữa.';

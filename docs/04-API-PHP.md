@@ -1251,3 +1251,21 @@ Mục đích: hết học kỳ, giảng viên tải toàn bộ dữ liệu của
 **Tài liệu in cho SV:** `khtd/phieu/Bang_NhanDien_KhoangVat_Da.pdf`, `khtd/phieu/Rubric_NhanDien_KhoangDa.pdf` (liên kết ở `khtd/index.html` và trong phiếu 7).
 
 **Kiểm thử:** `php tools/smoke_khtd_exam.php --config=<cấu hình CSDL thử>` (67 kiểm tra: so khớp tên, bậc rubric đá/khoáng, bấm giờ, chống sửa giờ, quá giờ, đáp án bộ mẫu, bảng luyện tập, CSV, dự báo từ phiếu 1, email).
+
+## 34. GĐ13 — Thực tập Cơ học đất `chd-tt/` trên module phiếu online (14/10/2026) — `api/lib/chd.php`, `api/lib/chd_phieu.json`
+
+Mục đích: học phần Cơ học đất GEO20202 (Bộ môn Địa chất Công trình - Địa chất Thủy văn) dùng chung hệ thống phiếu học tập online của KHTĐ: đăng nhập MSSV + mã buổi, ảnh minh chứng theo từng hàng bảng, Gemini chấm theo rubric, phiếu điểm PDF, thống kê, lưu trữ. **Không thêm bảng, không thêm action, không migration.**
+
+**Bộ phiếu** (`api/lib/chd_phieu.json`, sinh từ nguồn chung với bản in A4; thư mục `api/lib` bị `.htaccess` chặn web nên đáp án không lộ): số 1–6 = phiếu báo cáo thực hành 6 buổi (mỗi phiếu có ít nhất một bảng `photos: true`, nhãn cột `photo_label` = "Ảnh minh chứng", hướng dẫn chụp `photo_hint`; MaxAttempts 2, BEST); số 11–15 = các mốc **chuyên đề thuyết trình nhóm** theo lộ trình của phiếu giao nhiệm vụ (mốc 1 buổi 5, mốc 2 buổi 7/9, tóm tắt trước buổi trình bày 2 ngày, trình bày buổi 8/10, bản sửa 3 ngày sau; ScorePolicy LAST). Tệp slide/Excel/PDF nộp bằng liên kết Drive/OneDrive (ô chữ), ảnh biên bản họp/minh chứng nộp vào cột ảnh — không lưu tệp văn phòng trên host.
+
+**Khóa mới trong SchemaJSON** (phiếu cũ không có → hành vi cũ giữ nguyên):
+- `mon` `{ma, ten, rubric?, url}` → `khtd_mon()`: tiêu đề email `[CHĐ]`, tên môn, link trang làm phiếu.
+- `cham` `{vai_tro, quy_tac_bang, quy_tac_sua}` → `khtd_grade_system()`: thay câu vai trò, quy tắc 2 (bảng số liệu: Gemini **tự tính lại** đại lượng dẫn xuất từ số liệu thô của SV, sai lệch ≤ 2 % đúng, 2–5 % đúng một phần, kiểm đơn vị — 1 cm²/s = 3 155,76 m²/năm) và quy tắc 7. Phiếu KHTĐ: lời dặn **giống hệt** bản trước (đã so byte).
+- Mục `type: 'info'` `{title, lines[]}`: chỉ hiển thị (lộ trình, hạn nộp), không có ô nhập; các hàm thống kê/PDF/lưu trữ bỏ qua.
+- `status` (chỉ lúc tạo): mốc 12–15 tạo ở trạng thái `HIDDEN`, giảng viên mở khi tới hạn.
+
+**Thay đổi code**: `khtdSeedWorksheets` nhận thêm `bo` (`'chd'` → `chd_default_worksheets()`, mặc định bộ KHTĐ); `khtd_pdf.php` dùng `photo_label`; `KhtdView` hiện `photo_label/photo_hint`, mục `info`; `KhtdController` đọc `window.KHTD_BO` (gửi `bo` khi tạo phiếu) và `window.KHTD_CLASS_FILTER` (chỉ hiện lớp của môn, không khớp thì hiện tất cả); `APIService.khtdSeedWorksheets(token, classId, bo?)`.
+
+**Trang**: `chd-tt/index.html` (trang lớp: làm phiếu, giáo trình, phiếu in A4, rubric, lộ trình chuyên đề), `chd-tt/online.html` (SV), `chd-tt/quanly.html` (GV, `KHTD_BO='chd'`), `chd-tt/gv.html` + `chd-tt/tai-lieu.php` (tài liệu khoá trong `chd-tt/_gv/`: kế hoạch giảng dạy, đáp án 6 phiếu, đề kiểm tra và đáp án — `.htaccess` gốc thêm `RewriteRule ^chd-tt/_gv(/|$) - [F,L]`), `chd-tt/anh.php`, `chd-tt/xuat-pdf.php` (gọi lại bản trong `khtd/`). Trang chủ: tab **CHĐ-TT** cạnh KHTD-TT và thẻ “Thực tập Cơ học đất”; `pages/lecturer.html`: nút CHĐ-TT. `?v=20261014-chdtt`.
+
+**Vận hành**: Quản trị → tạo lớp GEO20202 (tên học phần có “Cơ học đất”), nhập danh sách → `chd-tt/quanly.html` chọn lớp → “Tạo / bổ sung phiếu CHĐ” → mở mã vào lớp như KHTD. Kiểm thử: `php tools/smoke_chd.php --config=<CSDL thử>` (33 ca); `tools/smoke_khtd_attempts.php` vẫn 67/67.

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kế hoạch giảng dạy Thực tập Cơ học đất (GEO20202) - HCMUS</title>
+<style>
+@page {
+  size: A4 portrait;
+  margin: 20mm 15mm 20mm 25mm;
+  @top-center {
+    font-family: "Times New Roman", serif;
+    font-size: 13pt;
+    content: counter(page);
+  }
+}
+@page :first {
+  @top-center { content: ""; }
+}
+body {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 12pt;
+  line-height: 1.45;
+  color: #000;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+}
+.page-container {
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 15mm 15mm 15mm 20mm;
+  box-sizing: border-box;
+}
+/* Dau van ban theo QD 1766 */
+.dau-vb {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12pt;
+}
+.dau-vb td {
+  border: none;
+  vertical-align: top;
+  padding: 0;
+}
+.col-left {
+  width: 48%;
+  text-align: center;
+}
+.col-right {
+  width: 52%;
+  text-align: center;
+}
+.truong-tren {
+  font-size: 11pt;
+  text-transform: uppercase;
+  margin: 0;
+}
+.truong-chinh {
+  font-size: 11.5pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 1pt 0 0;
+}
+.don-vi {
+  font-size: 11pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 2pt 0 0;
+}
+.line-dv {
+  width: 45%;
+  height: 1pt;
+  background: #000;
+  margin: 3pt auto 0;
+}
+.quoc-hieu {
+  font-size: 11.5pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0;
+}
+.tieu-ngu {
+  font-size: 12.5pt;
+  font-weight: bold;
+  margin: 2pt 0 0;
+}
+.line-tn {
+  width: 65%;
+  height: 1pt;
+  background: #000;
+  margin: 3pt auto 0;
+}
+.tieu-de-vb {
+  text-align: center;
+  font-size: 15pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 18pt 0 4pt;
+  line-height: 1.3;
+}
+.trich-yeu {
+  text-align: center;
+  font-size: 12pt;
+  font-weight: bold;
+  font-style: italic;
+  margin: 0 0 16pt;
+}
+h2 {
+  font-size: 12.5pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 12pt 0 4pt;
+}
+h3 {
+  font-size: 12pt;
+  font-weight: bold;
+  margin: 8pt 0 3pt;
+}
+p {
+  margin: 0 0 6pt;
+  text-align: justify;
+  text-indent: 1.2cm;
+}
+.no-indent {
+  text-indent: 0;
+}
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 6pt 0 10pt;
+  font-size: 11pt;
+  line-height: 1.3;
+}
+table.data-table th, table.data-table td {
+  border: 0.6pt solid #000;
+  padding: 4.5pt 5pt;
+  vertical-align: top;
+}
+table.data-table th {
+  background: #f2f2f2;
+  font-weight: bold;
+  text-align: center;
+}
+.center { text-align: center; }
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+.ky-ten-block {
+  width: 100%;
+  margin-top: 20pt;
+  border-collapse: collapse;
+}
+.ky-ten-block td {
+  border: none;
+  width: 50%;
+  text-align: center;
+  vertical-align: top;
+}
+.space-ky {
+  height: 65pt;
+}
+@media print {
+  body { background: transparent; }
+  .page-container { padding: 0; max-width: 100%; }
+}
+</style>
+<style>
+.dv3{text-align:center;white-space:nowrap;font-family:"Times New Roman",Times,serif;font-size:12pt;line-height:1.25;color:#000}
+.dv3 .ct{text-transform:uppercase;font-weight:normal}
+.dv3 .bh{text-transform:uppercase;font-weight:bold}
+.dv3 .bh span{display:inline-block}
+.dv3 .bh span::after{content:"";display:block;width:45%;margin:1.5pt auto 0;border-top:.75pt solid #000}
+.qh3{text-align:center;white-space:nowrap;font-family:"Times New Roman",Times,serif;line-height:1.25;color:#000}
+.qh3 .qh{font-weight:bold;text-transform:uppercase;font-size:12pt}
+.qh3 .tn{font-weight:bold;font-size:13pt}
+.qh3 .tn span{display:inline-block;border-bottom:.75pt solid #000;padding-bottom:.5pt}
+@media print{.btn-print{display:none!important}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div class="page-container">
+
+<table class="dau-vb">
+  <tr>
+    <td class="col-left">
+      <div class="dv3"><div class="ct">Trường Đại học Khoa học Tự nhiên</div><div class="ct">Khoa Địa chất</div><div class="bh"><span>Bộ môn Địa chất Công trình - Địa chất Thủy văn</span></div></div>
+    </td>
+    <td class="col-right">
+      <div class="qh3"><div class="qh">Cộng hòa xã hội chủ nghĩa Việt Nam</div><div class="tn"><span>Độc lập - Tự do - Hạnh phúc</span></div></div>
+    </td>
+  </tr>
+</table>
+
+<div class="tieu-de-vb">KẾ HOẠCH GIẢNG DẠY VÀ ĐỀ CƯƠNG CHI TIẾT<br/>PHẦN THỰC HÀNH HỌC PHẦN CƠ HỌC ĐẤT</div>
+<div class="trich-yeu">(Mã học phần: GEO20202 – 3 Tín chỉ: 30 LT, 30 TH, 45 Tự học)</div>
+
+<h2>I. THÔNG TIN CHUNG VỀ ĐỘI NGŨ GIẢNG VIÊN VÀ HỌC PHẦN</h2>
+<p class="no-indent"><b>1. Giảng viên phụ trách và giảng dạy:</b></p>
+<ul style="margin:0 0 6pt 1.2cm; padding:0;">
+  <li><b>ThS. Đinh Quốc Tuấn:</b> Giảng viên phụ trách phần thực hành, chuyển đổi số dữ liệu thí nghiệm và hệ thống phiếu trực tuyến (Email: dqtuan@hcmus.edu.vn).</li>
+  <li><b>ThS. Đỗ Ngọc Thanh:</b> Giảng viên đồng trách nhiệm hướng dẫn thực hành thí nghiệm phòng thí nghiệm cơ học đất và khảo sát hiện trường.</li>
+  <li><b>TS. Hồ Thu Hiền:</b> Giảng viên phụ trách lý thuyết học phần, điều phối chung đề cương chi tiết (Bộ môn Địa chất Thủy văn – Địa chất Công trình).</li>
+</ul>
+
+<p class="no-indent"><b>2. Thông tin học phần:</b></p>
+<p>Mã học phần: <b>GEO20202</b> | Tên tiếng Việt: <b>Cơ học đất</b> | Tên tiếng Anh: <b>Investigating Methods in Engineering Geology / Soil Mechanics</b>. Học phần tiên quyết: Địa chất cơ sở (GEO10051), Địa chất công trình (GEO10059). Số tín chỉ: 3 (30 tiết lý thuyết, 30 tiết thực hành, 45 tiết tự học).</p>
+<p><b>Mô tả tóm tắt phần thực hành:</b> Học phần thực hành gồm 30 tiết (tổ chức thành 6 buổi học tập trung, mỗi buổi 5 tiết), trang bị cho sinh viên kỹ năng trực tiếp vận hành các thiết bị thí nghiệm cơ lý đất tiêu chuẩn; quy trình lấy mẫu nguyên dạng và thí nghiệm nén cố kết một chiều (Oedometer); kỹ năng chuyển đổi số dữ liệu địa kỹ thuật (xử lý trên Excel và Web); vẽ đường cong nén lún e – log p, xác định áp lực tiền cố kết pc, hệ số cố kết cv; tính toán dự báo độ lún công trình theo thời gian và ứng dụng thực tiễn trong thiết kế nền móng.</p>
+
+<h2>II. CHUẨN ĐẦU RA PHẦN THỰC HÀNH (CLO) GẮN VỚI THANG BLOOM</h2>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th style="width:10%">Mã CĐR</th>
+      <th style="width:50%">Mô tả chuẩn đầu ra học phần</th>
+      <th style="width:20%">Mức Bloom</th>
+      <th style="width:20%">Liên kết CĐR CTĐT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="center bold">G1.1</td>
+      <td>Nhận biết, phân loại đất tại hiện trường và thao tác thành thạo các thí nghiệm chỉ tiêu vật lý cơ bản (độ ẩm, dung trọng, khối lượng riêng, thành phần hạt).</td>
+      <td class="center">3,0 (Vận dụng)</td>
+      <td class="center">CCT1.3, CCT2.1</td>
+    </tr>
+    <tr>
+      <td class="center bold">G1.2</td>
+      <td>Vận hành máy nén cố kết một chiều, lắp đặt mẫu nguyên dạng đúng kỹ thuật và ghi nhận số liệu biến dạng theo chuỗi thời gian logarithm.</td>
+      <td class="center">3,5 (Vận dụng nâng cao)</td>
+      <td class="center">CCT2.1</td>
+    </tr>
+    <tr>
+      <td class="center bold">G2.1</td>
+      <td>Chuyển đổi số dữ liệu thí nghiệm: Chuẩn hóa bảng biểu, làm sạch dữ liệu và tự động hóa xử lý kết quả nén lún bằng công cụ số (Excel/Python/Web).</td>
+      <td class="center">4,0 (Phân tích)</td>
+      <td class="center">CCT2.1, CCT2.4</td>
+    </tr>
+    <tr>
+      <td class="center bold">G3.1</td>
+      <td>Đọc hiểu, sử dụng thuật ngữ tiếng Anh chuyên ngành Địa kỹ thuật & Điều tra địa chất công trình trong báo cáo kỹ thuật.</td>
+      <td class="center">3,5 (Vận dụng)</td>
+      <td class="center">CCT2.2, CCT2.3</td>
+    </tr>
+    <tr>
+      <td class="center bold">G4.1</td>
+      <td>Dựng đường cong e – log p, xác định chính xác các thông số cố kết cốt lõi: pc, OCR, Cc, Cs, cv theo các phương pháp Casagrande và Taylor.</td>
+      <td class="center">4,5 (Phân tích - Đánh giá)</td>
+      <td class="center">CCT1.3, CCT2.4</td>
+    </tr>
+    <tr>
+      <td class="center bold">G5.1</td>
+      <td>Dự báo độ lún công trình theo thời gian (St) và đề xuất giải pháp xử lý nền móng công trình thực tế dựa trên điều kiện địa chất công trình cụ thể.</td>
+      <td class="center">4,5 (Đánh giá - Đề xuất)</td>
+      <td class="center">CCT2.4, CCT3.1</td>
+    </tr>
+    <tr>
+      <td class="center bold">G6.1</td>
+      <td>Làm việc nhóm hiệu quả, tuân thủ an toàn phòng thí nghiệm, trung thực trong ghi nhận số liệu và liêm chính học thuật.</td>
+      <td class="center">4,0 (Thái độ - Giá trị)</td>
+      <td class="center">CCT3.1</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>III. KẾ HOẠCH GIẢNG DẠY CHI TIẾT 6 BUỔI THỰC HÀNH VÀ HỆ THỐNG PHIẾU ĐÁNH GIÁ</h2>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th style="width:10%">Buổi / Tuần</th>
+      <th style="width:38%">Chủ đề & Nội dung chi tiết</th>
+      <th style="width:17%">CĐR liên kết</th>
+      <th style="width:15%">Hình thức dạy & học</th>
+      <th style="width:20%">Bài đánh giá</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="center bold">Tuần 1<br/>(Buổi 1)</td>
+      <td><b>Xác định các chỉ tiêu vật lý và trạng thái của đất:</b><br/>
+      - Nhận biết, mô tả đất tại hiện trường theo TCVN 5747 / ASTM D2488.<br/>
+      - Thí nghiệm độ ẩm tự nhiên $W$ (TCVN 4196).<br/>
+      - Thí nghiệm khối lượng thể tích $\rho, \gamma$ dao vòng (TCVN 4197).<br/>
+      - Thí nghiệm khối lượng riêng $\rho_s$ bình tỷ trọng (TCVN 4195).<br/>
+      - Phân tích thành phần hạt rây sàng & tỷ trọng kế (TCVN 4198).</td>
+      <td class="center">G1.1, G1.2, G1.3, G6.1</td>
+      <td>Thuyết giảng quy trình; SV thao tác thí nghiệm trực tiếp tại Lab</td>
+      <td><b>Phiếu thực hành 1</b><br/>(Báo cáo số 1 – ĐG1.4)</td>
+    </tr>
+    <tr>
+      <td class="center bold">Tuần 2<br/>(Buổi 2)</td>
+      <td><b>Thí nghiệm nén cố kết một chiều (Oedometer test):</b><br/>
+      - Nguyên lý máy nén Oedometer và buồng thấm.<br/>
+      - Quy trình gọt và lắp mẫu nguyên dạng vào dao vòng nén cố kết.<br/>
+      - Kỹ thuật gia tải cấp áp lực: 25, 50, 100, 200, 400, 800 kPa.<br/>
+      - Kỹ thuật đọc đồng hồ so biến dạng theo chuỗi thời gian logarithm (0,1, 0,25, 0,5, 1, 2, 4, 8, 15, 30 phút, 1, 2, 4, 8, 24 giờ).</td>
+      <td class="center">G1.1, G1.2, G2.1, G3.1, G6.1</td>
+      <td>GV hướng dẫn kỹ thuật; SV thực hành lắp mẫu & kích tải</td>
+      <td><b>Phiếu thực hành 2</b><br/>(Báo cáo số liệu thô – ĐG1.4)</td>
+    </tr>
+    <tr>
+      <td class="center bold">Tuần 3<br/>(Buổi 3)</td>
+      <td><b>Theo dõi biến dạng cố kết và Chuyển đổi số dữ liệu:</b><br/>
+      - Tiếp tục theo dõi các cấp nén cao và chu trình dỡ tải đàn hồi (800 -> 400 -> 200 -> 100 -> 0 kPa).<br/>
+      - Hướng dẫn nhập liệu số liệu thực tế vào máy tính, chuẩn hóa bảng biểu số.<br/>
+      - Kỹ thuật làm sạch dữ liệu, kiểm tra tính hợp lý của số liệu biến dạng.<br/>
+      - Tự động hóa tính toán biến dạng mẫu $\Delta h_i$ và hệ số rỗng e.</td>
+      <td class="center">G1.1, G1.2, G2.1, G6.1</td>
+      <td>Duy trì thí nghiệm nén; thực hành xử lý số liệu trên máy tính</td>
+      <td><b>Phiếu thực hành 3</b><br/>(Đánh giá tiến độ chuyển đổi số)</td>
+    </tr>
+    <tr>
+      <td class="center bold">Tuần 4<br/>(Buổi 4)</td>
+      <td><b>Xử lý dữ liệu cố kết chuyên sâu & Xác định thông số:</b><br/>
+      - Dựng đường cong nén lún e – log p trên tọa độ bán logarithm.<br/>
+      - Xác định áp lực tiền cố kết pc (phương pháp Casagrande & Pacheco Silva).<br/>
+      - Xác định tỷ số tiền cố kết OCR và phân loại đất (NC, OC, UC).<br/>
+      - Xác định chỉ số nén Cc, chỉ số nở Cs, hệ số nén thể tích $m_v$.<br/>
+      - Xác định hệ số cố kết cv (phương pháp log t và phương pháp √t).</td>
+      <td class="center">G4.1, G4.3, G5.1, G6.1</td>
+      <td>Thực hành máy tính; phân tích đồ họa số và giải đoán đồ thị</td>
+      <td><b>Phiếu thực hành 4</b><br/>(Báo cáo chuyên sâu thông số cố kết)</td>
+    </tr>
+    <tr>
+      <td class="center bold">Tuần 5<br/>(Buổi 5)</td>
+      <td><b>Dự báo biến dạng và độ lún công trình bằng công cụ số:</b><br/>
+      - Phân bố ứng suất bản thân và ứng suất gia tăng do tải trọng ngoài.<br/>
+      - Tính toán độ lún cố kết sơ cấp Sc cho nền nhiều lớp đất.<br/>
+      - Dự báo độ lún theo thời gian: Mối quan hệ giữa U và Tv; tính độ lún St tại thời điểm $t$ bất kỳ và thời gian đạt $t_{50}, t_{90}$.<br/>
+      - Lập trình bảng tính tự động dự báo lún công trình trên Excel/Web.</td>
+      <td class="center">G4.1, G4.3, G5.1, G6.1</td>
+      <td>Thực hành số hóa bài toán lún công trình; thảo luận giải pháp</td>
+      <td><b>Phiếu thực hành 5</b><br/>(Báo cáo số 3 – Dự báo lún công trình)</td>
+    </tr>
+    <tr>
+      <td class="center bold">Tuần 6<br/>(Buổi 6)</td>
+      <td><b>Tổng hợp dữ liệu ĐCCT, Đánh giá sức chịu tải & Báo cáo:</b><br/>
+      - Tích hợp số liệu thí nghiệm phòng và thí nghiệm hiện trường SPT ($N_{30}$).<br/>
+      - Đánh giá sức chịu tải giới hạn $q_{ult}$ và cho phép $q_a$ theo Terzaghi & Meyerhof.<br/>
+      - Phân tích rủi ro địa kỹ thuật (lún không đều, trượt lở, bùng nền nước ngầm).<br/>
+      - Đề xuất phương án nền móng tối ưu; thuật ngữ tiếng Anh chuyên ngành.<br/>
+      - Tổng kết đánh giá, giải đáp thắc mắc và ôn tập thi kết thúc học phần.</td>
+      <td class="center">CHP1, CHP2, CHP3 (G1.1 đến G6.1)</td>
+      <td>Báo cáo tổng kết nhóm; phản biện và giải đáp chuyên sâu</td>
+      <td><b>Phiếu thực hành 6</b><br/>(Báo cáo tổng kết & Đề ôn thi thực hành)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>IV. PHƯƠNG THỨC ĐÁNH GIÁ VÀ HỌC LIỆU</h2>
+<p class="no-indent"><b>1. Tỷ trọng điểm đánh giá học phần:</b></p>
+<ul style="margin:0 0 6pt 1.2cm; padding:0;">
+  <li><b>Điểm thực hành (ĐG1.4) – Chiếm 30% tổng điểm học phần:</b> Đánh giá qua 6 phiếu thực hành, kỹ năng thao tác thí nghiệm, năng lực chuyển đổi số dữ liệu và báo cáo chuyên sâu cố kết.</li>
+  <li><b>Điểm kiểm tra giữa kỳ (ĐG1.1) – Chiếm 30% tổng điểm học phần:</b> Tự luận và bài tập tính toán tham số vật lý, ứng suất, vòng tròn Mohr và sức chống cắt.</li>
+  <li><b>Điểm thi cuối kỳ (ĐG2) – Chiếm 40% tổng điểm học phần:</b> Trắc nghiệm và tự luận phân tích dữ liệu, bài toán lún và đề xuất giải pháp nền móng.</li>
+</ul>
+
+<p class="no-indent"><b>2. Tài liệu học tập và nguồn tra cứu chính:</b></p>
+<ul style="margin:0 0 6pt 1.2cm; padding:0;">
+  <li>Braja M. Das & Khaled Sobhan (2019), <i>Principles of Geotechnical Engineering</i>, 9th Edition, Cengage Learning (Giáo trình chính).</li>
+  <li>Lê Quý An, Nguyễn Công Mẫn, Nguyễn Văn Quì (1995), <i>Cơ học đất</i>, Nhà xuất bản Giáo Dục (Giáo trình chính).</li>
+  <li>Trần Văn Việt (2004), <i>Cẩm nang dùng cho kỹ sư Địa kỹ thuật</i>, NXB Xây dựng Hà Nội (Tài liệu tham khảo chính).</li>
+  <li>Whitlow, R. (2004), <i>Basic Soil Mechanics</i>, 4th Edition, Prentice Hall.</li>
+  <li>US Army Corps of Engineers (USACE), <i>EM 1110-1-1804: Geotechnical Investigations</i>.</li>
+  <li>Cổng thông tin & Phiếu thực hành trực tuyến: <a href="https://diemdanhsv.com/chd-tt/index.html">https://diemdanhsv.com/chd-tt/index.html</a>.</li>
+  <li>Kho tri thức NotebookLM học phần: <a href="https://notebook.google.com/notebook/bce4e6bc-650d-44a4-a9d6-27a0c72d880f">https://notebook.google.com/notebook/bce4e6bc-650d-44a4-a9d6-27a0c72d880f</a>.</li>
+</ul>
+
+<table class="ky-ten-block" style="width:100%;table-layout:fixed;break-inside:avoid;margin-top:14pt;text-align:center">
+  <tr>
+    <td><div>&nbsp;</div><div class="bold">TRƯỞNG KHOA</div><div class="italic" style="font-size:11pt">(ký, ghi rõ họ tên)</div><div class="space-ky"></div><div class="bold">Phạm Trung Hiếu</div></td>
+    <td><div>&nbsp;</div><div class="bold">TRƯỞNG BỘ MÔN</div><div class="italic" style="font-size:11pt">(ký, ghi rõ họ tên)</div><div class="space-ky"></div><div class="bold">Hồ Thu Hiền</div></td>
+    <td><div class="italic" style="white-space:nowrap">Thành phố Hồ Chí Minh, ngày 14 tháng 10 năm 2026</div><div class="bold">GIẢNG VIÊN BIÊN SOẠN</div><div class="italic" style="font-size:11pt">(ký, ghi rõ họ tên)</div><div class="space-ky"></div><div class="bold">Đinh Quốc Tuấn</div></td>
+  </tr>
+</table>
+
+</div>
+</body>
+</html>

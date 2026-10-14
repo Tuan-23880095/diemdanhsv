@@ -510,7 +510,7 @@ function khtd_pdf_render(KhtdPdf $pdf, array $d): void
             $cols = (array) $s['columns']; $hasPh = !empty($s['photos']);
             $wr = 16; $wp = $hasPh ? 40.6 : 0; $wcol = ($W - $wr - $wp) / max(1, count($cols));
             $h = [['', $wr, 'C', [242, 242, 242], 'B', 7.5]];
-            if ($hasPh) $h[] = ['Ảnh mẫu', $wp, 'C', [217, 234, 211], 'B', 7.5];
+            if ($hasPh) $h[] = [(string) ($s['photo_label'] ?? 'Ảnh mẫu'), $wp, 'C', [217, 234, 211], 'B', 7.5];
             foreach ($cols as $c) $h[] = [(string) $c, $wcol, 'C', [242, 242, 242], 'B', 7.5];
             $pdf->row($h, 3.6);
             foreach ((array) $s['rows'] as $ri => $label) {

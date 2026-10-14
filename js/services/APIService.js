@@ -105,7 +105,7 @@ class APIService {
   khtdGetWorksheet(token, worksheetId)        { return this.get('khtdGetWorksheet', { token, worksheetId }); }
   khtdSaveDraft(token, worksheetId, answers)  { return this.post('khtdSaveDraft', { token, worksheetId, answers }); }
   khtdSubmit(token, worksheetId, answers)     { return this.post('khtdSubmit', { token, worksheetId, answers }); }
-  khtdSeedWorksheets(token, classId)          { return this.post('khtdSeedWorksheets', { token, classId }); }
+  khtdSeedWorksheets(token, classId, bo)      { return this.post('khtdSeedWorksheets', bo ? { token, classId, bo } : { token, classId }); }
   khtdSetWorksheetStatus(token, worksheetId, status, closeAt) { return this.post('khtdSetWorksheetStatus', { token, worksheetId, status, closeAt }); }
   khtdLecturerList(token, classId)            { return this.get('khtdLecturerList', { token, classId }); }
   khtdLecturerSubmission(token, submissionId) { return this.get('khtdLecturerSubmission', { token, submissionId }); }

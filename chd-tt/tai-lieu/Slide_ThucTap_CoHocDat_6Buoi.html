@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Slide Bài giảng Thực tập Cơ học đất (GEO20202) - HCMUS</title>
+<link rel="icon" type="image/png" href="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738"/>
+<style>
+:root {
+  --blue-hcmus: #0b4f9e;
+  --blue-dark: #072e5c;
+  --gold: #D4AF37;
+  --terra: #B85042;
+  --bg-slide: #ffffff;
+  --ink: #1f2937;
+  --slide-w: 1200px;
+  --slide-h: 675px; /* 16:9 aspect ratio */
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #111827;
+  color: var(--ink);
+  font-family: "Segoe UI", Inter, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+#slider-wrapper {
+  position: relative;
+  width: var(--slide-w);
+  height: var(--slide-h);
+  background: var(--bg-slide);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  padding: 40px 50px;
+  display: none;
+  flex-direction: column;
+  background: #fff;
+}
+.slide.active { display: flex; }
+.slide-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--blue-hcmus);
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+.slide-hdr .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.slide-hdr img { height: 40px; }
+.slide-hdr .brand-text {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--blue-dark);
+  text-transform: uppercase;
+}
+.slide-hdr .slide-cat {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--terra);
+  text-transform: uppercase;
+}
+.slide-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--blue-hcmus);
+  margin: 0 0 15px;
+}
+.slide-body {
+  flex: 1;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.slide-ftr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 10px;
+  font-size: 12px;
+  color: #6b7280;
+}
+/* Title Slide Specific */
+.cover-slide {
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-hcmus) 100%);
+  color: #fff;
+  justify-content: center;
+  text-align: center;
+  padding: 60px;
+}
+.cover-slide h1 {
+  font-size: 38px;
+  text-transform: uppercase;
+  margin: 15px 0 10px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+.cover-slide h2 {
+  font-size: 20px;
+  font-weight: normal;
+  color: #93c5fd;
+  margin: 0 0 25px;
+}
+.cover-slide .authors {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-top: 25px;
+  color: #e0e7ff;
+}
+/* Grid & Cards */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+.card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid var(--blue-hcmus);
+  border-radius: 6px;
+  padding: 15px;
+}
+.card h4 { margin: 0 0 8px; color: var(--blue-hcmus); font-size: 16px; }
+.card ul { margin: 0; padding-left: 20px; font-size: 14.5px; }
+.card li { margin-bottom: 5px; }
+.highlight { color: var(--terra); font-weight: bold; }
+/* Controls */
+#nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+  color: #fff;
+}
+button.nav-btn {
+  background: var(--blue-hcmus);
+  border: none;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button.nav-btn:hover { background: #1d4ed8; }
+</style>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<div id="slider-wrapper">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide cover-slide active">
+    <div style="display:flex; justify-content:center; gap:20px; margin-bottom:15px;">
+      <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" style="height:65px; background:#fff; padding:6px; border-radius:8px;" alt="HCMUS Logo"/>
+    </div>
+    <div style="font-size:16px; text-transform:uppercase; letter-spacing:2px; color:#fde047;">KHOA ĐỊA CHẤT – BỘ MÔN ĐỊA CHẤT CÔNG TRÌNH - ĐỊA CHẤT THỦY VĂN</div>
+    <h1>THỰC TẬP CƠ HỌC ĐẤT</h1>
+    <h2>MÃ HỌC PHẦN: GEO20202 (30 TIẾT THỰC HÀNH – 6 BUỔI)</h2>
+    <div class="authors">
+      <div><b>ThS. ĐINH QUỐC TUẤN</b> (Chủ biên phần Thực hành &amp; Chuyển đổi số)</div>
+      <div><b>ThS. ĐỖ NGỌC THANH</b> (Phụ trách Thí nghiệm phòng &amp; Khảo sát hiện trường)</div>
+      <div><b>TS. HỒ THU HIỀN</b> (Giảng viên lý thuyết &amp; Điều phối học phần)</div>
+    </div>
+    <div style="margin-top:25px; font-size:13px; color:#cbd5e1;">HỌC KỲ 1 – NĂM HỌC 2026–2027 | TRƯỜNG ĐH KHOA HỌC TỰ NHIÊN, ĐHQG-HCM</div>
+  </div>
+
+  <!-- SLIDE 2: MỤC TIÊU & CHUẨN ĐẦU RA -->
+  <div class="slide">
+    <div class="slide-hdr">
+      <div class="brand">
+        <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Logo"/>
+        <div class="brand-text">CƠ HỌC ĐẤT (GEO20202)</div>
+      </div>
+      <div class="slide-cat">TỔNG QUAN HỌC PHẦN</div>
+    </div>
+    <div class="slide-title">Mục tiêu đào tạo &amp; Chuẩn đầu ra (CLO theo thang Bloom)</div>
+    <div class="slide-body">
+      <div class="grid-3">
+        <div class="card">
+          <h4>Kỹ năng thí nghiệm (G1.1, G1.2)</h4>
+          <ul>
+            <li>Vận hành thành thạo thiết bị thí nghiệm cơ lý phòng Lab (TCVN 4195–4202).</li>
+            <li>Gọt mẫu nguyên dạng vào dao vòng nén Oedometer chuẩn xác.</li>
+            <li>Đọc đồng hồ đo biến dạng theo chuỗi thời gian logarithm.</li>
+            <li><span class="highlight">Thang Bloom: 3.0 – 3.5 (Vận dụng)</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Năng lực số hóa (G2.1, G4.1)</h4>
+          <ul>
+            <li>Chuẩn hóa cấu trúc bảng tính số địa kỹ thuật (Excel/Sheets/JSON).</li>
+            <li>Dựng đường cong $e - \log p$, xác định $p_c, C_c, C_s, c_v$.</li>
+            <li>Làm sạch dữ liệu và tự động hóa xử lý kết quả nén lún.</li>
+            <li><span class="highlight">Thang Bloom: 4.0 – 4.5 (Phân tích)</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Ứng dụng thực tế (G5.1, G6.1)</h4>
+          <ul>
+            <li>Dự báo độ lún công trình theo thời gian ($S_c, U_v, T_v, S_t$).</li>
+            <li>Đánh giá sức chịu tải nền móng Terzaghi &amp; SPT.</li>
+            <li>Đề xuất giải pháp kỹ thuật nền móng tối ưu; liêm chính học thuật.</li>
+            <li><span class="highlight">Thang Bloom: 4.5 – 5.0 (Đánh giá)</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-ftr">
+      <span>Trường ĐH Khoa học Tự nhiên – ĐHQG-HCM</span>
+      <span>Slide 2 / 9</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: BUỔI 1 -->
+  <div class="slide">
+    <div class="slide-hdr">
+      <div class="brand"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Logo"/><div class="brand-text">CƠ HỌC ĐẤT (GEO20202)</div></div>
+      <div class="slide-cat">BUỔI 1 – TUẦN 1</div>
+    </div>
+    <div class="slide-title">Xác định các chỉ tiêu vật lý và trạng thái của đất</div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h4>1. Mô tả đất hiện trường (ASTM D2488)</h4>
+          <ul>
+            <li><b>Quan sát:</b> Màu sắc, mùi hữu cơ, phân tầng địa chất.</li>
+            <li><b>Vê con giun dẻo:</b> Vê sợi $\phi=3\text{ mm}$ đánh giá độ dẻo đất sét.</li>
+            <li><b>Lắc mẫu (Dilatancy):</b> Phản ứng nhanh (Bụi/Cát mịn) vs Chậm (Sét).</li>
+            <li><b>Độ bền khô:</b> Đánh giá cường độ liên kết hạt khoáng.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>2. Bộ 3 thí nghiệm Lab gốc</h4>
+          <ul>
+            <li><b>Độ ẩm $w$ (TCVN 4196):</b> Sấy mẫu ở $105^\circ\text{C}$ đến khối lượng không đổi.</li>
+            <li><b>Dung trọng $\rho$ (TCVN 4197):</b> Cắt gọt dao vòng tiêu chuẩn $V=56.55\text{ cm}^3$.</li>
+            <li><b>Tỷ trọng hạt $\rho_s$ (TCVN 4195):</b> Bình đo tỷ trọng (Pycnometer) khử khí.</li>
+            <li><b>Tính toán phái sinh:</b> $e, n, S_r, \rho_d, I_P, I_L \to$ Phân loại đất TCVN 5747.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-ftr"><span>Phiếu thực hành liên kết: Phiếu số 1</span><span>Slide 3 / 9</span></div>
+  </div>
+
+  <!-- SLIDE 4: BUỔI 2 -->
+  <div class="slide">
+    <div class="slide-hdr">
+      <div class="brand"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Logo"/><div class="brand-text">CƠ HỌC ĐẤT (GEO20202)</div></div>
+      <div class="slide-cat">BUỔI 2 – TUẦN 2</div>
+    </div>
+    <div class="slide-title">Thí nghiệm nén cố kết một chiều (Oedometer Test)</div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h4>1. Cơ chế cố kết Terzaghi</h4>
+          <ul>
+            <li>Mô hình piston – lò xo: Nước chịu tải trước ($u = \Delta \sigma$), thoát dần $\to$ ứng suất chuyển sang khung hạt ($\sigma' = \sigma - u$).</li>
+            <li>Điều kiện một chiều: Không nở hông ($K_0$), thoát nước 2 mặt ($H_{dr} = H/2$).</li>
+            <li>Đá thấm luộc nước sôi khử khí; giữ ngập nước trong buồng nén suốt thí nghiệm.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>2. Kỹ thuật gia tải &amp; Chuỗi thời gian logarithm</h4>
+          <ul>
+            <li><b>Dãy cấp áp lực:</b> $25 \to 50 \to 100 \to 200 \to 400 \to 800\text{ kPa}$ (tỷ lệ tăng tải $\Delta p / p = 1$).</li>
+            <li><b>Chuỗi thời gian đọc đồng hồ:</b> 0.1, 0.25, 0.5, 1, 2, 4, 8, 15, 30 phút, 1, 2, 4, 8, 24 giờ.</li>
+            <li><b>Kiểm soát thiết bị:</b> Cân bằng đòn bẩy tỷ lệ 1:10 bằng bọt thủy.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-ftr"><span>Phiếu thực hành liên kết: Phiếu số 2 (Báo cáo số liệu thô)</span><span>Slide 4 / 9</span></div>
+  </div>
+
+  <!-- SLIDE 5: BUỔI 3 -->
+  <div class="slide">
+    <div class="slide-hdr">
+      <div class="brand"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Logo"/><div class="brand-text">CƠ HỌC ĐẤT (GEO20202)</div></div>
+      <div class="slide-cat">BUỔI 3 – TUẦN 3</div>
+    </div>
+    <div class="slide-title">Chuyển đổi số dữ liệu địa kỹ thuật &amp; Dỡ tải đàn hồi</div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h4>1. Chu trình dỡ tải đàn hồi</h4>
+          <ul>
+            <li>Dỡ tải từ $800 \to 400 \to 200 \to 100 \to 0\text{ kPa}$.</li>
+            <li>Đất chỉ hồi phục đàn hồi một phần nhỏ ($\Delta h_{\text{elastic}} \approx 10 - 20\%$).</li>
+            <li>Biến dạng dẻo vĩnh cửu chiếm 80–90% do tái cấu trúc khung khoáng.</li>
+            <li>Xác định độ dốc đường dỡ tải: Chỉ số hồi phục $C_s$.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>2. Thuật toán số hóa trên Excel/Web</h4>
+          <ul>
+            <li>Bảo toàn thể tích hạt: $h_s = \frac{M_s}{A \cdot \rho_s} = \text{hằng số}$.</li>
+            <li>Chiều cao mẫu sau lún: $H_i = H_0 - \Delta h_i$.</li>
+            <li>Hệ số rỗng tại mọi cấp áp lực: $e_i = \frac{H_i - h_s}{h_s} = e_0 - \frac{\Delta h_i}{h_s}$.</li>
+            <li>Làm sạch dữ liệu: Trừ biến dạng độ võng của máy nén $\Delta h_{\text{app}}$.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-ftr"><span>Phiếu thực hành liên kết: Phiếu số 3</span><span>Slide 5 / 9</span></div>
+  </div>
+
+  <!-- SLIDE 6: BUỔI 4 -->
+  <div class="slide">
+    <div class="slide-hdr">
+      <div class="brand"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Logo"/><div class="brand-text">CƠ HỌC ĐẤT (GEO20202)</div></div>
+      <div class="slide-cat">BUỔI 4 – TUẦN 4</div>
+    </div>
+    <div class="slide-title">Xử lý dữ liệu cố kết chuyên sâu: $e - \log p$ &amp; $c_v$</div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h4>1. Đường cong $e - \log p$ &amp; Áp lực tiền cố kết $p_c$</h4>
+          <ul>
+            <li><b>Phương pháp Casagrande:</b> Điểm uốn bán kính cong nhỏ nhất $T \to$ kẻ đường ngang, tiếp tuyến, phân giác $\to$ giao điểm với đường nén trinh nguyên cho $p_c$.</li>
+            <li><b>Tỷ số tiền cố kết:</b> $OCR = p_c / \sigma'_{v0}$. Phân loại: NC ($OCR \approx 1$), OC ($OCR > 1$), UC ($OCR < 1$).</li>
+            <li><b>Chỉ số nén:</b> $C_c = -\frac{\Delta e}{\Delta \log p}$; Chỉ số nở: $C_s$.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>2. Xác định hệ số cố kết $c_v$</h4>
+          <ul>
+            <li><b>Phương pháp Casagrande ($\log t$):</b> Tìm $d_{100}, d_0, d_{50} \to t_{50} \to c_v = \frac{0.197 H_{dr}^2}{t_{50}}$.</li>
+            <li><b>Phương pháp Taylor ($\sqrt{t}$):</b> Vẽ tiếp tuyến đầu $\to$ đường dốc gấp 1.15 lần $\to \sqrt{t_{90}} \to c_v = \frac{0.848 H_{dr}^2}{t_{90}}$.</li>
+            <li>$c_v$ quyết định tốc độ lún của công trình thực tế.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-ftr"><span>Phiếu thực hành liên kết: Phiếu số 4</span><span>Slide 6 / 9</span></div>
+  </div>
+
+  <!-- SLIDE 7: BUỔI 5 -->
+  <div class="slide">
+    <div class="slide-hdr">
+      <div class="brand"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Logo"/><div class="brand-text">CƠ HỌC ĐẤT (GEO20202)</div></div>
+      <div class="slide-cat">BUỔI 5 – TUẦN 5</div>
+    </div>
+    <div class="slide-title">Dự báo biến dạng &amp; Độ lún công trình theo thời gian</div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h4>1. Tính lún cố kết sơ cấp $S_c$</h4>
+          <ul>
+            <li>Chia tầng đất sét thành các phân lớp mỏng $h_i \le 1.0\text{ m}$.</li>
+            <li>Tính $\sigma'_{v0i}$ (bản thân) và $\Delta \sigma_{zi}$ (gia tăng góc mở 2:1).</li>
+            <li><b>Đất NC:</b> $S_c = \sum \frac{C_c}{1+e_0} h_i \log\left(\frac{\sigma'_{v0i} + \Delta \sigma_{zi}}{\sigma'_{v0i}}\right)$.</li>
+            <li><b>Đất OC:</b> Lún theo $C_s$ nếu chưa vượt $p_c$; lún kết hợp $C_s + C_c$ nếu vượt $p_c$.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>2. Tiến trình lún theo thời gian (Terzaghi)</h4>
+          <ul>
+            <li>Nhân tố thời gian: $T_v = \frac{c_v t}{H_{dr}^2}$.</li>
+            <li>Hàm liên tục: $T_v = \frac{\pi}{4} U_v^2$ ($U_v \le 60\%$); $T_v = 1.781 - 0.933 \log(100 - U_v)$ ($U_v > 60\%$).</li>
+            <li>Độ lún tại thời điểm $t$: $S_t = U_v(t) \times S_c$.</li>
+            <li>Thời gian đạt 50% lún: $t_{50} = \frac{0.197 H_{dr}^2}{c_v}$; đạt 90%: $t_{90} = \frac{0.848 H_{dr}^2}{c_v}$.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-ftr"><span>Phiếu thực hành liên kết: Phiếu số 5 (Báo cáo số 3)</span><span>Slide 7 / 9</span></div>
+  </div>
+
+  <!-- SLIDE 8: BUỔI 6 -->
+  <div class="slide">
+    <div class="slide-hdr">
+      <div class="brand"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Logo"/><div class="brand-text">CƠ HỌC ĐẤT (GEO20202)</div></div>
+      <div class="slide-cat">BUỔI 6 – TUẦN 6</div>
+    </div>
+    <div class="slide-title">Tích hợp địa kỹ thuật, Thí nghiệm SPT &amp; Sức chịu tải</div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h4>1. Thí nghiệm xuyên tiêu chuẩn SPT</h4>
+          <ul>
+            <li>Búa $63.5\text{ kg}$ rơi $76\text{ cm} \to$ Đóng ống mẫu chẻ đôi $45\text{ cm}$.</li>
+            <li>Chỉ số $N_{SPT} = N_2 + N_3$ (số búa của $30\text{ cm}$ sau).</li>
+            <li>Hiệu chỉnh năng lượng $N_{60}$ và áp lực tầng phủ $(N_1)_{60}$.</li>
+            <li>Tương quan đánh giá độ chặt của cát và cường độ chống cắt.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>2. Sức chịu tải móng &amp; Giải pháp kỹ thuật</h4>
+          <ul>
+            <li><b>Công thức Terzaghi:</b> $q_{ult} = c N_c s_c + q N_q + 0.5 \gamma B N_\gamma s_\gamma$. Sức chịu tải cho phép: $q_a = q_{ult} / FS$ ($FS = 2.5 - 3.0$).</li>
+            <li><b>Phương pháp Meyerhof:</b> Tính $q_a$ trực tiếp từ chỉ số $N_{60}$.</li>
+            <li><b>Giải pháp nền móng:</b> Móng đơn $\to$ móng bè $\to$ móng cọc; xử lý nền đất yếu bằng đệm cát, cọc CDM, bấc thấm PVD hút chân không.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-ftr"><span>Phiếu thực hành liên kết: Phiếu số 6 (Báo cáo tổng kết)</span><span>Slide 8 / 9</span></div>
+  </div>
+
+  <!-- SLIDE 9: TỔNG KẾT & HỆ THỐNG WEB PORTAL -->
+  <div class="slide">
+    <div class="slide-hdr">
+      <div class="brand"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Logo"/><div class="brand-text">CƠ HỌC ĐẤT (GEO20202)</div></div>
+      <div class="slide-cat">TỔNG KẾT &amp; ĐÁNH GIÁ</div>
+    </div>
+    <div class="slide-title">Cổng thông tin môn học &amp; Nộp phiếu trực tuyến</div>
+    <div class="slide-body">
+      <div class="card" style="margin-bottom:15px;">
+        <h4>Hệ thống Web Portal Thực tập Cơ học đất</h4>
+        <p>Địa chỉ truy cập chính thức: <a href="https://diemdanhsv.com/cohocdat-tt/index.html" target="_blank" style="font-size:18px; font-weight:bold; color:var(--blue-hcmus);">https://diemdanhsv.com/cohocdat-tt/index.html</a></p>
+        <ul>
+          <li>Sinh viên đăng nhập bằng <b>MSSV</b> để làm bài và nộp 6 phiếu thực hành trực tuyến.</li>
+          <li>Hệ thống tự động chấm điểm sơ bộ, kiểm tra sai số tính toán và phản hồi kết quả về email.</li>
+          <li>Tải toàn bộ Giáo trình A4, Phiếu in chuẩn và Ngân hàng đề ôn tập thi kết thúc học phần.</li>
+        </ul>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h4>Trọng số điểm học phần</h4>
+          <ul>
+            <li>Điểm thực hành (ĐG1.4 – 6 phiếu): <b>30%</b></li>
+            <li>Điểm kiểm tra giữa kỳ (ĐG1.1): <b>30%</b></li>
+            <li>Điểm thi kết thúc học phần (ĐG2): <b>40%</b></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Chúc các bạn sinh viên học tập tốt!</h4>
+          <p>Mọi thắc mắc học thuật, sinh viên liên hệ trực tiếp giảng viên phụ trách:<br/>
+          <b>ThS. Đinh Quốc Tuấn:</b> <code>dqtuan@hcmus.edu.vn</code><br/>
+          <b>TS. Hồ Thu Hiền:</b> Bộ môn Địa chất Thủy văn – Địa chất Công trình.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-ftr"><span>Khoa Địa chất – Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM</span><span>Slide 9 / 9</span></div>
+  </div>
+
+</div>
+
+<!-- NAVIGATION CONTROLS -->
+<div id="nav-bar">
+  <button class="nav-btn" onclick="prevSlide()">◀ Trang trước</button>
+  <span id="slide-indicator" style="font-weight:bold; font-size:14px;">1 / 9</span>
+  <button class="nav-btn" onclick="nextSlide()">Trang sau ▶</button>
+  <span style="font-size:12px; opacity:0.8; margin-left:10px;">(Dùng phím mũi tên ◄ ► để chuyển slide)</span>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const indicator = document.getElementById('slide-indicator');
+
+function showSlide(index) {
+  if (index < 0) index = 0;
+  if (index >= slides.length) index = slides.length - 1;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = index;
+  slides[currentSlide].classList.add('active');
+  indicator.textContent = (currentSlide + 1) + " / " + slides.length;
+}
+
+function prevSlide() { showSlide(currentSlide - 1); }
+function nextSlide() { showSlide(currentSlide + 1); }
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+});
+</script>
+
+</body>
+</html>

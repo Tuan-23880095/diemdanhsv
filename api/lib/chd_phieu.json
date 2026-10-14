@@ -1,0 +1,1448 @@
+{
+ "1": {
+  "title": "Chỉ tiêu vật lý và trạng thái của đất",
+  "buoi": "Buổi 1",
+  "cdr": "G1.1, G1.2, G1.3, G6.1",
+  "sections": [
+   {
+    "id": "thongtin",
+    "type": "table",
+    "title": "Thông tin nhóm thực hành",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm / tổ",
+     "Thành viên cùng làm (họ tên, MSSV)",
+     "Ngày thí nghiệm",
+     "Mã hiệu mẫu / lỗ khoan / độ sâu"
+    ],
+    "photos": false
+   },
+   {
+    "id": "hientruong",
+    "type": "table",
+    "title": "I. Mô tả đất tại hiện trường (ASTM D2488)",
+    "columns": [
+     "Kết quả quan sát / phép thử"
+    ],
+    "rows": [
+     "Màu sắc chính, màu phụ, mùi",
+     "Vê sợi đất 3 mm (vê được / nứt vụn / không vê được)",
+     "Lắc mẫu – phản ứng nước (nhanh / chậm / không)",
+     "Độ bền khô (cao / trung bình / thấp)",
+     "Tên đất sơ bộ"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp ảnh mẫu đất và từng phép thử (sợi đất vê, mặt mẫu sau khi lắc, mẫu khô bóp tay)."
+   },
+   {
+    "id": "solieu",
+    "type": "table",
+    "title": "II. Số liệu đo trong phòng thí nghiệm (2 lần thử)",
+    "columns": [
+     "Lần 1",
+     "Lần 2",
+     "Trung bình"
+    ],
+    "rows": [
+     "Khối lượng dao vòng m₀ (g)",
+     "Thể tích dao vòng V (cm³)",
+     "Dao vòng + đất ẩm (g)",
+     "Hộp nhôm m₁ (g)",
+     "Hộp + đất ẩm m₂ (g)",
+     "Hộp + đất khô m₃ (g)",
+     "Khối lượng riêng hạt ρs (g/cm³) hoặc Gs",
+     "Giới hạn chảy WL (%)",
+     "Giới hạn dẻo WP (%)"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Mỗi hàng chụp màn hình cân hoặc dụng cụ khi đọc số (ảnh phải thấy rõ con số)."
+   },
+   {
+    "id": "ketqua",
+    "type": "table",
+    "title": "III. Kết quả tính các chỉ tiêu dẫn xuất",
+    "columns": [
+     "Giá trị",
+     "Công thức đã dùng"
+    ],
+    "rows": [
+     "Độ ẩm w (%)",
+     "Khối lượng thể tích ρ (g/cm³)",
+     "Khối lượng thể tích khô ρd (g/cm³)",
+     "Hệ số rỗng e",
+     "Độ rỗng n (%)",
+     "Độ bão hòa Sr (%)",
+     "Chỉ số dẻo IP (%)",
+     "Độ sệt IL",
+     "Tên đất và trạng thái (TCVN 5747:1993)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "vandung",
+    "type": "questions",
+    "title": "Câu hỏi phân tích – vận dụng",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Vì sao phải làm 2 lần thử độ ẩm và chỉ nhận kết quả khi chênh lệch giữa 2 lần nhỏ hơn 1 %? Nêu một nguyên nhân làm 2 lần lệch nhau."
+     },
+     {
+      "id": "q2",
+      "text": "Nếu tính ra độ bão hòa Sr lớn hơn 100 %, bạn kiểm tra lại những số đo nào trước? Giải thích vì sao."
+     },
+     {
+      "id": "q3",
+      "text": "Cùng một loại sét, mẫu A có IL = 0,2 và mẫu B có IL = 0,9. Mẫu nào nguy hiểm hơn khi làm nền móng? Vì sao?"
+     }
+    ]
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Thao tác cân, sấy, đo dao vòng đúng quy trình",
+     "Tính 6 chỉ tiêu dẫn xuất từ 3 chỉ tiêu gốc",
+     "Phân loại đất và trạng thái theo IP, IL",
+     "Tự phát hiện số liệu vô lý (Sr > 100 %)"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "hientruong",
+     "name": "Mô tả hiện trường đủ 4 phép thử, có ảnh",
+     "max": 2
+    },
+    {
+     "id": "solieu",
+     "name": "Số liệu đo 2 lần đủ, có ảnh minh chứng, chênh lệch < 1 %",
+     "max": 3
+    },
+    {
+     "id": "ketqua",
+     "name": "Tính đúng các chỉ tiêu dẫn xuất (tự kiểm lại từ số liệu thô)",
+     "max": 3
+    },
+    {
+     "id": "vd",
+     "name": "Phân loại đất và câu hỏi vận dụng",
+     "max": 2
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Hai lần thử để loại sai số ngẫu nhiên (cân, đất bám, sấy chưa khô kiệt). Chênh lệch < 1 % mới chứng tỏ thao tác ổn định. Nguyên nhân lệch: sấy chưa đủ thời gian hoặc chưa đạt khối lượng không đổi; để hộp nguội ngoài bình hút ẩm nên hút ẩm lại; đất không đồng nhất; cân sai.",
+   "q2": "Sr = w·Gs/e > 100 % là vô lý. Kiểm tra trước: (1) khối lượng dao vòng + đất và thể tích dao vòng (sai thể tích hoặc đất chưa gạt phẳng làm ρ lớn, e nhỏ); (2) độ ẩm w (đất khô chưa kiệt làm w nhỏ, hoặc nhầm m₂, m₃); (3) Gs. Vì e tính từ ρ và w nên chỉ cần một số đo sai là e sai, kéo theo Sr sai.",
+   "q3": "Mẫu B (IL = 0,9) nguy hiểm hơn: trạng thái dẻo chảy, độ ẩm gần giới hạn chảy nên sức chống cắt thấp, nén lún lớn, dễ lún và trượt. Mẫu A (IL = 0,2) ở trạng thái nửa cứng – dẻo cứng, chịu tải tốt hơn."
+  },
+  "reference": "Công thức: w = (m₂ − m₃)/(m₃ − m₁)·100; ρ = (m dao+đất − m₀)/V; ρd = ρ/(1 + w); e = Gs·ρw/ρd − 1; n = e/(1 + e)·100; Sr = w·Gs/e; IP = WL − WP; IL = (w − WP)/IP. Trạng thái sét theo IL: < 0 cứng; 0–0,25 nửa cứng; 0,25–0,5 dẻo cứng; 0,5–0,75 dẻo mềm; 0,75–1 dẻo chảy; > 1 chảy. Tên đất theo IP: 1–7 cát pha; 7–17 sét pha; > 17 sét. Kiểm tra hợp lý: Sr ≤ 100 %, ρd < ρ, e thường 0,4–1,5 với đất dính. Mẫu chuẩn ST-01 (dùng trong giáo trình): V = 56,55 cm³, đất ẩm 102,92 g → ρ = 1,820 g/cm³; hộp 12,50 g, hộp + đất ẩm 48,60 g, hộp + đất khô 38,80 g → w = 37,26 %; Gs = 2,70 → ρd = 1,326 g/cm³; e = 1,036; n = 50,89 %; Sr = 97,1 %; WL = 45,2 %, WP = 22,8 % → IP = 22,4 % (sét), IL = 0,646 (dẻo mềm).",
+  "answer_hints": "Mẫu ST-01: ρ 1,820; w 37,26 %; ρd 1,326; e 1,036; n 50,89 %; Sr 97,1 %; IP 22,4 → sét; IL 0,646 → dẻo mềm.",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "max_attempts": 2,
+  "score_policy": "BEST"
+ },
+ "2": {
+  "title": "Thí nghiệm nén cố kết một chiều: số liệu thô",
+  "buoi": "Buổi 2",
+  "cdr": "G1.1, G1.2, G2.1, G3.1, G6.1",
+  "sections": [
+   {
+    "id": "thongtin",
+    "type": "table",
+    "title": "Thông tin nhóm thực hành",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm / tổ",
+     "Thành viên cùng làm (họ tên, MSSV)",
+     "Ngày thí nghiệm",
+     "Mã hiệu mẫu / lỗ khoan / độ sâu"
+    ],
+    "photos": false
+   },
+   {
+    "id": "mau",
+    "type": "table",
+    "title": "I. Thông số ban đầu của mẫu",
+    "columns": [
+     "Giá trị"
+    ],
+    "rows": [
+     "Đường kính D (mm) và diện tích A (cm²)",
+     "Chiều cao ban đầu H₀ (mm)",
+     "Khối lượng dao vòng (g)",
+     "Dao vòng + đất ẩm ban đầu (g)",
+     "Độ ẩm ban đầu w₀ (%)",
+     "Tỷ lệ đòn bẩy và tải trọng quả cân cho cấp 100 kPa"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp mẫu sau khi lắp vào hộp nén, đá thấm, giấy lọc và cân khi cân mẫu."
+   },
+   {
+    "id": "nhattrinh",
+    "type": "table",
+    "title": "II. Nhật trình số đọc đồng hồ ở cấp áp lực 100 kPa",
+    "columns": [
+     "√t (phút^0,5)",
+     "log t",
+     "Số đọc đồng hồ Rt (mm)",
+     "Độ lún Δh (mm)",
+     "Ghi chú"
+    ],
+    "rows": [
+     "0 (lúc gia tải)",
+     "6 giây (0,1 phút)",
+     "15 giây (0,25 phút)",
+     "30 giây (0,5 phút)",
+     "1 phút",
+     "2 phút",
+     "4 phút",
+     "8 phút",
+     "15 phút",
+     "30 phút",
+     "1 giờ",
+     "2 giờ",
+     "4 giờ",
+     "24 giờ"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp mặt đồng hồ so ở các mốc 1 phút, 15 phút, 1 giờ và 24 giờ (ảnh thấy rõ kim và vạch chia)."
+   },
+   {
+    "id": "kiemsoat",
+    "type": "table",
+    "title": "III. Kiểm soát kỹ thuật",
+    "columns": [
+     "Có / Không và mô tả"
+    ],
+    "rows": [
+     "Cánh tay đòn bẩy giữ thăng bằng nằm ngang",
+     "Mẫu trồi qua khe đá thấm",
+     "Nước ngập đều quanh mẫu",
+     "Sự cố và cách xử lý"
+    ],
+    "photos": false
+   },
+   {
+    "id": "vandung",
+    "type": "questions",
+    "title": "Câu hỏi phân tích – vận dụng",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Vì sao các mốc đọc đồng hồ lại dày ở đầu (6 giây, 15 giây, 30 giây) và thưa dần về sau?"
+     },
+     {
+      "id": "q2",
+      "text": "Nếu cánh tay đòn bẩy bị nghiêng xuống trong lúc gia tải thì áp lực thực tác dụng lên mẫu thay đổi thế nào? Ảnh hưởng gì tới số liệu?"
+     },
+     {
+      "id": "q3",
+      "text": "Tại sao phải giữ mẫu ngập nước trong suốt thí nghiệm nén cố kết?"
+     }
+    ]
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Lắp mẫu, đá thấm, giấy lọc đúng thứ tự",
+     "Đặt quả cân đúng tỷ lệ đòn bẩy",
+     "Đọc đồng hồ so chính xác 0,001 mm",
+     "Ghi nhật trình đúng mốc thời gian"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "mau",
+     "name": "Thông số mẫu đủ và có ảnh lắp mẫu",
+     "max": 2.5
+    },
+    {
+     "id": "nhattrinh",
+     "name": "Nhật trình đủ các mốc, Δh tăng dần hợp lý, có ảnh số đọc",
+     "max": 4
+    },
+    {
+     "id": "kiemsoat",
+     "name": "Kiểm soát kỹ thuật và xử lý sự cố",
+     "max": 1.5
+    },
+    {
+     "id": "vd",
+     "name": "Câu hỏi vận dụng",
+     "max": 2
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Biến dạng cố kết diễn ra nhanh nhất ngay sau khi gia tải (áp lực nước lỗ rỗng thặng dư lớn, tiêu tán nhanh) rồi chậm dần theo quy luật gần tỷ lệ với √t và log t. Đọc dày ở đầu để bắt được đoạn cong ban đầu, cần cho phương pháp Casagrande (log t) và Taylor (√t) xác định t₅₀, t₉₀.",
+   "q2": "Tay đòn nghiêng làm mất cân bằng, một phần tải bị cản hoặc truyền lệch nên áp lực thực lên mẫu khác giá trị danh định (thường nhỏ hơn). Độ lún đo được nhỏ hơn thực, đường cong e – log p và hệ số cố kết sai; phải chỉnh lại thăng bằng và ghi chú.",
+   "q3": "Để mẫu luôn bão hòa: tránh mẫu khô, co ngót và tạo lực hút dính (sức hút mao dẫn) làm sai biến dạng; bảo đảm điều kiện thoát nước hai mặt như giả thiết của lý thuyết cố kết Terzaghi."
+  },
+  "reference": "Thí nghiệm theo TCVN 4200:2012 và ASTM D2435. Dao vòng thường D = 60–63,5 mm, H₀ = 20 mm (A = 28,27 cm² với D = 60 mm). Δh = Rt − R₀. Ở một cấp tải Δh phải tăng đều và tăng chậm dần; sau 24 giờ gần ổn định. Với sét dẻo mềm ở cấp 100 kPa, độ lún 24 giờ thường khoảng 0,4–1,0 mm. Mốc √t: 0,1 → 0,316; 0,25 → 0,5; 0,5 → 0,707; 1 → 1; 2 → 1,414; 4 → 2; 8 → 2,828; 15 → 3,873; 30 → 5,477; 60 → 7,746; 120 → 10,954; 240 → 15,492; 1440 → 37,947. log t tương ứng: −1; −0,602; −0,301; 0; 0,301; 0,602; 0,903; 1,176; 1,477; 1,778; 2,079; 2,380; 3,158.",
+  "answer_hints": "Kiểm tra √t, log t theo bảng chuẩn; Δh tăng dần, ổn định sau 24 giờ.",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "max_attempts": 2,
+  "score_policy": "BEST"
+ },
+ "3": {
+  "title": "Theo dõi biến dạng cố kết và chuyển đổi số dữ liệu",
+  "buoi": "Buổi 3",
+  "cdr": "G1.1, G1.2, G2.1, G6.1",
+  "sections": [
+   {
+    "id": "thongtin",
+    "type": "table",
+    "title": "Thông tin nhóm thực hành",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm / tổ",
+     "Thành viên cùng làm (họ tên, MSSV)",
+     "Ngày thí nghiệm",
+     "Mã hiệu mẫu / lỗ khoan / độ sâu"
+    ],
+    "photos": false
+   },
+   {
+    "id": "pharan",
+    "type": "table",
+    "title": "I. Pha rắn và hệ số rỗng ban đầu",
+    "columns": [
+     "Giá trị",
+     "Cách tính"
+    ],
+    "rows": [
+     "Khối lượng đất khô Ms (g)",
+     "Khối lượng riêng hạt ρs (g/cm³)",
+     "Chiều cao quy đổi pha rắn hs = Ms/(A·ρs) (mm)",
+     "Hệ số rỗng ban đầu e₀ = (H₀ − hs)/hs"
+    ],
+    "photos": false
+   },
+   {
+    "id": "nendo",
+    "type": "table",
+    "title": "II. Bảng nén – dỡ tải sau 24 giờ mỗi cấp",
+    "columns": [
+     "Số đọc R (mm)",
+     "Hiệu chỉnh máy Δh_máy (mm)",
+     "Lún thực Δh (mm)",
+     "Chiều cao mẫu H (mm)",
+     "Hệ số rỗng e"
+    ],
+    "rows": [
+     "Gia tải 25 kPa",
+     "Gia tải 50 kPa",
+     "Gia tải 100 kPa",
+     "Gia tải 200 kPa",
+     "Gia tải 400 kPa",
+     "Gia tải 800 kPa",
+     "Dỡ tải 400 kPa",
+     "Dỡ tải 200 kPa",
+     "Dỡ tải 100 kPa",
+     "Dỡ tải 0 kPa"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Mỗi cấp tải chụp số đọc đồng hồ sau 24 giờ; hàng cuối chụp màn hình bảng tính Excel đã lập."
+   },
+   {
+    "id": "excel",
+    "type": "text",
+    "title": "III. Công thức Excel",
+    "prompt": "Ghi công thức Excel bạn dùng để tính e ở một ô bất kỳ (ví dụ ô cấp 200 kPa), nói rõ ô nào chứa hs, H₀, Δh."
+   },
+   {
+    "id": "vandung",
+    "type": "questions",
+    "title": "Câu hỏi phân tích – vận dụng",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Khi dỡ tải từ 800 kPa về 0 kPa, hệ số rỗng chỉ hồi phục một phần. Giải thích vì sao."
+     },
+     {
+      "id": "q2",
+      "text": "Một bạn quên trừ hiệu chỉnh máy Δh_máy ở cấp 800 kPa. Hệ số rỗng tính ra lớn hơn hay nhỏ hơn giá trị thực? Lấy số liệu của nhóm để minh họa."
+     },
+     {
+      "id": "q3",
+      "text": "Nêu hai lợi ích của việc lập bảng tính bằng công thức (không gõ tay kết quả) khi xử lý số liệu nén cố kết."
+     }
+    ]
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Tính hs, e₀ đúng",
+     "Trừ hiệu chỉnh máy đúng cấp tải",
+     "Lập công thức Excel liên kết ô",
+     "Giải thích nhánh dỡ tải"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "pharan",
+     "name": "Tính đúng hs và e₀",
+     "max": 2
+    },
+    {
+     "id": "nendo",
+     "name": "Bảng nén – dỡ tải đúng, có hiệu chỉnh máy, có ảnh",
+     "max": 4
+    },
+    {
+     "id": "excel",
+     "name": "Công thức Excel liên kết ô, đúng",
+     "max": 1.5
+    },
+    {
+     "id": "vd",
+     "name": "Câu hỏi vận dụng",
+     "max": 2.5
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Khi nén, hạt đất sắp xếp lại, một phần biến dạng là dẻo (không hồi phục): tiếp xúc giữa các hạt thay đổi vĩnh viễn, nước bị ép ra. Khi dỡ tải chỉ phần biến dạng đàn hồi của hạt và màng nước liên kết hồi phục, nên e tăng ít (nhánh nở thoải hơn nhánh nén).",
+   "q2": "Quên trừ Δh_máy làm lún thực bị tính lớn hơn (Δh = R − Δh_máy), chiều cao mẫu H nhỏ hơn nên e tính ra NHỎ HƠN giá trị thực. Độ chênh e = Δh_máy/hs (ví dụ 0,060/10,385 ≈ 0,006).",
+   "q3": "Sửa một số đọc thì mọi kết quả tự cập nhật; tránh lỗi chép tay; kiểm tra lại được công thức; dùng lại cho mẫu khác; vẽ đồ thị trực tiếp từ dữ liệu."
+  },
+  "reference": "hs = Ms/(A·ρs) (mm, A theo mm²·10⁻² nếu dùng cm²); e₀ = (H₀ − hs)/hs; Δh = R − R₀ − Δh_máy; H = H₀ − Δh; e = (H − hs)/hs = e₀ − Δh/hs. e phải giảm dần khi gia tải và tăng nhẹ khi dỡ tải. Mẫu chuẩn trong giáo trình: H₀ = 20,000 mm, hs = 10,385 mm, e₀ = 0,926; tại 800 kPa e = 0,631; dỡ về 0 kPa e = 0,682. Hiệu chỉnh máy tham khảo: 25 kPa 0,005; 50 kPa 0,010; 100 kPa 0,018; 200 kPa 0,028; 400 kPa 0,042; 800 kPa 0,060 mm.",
+  "answer_hints": "e = e₀ − Δh/hs; quên trừ hiệu chỉnh máy → e nhỏ hơn thực.",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "max_attempts": 2,
+  "score_policy": "BEST"
+ },
+ "4": {
+  "title": "Xử lý dữ liệu cố kết: đường cong e – log p, pc, Cc, Cs, cv",
+  "buoi": "Buổi 4",
+  "cdr": "G4.1, G4.3, G5.1, G6.1",
+  "sections": [
+   {
+    "id": "thongtin",
+    "type": "table",
+    "title": "Thông tin nhóm thực hành",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm / tổ",
+     "Thành viên cùng làm (họ tên, MSSV)",
+     "Ngày thí nghiệm",
+     "Mã hiệu mẫu / lỗ khoan / độ sâu"
+    ],
+    "photos": false
+   },
+   {
+    "id": "dothi",
+    "type": "table",
+    "title": "I. Đồ thị",
+    "columns": [
+     "Mô tả ngắn (trục, số điểm, cách dựng)"
+    ],
+    "rows": [
+     "Đường cong e – log p (có nhánh dỡ tải)",
+     "Dựng hình Casagrande xác định pc",
+     "Đồ thị biến dạng – log t (cấp 100 kPa)",
+     "Đồ thị biến dạng – √t (cấp 100 kPa)"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh đồ thị",
+    "photo_hint": "Chụp hoặc chụp màn hình từng đồ thị (vẽ tay trên giấy bán log hoặc vẽ bằng Excel), thấy rõ các đường dựng hình."
+   },
+   {
+    "id": "thongso",
+    "type": "table",
+    "title": "II. Thông số cố kết xác định được",
+    "columns": [
+     "Giá trị",
+     "Cách xác định / công thức"
+    ],
+    "rows": [
+     "Áp lực tiền cố kết pc (kPa)",
+     "Ứng suất bản thân hữu hiệu σ′v0 tại độ sâu lấy mẫu (kPa)",
+     "Tỷ số tiền cố kết OCR và trạng thái (NC / OC)",
+     "Chỉ số nén Cc (đoạn nén nguyên sinh)",
+     "Chỉ số nở Cs (nhánh dỡ tải)",
+     "t₅₀ (phút) và cv theo Casagrande (cm²/s; m²/năm)",
+     "t₉₀ (phút) và cv theo Taylor (cm²/s; m²/năm)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "vandung",
+    "type": "questions",
+    "title": "Câu hỏi phân tích – vận dụng",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Vì sao cv theo Casagrande và theo Taylor thường không bằng nhau? Bạn chọn giá trị nào cho bài toán dự báo lún và vì sao?"
+     },
+     {
+      "id": "q2",
+      "text": "Đất của nhóm có OCR bằng bao nhiêu? Điều đó nói gì về lịch sử chịu tải của lớp đất?"
+     },
+     {
+      "id": "q3",
+      "text": "Đổi 1,0·10⁻⁴ cm²/s sang m²/năm. Trình bày phép đổi."
+     }
+    ]
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Vẽ đường e – log p đúng thang log",
+     "Dựng hình Casagrande tìm pc",
+     "Tính Cc, Cs trên đúng đoạn",
+     "Xác định t₅₀, t₉₀ và đổi đơn vị cv"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "dothi",
+     "name": "Đồ thị đúng thang, dựng hình rõ, có ảnh",
+     "max": 2.5
+    },
+    {
+     "id": "pc",
+     "name": "Xác định pc, σ′v0, OCR và trạng thái",
+     "max": 2.5
+    },
+    {
+     "id": "chiso",
+     "name": "Tính đúng Cc, Cs, cv (2 phương pháp, đúng đơn vị)",
+     "max": 3
+    },
+    {
+     "id": "vd",
+     "name": "Câu hỏi vận dụng",
+     "max": 2
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Hai phương pháp dùng đoạn khác nhau của đường cong (Casagrande dựa vào t₅₀ và giả thiết đoạn đầu tỷ lệ √t để tìm d₀; Taylor dựa vào t₉₀ trên đồ thị √t) và chịu ảnh hưởng khác nhau của nén thứ cấp, nên thường lệch nhau (Taylor thường cho cv lớn hơn). Khi dự báo lún nên chọn giá trị nhỏ hơn (an toàn, thời gian lún dài hơn) hoặc giá trị phù hợp đoạn cố kết sơ cấp rõ hơn, và nêu lý do.",
+   "q2": "OCR = pc/σ′v0. OCR ≈ 1: cố kết bình thường, chưa từng chịu tải lớn hơn hiện tại. OCR > 1: quá cố kết, đã từng chịu tải lớn hơn (bào mòn lớp phủ, mực nước ngầm hạ thấp, khô hạn) nên lún nhỏ khi tải công trình chưa vượt pc.",
+   "q3": "1 năm = 365,25 × 86 400 = 31 557 600 s; 1 cm² = 10⁻⁴ m². 1,0·10⁻⁴ cm²/s × 10⁻⁴ m²/cm² × 31 557 600 s/năm ≈ 0,316 m²/năm."
+  },
+  "reference": "OCR = pc/σ′v0 (≈ 1 NC; > 1 OC). Cc = Δe/Δlog p trên đoạn nén nguyên sinh (p > pc); Cs trên nhánh dỡ tải. Casagrande: d₀ từ hai thời điểm t và 4t, d₁₀₀ là giao hai tiếp tuyến, d₅₀ = (d₀ + d₁₀₀)/2, cv = 0,197·Hdr²/t₅₀. Taylor: đường thẳng hoành độ gấp 1,15 lần, cv = 0,848·Hdr²/t₉₀. Thoát nước hai mặt: Hdr = chiều cao mẫu trung bình/2. ĐỔI ĐƠN VỊ: 1 cm²/s = 3 155,76 m²/năm (sai 10 lần là lỗi hay gặp). Mẫu chuẩn giáo trình: pc = 135 kPa; σ′v0 = 85 kPa; OCR = 1,59 (quá cố kết nhẹ); Cc = 0,297 (200 → 800 kPa); Cs = 0,0388 (800 → 100 kPa); t₅₀ = 14,5 phút, Hdr = 0,968 cm → cv = 2,12·10⁻⁴ cm²/s = 0,669 m²/năm.",
+  "answer_hints": "Mẫu chuẩn: pc 135; OCR 1,59; Cc 0,297; Cs 0,0388; cv 2,12·10⁻⁴ cm²/s = 0,669 m²/năm.",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "max_attempts": 2,
+  "score_policy": "BEST"
+ },
+ "5": {
+  "title": "Dự báo độ lún công trình và thời gian lún",
+  "buoi": "Buổi 5",
+  "cdr": "G4.1, G4.3, G5.1, G6.1",
+  "sections": [
+   {
+    "id": "thongtin",
+    "type": "table",
+    "title": "Thông tin nhóm thực hành",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm / tổ",
+     "Thành viên cùng làm (họ tên, MSSV)",
+     "Ngày thí nghiệm",
+     "Mã hiệu mẫu / lỗ khoan / độ sâu"
+    ],
+    "photos": false
+   },
+   {
+    "id": "baitoan",
+    "type": "table",
+    "title": "I. Bài toán (giảng viên giao) và thông số dùng",
+    "columns": [
+     "Giá trị",
+     "Nguồn (phiếu 1–4 hay đề cho)"
+    ],
+    "rows": [
+     "Móng: B, L (m); Df (m); p₀ (kPa)",
+     "Lớp sét: chiều dày H (m), điều kiện thoát nước, Hdr (m)",
+     "γ trên MNN, γ′ dưới MNN (kN/m³); vị trí MNN",
+     "e₀; Cc; Cs; pc (kPa)",
+     "cv (cm²/s và m²/năm)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "phanlop",
+    "type": "table",
+    "title": "II. Tính lún cố kết sơ cấp theo phân lớp",
+    "columns": [
+     "z giữa lớp (m)",
+     "h (m)",
+     "σ′v0 (kPa)",
+     "Δσz (kPa)",
+     "σ′v0 + Δσz (kPa)",
+     "Trường hợp (NC / OC / OC vượt pc)",
+     "Sc,i (cm)"
+    ],
+    "rows": [
+     "Phân lớp 1",
+     "Phân lớp 2",
+     "Phân lớp 3",
+     "Phân lớp 4",
+     "Tổng Sc"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh bảng tính",
+    "photo_hint": "Chụp màn hình bảng tính Excel của từng phân lớp (thấy công thức trên thanh công thức)."
+   },
+   {
+    "id": "thoigian",
+    "type": "table",
+    "title": "III. Lún theo thời gian (Terzaghi)",
+    "columns": [
+     "Tv",
+     "U (%)",
+     "St (cm)"
+    ],
+    "rows": [
+     "t = 0,5 năm",
+     "t = 1 năm",
+     "t = 2 năm",
+     "t = 5 năm",
+     "t₅₀ (năm, tháng)",
+     "t₉₀ (năm, tháng)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "ketluan",
+    "type": "text",
+    "title": "IV. Kết luận và giải pháp",
+    "prompt": "So sánh với độ lún cho phép Scp do giảng viên cho; nếu vượt, đề xuất giải pháp (bấc thấm, gia tải trước, thay đất…) và nói rõ giải pháp làm thay đổi đại lượng nào trong công thức."
+   },
+   {
+    "id": "vandung",
+    "type": "questions",
+    "title": "Câu hỏi phân tích – vận dụng",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Vì sao phải chia lớp sét dày thành các phân lớp mỏng khi tính lún, thay vì tính một lần cho cả lớp?"
+     },
+     {
+      "id": "q2",
+      "text": "Bấc thấm (PVD) rút ngắn thời gian lún bằng cách nào? Nó có làm giảm độ lún cuối cùng không?"
+     }
+    ]
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Tính σ′v0 và Δσz ở giữa từng phân lớp",
+     "Chọn đúng công thức theo trường hợp NC/OC",
+     "Tính Tv, U, St và t₅₀, t₉₀",
+     "Đề xuất giải pháp có căn cứ"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "phanlop",
+     "name": "Phân lớp, ứng suất và độ lún từng lớp đúng (có ảnh bảng tính)",
+     "max": 4
+    },
+    {
+     "id": "thoigian",
+     "name": "Lún theo thời gian, t₅₀, t₉₀ đúng đơn vị",
+     "max": 3
+    },
+    {
+     "id": "ketluan",
+     "name": "Kết luận, so sánh Scp và giải pháp",
+     "max": 1.5
+    },
+    {
+     "id": "vd",
+     "name": "Câu hỏi vận dụng",
+     "max": 1.5
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Ứng suất bản thân σ′v0 tăng và ứng suất gây lún Δσz giảm theo độ sâu, quan hệ e – log p phi tuyến; tính một lần với giá trị ở giữa lớp dày sẽ sai số lớn. Chia phân lớp mỏng (h ≤ 0,4B hoặc ≤ 1–2 m) để mỗi lớp có ứng suất gần đều và xét đúng trường hợp NC/OC từng lớp.",
+   "q2": "Bấc thấm tạo đường thoát nước ngang ngắn (khoảng cách giữa các bấc) thay cho đường thoát nước đứng dài Hdr, nên áp lực nước lỗ rỗng tiêu tán nhanh, thời gian đạt U = 90 % giảm từ nhiều năm xuống vài tháng. Bấc thấm không làm giảm độ lún cuối cùng; nó chỉ làm lún xảy ra sớm (trong giai đoạn thi công, kết hợp gia tải trước)."
+  },
+  "reference": "σ′v0 = Σγ·h (trên MNN dùng γ, dưới MNN dùng γ′ = γsat − γw). Δσz theo góc truyền 2:1 cho móng băng: Δσz = p₀·B/(B + z); móng chữ nhật: p₀·B·L/((B + z)(L + z)). Trường hợp NC (σ′v0 ≥ pc): Sc = Cc·h/(1+e₀)·log((σ′v0+Δσ)/σ′v0). OC không vượt pc: Sc = Cs·h/(1+e₀)·log((σ′v0+Δσ)/σ′v0). OC vượt pc: Sc = h/(1+e₀)·[Cs·log(pc/σ′v0) + Cc·log((σ′v0+Δσ)/pc)]. Tv = cv·t/Hdr²; U = √(4Tv/π) khi U ≤ 60 %, Tv = 1,781 − 0,933·log(100 − U%) khi U > 60 %. t₅₀ = 0,197·Hdr²/cv; t₉₀ = 0,848·Hdr²/cv. Bài mẫu giáo trình (B = 3 m, p₀ = 150 kPa, Df = 1,5 m, γ = 18,15, γ′ = 8,34, sét dày 6 m thoát nước 2 mặt, e₀ = 0,95, Cc = 0,32, Cs = 0,04, pc = 65 kPa, cv = 3,2·10⁻⁴ cm²/s = 1,01 m²/năm, 3 phân lớp 2 m): S₁ = 12,81 cm (OC vượt pc); S₂ = 9,97 cm (OC vượt pc, σ′v0 = 52,2 kPa); S₃ = 8,51 cm (NC, σ′v0 = 68,9 kPa); Sc = 31,3 cm; Hdr = 3 m; t₅₀ = 1,76 năm (21 tháng); t₉₀ = 7,56 năm (91 tháng); t = 0,5 năm: Tv = 0,056, U = 26,7 %, St = 8,4 cm; 1 năm: 0,112; 37,8 %; 11,8 cm; 2 năm: 0,224; 53,5 %; 16,7 cm; 5 năm: 0,561; 79,7 %; 24,9 cm.",
+  "answer_hints": "Bài mẫu: Sc 31,3 cm; t₅₀ 1,76 năm; t₉₀ 7,56 năm; U(0,5 năm) 26,7 % → 8,4 cm.",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "max_attempts": 2,
+  "score_policy": "BEST"
+ },
+ "6": {
+  "title": "Tổng hợp địa kỹ thuật, SPT và đánh giá sức chịu tải",
+  "buoi": "Buổi 6",
+  "cdr": "G4.1, G5.1, G6.1, CHP3",
+  "sections": [
+   {
+    "id": "thongtin",
+    "type": "table",
+    "title": "Thông tin nhóm thực hành",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm / tổ",
+     "Thành viên cùng làm (họ tên, MSSV)",
+     "Ngày thí nghiệm",
+     "Mã hiệu mẫu / lỗ khoan / độ sâu"
+    ],
+    "photos": false
+   },
+   {
+    "id": "diatang",
+    "type": "table",
+    "title": "I. Tổng hợp hồ sơ địa kỹ thuật",
+    "columns": [
+     "Độ sâu (m)",
+     "Mô tả đất",
+     "N_SPT",
+     "N₆₀",
+     "w (%)",
+     "γ (kN/m³)",
+     "c (kPa)",
+     "φ (độ)",
+     "pc (kPa) / Cc"
+    ],
+    "rows": [
+     "Lớp 1",
+     "Lớp 2",
+     "Lớp 3",
+     "Lớp 4"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp hình trụ hố khoan, mẫu SPT hoặc bảng tổng hợp chỉ tiêu nhóm đã lập."
+   },
+   {
+    "id": "succhiutai",
+    "type": "table",
+    "title": "II. Sức chịu tải nền dưới móng",
+    "columns": [
+     "Giá trị",
+     "Công thức, hệ số tra (ghi nguồn bảng)"
+    ],
+    "rows": [
+     "Thông số móng: B, L, Df; MNN",
+     "Hệ số Nc, Nq, Nγ dùng (tác giả)",
+     "Sức chịu tải giới hạn qu (kPa)",
+     "Sức chịu tải cho phép qa = qu/FS, FS = 3 (kPa)",
+     "Áp lực tính toán R theo TCVN 9362:2012 (kPa)",
+     "Áp lực đáy móng thực tế p (kPa) và kết luận"
+    ],
+    "photos": false
+   },
+   {
+    "id": "phuongan",
+    "type": "text",
+    "title": "III. Đề xuất phương án nền móng",
+    "prompt": "Chọn loại móng (móng đơn nông / móng bè / móng cọc) và biện pháp xử lý nền hoặc thi công hố móng; lập luận bằng số liệu ở mục I và II."
+   },
+   {
+    "id": "vandung",
+    "type": "questions",
+    "title": "Câu hỏi phân tích – vận dụng",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Vì sao qu/FS và R theo TCVN 9362:2012 khác nhau về bản chất?"
+     },
+     {
+      "id": "q2",
+      "text": "Mực nước ngầm dâng lên đến đáy móng thì sức chịu tải thay đổi thế nào? Giải thích bằng số hạng nào trong công thức."
+     }
+    ]
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Tổng hợp đúng các lớp đất từ hồ sơ",
+     "Tra hệ số sức chịu tải đúng tác giả",
+     "Tính qu, qa, R",
+     "Đề xuất phương án có lập luận"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "diatang",
+     "name": "Tổng hợp hồ sơ đủ, nhất quán, có ảnh",
+     "max": 3
+    },
+    {
+     "id": "succhiutai",
+     "name": "Tính đúng qu, qa, R; ghi nguồn hệ số",
+     "max": 4
+    },
+    {
+     "id": "phuongan",
+     "name": "Phương án nền móng có lập luận",
+     "max": 1.5
+    },
+    {
+     "id": "vd",
+     "name": "Câu hỏi vận dụng",
+     "max": 1.5
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "qu/FS dựa trên trạng thái phá hoại cắt toàn phần của nền (Terzaghi, Meyerhof) rồi chia hệ số an toàn. R theo TCVN 9362:2012 là áp lực ứng với vùng biến dạng dẻo phát triển tới độ sâu khoảng 1/4 bề rộng móng, nền vẫn làm việc gần tuyến tính để còn tính lún theo mô hình đàn hồi; R thường nhỏ hơn qu và không phải trạng thái phá hoại.",
+   "q2": "Dưới MNN phải dùng γ′ (khoảng một nửa γ) trong số hạng 0,5·γ·B·Nγ và số hạng phụ tải q = γ·Df·Nq nếu MNN ở trên đáy móng, nên sức chịu tải giảm đáng kể (có thể 30–50 % với đất rời); đồng thời đất dính có thể bị giảm c do bão hòa."
+  },
+  "reference": "Terzaghi (1943) móng băng: qu = c·Nc + q·Nq + 0,5·γ·B·Nγ; móng vuông: 1,3·c·Nc + q·Nq + 0,4·γ·B·Nγ. Hệ số Terzaghi: φ = 0: Nc 5,70; Nq 1,00; Nγ 0,00. φ = 10: 9,61; 2,69; 0,56. φ = 20: 17,69; 7,44; 3,64. φ = 30: 37,16; 22,46; 19,13. Meyerhof (1963)/Vesić (1973) có Nc = 5,14 khi φ = 0, kèm hệ số hình dạng, độ sâu. qa = qu/FS. R = m₁·m₂/ktc·(A·b·γII + B·h·γ′II + D·cII) theo TCVN 9362:2012 (A, B, D tra bảng theo φII). N₆₀ = N·E/60 (hiệu chỉnh năng lượng). Chấm theo tính nhất quán: đúng công thức, đúng hệ số theo tác giả đã ghi, đúng đơn vị; không có đáp số cố định vì mỗi nhóm dùng hồ sơ riêng.",
+  "answer_hints": "Kiểm tra công thức Terzaghi/Meyerhof, hệ số đúng tác giả, γ′ dưới MNN, qa = qu/3.",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "max_attempts": 2,
+  "score_policy": "BEST"
+ },
+ "11": {
+  "title": "Chuyên đề nhóm – Mốc 1 (buổi 5): đề cương chi tiết, phân công, nguồn số liệu",
+  "kind": "chuyen_de",
+  "moc": 1,
+  "max_attempts": 3,
+  "score_policy": "LAST",
+  "sections": [
+   {
+    "id": "lotrinh",
+    "type": "info",
+    "title": "Lộ trình nộp bài chuyên đề",
+    "lines": [
+     "Lộ trình (đúng phiếu giao nhiệm vụ của giảng viên): giao bài buổi 4 → Mốc 1 buổi 5 → Mốc 2 buổi 7 (Nhóm 1) / buổi 9 (Nhóm 2) → tóm tắt 1 trang gửi trước buổi trình bày 2 ngày → trình bày buổi 8 (Nhóm 1 – Chương 3) / buổi 10 (Nhóm 2 – Chương 4) → bản sửa trong 3 ngày sau buổi trình bày.",
+     "Ngày cụ thể của từng buổi do giảng viên công bố; phiếu của mốc nào chỉ mở trong thời gian của mốc đó.",
+     "Tệp slide (.pptx), bảng tính (.xlsx), tóm tắt (.pdf): tải lên Google Drive hoặc OneDrive của trường, đặt quyền 'Ai có liên kết đều xem được', rồi dán liên kết vào ô tương ứng. Ảnh (biên bản họp, minh chứng) tải trực tiếp vào cột ảnh.",
+     "Mỗi thành viên nộp phiếu của mình (ghi rõ vị trí SV1–SV4); trưởng nhóm nộp thêm nhật ký nhóm.",
+     "Mốc 1 – giảng viên DUYỆT: đề cương chi tiết, phân công và nguồn số liệu."
+    ]
+   },
+   {
+    "id": "nhom",
+    "type": "table",
+    "title": "Thông tin nhóm",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm (Nhóm 1 – Chương 3 hoặc Nhóm 2 – Chương 4)",
+     "Vị trí của bạn (SV1 trưởng nhóm / SV2 / SV3 / SV4) và phần phụ trách",
+     "Họ tên, MSSV các thành viên"
+    ],
+    "photos": false
+   },
+   {
+    "id": "decuong",
+    "type": "text",
+    "title": "1. Đề cương chi tiết",
+    "prompt": "Mục tiêu, các câu hỏi phải trả lời (3 câu bắt buộc trong phiếu giao), dàn ý slide theo phần SV1–SV4."
+   },
+   {
+    "id": "phancong",
+    "type": "table",
+    "title": "2. Bảng phân công",
+    "columns": [
+     "Nhiệm vụ cụ thể",
+     "Sản phẩm",
+     "Hạn hoàn thành"
+    ],
+    "rows": [
+     "SV1",
+     "SV2",
+     "SV3",
+     "SV4"
+    ],
+    "photos": false
+   },
+   {
+    "id": "nguon",
+    "type": "table",
+    "title": "3. Nguồn số liệu và tài liệu",
+    "columns": [
+     "Mô tả / trích dẫn APA 7"
+    ],
+    "rows": [
+     "Số liệu thí nghiệm của nhóm (phiếu 1–4, báo cáo 2–3)",
+     "Hồ sơ địa chất / tình huống giả định",
+     "Tiêu chuẩn sử dụng (số hiệu, điều, bảng)",
+     "Tài liệu tham khảo chính"
+    ],
+    "photos": false
+   },
+   {
+    "id": "bienban",
+    "type": "table",
+    "title": "4. Minh chứng họp nhóm",
+    "columns": [
+     "Ngày, người dự, việc đã giao"
+    ],
+    "rows": [
+     "Buổi họp 1",
+     "Buổi họp 2"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh biên bản",
+    "photo_hint": "Chụp trang nhật ký / biên bản họp nhóm có chữ ký người dự."
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "decuong",
+     "name": "Đề cương bám 3 câu hỏi bắt buộc của phiếu giao",
+     "max": 4
+    },
+    {
+     "id": "phancong",
+     "name": "Phân công rõ, đúng vai trò SV1–SV4",
+     "max": 3
+    },
+    {
+     "id": "nguon",
+     "name": "Nguồn số liệu và tài liệu cụ thể, trích dẫn APA 7",
+     "max": 2
+    },
+    {
+     "id": "bienban",
+     "name": "Có minh chứng họp nhóm",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Đây là mốc chuyên đề thuyết trình nhóm, chấm theo mức độ hoàn thành yêu cầu của mốc và chất lượng nội dung sinh viên viết; không đòi hỏi số liệu cố định. Kiểm tra: có đủ các mục bắt buộc, liên kết tệp có ghi đầy đủ, nội dung kỹ thuật đúng hướng phiếu giao (tình huống, phân công SV1–SV4, công thức, tiêu chuẩn), có trích dẫn nguồn theo APA 7 và dòng khai báo dùng công cụ AI.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  }
+ },
+ "12": {
+  "title": "Chuyên đề nhóm – Mốc 2 (buổi 7 Nhóm 1 / buổi 9 Nhóm 2): bản nháp slide và Excel",
+  "kind": "chuyen_de",
+  "moc": 2,
+  "max_attempts": 3,
+  "score_policy": "LAST",
+  "sections": [
+   {
+    "id": "lotrinh",
+    "type": "info",
+    "title": "Lộ trình nộp bài chuyên đề",
+    "lines": [
+     "Lộ trình (đúng phiếu giao nhiệm vụ của giảng viên): giao bài buổi 4 → Mốc 1 buổi 5 → Mốc 2 buổi 7 (Nhóm 1) / buổi 9 (Nhóm 2) → tóm tắt 1 trang gửi trước buổi trình bày 2 ngày → trình bày buổi 8 (Nhóm 1 – Chương 3) / buổi 10 (Nhóm 2 – Chương 4) → bản sửa trong 3 ngày sau buổi trình bày.",
+     "Ngày cụ thể của từng buổi do giảng viên công bố; phiếu của mốc nào chỉ mở trong thời gian của mốc đó.",
+     "Tệp slide (.pptx), bảng tính (.xlsx), tóm tắt (.pdf): tải lên Google Drive hoặc OneDrive của trường, đặt quyền 'Ai có liên kết đều xem được', rồi dán liên kết vào ô tương ứng. Ảnh (biên bản họp, minh chứng) tải trực tiếp vào cột ảnh.",
+     "Mỗi thành viên nộp phiếu của mình (ghi rõ vị trí SV1–SV4); trưởng nhóm nộp thêm nhật ký nhóm.",
+     "Mốc 2 – giảng viên GÓP Ý: bản nháp slide và bảng tính Excel của phần bạn phụ trách."
+    ]
+   },
+   {
+    "id": "nhom",
+    "type": "table",
+    "title": "Thông tin nhóm",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm (Nhóm 1 – Chương 3 hoặc Nhóm 2 – Chương 4)",
+     "Vị trí của bạn (SV1 trưởng nhóm / SV2 / SV3 / SV4) và phần phụ trách",
+     "Họ tên, MSSV các thành viên"
+    ],
+    "photos": false
+   },
+   {
+    "id": "tep",
+    "type": "table",
+    "title": "1. Liên kết tệp nháp",
+    "columns": [
+     "Liên kết Google Drive / OneDrive",
+     "Tình trạng (đã xong / đang làm)"
+    ],
+    "rows": [
+     "Slide nháp (.pptx)",
+     "Bảng tính Excel (.xlsx) – công thức hiển thị, không dán giá trị"
+    ],
+    "photos": false
+   },
+   {
+    "id": "ketqua",
+    "type": "text",
+    "title": "2. Kết quả chính đã tính được",
+    "prompt": "Tóm tắt số liệu và kết quả phần bạn phụ trách (giá trị, đơn vị, phương pháp)."
+   },
+   {
+    "id": "vuongmac",
+    "type": "text",
+    "title": "3. Vướng mắc cần giảng viên góp ý",
+    "prompt": "Nêu cụ thể điểm chưa chắc (số liệu bị loại và lý do, lựa chọn công thức, tiêu chuẩn…)."
+   },
+   {
+    "id": "minhchung",
+    "type": "table",
+    "title": "4. Minh chứng",
+    "columns": [
+     "Mô tả"
+    ],
+    "rows": [
+     "Ảnh màn hình bảng tính",
+     "Ảnh slide chính"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp màn hình bảng tính (thấy thanh công thức) và slide quan trọng nhất của phần bạn."
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "tep",
+     "name": "Đủ liên kết slide và Excel, Excel dùng công thức",
+     "max": 3
+    },
+    {
+     "id": "ketqua",
+     "name": "Kết quả đúng hướng, có đơn vị và phương pháp",
+     "max": 4
+    },
+    {
+     "id": "vuongmac",
+     "name": "Nêu vướng mắc cụ thể",
+     "max": 2
+    },
+    {
+     "id": "minhchung",
+     "name": "Có ảnh minh chứng",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Đây là mốc chuyên đề thuyết trình nhóm, chấm theo mức độ hoàn thành yêu cầu của mốc và chất lượng nội dung sinh viên viết; không đòi hỏi số liệu cố định. Kiểm tra: có đủ các mục bắt buộc, liên kết tệp có ghi đầy đủ, nội dung kỹ thuật đúng hướng phiếu giao (tình huống, phân công SV1–SV4, công thức, tiêu chuẩn), có trích dẫn nguồn theo APA 7 và dòng khai báo dùng công cụ AI.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "status": "HIDDEN"
+ },
+ "13": {
+  "title": "Chuyên đề nhóm – Tóm tắt 1 trang (gửi trước buổi trình bày 2 ngày)",
+  "kind": "chuyen_de",
+  "moc": 3,
+  "max_attempts": 2,
+  "score_policy": "LAST",
+  "sections": [
+   {
+    "id": "lotrinh",
+    "type": "info",
+    "title": "Lộ trình nộp bài chuyên đề",
+    "lines": [
+     "Lộ trình (đúng phiếu giao nhiệm vụ của giảng viên): giao bài buổi 4 → Mốc 1 buổi 5 → Mốc 2 buổi 7 (Nhóm 1) / buổi 9 (Nhóm 2) → tóm tắt 1 trang gửi trước buổi trình bày 2 ngày → trình bày buổi 8 (Nhóm 1 – Chương 3) / buổi 10 (Nhóm 2 – Chương 4) → bản sửa trong 3 ngày sau buổi trình bày.",
+     "Ngày cụ thể của từng buổi do giảng viên công bố; phiếu của mốc nào chỉ mở trong thời gian của mốc đó.",
+     "Tệp slide (.pptx), bảng tính (.xlsx), tóm tắt (.pdf): tải lên Google Drive hoặc OneDrive của trường, đặt quyền 'Ai có liên kết đều xem được', rồi dán liên kết vào ô tương ứng. Ảnh (biên bản họp, minh chứng) tải trực tiếp vào cột ảnh.",
+     "Mỗi thành viên nộp phiếu của mình (ghi rõ vị trí SV1–SV4); trưởng nhóm nộp thêm nhật ký nhóm.",
+     "Tóm tắt 1 trang (PDF) gửi giảng viên và nhóm phản biện trước buổi trình bày 2 ngày: mục tiêu, số liệu, kết quả chính, kết luận."
+    ]
+   },
+   {
+    "id": "nhom",
+    "type": "table",
+    "title": "Thông tin nhóm",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm (Nhóm 1 – Chương 3 hoặc Nhóm 2 – Chương 4)",
+     "Vị trí của bạn (SV1 trưởng nhóm / SV2 / SV3 / SV4) và phần phụ trách",
+     "Họ tên, MSSV các thành viên"
+    ],
+    "photos": false
+   },
+   {
+    "id": "tep",
+    "type": "table",
+    "title": "1. Liên kết tóm tắt",
+    "columns": [
+     "Liên kết Google Drive / OneDrive"
+    ],
+    "rows": [
+     "Tóm tắt 1 trang (.pdf)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "tomtat",
+    "type": "text",
+    "title": "2. Nội dung tóm tắt (dán văn bản)",
+    "prompt": "Mục tiêu – số liệu – kết quả chính – kết luận (trả lời 3 câu bắt buộc)."
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "tep",
+     "name": "Có tệp PDF đúng hạn",
+     "max": 2
+    },
+    {
+     "id": "tomtat",
+     "name": "Đủ 4 phần, trả lời 3 câu bắt buộc, số liệu có đơn vị",
+     "max": 8
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Đây là mốc chuyên đề thuyết trình nhóm, chấm theo mức độ hoàn thành yêu cầu của mốc và chất lượng nội dung sinh viên viết; không đòi hỏi số liệu cố định. Kiểm tra: có đủ các mục bắt buộc, liên kết tệp có ghi đầy đủ, nội dung kỹ thuật đúng hướng phiếu giao (tình huống, phân công SV1–SV4, công thức, tiêu chuẩn), có trích dẫn nguồn theo APA 7 và dòng khai báo dùng công cụ AI.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "status": "HIDDEN"
+ },
+ "14": {
+  "title": "Chuyên đề nhóm – Trình bày (buổi 8 Nhóm 1 / buổi 10 Nhóm 2): sản phẩm cuối",
+  "kind": "chuyen_de",
+  "moc": 4,
+  "max_attempts": 1,
+  "score_policy": "LAST",
+  "sections": [
+   {
+    "id": "lotrinh",
+    "type": "info",
+    "title": "Lộ trình nộp bài chuyên đề",
+    "lines": [
+     "Lộ trình (đúng phiếu giao nhiệm vụ của giảng viên): giao bài buổi 4 → Mốc 1 buổi 5 → Mốc 2 buổi 7 (Nhóm 1) / buổi 9 (Nhóm 2) → tóm tắt 1 trang gửi trước buổi trình bày 2 ngày → trình bày buổi 8 (Nhóm 1 – Chương 3) / buổi 10 (Nhóm 2 – Chương 4) → bản sửa trong 3 ngày sau buổi trình bày.",
+     "Ngày cụ thể của từng buổi do giảng viên công bố; phiếu của mốc nào chỉ mở trong thời gian của mốc đó.",
+     "Tệp slide (.pptx), bảng tính (.xlsx), tóm tắt (.pdf): tải lên Google Drive hoặc OneDrive của trường, đặt quyền 'Ai có liên kết đều xem được', rồi dán liên kết vào ô tương ứng. Ảnh (biên bản họp, minh chứng) tải trực tiếp vào cột ảnh.",
+     "Mỗi thành viên nộp phiếu của mình (ghi rõ vị trí SV1–SV4); trưởng nhóm nộp thêm nhật ký nhóm.",
+     "Buổi trình bày: 95 phút = 45 phút trình bày (mỗi SV khoảng 10 phút) + 30 phút hỏi đáp, phản biện + 20 phút giảng viên chốt kiến thức. Nộp 4 sản phẩm trước giờ trình bày."
+    ]
+   },
+   {
+    "id": "nhom",
+    "type": "table",
+    "title": "Thông tin nhóm",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm (Nhóm 1 – Chương 3 hoặc Nhóm 2 – Chương 4)",
+     "Vị trí của bạn (SV1 trưởng nhóm / SV2 / SV3 / SV4) và phần phụ trách",
+     "Họ tên, MSSV các thành viên"
+    ],
+    "photos": false
+   },
+   {
+    "id": "sanpham",
+    "type": "table",
+    "title": "1. Bốn sản phẩm",
+    "columns": [
+     "Liên kết",
+     "Ghi chú"
+    ],
+    "rows": [
+     "Slide (.pptx) 20–25 slide, có bảng ≥ 10 thuật ngữ Anh – Việt",
+     "Bảng tính Excel (.xlsx)",
+     "Tóm tắt 1 trang (.pdf)",
+     "Nhật ký nhóm"
+    ],
+    "photos": false
+   },
+   {
+    "id": "khaibao",
+    "type": "text",
+    "title": "2. Khai báo dùng công cụ AI",
+    "prompt": "Ghi đúng dòng khai báo ở slide cuối: dùng công cụ nào, vào việc gì (không dùng AI để tạo số liệu, kết quả tính hay hình kết quả)."
+   },
+   {
+    "id": "danhgiacheo",
+    "type": "table",
+    "title": "3. Phiếu đánh giá chéo trong nhóm (cơ sở hệ số đóng góp k)",
+    "columns": [
+     "Mức đóng góp (1–5)",
+     "Nhận xét ngắn"
+    ],
+    "rows": [
+     "SV1",
+     "SV2",
+     "SV3",
+     "SV4"
+    ],
+    "photos": false
+   },
+   {
+    "id": "cauhoi",
+    "type": "text",
+    "title": "4. Câu hỏi bạn chuẩn bị khi làm nhóm phản biện",
+    "prompt": "Ít nhất 1 câu hỏi có nội dung kỹ thuật cho nhóm bạn."
+   },
+   {
+    "id": "minhchung",
+    "type": "table",
+    "title": "5. Minh chứng buổi trình bày",
+    "columns": [
+     "Mô tả"
+    ],
+    "rows": [
+     "Ảnh buổi trình bày / slide kết luận"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Mỗi hàng chụp 1–3 ảnh rõ nét làm minh chứng (màn hình cân, số đọc đồng hồ, mẫu đất, bảng tính Excel…); ảnh được nén tự động trước khi gửi."
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "sanpham",
+     "name": "Đủ 4 sản phẩm, đúng yêu cầu hình thức",
+     "max": 4
+    },
+    {
+     "id": "khaibao",
+     "name": "Trích dẫn APA 7 và khai báo AI đúng",
+     "max": 2
+    },
+    {
+     "id": "danhgiacheo",
+     "name": "Đánh giá chéo nghiêm túc",
+     "max": 1
+    },
+    {
+     "id": "cauhoi",
+     "name": "Câu hỏi phản biện có nội dung kỹ thuật",
+     "max": 2
+    },
+    {
+     "id": "minhchung",
+     "name": "Minh chứng",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Đây là mốc chuyên đề thuyết trình nhóm, chấm theo mức độ hoàn thành yêu cầu của mốc và chất lượng nội dung sinh viên viết; không đòi hỏi số liệu cố định. Kiểm tra: có đủ các mục bắt buộc, liên kết tệp có ghi đầy đủ, nội dung kỹ thuật đúng hướng phiếu giao (tình huống, phân công SV1–SV4, công thức, tiêu chuẩn), có trích dẫn nguồn theo APA 7 và dòng khai báo dùng công cụ AI. Điểm chính thức của buổi trình bày do giảng viên chấm theo rubric A–G trong phiếu giao; điểm của phiếu này chỉ đánh giá việc nộp đủ sản phẩm.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "status": "HIDDEN"
+ },
+ "15": {
+  "title": "Chuyên đề nhóm – Bản sửa sau phản biện (trong 3 ngày sau buổi trình bày)",
+  "kind": "chuyen_de",
+  "moc": 5,
+  "max_attempts": 2,
+  "score_policy": "LAST",
+  "sections": [
+   {
+    "id": "lotrinh",
+    "type": "info",
+    "title": "Lộ trình nộp bài chuyên đề",
+    "lines": [
+     "Lộ trình (đúng phiếu giao nhiệm vụ của giảng viên): giao bài buổi 4 → Mốc 1 buổi 5 → Mốc 2 buổi 7 (Nhóm 1) / buổi 9 (Nhóm 2) → tóm tắt 1 trang gửi trước buổi trình bày 2 ngày → trình bày buổi 8 (Nhóm 1 – Chương 3) / buổi 10 (Nhóm 2 – Chương 4) → bản sửa trong 3 ngày sau buổi trình bày.",
+     "Ngày cụ thể của từng buổi do giảng viên công bố; phiếu của mốc nào chỉ mở trong thời gian của mốc đó.",
+     "Tệp slide (.pptx), bảng tính (.xlsx), tóm tắt (.pdf): tải lên Google Drive hoặc OneDrive của trường, đặt quyền 'Ai có liên kết đều xem được', rồi dán liên kết vào ô tương ứng. Ảnh (biên bản họp, minh chứng) tải trực tiếp vào cột ảnh.",
+     "Mỗi thành viên nộp phiếu của mình (ghi rõ vị trí SV1–SV4); trưởng nhóm nộp thêm nhật ký nhóm.",
+     "Bản sửa theo góp ý phản biện nộp trong 3 ngày sau buổi trình bày."
+    ]
+   },
+   {
+    "id": "nhom",
+    "type": "table",
+    "title": "Thông tin nhóm",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm (Nhóm 1 – Chương 3 hoặc Nhóm 2 – Chương 4)",
+     "Vị trí của bạn (SV1 trưởng nhóm / SV2 / SV3 / SV4) và phần phụ trách",
+     "Họ tên, MSSV các thành viên"
+    ],
+    "photos": false
+   },
+   {
+    "id": "tep",
+    "type": "table",
+    "title": "1. Liên kết bản sửa",
+    "columns": [
+     "Liên kết"
+    ],
+    "rows": [
+     "Slide đã sửa",
+     "Excel đã sửa"
+    ],
+    "photos": false
+   },
+   {
+    "id": "gopy",
+    "type": "table",
+    "title": "2. Tiếp thu góp ý",
+    "columns": [
+     "Góp ý (của ai)",
+     "Đã sửa thế nào (slide / ô số)"
+    ],
+    "rows": [
+     "Góp ý 1",
+     "Góp ý 2",
+     "Góp ý 3"
+    ],
+    "photos": false
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "tep",
+     "name": "Có bản sửa đúng hạn",
+     "max": 3
+    },
+    {
+     "id": "gopy",
+     "name": "Tiếp thu và giải trình từng góp ý cụ thể",
+     "max": 7
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Đây là mốc chuyên đề thuyết trình nhóm, chấm theo mức độ hoàn thành yêu cầu của mốc và chất lượng nội dung sinh viên viết; không đòi hỏi số liệu cố định. Kiểm tra: có đủ các mục bắt buộc, liên kết tệp có ghi đầy đủ, nội dung kỹ thuật đúng hướng phiếu giao (tình huống, phân công SV1–SV4, công thức, tiêu chuẩn), có trích dẫn nguồn theo APA 7 và dòng khai báo dùng công cụ AI.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO20202)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO20202, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Bảng số liệu: mỗi nhóm có mẫu đất và số đọc RIÊNG nên KHÔNG so với một đáp số cố định. Hãy TỰ TÍNH LẠI các đại lượng dẫn xuất từ chính số liệu thô sinh viên ghi (theo công thức trong 'du_lieu_chuan'); sai lệch ≤ 2 % là đúng, 2–5 % là đúng một phần (thường do làm tròn), > 5 % là sai. Kiểm tra đơn vị (g, cm³, kPa, mm, cm²/s, m²/năm — chú ý 1 cm²/s = 3 155,76 m²/năm), dấu phẩy thập phân, và tính hợp lý vật lý (độ bão hòa ≤ 100 %, hệ số rỗng giảm khi tăng tải, số đọc đồng hồ tăng dần theo thời gian ở một cấp tải). Một ô sai kéo theo các ô sau thì chỉ trừ ở ô gốc nếu các bước sau làm đúng phương pháp.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "status": "HIDDEN"
+ }
+}

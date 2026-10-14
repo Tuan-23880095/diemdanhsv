@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BÁO CÁO TÓM TẮT DỰ ÁN (EXECUTIVE SUMMARY) - NHÓM 1</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+  @media print {
+    body { margin: 0; background: #fff; font-size: 10.5pt; }
+    .no-print { display: none; }
+    .page-box { box-shadow: none; border: none; padding: 0; margin: 0; width: 100%; }
+  }
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11pt;
+    line-height: 1.35;
+    color: #111;
+    background-color: #e9ecef;
+    margin: 0;
+    padding: 20px 0;
+  }
+  .page-box {
+    background: #fff;
+    width: 210mm;
+    height: 297mm; /* Đúng 1 trang A4 duy nhất */
+    margin: 0 auto;
+    padding: 15mm 15mm;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    overflow: hidden;
+    position: relative;
+  }
+  .header {
+    border-bottom: 2px solid #0b2545;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .header-left { font-size: 9.5pt; text-transform: uppercase; font-weight: bold; color: #0b2545; }
+  .header-right { font-size: 9.5pt; font-style: italic; color: #555; text-align: right; }
+  .doc-title { text-align: center; margin: 6px 0 10px 0; }
+  .doc-title h1 { font-size: 14pt; font-weight: bold; text-transform: uppercase; margin: 0; color: #0b2545; }
+  .doc-title h2 { font-size: 11pt; font-weight: bold; margin: 2px 0 0 0; color: #134074; }
+  
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    background: #f0f4f8;
+    border: 1px solid #bcccdc;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 9.5pt;
+    margin-bottom: 10px;
+  }
+  
+  .sec-title {
+    font-size: 11pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #0b2545;
+    border-left: 4px solid #134074;
+    padding-left: 6px;
+    margin: 8px 0 4px 0;
+  }
+  
+  table.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin: 4px 0 8px 0;
+  }
+  table.summary-table th, table.summary-table td {
+    border: 1px solid #666;
+    padding: 4px 6px;
+    text-align: left;
+  }
+  table.summary-table th {
+    background-color: #dbe4ee;
+    color: #0b2545;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .highlight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 6px 0;
+  }
+  .kpi-card {
+    border: 1px solid #8da9c4;
+    background: #fdfdfe;
+    border-radius: 4px;
+    padding: 6px 8px;
+    text-align: center;
+  }
+  .kpi-val { font-size: 13pt; font-weight: bold; color: #c1121f; margin: 2px 0; }
+  .kpi-lbl { font-size: 8.5pt; text-transform: uppercase; color: #495057; font-weight: bold; }
+  
+  .recommend-box {
+    border: 1.5px solid #0077b6;
+    background: #e7f5ff;
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-top: 6px;
+    font-size: 9.5pt;
+  }
+  .recommend-box strong { color: #0077b6; }
+  
+  .signatures {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 9.5pt;
+    text-align: center;
+  }
+  .signatures div { width: 45%; }
+</style>
+<style>
+.dv3{text-align:center;white-space:nowrap;font-family:"Times New Roman",Times,serif;font-size:12pt;line-height:1.25;color:#000}
+.dv3 .ct{text-transform:uppercase;font-weight:normal}
+.dv3 .bh{text-transform:uppercase;font-weight:bold}
+.dv3 .bh span{display:inline-block}
+.dv3 .bh span::after{content:"";display:block;width:45%;margin:1.5pt auto 0;border-top:.75pt solid #000}
+.qh3{text-align:center;white-space:nowrap;font-family:"Times New Roman",Times,serif;line-height:1.25;color:#000}
+.qh3 .qh{font-weight:bold;text-transform:uppercase;font-size:12pt}
+.qh3 .tn{font-weight:bold;font-size:13pt}
+.qh3 .tn span{display:inline-block;border-bottom:.75pt solid #000;padding-bottom:.5pt}
+@media print{.btn-print{display:none!important}}
+</style>
+</head>
+<body>
+
+<div class="page-box">
+  <div class="header">
+    <div class="header-left">
+      <div class="dv3"><div class="ct">Trường Đại học Khoa học Tự nhiên</div><div class="ct">Khoa Địa chất</div><div class="bh"><span>Bộ môn Địa chất Công trình - Địa chất Thủy văn</span></div></div>
+    </div>
+    <div class="header-right">
+      HỌC PHẦN: CƠ HỌC ĐẤT (GEO20202)<br>MẪU BÁO CÁO TÓM TẮT 1 TRANG (EXECUTIVE SUMMARY)
+    </div>
+  </div>
+
+  <div class="doc-title">
+    <h1>BÁO CÁO KỸ THUẬT DỰ BÁO LÚN NỀN ĐẮP ĐƯỜNG ĐẦU CẦU TRÊN ĐẤT YẾU</h1>
+    <h2>VÀ ĐỀ XUẤT GIẢI PHÁP GIA TỐC CỐ KẾT BẰNG BẤC THẤM (PVD)</h2>
+  </div>
+
+  <div class="meta-grid">
+    <div>
+      <strong>Đơn vị tư vấn:</strong> Nhóm 1 - Lớp GEO20202 (SV1: Trưởng nhóm, SV2: Dữ liệu, SV3: Tính toán, SV4: Báo cáo)<br>
+      <strong>Công trình:</strong> Tuyến đường dẫn đầu cầu vượt sông (Đắp cao $H=3{,}0	ext{ m}$, rộng đỉnh $B=12{,}0	ext{ m}$, mái $1:1{,}5$)
+    </div>
+    <div style="text-align: right;">
+      <strong>Ngày lập:</strong> 14/10/2026<br>
+      <strong>Mã hồ sơ:</strong> EXS-N01-CH3
+    </div>
+  </div>
+
+  <div class="sec-title">1. TỔNG QUAN ĐỊA TẦNG VÀ CĂN CỨ TÍNH TOÁN TỪ THỰC NGHIỆM PHÒNG THÍ NGHIỆM</div>
+  <p style="margin: 2px 0 6px 0; font-size: 9.5pt; text-align: justify;">
+    Tầng địa chất chịu tải chính là lớp bùn sét xám xanh dày $H = 15{,}0	ext{ m}$ ($H_{dr} = 7{,}5	ext{ m}$ thoát nước 2 phía), MNN ở $-1{,}0	ext{ m}$. Toàn bộ thông số địa kỹ thuật được nhóm chuẩn hóa từ 06 phiếu thực hành tại PTN: Dung trọng bão hòa $\gamma_{sat} = 15{,}8	ext{ kN/m}^3$ ($\gamma' = 5{,}99	ext{ kN/m}^3$); Hệ số rỗng ban đầu $e_0 = 1{,}62$; Áp lực tiền cố kết $p_c = 42{,}0	ext{ kPa}$; Chỉ số nén $C_c = 0{,}58$; Chỉ số nở $C_r = 0{,}065$; Hệ số cố kết đứng $c_v = 1{,}85 	imes 10^{-4}	ext{ cm}^2/	ext{s}$ ($0{,}583	ext{ m}^2/	ext{năm}$); Hệ số cố kết ngang $c_h = 2{,}0 	imes c_v$. Tải trọng đắp mặt đất: $q = \gamma 	imes H = 19{,}0 	imes 3{,}0 = 57{,}0	ext{ kPa}$.
+  </p>
+
+  <div class="sec-title">2. KẾT QUẢ ĐỊNH LƯỢNG 3 CÂU HỎI TRỌNG YẾU CỦA CHỦ ĐẦU TƯ</div>
+  
+  <div class="highlight-grid">
+    <div class="kpi-card">
+      <div class="kpi-lbl">Độ lún cuối cùng ($S_c$)</div>
+      <div class="kpi-val">84,6 cm</div>
+      <div style="font-size: 8pt; color: #555;">(Theo $C_c, C_r$ & OCR)<br>TCVN 9362: $76{,}2	ext{ cm}$</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lbl">Thời gian lún tự nhiên ($t_{90}$)</div>
+      <div class="kpi-val">81,9 năm</div>
+      <div style="font-size: 8pt; color: #555;">Thoát nước tự nhiên $H_{dr}=7{,}5	ext{ m}$<br>Sau 12 tháng mới đạt $U=12{,}5\%$</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lbl">Sau xử lý PVD ($t_{90}$ mới)</div>
+      <div class="kpi-val">6,5 tháng</div>
+      <div style="font-size: 8pt; color: #555;">Cự ly $d=1{,}2	ext{ m}$ tam giác<br>Đạt $U \ge 90\%$ trước 8 tháng</div>
+    </div>
+  </div>
+
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th style="width: 25%;">Kịch bản thoát nước</th>
+        <th style="width: 20%;">Thời gian ($t$)</th>
+        <th style="width: 18%;">Độ cố kết ($U_t$)</th>
+        <th style="width: 18%;">Độ lún đạt được</th>
+        <th style="width: 19%;">Độ lún dư còn lại</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Thoát nước tự nhiên</strong> (Không xử lý)</td>
+        <td>12 tháng (Hạn thảm nhựa)</td>
+        <td style="text-align: center; color: red; font-weight: bold;">12,5%</td>
+        <td style="text-align: center;">10,6 cm</td>
+        <td style="text-align: center; color: red; font-weight: bold;">74,0 cm (Phá hủy đường)</td>
+      </tr>
+      <tr>
+        <td rowspan="2"><strong>Xử lý Bấc thấm PVD</strong><br>(Lưới tam giác $d = 1{,}2	ext{ m}$)</td>
+        <td>6 tháng</td>
+        <td style="text-align: center; font-weight: bold;">88,2%</td>
+        <td style="text-align: center;">74,6 cm</td>
+        <td style="text-align: center;">10,0 cm</td>
+      </tr>
+      <tr>
+        <td>8 tháng</td>
+        <td style="text-align: center; color: green; font-weight: bold;">94,5%</td>
+        <td style="text-align: center;">79,9 cm</td>
+        <td style="text-align: center; color: green; font-weight: bold;">4,7 cm (Đạt TCVN)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sec-title">3. KẾT LUẬN & KHUYẾN NGHỊ HÀNH ĐỘNG DÀNH CHO BAN GIÁM ĐỐC / CHỦ ĐẦU TƯ</div>
+  <div class="recommend-box">
+    <strong>KHUYẾN NGHỊ 1 (Tuyệt đối không thi công theo phương án tự nhiên):</strong> Nếu đắp trực tiếp trên nền tự nhiên và thảm nhựa sau 12 tháng, độ lún dư chưa hoàn thành lên tới $74	ext{ cm}$. Tuyến đường chắc chắn sẽ bị sụt lún nghiêm trọng, hình thành gãy khúc đầu cầu ("ổ gà mố cầu") gây tai nạn giao thông.<br>
+    <strong>KHUYẾN NGHỊ 2 (Phương án xử lý kỹ thuật tối ưu):</strong> Áp dụng công nghệ <em>Cắm bấc thấm PVD cự ly tam giác $d = 1{,}2	ext{ m}$</em> xuyên suốt chiều sâu $15	ext{ m}$ vào tầng cát cuội sỏi, kết hợp trải tầng đệm cát thoát nước dày $50	ext{ cm}$ và đắp gia tải trước (Preloading) $H_{phu} = 0{,}8	ext{ m}$.<br>
+    <strong>KHUYẾN NGHỊ 3 (Tiến độ và Quan trắc):</strong> Thời gian chờ cố kết là <strong>7,0 tháng</strong> để đạt độ lún trên $92\%$. Bắt buộc bố trí bàn đo lún bề mặt và ống đo áp lực nước lỗ rỗng (piezometer) để nghiệm thu độ lún thực tế trước khi dỡ tải gia tải và thi công lớp kết cấu áo đường.
+  </div>
+
+  <div class="signatures">
+    <div>
+      <strong>KỸ SƯ TÍNH TOÁN & DỮ LIỆU</strong><br>
+      <span style="font-size: 8.5pt; font-style: italic;">(Ký và ghi rõ họ tên)</span><br><br><br>
+      <strong>SV2 & SV3</strong>
+    </div>
+    <div>
+      <strong>TRƯỞNG NHÓM TƯ VẤN (SV1)</strong><br>
+      <span style="font-size: 8.5pt; font-style: italic;">(Ký và xác nhận cam kết số liệu)</span><br><br><br>
+      <strong>SV1</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
