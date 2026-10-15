@@ -48,8 +48,10 @@
   ];
 
   /* Time Management Questionnaire — Britton & Tesser (1991), 18 câu, 3 thang con.
-   * Bản dịch làm việc (cần dịch ngược + đối chiếu nguyên văn Bảng 1 của bài gốc trước khi công bố).
-   * s: SRP = lập kế hoạch ngắn hạn, TA = thái độ với thời gian, LRP = lập kế hoạch dài hạn. */
+   * Thứ tự, phân nhóm và câu đảo chiều đã đối chiếu với Bảng 1 của bài gốc (J. Educ. Psychol., 83(3), 405–410):
+   * câu 8, 10, 11, 13, 16 chấm đảo (6 − x); câu 17 chấm thuận như bài gốc (theo dõi tương quan biến–tổng khi phân tích).
+   * Bản dịch tiếng Việt vẫn cần dịch ngược độc lập trước khi công bố.
+   * s: SRP = lập kế hoạch ngắn hạn, TA = thái độ với thời gian, LRP = lập kế hoạch dài hạn; r: 1 = câu đảo chiều. */
   R.TMQ_SCALE = ['Không bao giờ', 'Hiếm khi', 'Thỉnh thoảng', 'Thường xuyên', 'Luôn luôn']; // lưu 1–5
   R.TMQ = [
     { s: 'SRP', q: 'Bạn có lập danh sách những việc cần làm mỗi ngày không?' },
@@ -59,15 +61,15 @@
     { s: 'SRP', q: 'Mỗi ngày, bạn có dành thời gian để lập kế hoạch không?' },
     { s: 'SRP', q: 'Bạn có biết rõ mình muốn hoàn thành những gì trong tuần tới không?' },
     { s: 'SRP', q: 'Bạn có đặt thứ tự ưu tiên cho các việc và làm theo thứ tự đó không?' },
-    { s: 'TA', q: 'Bạn có hay làm những việc ảnh hưởng đến việc học chỉ vì ngại nói “không” với người khác không?' },
+    { s: 'TA', q: 'Bạn có hay làm những việc ảnh hưởng đến việc học chỉ vì ngại nói “không” với người khác không?', r: 1 },
     { s: 'TA', q: 'Nhìn chung, bạn có cảm thấy mình làm chủ được thời gian của mình không?' },
-    { s: 'TA', q: 'Trong một ngày đi học bình thường, bạn có dành cho việc chăm chút cá nhân (ăn mặc, ngoại hình…) nhiều thời gian hơn cho việc học không?' },
-    { s: 'TA', q: 'Bạn có nghĩ cách mình quản lý thời gian vẫn còn chỗ cần cải thiện không?' },
+    { s: 'TA', q: 'Trong một ngày đi học bình thường, bạn có dành cho việc chăm chút cá nhân (ăn mặc, ngoại hình…) nhiều thời gian hơn cho việc học không?', r: 1 },
+    { s: 'TA', q: 'Bạn có nghĩ cách mình quản lý thời gian vẫn còn chỗ cần cải thiện không?', r: 1 },
     { s: 'TA', q: 'Bạn có sử dụng thời gian của mình một cách hữu ích không?' },
-    { s: 'TA', q: 'Bạn có tiếp tục những thói quen hoặc hoạt động không mang lại lợi ích không?' },
+    { s: 'TA', q: 'Bạn có tiếp tục những thói quen hoặc hoạt động không mang lại lợi ích không?', r: 1 },
     { s: 'LRP', q: 'Bạn có thường giữ bàn học gọn, chỉ để những thứ phục vụ việc đang làm không?' },
     { s: 'LRP', q: 'Bạn có đặt ra một bộ mục tiêu cho cả học kỳ không?' },
-    { s: 'LRP', q: 'Vào đêm trước hạn nộp một bài lớn, bạn có thường vẫn còn đang làm dở không?' },
+    { s: 'LRP', q: 'Vào đêm trước hạn nộp một bài lớn, bạn có thường vẫn còn đang làm dở không?', r: 1 },
     { s: 'LRP', q: 'Khi có nhiều việc phải làm, bạn có cho rằng tốt nhất là mỗi việc làm một ít không?' },
     { s: 'LRP', q: 'Bạn có thường xem lại bài ghi trên lớp ngay cả khi chưa sắp kiểm tra không?' }
   ];
