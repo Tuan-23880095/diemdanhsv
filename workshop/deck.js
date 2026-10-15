@@ -683,7 +683,9 @@
   document.getElementById('stage').addEventListener('touchend', function (e) { if (tx == null) return; var dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1)); tx = null; });
 
   var hideT = null;
-  document.addEventListener('mousemove', function () { document.body.classList.add('show-ctrl'); clearTimeout(hideT); hideT = setTimeout(function () { document.body.classList.remove('show-ctrl'); }, 2200); });
+  function showCtrl(ms) { document.body.classList.add('show-ctrl'); clearTimeout(hideT); hideT = setTimeout(function () { document.body.classList.remove('show-ctrl'); }, ms); }
+  document.addEventListener('mousemove', function () { showCtrl(2200); });
+  document.addEventListener('touchstart', function () { showCtrl(4000); }, { passive: true }); // điện thoại: chạm để hiện thanh điều khiển
 
   /* bản in: dựng toàn bộ slide (Ctrl+P) */
   window.addEventListener('beforeprint', function () {
