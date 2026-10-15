@@ -155,30 +155,40 @@ table.cmp td:last-child { background: color-mix(in srgb, var(--sec) 7%, white); 
 .shape-card .lb { font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); margin-bottom: 2px; }
 .shape-card .try { margin-top: auto; background: color-mix(in srgb, var(--c) 9%, white); border-radius: 10px; padding: 10px 12px; }
 
-/* điều khiển (tự ẩn) */
-#ctrl { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 6px; align-items: center; background: rgba(16,33,43,.88); color: #fff; padding: 6px 8px; border-radius: 14px; font-size: 14px; z-index: 20; opacity: 0; transition: opacity .25s; }
+/* điều khiển (tự ẩn) — co giãn theo % bề ngang màn hình */
+#ctrl { position: fixed; left: 50%; bottom: max(1.6vh, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: max-content; max-width: 96%; display: flex; gap: .3em; align-items: stretch; background: rgba(16,33,43,.9); color: #fff; padding: .4em; border-radius: 1em; font-size: clamp(12px, .55vw + 7px, 15px); z-index: 20; opacity: 0; transition: opacity .25s; box-sizing: border-box; }
 body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
-#ctrl button, #ctrl a { background: transparent; border: 0; color: #fff; padding: 8px 11px; border-radius: 9px; cursor: pointer; text-decoration: none; white-space: nowrap; }
+#ctrl button, #ctrl a { flex: 0 1 auto; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: .4em; background: transparent; border: 0; color: #fff; font: inherit; padding: .55em .75em; border-radius: .65em; cursor: pointer; text-decoration: none; white-space: nowrap; }
 #ctrl button:hover, #ctrl a:hover { background: rgba(255,255,255,.14); }
-#ctrl .pos { padding: 0 8px; font-variant-numeric: tabular-nums; opacity: .8; white-space: nowrap; }
+#ctrl .ic { width: 1.3em; height: 1.3em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#ctrl .lb { overflow: hidden; text-overflow: ellipsis; }
+#ctrl .pos { flex: 0 0 auto; align-self: center; padding: 0 .4em; font-variant-numeric: tabular-nums; opacity: .85; white-space: nowrap; }
+/* màn hình hẹp (điện thoại, máy tính bảng dọc): chỉ biểu tượng, mỗi nút chia đều bề ngang */
+@media (max-width: 960px) {
+  #ctrl { width: 96%; gap: 1%; padding: .35em; }
+  #ctrl button, #ctrl a { flex: 1 1 0; padding: .7em 0; }
+  #ctrl .lb { display: none; }
+  #ctrl .pos { flex: 1.4 1 0; text-align: center; padding: 0; }
+}
+@media (max-width: 520px) { #ctrl .opt { display: none; } }
 #progress { position: fixed; left: 0; top: 0; height: 4px; background: var(--luc); z-index: 21; transition: width .3s; }
 
 /* đồng hồ */
-#timer { position: fixed; right: 22px; top: 18px; z-index: 22; background: var(--muc); color: #fff; border-radius: 18px; padding: 10px 18px 10px 20px; display: none; align-items: center; gap: 14px; font-variant-numeric: tabular-nums; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+#timer { position: fixed; right: 2%; top: 2.5%; z-index: 22; background: var(--muc); color: #fff; border-radius: 1em; padding: .5em .8em .5em 1em; display: none; align-items: center; gap: .7em; font-size: clamp(12px, .5vw + 8px, 16px); font-variant-numeric: tabular-nums; box-shadow: 0 10px 30px rgba(0,0,0,.25); max-width: 96%; box-sizing: border-box; }
 #timer.on { display: flex; }
-#timer .tv { font: 700 44px/1 var(--sans); }
+#timer .tv { font: 700 clamp(24px, 2.4vw + 10px, 44px)/1 var(--sans); }
 #timer.done { background: var(--son); animation: blink 1s 6; }
 @keyframes blink { 50% { opacity: .55; } }
-#timer button { background: rgba(255,255,255,.14); border: 0; color: #fff; border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+#timer button { background: rgba(255,255,255,.14); border: 0; color: #fff; border-radius: .5em; padding: .4em .65em; cursor: pointer; font: inherit; }
 
 /* hộp thoại */
-.modal { position: fixed; inset: 0; background: rgba(16,33,43,.55); z-index: 30; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal { position: fixed; inset: 0; background: rgba(16,33,43,.55); z-index: 30; display: none; align-items: center; justify-content: center; padding: 2.5%; }
 .modal.on { display: flex; }
-.panel { background: #fff; border-radius: 18px; width: min(980px, 100%); max-height: 92vh; overflow: auto; padding: 24px 28px; font-size: 15px; box-shadow: 0 30px 80px rgba(0,0,0,.3); }
+.panel { background: #fff; border-radius: 18px; width: min(980px, 100%); max-height: 92vh; overflow: auto; padding: clamp(14px, 3%, 28px); font-size: 15px; box-shadow: 0 30px 80px rgba(0,0,0,.3); }
 .panel h2 { font: 700 24px var(--serif); margin: 0 0 4px; }
 .panel h3 { font-size: 15px; margin: 20px 0 8px; text-transform: uppercase; letter-spacing: .06em; color: var(--mute); }
 .panel .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.panel input[type=password], .panel input[type=text] { font: inherit; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; min-width: 220px; }
+.panel input[type=password], .panel input[type=text] { font: inherit; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; min-width: min(220px, 100%); }
 .btn { font: 600 14px var(--sans); border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 13px; cursor: pointer; }
 .btn:hover { border-color: var(--luc); }
 .btn.pri { background: var(--luc); color: #fff; border-color: var(--luc); }
@@ -189,11 +199,11 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 .hq { display: grid; grid-template-columns: 40px 1fr auto; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); align-items: center; }
 .hq.hid { opacity: .4; }
 .goal-txt { padding: 8px 0; border-top: 1px solid var(--line); }
-.overview { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.overview { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(190px, 45%), 1fr)); gap: 10px; }
 .overview button { text-align: left; border: 1px solid var(--line); background: var(--giay); border-radius: 10px; padding: 10px 12px; cursor: pointer; font-size: 14px; line-height: 1.3; }
 .overview button.cur { border-color: var(--luc); background: #E3F1EA; }
 .overview button small { display: block; color: var(--mute); font-size: 12px; }
-.keys { columns: 2; font-size: 14px; color: var(--mute); }
+.keys { columns: 2 240px; font-size: 14px; color: var(--mute); }
 .keys kbd { font: 600 12px var(--sans); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; color: var(--muc); background: #fff; }
 
 /* cửa sổ ghi chú diễn giả */
@@ -227,17 +237,17 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 <div id="timer" role="timer" aria-live="polite"><span class="tv" id="timerV">05:00</span><button id="timerP" type="button">Tạm dừng</button><button id="timerX" type="button" aria-label="Tắt đồng hồ">✕</button></div>
 
 <nav id="ctrl" aria-label="Điều khiển trình chiếu">
-  <a href="../index.html" title="Về trang chủ diemdanhsv">← diemdanhsv</a>
-  <button type="button" data-k="prev" title="Slide trước (←)">‹</button>
+  <a class="opt" href="../index.html" title="Về trang chủ diemdanhsv" aria-label="Về trang chủ diemdanhsv"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><span class="lb">diemdanhsv</span></a>
+  <button type="button" data-k="prev" title="Slide trước (←)" aria-label="Slide trước"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
   <span class="pos" id="pos">1 / 1</span>
-  <button type="button" data-k="next" title="Slide sau (→, Space)">›</button>
-  <button type="button" data-k="overview" title="Mục lục (O)">Mục lục</button>
-  <button type="button" data-k="timer" title="Đồng hồ hoạt động (T)">Đồng hồ</button>
-  <button type="button" data-k="notes" title="Ghi chú diễn giả ở cửa sổ riêng (P)">Ghi chú</button>
-  <button type="button" data-k="full" title="Toàn màn hình (F)">Toàn màn hình</button>
-  <button type="button" data-k="host" title="Bảng diễn giả (H)">Diễn giả</button>
-  <a href="sv.html" target="_blank" rel="noopener" title="Trang tham gia của sinh viên">Trang SV</a>
-  <a href="cam-nang.html" target="_blank" rel="noopener" title="Cẩm nang in được">Cẩm nang</a>
+  <button type="button" data-k="next" title="Slide sau (→, Space)" aria-label="Slide sau"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  <button type="button" data-k="overview" title="Mục lục (O)" aria-label="Mục lục"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg><span class="lb">Mục lục</span></button>
+  <button type="button" data-k="timer" title="Đồng hồ hoạt động (T)" aria-label="Đồng hồ"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 10v3.5l2.5 2M9.5 2.5h5"/></svg><span class="lb">Đồng hồ</span></button>
+  <button class="opt" type="button" data-k="notes" title="Ghi chú diễn giả ở cửa sổ riêng (P)" aria-label="Ghi chú diễn giả"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9.5 11.5h6M9.5 15.5h6"/></svg><span class="lb">Ghi chú</span></button>
+  <button type="button" data-k="full" title="Toàn màn hình (F)" aria-label="Toàn màn hình"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="lb">Toàn màn hình</span></button>
+  <button type="button" data-k="host" title="Bảng diễn giả (H)" aria-label="Bảng diễn giả"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c1.4-3.8 4.3-5.8 7.5-5.8s6.1 2 7.5 5.8"/></svg><span class="lb">Diễn giả</span></button>
+  <a href="sv.html" target="_blank" rel="noopener" title="Trang tham gia của sinh viên" aria-label="Trang sinh viên"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18h2"/></svg><span class="lb">Trang SV</span></a>
+  <a class="opt" href="cam-nang.html" target="_blank" rel="noopener" title="Cẩm nang in được" aria-label="Cẩm nang"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5z"/><path d="M5 20.5V5.5"/></svg><span class="lb">Cẩm nang</span></a>
 </nav>
 
 <!-- Mục lục -->
@@ -311,6 +321,6 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 
 <script src="vendor/qrcode-generator-1.4.4.js?v=20261015"></script>
 <script src="ws-common.js?v=20261016"></script>
-<script src="deck.js?v=20261017"></script>
+<script src="deck.js?v=20261018"></script>
 </body>
 </html>
