@@ -16,8 +16,8 @@ html, body { height: 100%; overflow: hidden; background: #E7EAE5; }
 body.notes-view, body.print-view { overflow: auto; height: auto; }
 
 /* ───────── Sân khấu: slide 1600×900 co giãn vừa màn hình ───────── */
-#stage { position: fixed; inset: 0; display: grid; place-items: center; }
-#scaler { width: 1600px; height: 900px; transform-origin: center center; position: relative; }
+#stage { position: fixed; inset: 0; overflow: hidden; }
+#scaler { width: 1600px; height: 900px; transform-origin: center center; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
 .slide { position: absolute; inset: 0; background: var(--giay); border-radius: 6px; overflow: hidden; box-shadow: 0 20px 60px rgba(16,33,43,.18); display: flex; flex-direction: column; font-size: 26px; line-height: 1.45; padding: 58px 84px 0; }
 .slide.enter { animation: sIn .38s cubic-bezier(.2,.8,.2,1); }
 @keyframes sIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -311,6 +311,6 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 
 <script src="vendor/qrcode-generator-1.4.4.js?v=20261015"></script>
 <script src="ws-common.js?v=20261016"></script>
-<script src="deck.js?v=20261016"></script>
+<script src="deck.js?v=20261017"></script>
 </body>
 </html>
