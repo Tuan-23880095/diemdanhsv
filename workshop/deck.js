@@ -429,7 +429,8 @@
   function fit() {
     var w = window.innerWidth, h = window.innerHeight;
     var k = Math.min(w / 1600, h / 900);
-    scaler.style.transform = 'scale(' + k + ')';
+    // Căn giữa bằng translate rồi mới scale: cửa sổ hẹp hơn 1600px (laptop, máy chiếu 1366/1280) vẫn nằm giữa.
+    scaler.style.transform = 'translate(-50%, -50%) scale(' + k + ')';
   }
 
   function go(i, fromRemote) {
