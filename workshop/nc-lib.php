@@ -20,6 +20,7 @@ if (!function_exists('api_fail')) {
 const WS_NC_ACTS = ['nc0', 'nc1', 'nc2', 'nc3'];
 const WS_NC_DEMO = ['gioi' => 3, 'nganh' => 9, 'noio' => 4, 'lamthem' => 3, 'tinchi' => 4, 'coso' => 2, 'dahoc' => 1];
 const WS_NC_TMQ_SUB = ['SRP', 'SRP', 'SRP', 'SRP', 'SRP', 'SRP', 'SRP', 'TA', 'TA', 'TA', 'TA', 'TA', 'TA', 'LRP', 'LRP', 'LRP', 'LRP', 'LRP'];
+const WS_NC_TMQ_REV = [8, 10, 11, 13, 16]; // câu chấm đảo theo Bảng 1 của Britton & Tesser (1991) — chỉ dùng khi phân tích
 const WS_NC_KT_KEY = [2, 1, 2, 0, 1, 1, 2, 2];
 const WS_NC_N = ['tmq' => 18, 'se' => 5, 'kt' => 8, 're' => 4, 'yd' => 3, 'ad' => 7];
 
@@ -129,7 +130,7 @@ function ws_nc_score(array $kt): int
  * Bảng dữ liệu nghiên cứu dạng rộng: mỗi dòng = một người tham gia (theo mã SGIC).
  * Nối T0–T1 ưu tiên cùng thiết bị (client), sau đó theo SGIC; T2–T3 nối theo SGIC.
  * Dữ liệu hoạt động workshop chỉ đưa vào khi thiết bị đó đã đồng ý (có nc0 hoặc nc1).
- * Điểm TMQ để NGUYÊN (1–5), chưa đảo chiều — đảo chiều theo khóa chấm của bài gốc khi phân tích.
+ * Điểm TMQ để NGUYÊN (1–5), chưa đảo chiều; cột có hậu tố _R là câu cần đảo (6 − x) khi phân tích.
  */
 function ws_nc_csv(string $sess): array
 {
@@ -185,7 +186,7 @@ function ws_nc_csv(string $sess): array
     }
     $h[] = 't0_thoi_gian';
     for ($i = 1; $i <= 18; $i++) {
-        $h[] = sprintf('t0_tmq%02d_%s', $i, WS_NC_TMQ_SUB[$i - 1]);
+        $h[] = sprintf('t0_tmq%02d_%s', $i, WS_NC_TMQ_SUB[$i - 1]) . (in_array($i, WS_NC_TMQ_REV, true) ? '_R' : '');
     }
     for ($i = 1; $i <= 5; $i++) { $h[] = 't0_se' . $i; }
     for ($i = 1; $i <= 8; $i++) { $h[] = 't0_kt' . $i; }
@@ -207,7 +208,7 @@ function ws_nc_csv(string $sess): array
         if ($w === 't2') {
             $h[] = 't2_camket_so_ngay';
         } else {
-            for ($i = 1; $i <= 18; $i++) { $h[] = sprintf('t3_tmq%02d_%s', $i, WS_NC_TMQ_SUB[$i - 1]); }
+            for ($i = 1; $i <= 18; $i++) { $h[] = sprintf('t3_tmq%02d_%s', $i, WS_NC_TMQ_SUB[$i - 1]) . (in_array($i, WS_NC_TMQ_REV, true) ? '_R' : ''); }
             for ($i = 1; $i <= 5; $i++) { $h[] = 't3_se' . $i; }
             $h[] = 't3_thay_doi';
         }
