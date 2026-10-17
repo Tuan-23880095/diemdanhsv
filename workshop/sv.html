@@ -143,6 +143,13 @@ footer.ft { text-align: center; font-size: 12.5px; color: var(--mute); padding: 
   header.top .sen, .dqt-sen { display: none !important; }
   .print-head { display: flex !important; }
 }
+.lucky { background: #FFF6DC; border-bottom: 1px solid #EBD69B; font-size: 13.5px; }
+.lucky .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding-top: 7px; padding-bottom: 7px; }
+.lucky .lk-l { font-weight: 600; color: #7A5A12; }
+.lucky b { font: 700 19px/1 "SFMono-Regular", Consolas, "Liberation Mono", monospace; letter-spacing: .1em; color: var(--muc); background: #fff; border: 1px solid #EBD69B; border-radius: 6px; padding: 3px 7px; }
+.lucky #lkTxt { color: #6b5a2c; }
+.lucky #lkTxt.ok { color: var(--luc); font-weight: 600; }
+@media print { .lucky { display: none; } }
 .print-head { display: none; align-items: center; gap: 12px; margin-bottom: 12px; }
 .print-head img { height: 44px; }
 </style>
@@ -155,6 +162,7 @@ footer.ft { text-align: center; font-size: 12.5px; color: var(--mute); padding: 
     <img class="sen dqt-sen" src="assets/logo-sen.svg" alt="Logo hoa sen đọng sương">
   </div>
 </header>
+<div class="lucky" id="luckyBar"><div class="wrap"><span class="lk-l">🎟 Mã may mắn</span><b id="lkCode">·····</b><span id="lkTxt"></span></div></div>
 <nav class="tabs" aria-label="Các hoạt động"><div class="wrap" id="tabs"></div></nav>
 <div id="liveBar" role="status"><div class="wrap"><span>📣 Diễn giả đang mở: <b id="liveName"></b></span><button class="btn sm pri" type="button" id="liveGo">Tham gia</button></div></div>
 
@@ -303,6 +311,6 @@ footer.ft { text-align: center; font-size: 12.5px; color: var(--mute); padding: 
 <script src="ws-common.js?v=20261016"></script>
 <script src="ws-research.js?v=20261016"></script>
 <script src="ws-survey.js?v=20261016"></script>
-<script src="sv.js?v=20261016"></script>
+<script src="sv.js?v=20261019"></script>
 </body>
 </html>

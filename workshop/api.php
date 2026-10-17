@@ -391,6 +391,7 @@ function ws_check_pin(string $pin): void
 }
 
 require __DIR__ . '/nc-lib.php';
+require __DIR__ . '/qua-lib.php';
 
 // ───────────────────────── Router ─────────────────────────
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -559,6 +560,7 @@ try {
                 if ($what === 'all') {
                     // "Tất cả" = dữ liệu hoạt động workshop; KHÔNG xóa phiếu nghiên cứu nc0–nc3.
                     $pdo->prepare("DELETE FROM ws_votes WHERE sess = ? AND act NOT IN ('nc0','nc1','nc2','nc3')")->execute([$sess]);
+                    $pdo->prepare('DELETE FROM ws_state WHERE sess = ?')->execute([ws_qua_key($sess)]); // kết quả quay số
                 } elseif ($what === 'nghiencuu') {
                     $pdo->prepare("DELETE FROM ws_votes WHERE sess = ? AND act IN ('nc0','nc1','nc2','nc3')")->execute([$sess]);
                 } elseif (in_array($what, WS_ACTS, true)) {
@@ -566,6 +568,26 @@ try {
                 }
             });
             api_ok(['ok' => true]);
+        }
+        if ($op === 'lucky_draw' || $op === 'lucky_info') {
+            $min = ws_int($p['min'] ?? 3, 1, count(WS_QUA_ACTS)) ?? 3;
+            if ($op === 'lucky_info') {
+                api_ok(ws_qua_info($sess, $min));
+            }
+            $n = ws_int($p['n'] ?? 3, 1, 10) ?? 3;
+            api_ok(ws_qua_draw($sess, $n, $min));
+        }
+        if ($op === 'lucky_reset') {
+            ws_qua_save($sess, []);
+            api_ok(['ok' => true]);
+        }
+        if ($op === 'smart_rank') {
+            $goals = ws_qua_goals($sess);
+            if ((int) ($p['ai'] ?? 0) === 1) {
+                api_ok(ws_qua_smart_ai($goals, 5));
+            }
+            $coGemini = function_exists('app_config') && trim((string) ((app_config()['gemini'] ?? [])['api_key'] ?? '')) !== '';
+            api_ok(['items' => array_slice($goals, 0, 10), 'xet' => count($goals), 'co_gemini' => $coGemini]);
         }
         if ($op === 'research_csv') {
             api_ok(ws_nc_csv($sess));
