@@ -181,6 +181,24 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 @keyframes blink { 50% { opacity: .55; } }
 #timer button { background: rgba(255,255,255,.14); border: 0; color: #fff; border-radius: .5em; padding: .4em .65em; cursor: pointer; font: inherit; }
 
+/* quay số may mắn */
+#lucky { position: fixed; inset: 0; z-index: 40; background: radial-gradient(circle at 50% 35%, #1d3a4d, #10212B 70%); color: #fff; display: none; align-items: center; justify-content: center; text-align: center; padding: 3%; }
+#lucky.on { display: flex; }
+#lucky .lk-in { width: 100%; }
+#lucky .lk-t { font: 700 clamp(28px, 4.2vw, 64px)/1.1 var(--serif); margin: 0 0 .25em; }
+#lucky .lk-sub { font-size: clamp(14px, 1.5vw, 24px); opacity: .85; margin: 0 0 1.4em; }
+#lucky .lk-codes { display: flex; flex-wrap: wrap; gap: clamp(10px, 2vw, 36px); justify-content: center; }
+#lucky .lk-code { font: 700 clamp(36px, 7vw, 120px)/1 "SFMono-Regular", Consolas, "Liberation Mono", monospace; letter-spacing: .08em; background: rgba(255,255,255,.1); border: 2px solid rgba(255,255,255,.25); color: #fff; border-radius: .16em; padding: .2em .32em; min-width: 5.6ch; }
+#lucky .lk-code.done { background: #fff; color: var(--muc); border-color: #F3C969; box-shadow: 0 0 0 .08em #F3C969, 0 12px 40px rgba(243,201,105,.35); animation: lkPop .45s cubic-bezier(.2,.9,.3,1.4); }
+#lucky .lk-code small { display: block; font: 600 clamp(11px, 1vw, 16px) var(--sans); letter-spacing: 0; color: var(--mute); margin-top: .5em; }
+#lucky .lk-note { font-size: clamp(13px, 1.3vw, 20px); opacity: .8; margin: 1.4em 0 1em; }
+#lucky .btn { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.3); }
+@keyframes lkPop { from { transform: scale(.7); } to { transform: none; } }
+.sm-item { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+.sm-item .sc { font: 700 20px var(--sans); color: var(--luc); }
+.sm-item .sc small { display: block; font-size: 11px; color: var(--mute); font-weight: 600; }
+.sm-item .meta { font-size: 12.5px; color: var(--mute); margin-top: 2px; }
+
 /* hộp thoại */
 .modal { position: fixed; inset: 0; background: rgba(16,33,43,.55); z-index: 30; display: none; align-items: center; justify-content: center; padding: 2.5%; }
 .modal.on { display: flex; }
@@ -275,6 +293,16 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 </div>
 
 <!-- Bảng diễn giả -->
+<div id="lucky" role="dialog" aria-modal="true" aria-label="Quay số may mắn">
+  <div class="lk-in">
+    <p class="lk-t">🎁 Quay số may mắn</p>
+    <p class="lk-sub" id="lkSub"></p>
+    <div class="lk-codes" id="lkCodes"></div>
+    <p class="lk-note" id="lkNote"></p>
+    <button class="btn" type="button" id="lkClose">Đóng (Esc)</button>
+  </div>
+</div>
+
 <div class="modal" id="mHost" role="dialog" aria-modal="true" aria-labelledby="hostT">
   <div class="panel">
     <button class="btn close" type="button" data-close>Đóng</button>
@@ -300,6 +328,18 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
       <h3>Mục tiêu SMART &amp; góp ý của sinh viên (không chiếu)</h3>
       <div class="row"><button class="btn" type="button" data-detail="muctieu">Xem mục tiêu</button><button class="btn" type="button" data-detail="danhgia">Xem góp ý</button></div>
       <div id="hdList"></div>
+      <h3>Quà tặng</h3>
+      <div class="row"><button class="btn" type="button" id="smAuto">Xếp hạng mục tiêu SMART (tự động)</button><button class="btn" type="button" id="smAi">Nhờ Gemini chấm mục tiêu</button></div>
+      <p class="muted" style="margin:4px 0 0;font-size:13px">Danh sách gợi ý để diễn giả chọn; không chiếu. Gemini chỉ nhận nội dung mục tiêu, không kèm mã thiết bị.</p>
+      <div id="smList"></div>
+      <div class="row" style="margin-top:10px">
+        <label>Số quà <input type="number" id="ldN" value="3" min="1" max="10" style="width:56px" class="btn"></label>
+        <button class="btn pri" type="button" id="ldGo">🎲 Quay số may mắn</button>
+        <button class="btn" type="button" id="ldInfoBtn">Ai đủ điều kiện?</button>
+        <button class="btn warn" type="button" id="ldReset">Xóa kết quả quay</button>
+      </div>
+      <p class="muted" style="margin:4px 0 0;font-size:13px">Chỉ thiết bị đã làm ≥ 3 trong 7 hoạt động workshop (không tính khảo sát nghiên cứu). Người đã trúng không quay lại. Mã may mắn hiện trên đầu trang SV.</p>
+      <div class="msg" id="ldMsg"></div>
       <h3>Xuất dữ liệu minh chứng</h3>
       <div class="row"><button class="btn pri" type="button" id="expJson">Tải JSON</button><button class="btn pri" type="button" id="expCsv">Tải CSV (Excel)</button><button class="btn pri" type="button" id="expNc">Tải dữ liệu nghiên cứu (CSV)</button></div>
       <p class="muted" style="margin:6px 0 0;font-size:13px">Dữ liệu nghiên cứu: mỗi dòng một người (theo mã ẩn danh), nối đầu buổi – cuối buổi – sau 2 tuần – sau 6 tuần. Chỉ gồm người đã đồng ý.</p>
@@ -321,6 +361,6 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 
 <script src="vendor/qrcode-generator-1.4.4.js?v=20261015"></script>
 <script src="ws-common.js?v=20261016"></script>
-<script src="deck.js?v=20261018"></script>
+<script src="deck.js?v=20261019"></script>
 </body>
 </html>

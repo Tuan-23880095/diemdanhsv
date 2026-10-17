@@ -23,7 +23,16 @@
     }
     WSS.mount(box, w, { onDone: drawTabs, onDecline: function () { mountNc('nc0'); mountNc('nc1'); show('khoidong'); } });
   }
+  /* mã may mắn = 5 ký tự đầu của mã thiết bị (khớp ws_qua_code trong qua-lib.php); chỉ tính 7 hoạt động, không tính khảo sát */
+  var LK_ACTS = ['khoidong', 'hinh', 'muctieu', 'eisen', 'banhxe', 'camket', 'danhgia'];
+  function drawLucky() {
+    var n = LK_ACTS.filter(done).length, t = $('lkTxt');
+    $('lkCode').textContent = CLIENT.slice(0, 5).toUpperCase();
+    t.textContent = n >= 3 ? '✓ Đã làm ' + n + '/7 hoạt động — bạn có tên trong vòng quay số cuối buổi' : 'Đã làm ' + n + '/7 hoạt động · làm đủ 3 để vào vòng quay số cuối buổi';
+    t.className = n >= 3 ? 'ok' : '';
+  }
   function drawTabs() {
+    drawLucky();
     $('tabs').innerHTML = TABS.map(function (t) {
       return '<button type="button" data-t="' + t[0] + '" class="' + (t[0] === current ? 'on' : '') + (t[0] === liveAct && t[0] !== current ? ' live' : '') + '">' + t[1] + (done(t[0]) ? '<span class="ok">✓</span>' : '') + '</button>';
     }).join('');
