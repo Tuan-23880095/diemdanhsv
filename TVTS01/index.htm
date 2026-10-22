@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La bàn Hướng nghiệp</title>
+<meta name="description" content="Bộ trắc nghiệm hướng nghiệp cho học sinh: sở thích nghề (Holland RIASEC), tính cách (Big Five), giá trị nghề, khả năng thích ứng nghề nghiệp và học lực — tổng hợp theo mô hình 3 vòng tròn.">
+<link rel="icon" type="image/svg+xml" href="/images/logo-sen.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --luc: #0F6B55; --luc-non: #46A385; --ngoc: #8FE0BD;
+  --lam: #1F4E79; --lam-suong: #2F6DB0;
+  --muc: #10212B; --giay: #F6F7F3; --card: #FFFFFF;
+  --line: #D5DCE1; --mute: #4E5D68; --soft: #EEF2EE;
+  --son: #D2492A; --tho: #D6A130; --tim: #6B4A9E;
+  --R: #B5532F; --I: #2F6DB0; --A: #6B4A9E; --S: #0F6B55; --E: #C98A12; --C: #4E5D68;
+  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --radius: 14px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--sans); color: var(--muc); background: var(--giay); -webkit-font-smoothing: antialiased; line-height: 1.55; font-size: 16px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--lam-suong); }
+.wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+
+/* Header */
+header.top { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; }
+header.top .wrap { display: flex; align-items: center; gap: 12px; height: 60px; }
+header.top img { width: 36px; height: 36px; flex: none; }
+header.top .brand { font-family: var(--serif); font-weight: 700; font-size: 1.15rem; line-height: 1.1; }
+header.top .brand small { display: block; font-family: var(--sans); font-weight: 500; font-size: .74rem; color: var(--mute); letter-spacing: .02em; }
+header.top .grow { flex: 1; }
+.prog { height: 4px; background: var(--soft); }
+.prog > i { display: block; height: 100%; width: 0; background: var(--luc); transition: width .35s ease; }
+
+/* Steps nav */
+.steps { display: flex; gap: 6px; overflow-x: auto; padding: 14px 0 4px; scrollbar-width: none; }
+.steps::-webkit-scrollbar { display: none; }
+.steps button { flex: none; border: 1px solid var(--line); background: var(--card); border-radius: 99px; padding: 6px 12px; font-size: .82rem; color: var(--mute); cursor: pointer; white-space: nowrap; }
+.steps button.on { background: var(--luc); border-color: var(--luc); color: #fff; font-weight: 600; }
+.steps button.done { border-color: var(--luc-non); color: var(--luc); }
+.steps button:disabled { cursor: default; opacity: .55; }
+
+main { padding: 8px 0 80px; }
+section.page { display: none; }
+section.page.on { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+h1 { font-family: var(--serif); font-size: clamp(1.7rem, 5vw, 2.4rem); line-height: 1.15; margin: 18px 0 10px; }
+h2 { font-family: var(--serif); font-size: clamp(1.35rem, 4vw, 1.75rem); line-height: 1.2; margin: 18px 0 6px; }
+h3 { font-size: 1.05rem; margin: 22px 0 8px; }
+.kicker { font-size: .76rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--luc); margin-top: 18px; }
+.lead { font-size: 1.05rem; color: var(--mute); margin: 0 0 14px; }
+.muted { color: var(--mute); }
+.small { font-size: .86rem; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; margin: 14px 0; }
+.card.tint { background: #F0F6F2; border-color: #CFE4D8; }
+.card.warn { background: #FFF8EC; border-color: #F0DDB4; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+
+label.f { display: block; font-weight: 600; font-size: .9rem; margin-bottom: 4px; }
+input[type=text], select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fff; }
+textarea { min-height: 84px; resize: vertical; }
+input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px solid var(--lam-suong); outline-offset: 1px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 10px; padding: 12px 18px; font-weight: 600; cursor: pointer; background: var(--luc); color: #fff; }
+.btn:hover { background: #0B5845; }
+.btn.ghost { background: transparent; color: var(--luc); border: 1px solid var(--luc-non); }
+.btn.ghost:hover { background: #EAF4EF; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+
+/* Questions */
+.q { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 14px 12px; margin: 10px 0; transition: border-color .2s; }
+.q.missing { border-color: var(--son); box-shadow: 0 0 0 2px rgba(210,73,42,.12); }
+.q .t { font-weight: 500; margin-bottom: 10px; display: flex; gap: 10px; }
+.q .t b { color: var(--mute); font-weight: 600; font-variant-numeric: tabular-nums; min-width: 1.8em; }
+.opts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.opts label { position: relative; display: block; cursor: pointer; }
+.opts input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.opts span { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 44px; padding: 6px 4px; border: 1px solid var(--line); border-radius: 9px; font-size: .78rem; line-height: 1.2; color: var(--mute); background: #FBFCFA; transition: all .15s; }
+.opts input:checked + span { background: var(--luc); border-color: var(--luc); color: #fff; font-weight: 600; }
+.opts input:focus-visible + span { outline: 2px solid var(--lam-suong); outline-offset: 1px; }
+.opts label:hover span { border-color: var(--luc-non); }
+.opts.s6 { grid-template-columns: repeat(6, 1fr); }
+@media (max-width: 520px) { .opts span { font-size: .7rem; min-height: 48px; } .opts.s6 { grid-template-columns: repeat(3, 1fr); } }
+.legend { display: flex; justify-content: space-between; font-size: .78rem; color: var(--mute); margin: 4px 2px 0; }
+.counter { position: sticky; bottom: 0; background: linear-gradient(transparent, var(--giay) 35%); padding: 18px 0 10px; pointer-events: none; }
+.counter .nav { pointer-events: auto; }
+
+/* Subjects table */
+.subj { display: grid; grid-template-columns: minmax(130px, 1.1fr) 3fr; gap: 8px 12px; align-items: center; }
+.subj .n { font-weight: 500; }
+@media (max-width: 560px) { .subj { grid-template-columns: 1fr; } .subj .n { margin-top: 8px; } }
+
+/* Results */
+.code { display: flex; gap: 8px; margin: 6px 0 4px; }
+.code span { width: 54px; height: 54px; border-radius: 12px; color: #fff; display: grid; place-items: center; font-family: var(--serif); font-weight: 700; font-size: 1.7rem; }
+.bars { display: grid; gap: 9px; margin: 10px 0; }
+.bar { display: grid; grid-template-columns: minmax(110px, 34%) 1fr minmax(3.4em, auto); gap: 10px; align-items: center; font-size: .92rem; }
+.bar .tr { height: 14px; background: #E9EDEA; border-radius: 99px; overflow: hidden; }
+.bar .fi { height: 100%; border-radius: 99px; transition: width .7s cubic-bezier(.2,.8,.2,1); }
+.bar .v { white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.bar.hi .l { font-weight: 700; }
+.pill { display: inline-block; border-radius: 99px; padding: 2px 10px; font-size: .78rem; font-weight: 600; background: var(--soft); color: var(--mute); }
+.pill.g { background: #E3F2EA; color: var(--luc); }
+.pill.y { background: #FBF0D9; color: #8A5F06; }
+.pill.r { background: #FBE6E0; color: #A43A20; }
+.major { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin: 10px 0; background: #fff; }
+.major .h { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.major .h strong { font-size: 1rem; }
+.major .meter { display: flex; gap: 14px; flex-wrap: wrap; font-size: .82rem; color: var(--mute); margin-top: 4px; }
+.major .ex { font-size: .86rem; margin-top: 6px; }
+.typebox { border-left: 4px solid var(--luc); padding: 4px 0 4px 12px; margin: 10px 0; }
+.venn { display: block; width: 100%; max-width: 520px; margin: 6px auto; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 640px) { .cols3 { grid-template-columns: 1fr; } }
+.cols3 .card { margin: 0; }
+ul.tight { margin: 6px 0; padding-left: 20px; }
+ul.tight li { margin: 3px 0; }
+table.t { width: 100%; border-collapse: collapse; font-size: .88rem; }
+table.t th, table.t td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.t th { color: var(--mute); font-weight: 600; font-size: .8rem; }
+.refs { font-size: .8rem; color: var(--mute); }
+.refs p { margin: 4px 0; padding-left: 1.6em; text-indent: -1.6em; }
+footer { border-top: 1px solid var(--line); padding: 22px 0 40px; color: var(--mute); font-size: .82rem; }
+footer .wrap { display: flex; gap: 12px; align-items: center; }
+footer img { width: 40px; height: 40px; }
+.toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--muc); color: #fff; padding: 10px 16px; border-radius: 10px; font-size: .9rem; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 50; }
+.toast.on { opacity: 1; }
+
+@media print {
+  header.top, .steps, .nav, .noprint, footer, .counter { display: none !important; }
+  body { background: #fff; font-size: 12px; }
+  section.page { display: none !important; }
+  section.page#p-result { display: block !important; }
+  .card, .major { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <img src="/images/logo-sen.svg" alt="">
+    <div class="brand">La bàn Hướng nghiệp<small>Trắc nghiệm định hướng nghề nghiệp cho học sinh</small></div>
+    <div class="grow"></div>
+    <button class="btn ghost noprint" id="btnReset" type="button" style="padding:7px 12px;font-size:.82rem;white-space:nowrap">Làm lại</button>
+  </div>
+  <div class="prog"><i id="progBar"></i></div>
+</header>
+
+<div class="wrap">
+  <nav class="steps noprint" id="steps" aria-label="Các phần"></nav>
+  <main id="main">
+
+    <!-- 0. Giới thiệu -->
+    <section class="page" id="p-intro" data-step="0">
+      <div class="kicker">Bắt đầu</div>
+      <h1>Em hợp với nghề nào?</h1>
+      <p class="lead">Bộ trắc nghiệm gồm 5 phần ngắn, mất khoảng 20–25 phút. Kết quả ghép ba câu hỏi lớn của chọn nghề: <b>em thích gì</b>, <b>em làm tốt gì</b> và <b>xã hội cần gì</b>.</p>
+
+      <div class="card">
+        <table class="t">
+          <tr><th>Phần</th><th>Đo điều gì</th><th>Số câu</th></tr>
+          <tr><td>1. Sở thích nghề</td><td>6 nhóm sở thích Holland (RIASEC)</td><td>30</td></tr>
+          <tr><td>2. Tính cách</td><td>5 nét tính cách lớn (Big Five)</td><td>20</td></tr>
+          <tr><td>3. Giá trị nghề</td><td>Điều em coi trọng ở một công việc</td><td>20</td></tr>
+          <tr><td>4. Sẵn sàng chọn nghề</td><td>Khả năng thích ứng nghề nghiệp (4C)</td><td>12</td></tr>
+          <tr><td>5. Học lực</td><td>Em tự đánh giá mức học tốt từng môn</td><td>14 môn</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="grid2">
+          <div><label class="f" for="inName">Họ tên hoặc biệt danh (không bắt buộc)</label><input type="text" id="inName" maxlength="60" autocomplete="off"></div>
+          <div><label class="f" for="inGrade">Lớp</label>
+            <select id="inGrade">
+              <option value="">— Chọn —</option>
+              <option>Lớp 8</option><option>Lớp 9</option><option>Lớp 10</option><option>Lớp 11</option><option>Lớp 12</option><option>Khác</option>
+            </select></div>
+          <div><label class="f" for="inSchool">Trường (không bắt buộc)</label><input type="text" id="inSchool" maxlength="80" autocomplete="off"></div>
+          <div><label class="f" for="inDream">Nghề em đang nghĩ tới (nếu có)</label><input type="text" id="inDream" maxlength="80" autocomplete="off"></div>
+        </div>
+      </div>
+
+      <div class="card warn small">
+        <b>Lưu ý trước khi làm.</b> Không có câu trả lời đúng hay sai; hãy chọn theo đúng con người em lúc này, không theo mong muốn của người khác. Câu trả lời chỉ lưu trên máy của em, trang không gửi dữ liệu đi đâu. Kết quả là <b>điểm khởi đầu để trao đổi</b> với thầy cô, gia đình — không phải “phán quyết” chọn ngành.
+      </div>
+
+      <div class="nav"><span></span><button class="btn" type="button" data-go="1">Bắt đầu phần 1 →</button></div>
+    </section>
+
+    <!-- 1. RIASEC -->
+    <section class="page" id="p-riasec" data-step="1">
+      <div class="kicker">Phần 1 / 5 · Sở thích nghề</div>
+      <h2>Em thích làm những việc này đến mức nào?</h2>
+      <p class="lead">Đừng lo em có làm được, có học qua hay kiếm được nhiều tiền không. Chỉ nghĩ: <i>mình có thích làm việc này không?</i></p>
+      <div id="qRiasec"></div>
+      <div class="counter"><div class="nav" style="margin:0"><button class="btn ghost" type="button" data-go="0">← Quay lại</button><button class="btn" type="button" data-next="1">Tiếp: Tính cách →</button></div></div>
+    </section>
+
+    <!-- 2. Big Five -->
+    <section class="page" id="p-big5" data-step="2">
+      <div class="kicker">Phần 2 / 5 · Tính cách</div>
+      <h2>Câu nào mô tả đúng em?</h2>
+      <p class="lead">Hãy mô tả em <b>thường ngày</b>, như em đang là — không phải như em muốn trở thành. So với các bạn cùng giới, cùng tuổi.</p>
+      <div id="qBig5"></div>
+      <div class="counter"><div class="nav" style="margin:0"><button class="btn ghost" type="button" data-go="1">← Quay lại</button><button class="btn" type="button" data-next="2">Tiếp: Giá trị nghề →</button></div></div>
+    </section>
+
+    <!-- 3. Values -->
+    <section class="page" id="p-values" data-step="3">
+      <div class="kicker">Phần 3 / 5 · Giá trị nghề</div>
+      <h2>Trong công việc lý tưởng của em, điều này quan trọng đến mức nào?</h2>
+      <p class="lead">Mọi thứ đều có vẻ quan trọng. Hãy cố <b>phân biệt</b>: chỉ chọn “Rất quan trọng” cho vài điều em thật sự không muốn thiếu.</p>
+      <div id="qValues"></div>
+      <div class="counter"><div class="nav" style="margin:0"><button class="btn ghost" type="button" data-go="2">← Quay lại</button><button class="btn" type="button" data-next="3">Tiếp: Sẵn sàng chọn nghề →</button></div></div>
+    </section>
+
+    <!-- 4. CAAS -->
+    <section class="page" id="p-caas" data-step="4">
+      <div class="kicker">Phần 4 / 5 · Sẵn sàng chọn nghề</div>
+      <h2>Em đã phát triển những khả năng này đến đâu?</h2>
+      <p class="lead">Mỗi người dùng những điểm mạnh khác nhau để xây dựng con đường nghề nghiệp. Không ai giỏi mọi thứ — mỗi người mạnh ở vài điểm hơn những điểm khác.</p>
+      <div id="qCaas"></div>
+      <div class="counter"><div class="nav" style="margin:0"><button class="btn ghost" type="button" data-go="3">← Quay lại</button><button class="btn" type="button" data-next="4">Tiếp: Học lực →</button></div></div>
+    </section>
+
+    <!-- 5. Subjects -->
+    <section class="page" id="p-subj" data-step="5">
+      <div class="kicker">Phần 5 / 5 · Học lực</div>
+      <h2>Em học tốt môn nào?</h2>
+      <p class="lead">Dựa vào điểm tổng kết gần nhất và cảm nhận của em. Môn em không học thì chọn “Không học”.</p>
+      <div class="card"><div class="subj" id="qSubj"></div></div>
+      <div class="card">
+        <label class="f" for="inNeed">Vòng tròn thứ ba — xã hội cần gì?</label>
+        <p class="small muted" style="margin:0 0 8px">Kể vài nghề em thấy đang thiếu người hoặc cần nhiều ở địa phương em, hoặc nghề em nghe người lớn nhắc tới. Phần này giúp buổi trao đổi với thầy cô cụ thể hơn.</p>
+        <textarea id="inNeed" maxlength="600" placeholder="Ví dụ: kĩ thuật viên điện ở khu công nghiệp gần nhà; giáo viên tiếng Anh; nhân viên du lịch…"></textarea>
+      </div>
+      <div class="counter"><div class="nav" style="margin:0"><button class="btn ghost" type="button" data-go="4">← Quay lại</button><button class="btn" type="button" data-next="5">Xem kết quả →</button></div></div>
+    </section>
+
+    <!-- 6. Results -->
+    <section class="page" id="p-result" data-step="6">
+      <div id="resultBody"></div>
+      <div class="nav noprint">
+        <button class="btn ghost" type="button" data-go="5">← Sửa câu trả lời</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn ghost" type="button" id="btnCopy">Sao chép tóm tắt</button>
+          <button class="btn ghost" type="button" id="btnCsv">Tải file kết quả (.csv)</button>
+          <button class="btn" type="button" id="btnPrint">In / Lưu PDF</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <img src="/images/logo-sen.svg" alt="">
+    <div>Biên soạn: ThS. Đinh Quốc Tuấn · Câu hỏi dịch và phỏng theo các thang đo công khai: O*NET Mini Interest Profiler, Mini-IPIP, O*NET Work Importance Locator, CAAS-SF. Bản tiếng Việt chưa được chuẩn hóa trên học sinh Việt Nam — kết quả dùng để tham khảo và trao đổi.</div>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+'use strict';
+
+/* ───────────── DỮ LIỆU THANG ĐO ─────────────
+   1) O*NET Mini Interest Profiler — Rounds, Ming, Cao, Song & Lewis (2016), Appendix A.
+      Thang 0–4; điểm mỗi nhóm = tổng 5 câu (0–20).
+   2) Mini-IPIP — Donnellan, Oswald, Baird & Lucas (2006). Thang 1–5; (R) đảo chiều.
+   3) O*NET Work Importance Locator — McCloy và cộng sự (1999). 20 nhu cầu nghề, 6 giá trị.
+      Bản gốc xếp thẻ 5 cột × 4 thẻ; ở đây phỏng theo bằng thang 1–5, điểm = trung bình mỗi giá trị.
+   4) CAAS-SF — Maggiori, Rossier & Savickas (2017); câu dẫn & nhãn theo Savickas & Porfeli (2012).
+*/
+const TYPES = {
+  R: { name: 'Kỹ thuật', en: 'Realistic', color: 'var(--R)', hex: '#B5532F',
+       desc: 'Thích làm việc với đồ vật, máy móc, công cụ, cây trồng, vật nuôi; ưa hoạt động tay chân, thực tế, thấy ngay kết quả.',
+       env: 'xưởng, công trường, phòng kĩ thuật, trang trại, ngoài trời' },
+  I: { name: 'Nghiên cứu', en: 'Investigative', color: 'var(--I)', hex: '#2F6DB0',
+       desc: 'Thích quan sát, tìm hiểu, phân tích, giải quyết vấn đề bằng tư duy; tò mò về cách thế giới vận hành.',
+       env: 'phòng thí nghiệm, bệnh viện, viện nghiên cứu, phòng dữ liệu' },
+  A: { name: 'Nghệ thuật', en: 'Artistic', color: 'var(--A)', hex: '#6B4A9E',
+       desc: 'Thích sáng tạo, tự do thể hiện bằng chữ viết, âm nhạc, hình ảnh, sân khấu; không ưa khuôn khổ cứng nhắc.',
+       env: 'studio, toà soạn, nhà hát, công ty thiết kế, truyền thông' },
+  S: { name: 'Xã hội', en: 'Social', color: 'var(--S)', hex: '#0F6B55',
+       desc: 'Thích làm việc với con người: dạy, giúp đỡ, chăm sóc, tư vấn; quan tâm đến cảm xúc và sự phát triển của người khác.',
+       env: 'trường học, cơ sở y tế, tổ chức cộng đồng, dịch vụ' },
+  E: { name: 'Quản lý', en: 'Enterprising', color: 'var(--E)', hex: '#C98A12',
+       desc: 'Thích dẫn dắt, thuyết phục, kinh doanh, đàm phán; năng động, thích cạnh tranh và chấp nhận rủi ro để đạt mục tiêu.',
+       env: 'doanh nghiệp, bán hàng, khởi nghiệp, chính trường, pháp lí' },
+  C: { name: 'Nghiệp vụ', en: 'Conventional', color: 'var(--C)', hex: '#4E5D68',
+       desc: 'Thích công việc có quy trình rõ ràng, làm với số liệu, hồ sơ; cẩn thận, ngăn nắp, chính xác.',
+       env: 'văn phòng, kế toán, ngân hàng, kho vận, hành chính' }
+};
+const ORDER = ['R', 'I', 'A', 'S', 'E', 'C'];
+
+const RIASEC_ITEMS = [ // vị trí 1..30 theo Rounds et al. (2016)
+  ['R', 'Đóng tủ bếp, kệ gỗ'], ['I', 'Nghiên cứu phát triển một loại thuốc mới'], ['A', 'Viết sách hoặc kịch bản sân khấu'],
+  ['S', 'Giúp người khác vượt qua khó khăn cá nhân hay cảm xúc'], ['E', 'Quản lý một phòng ban trong công ty lớn'], ['C', 'Cài đặt phần mềm cho các máy tính trong một hệ thống mạng lớn'],
+  ['R', 'Sửa chữa đồ điện gia dụng'], ['I', 'Tìm cách giảm ô nhiễm nguồn nước'], ['A', 'Sáng tác hoặc phối khí âm nhạc'],
+  ['S', 'Tư vấn nghề nghiệp cho người khác'], ['E', 'Tự khởi nghiệp kinh doanh'], ['C', 'Dùng máy tính cầm tay để tính toán số liệu'],
+  ['R', 'Lắp ráp linh kiện điện tử'], ['I', 'Làm thí nghiệm hoá học'], ['A', 'Làm kỹ xảo cho phim'],
+  ['S', 'Hướng dẫn người bệnh tập phục hồi chức năng'], ['E', 'Đàm phán hợp đồng kinh doanh'], ['C', 'Ghi chép sổ sách hàng nhập, hàng xuất'],
+  ['R', 'Lái xe tải giao hàng đến văn phòng và nhà dân'], ['I', 'Quan sát mẫu máu dưới kính hiển vi'], ['A', 'Vẽ phông cảnh cho vở kịch'],
+  ['S', 'Làm tình nguyện cho một tổ chức phi lợi nhuận'], ['E', 'Tiếp thị (marketing) một dòng quần áo mới'], ['C', 'Kiểm kê vật tư bằng máy quét cầm tay'],
+  ['R', 'Kiểm tra chất lượng linh kiện trước khi xuất xưởng'], ['I', 'Tìm cách dự báo thời tiết chính xác hơn'], ['A', 'Viết kịch bản phim hoặc chương trình truyền hình'],
+  ['S', 'Dạy một lớp học trung học phổ thông'], ['E', 'Bán hàng ở trung tâm thương mại'], ['C', 'Đóng dấu, phân loại và chuyển công văn, thư từ cho một cơ quan']
+];
+const RIASEC_SCALE = ['Rất không thích', 'Không thích', 'Chưa chắc', 'Thích', 'Rất thích']; // 0–4
+
+const BIG5 = {
+  E: { name: 'Hướng ngoại', hi: 'năng động, thích giao tiếp, nạp năng lượng khi ở giữa mọi người', lo: 'trầm, thích không gian yên tĩnh, suy nghĩ kĩ trước khi nói' },
+  A: { name: 'Dễ chịu, hoà đồng', hi: 'tốt bụng, biết cảm thông, thích hợp tác', lo: 'thẳng thắn, độc lập, giữ quan điểm riêng' },
+  C: { name: 'Tận tâm', hi: 'có kế hoạch, ngăn nắp, kiên trì đến cùng', lo: 'linh hoạt, tuỳ hứng, đôi khi cần thêm kỉ luật' },
+  S: { name: 'Ổn định cảm xúc', hi: 'bình tĩnh, ít lo âu, chịu áp lực tốt', lo: 'nhạy cảm, dễ lo lắng khi căng thẳng — có thể rèn luyện kĩ năng quản lí cảm xúc' },
+  O: { name: 'Cởi mở, giàu trí tưởng tượng', hi: 'tò mò, thích ý tưởng mới và điều trừu tượng', lo: 'thực tế, thích điều cụ thể, quen thuộc' }
+};
+const B5_ORDER = ['O', 'C', 'E', 'A', 'S'];
+const BIG5_ITEMS = [ // [yếu tố, câu, đảo chiều] — Mini-IPIP, Donnellan et al. (2006). 'N' được đổi thành 'S' (ổn định) khi tính.
+  ['E', 'Tôi là người làm sôi nổi không khí trong các buổi tụ tập.', 0],
+  ['A', 'Tôi đồng cảm với cảm xúc của người khác.', 0],
+  ['C', 'Tôi làm xong việc được giao ngay, không để dồn.', 0],
+  ['N', 'Tâm trạng tôi hay thay đổi thất thường.', 0],
+  ['O', 'Tôi có trí tưởng tượng phong phú.', 0],
+  ['E', 'Tôi ít nói.', 1],
+  ['A', 'Tôi không quan tâm đến khó khăn của người khác.', 1],
+  ['C', 'Tôi hay quên cất đồ về đúng chỗ.', 1],
+  ['N', 'Phần lớn thời gian tôi thấy thoải mái, thư thái.', 1],
+  ['O', 'Tôi không hứng thú với những ý tưởng trừu tượng.', 1],
+  ['E', 'Trong các buổi tụ tập, tôi trò chuyện với nhiều người khác nhau.', 0],
+  ['A', 'Tôi cảm nhận được cảm xúc của người khác.', 0],
+  ['C', 'Tôi thích sự ngăn nắp, trật tự.', 0],
+  ['N', 'Tôi dễ bực bội, khó chịu.', 0],
+  ['O', 'Tôi thấy khó hiểu những ý tưởng trừu tượng.', 1],
+  ['E', 'Tôi thường đứng phía sau, ít muốn nổi bật.', 1],
+  ['A', 'Tôi không thật sự quan tâm đến người khác.', 1],
+  ['C', 'Tôi hay làm rối tung mọi thứ.', 1],
+  ['N', 'Tôi hiếm khi cảm thấy buồn bã.', 1],
+  ['O', 'Tôi không có trí tưởng tượng tốt.', 1]
+];
+const AGREE5 = ['Hoàn toàn không đúng', 'Không đúng', 'Phân vân', 'Đúng', 'Hoàn toàn đúng'];
+
+const VALUES = {
+  ACH: { name: 'Thành tựu', desc: 'được dùng năng lực của mình và thấy mình làm nên chuyện', hint: 'nghề có thử thách, kết quả đo được, cơ hội giỏi lên' },
+  WC:  { name: 'Điều kiện làm việc', desc: 'thu nhập tương xứng, ổn định, môi trường tốt, công việc đa dạng', hint: 'tìm hiểu kĩ thu nhập, chế độ, độ ổn định của nghề' },
+  REC: { name: 'Được ghi nhận', desc: 'có cơ hội thăng tiến, được tôn trọng, có thể dẫn dắt người khác', hint: 'nghề có lộ trình thăng tiến rõ, vai trò quản lí' },
+  REL: { name: 'Quan hệ & giúp người', desc: 'đồng nghiệp hoà hợp, làm việc đúng lương tâm, giúp ích cho người khác', hint: 'nghề phục vụ con người, môi trường tập thể gắn bó' },
+  SUP: { name: 'Được hỗ trợ', desc: 'được đối xử công bằng, có cấp trên hướng dẫn và bảo vệ', hint: 'tổ chức có quy trình đào tạo, quản lí tốt' },
+  IND: { name: 'Tự chủ', desc: 'được thử ý tưởng riêng, tự quyết định, ít bị giám sát', hint: 'nghề sáng tạo, tự do, khởi nghiệp, nghiên cứu' }
+};
+const V_ORDER = ['ACH', 'WC', 'REC', 'REL', 'SUP', 'IND'];
+const VALUE_ITEMS = [ // McCloy et al. (1999) — 20 nhu cầu nghề, xếp xen kẽ
+  ['ACH', 'Được sử dụng những năng lực của mình'],
+  ['REC', 'Có cơ hội thăng tiến'],
+  ['WC', 'Thu nhập tương xứng so với người làm nghề khác'],
+  ['REL', 'Đồng nghiệp dễ hoà hợp'],
+  ['IND', 'Được thử nghiệm ý tưởng của riêng mình'],
+  ['SUP', 'Được cơ quan, công ty đối xử công bằng'],
+  ['WC', 'Lúc nào cũng có việc để làm, bận rộn'],
+  ['ACH', 'Công việc mang lại cảm giác mình làm nên thành quả'],
+  ['REC', 'Có thể giao việc, hướng dẫn cho người khác'],
+  ['REL', 'Không bao giờ bị ép làm điều trái với lương tâm'],
+  ['WC', 'Có thể làm việc một mình'],
+  ['IND', 'Được tự mình ra quyết định'],
+  ['SUP', 'Có cấp trên sẵn sàng bảo vệ, ủng hộ nhân viên'],
+  ['WC', 'Công việc ổn định lâu dài'],
+  ['REC', 'Được ghi nhận vì công việc mình làm'],
+  ['REL', 'Được làm những việc giúp ích cho người khác'],
+  ['WC', 'Mỗi ngày được làm một điều gì đó khác nhau'],
+  ['SUP', 'Có cấp trên đào tạo, hướng dẫn nhân viên tốt'],
+  ['IND', 'Được tự lên kế hoạch công việc, ít bị giám sát'],
+  ['WC', 'Điều kiện làm việc tốt']
+];
+const IMPORT5 = ['Không quan trọng', 'Ít quan trọng', 'Khá quan trọng', 'Quan trọng', 'Rất quan trọng'];
+
+const CAAS = {
+  CON: { name: 'Quan tâm đến tương lai', en: 'Concern', low: 'Em chưa nghĩ nhiều về tương lai. Thử viết “tự truyện năm 25 tuổi”, lập kế hoạch học tập 1 năm, tìm hiểu các mốc chọn tổ hợp môn, thi tốt nghiệp, xét tuyển.' },
+  COL: { name: 'Tự chủ, quyết đoán', en: 'Control', low: 'Em còn ngại tự quyết định. Luyện cách ra quyết định nhỏ có cân nhắc (liệt kê phương án – ưu – nhược), tự quản lí thời gian, trao đổi thẳng thắn với gia đình về mong muốn của mình.' },
+  CUR: { name: 'Tò mò, khám phá', en: 'Curiosity', low: 'Em cần thêm thông tin thực tế. Tham quan doanh nghiệp, trường đại học/cao đẳng; phỏng vấn người trong nghề; đọc mô tả nghề; thử làm thêm, tình nguyện.' },
+  COF: { name: 'Tự tin', en: 'Confidence', low: 'Em chưa thật tin vào khả năng của mình. Đặt mục tiêu nhỏ và ghi lại thành công, tìm hình mẫu người đi trước, nhờ thầy cô góp ý điểm mạnh của em.' }
+};
+const C_ORDER = ['CON', 'COL', 'CUR', 'COF'];
+const CAAS_ITEMS = [ // Maggiori et al. (2017)
+  ['CON', 'Suy nghĩ về tương lai của mình sẽ như thế nào'],
+  ['CON', 'Chuẩn bị cho tương lai'],
+  ['CON', 'Nhận ra những lựa chọn học tập và nghề nghiệp mình phải đưa ra'],
+  ['COL', 'Tự mình ra quyết định'],
+  ['COL', 'Chịu trách nhiệm về hành động của mình'],
+  ['COL', 'Tin cậy vào bản thân'],
+  ['CUR', 'Tìm kiếm cơ hội để phát triển bản thân'],
+  ['CUR', 'Tìm hiểu các phương án trước khi lựa chọn'],
+  ['CUR', 'Quan sát những cách làm khác nhau'],
+  ['COF', 'Cẩn thận để làm tốt mọi việc'],
+  ['COF', 'Học những kĩ năng mới'],
+  ['COF', 'Phát huy hết khả năng của mình']
+];
+const STRONG5 = ['Chưa mạnh', 'Hơi mạnh', 'Mạnh', 'Rất mạnh', 'Mạnh nhất'];
+
+const SUBJECTS = [
+  ['TO', 'Toán'], ['VA', 'Ngữ văn'], ['AN', 'Tiếng Anh'], ['LI', 'Vật lí'], ['HO', 'Hoá học'], ['SI', 'Sinh học'],
+  ['SU', 'Lịch sử'], ['DI', 'Địa lí'], ['KP', 'GD kinh tế và pháp luật'], ['TI', 'Tin học'], ['CN', 'Công nghệ'],
+  ['MT', 'Mĩ thuật'], ['AM', 'Âm nhạc'], ['TC', 'Giáo dục thể chất']
+];
+const SUBJ_SCALE = ['Không học', 'Yếu', 'Trung bình', 'Khá', 'Giỏi', 'Xuất sắc']; // 0 = không học
+
+/* Nhóm ngành: mã Holland (2–3 chữ, chữ đầu nặng nhất), môn then chốt, ví dụ ngành/nghề.
+   Mã được gán gần đúng theo mô tả nghề trong hệ thống O*NET và lí thuyết Holland (1997);
+   giáo viên nên điều chỉnh theo thực tế tuyển sinh địa phương. */
+const MAJORS = [
+  { n: 'Cơ khí, cơ điện tử, công nghệ ô tô', c: 'RIC', s: ['TO', 'LI', 'CN'], ex: 'Kĩ thuật cơ khí, Cơ điện tử, Công nghệ kĩ thuật ô tô, Kĩ thuật nhiệt' },
+  { n: 'Điện, điện tử, tự động hoá', c: 'RIC', s: ['TO', 'LI', 'TI'], ex: 'Kĩ thuật điện, Điện tử – viễn thông, Điều khiển và tự động hoá, Kĩ thuật máy tính' },
+  { n: 'Xây dựng, giao thông, thuỷ lợi', c: 'RCI', s: ['TO', 'LI'], ex: 'Kĩ thuật xây dựng, Xây dựng cầu đường, Quản lí xây dựng, Kĩ thuật tài nguyên nước' },
+  { n: 'Kiến trúc, quy hoạch, thiết kế nội thất', c: 'ARI', s: ['TO', 'MT', 'LI'], ex: 'Kiến trúc, Quy hoạch vùng và đô thị, Thiết kế nội thất' },
+  { n: 'Công nghệ thông tin, kĩ thuật phần mềm', c: 'IRC', s: ['TO', 'TI', 'AN'], ex: 'Công nghệ thông tin, Kĩ thuật phần mềm, Khoa học máy tính, Mạng máy tính' },
+  { n: 'Khoa học dữ liệu, trí tuệ nhân tạo', c: 'ICR', s: ['TO', 'TI', 'AN'], ex: 'Khoa học dữ liệu, Trí tuệ nhân tạo, Toán tin, Thống kê' },
+  { n: 'An toàn thông tin, hệ thống thông tin', c: 'CIR', s: ['TO', 'TI'], ex: 'An toàn thông tin, Hệ thống thông tin quản lí' },
+  { n: 'Khoa học tự nhiên cơ bản', c: 'IRA', s: ['TO', 'LI', 'HO', 'SI'], ex: 'Toán học, Vật lí học, Hoá học, Sinh học, Khoa học vật liệu' },
+  { n: 'Địa chất, môi trường, khoa học Trái Đất', c: 'IRS', s: ['DI', 'HO', 'SI', 'TO'], ex: 'Địa chất học, Kĩ thuật địa chất, Khoa học môi trường, Hải dương học, Khí tượng thuỷ văn' },
+  { n: 'Kĩ thuật hoá học, vật liệu, thực phẩm', c: 'IRC', s: ['HO', 'TO', 'SI'], ex: 'Kĩ thuật hoá học, Công nghệ thực phẩm, Kĩ thuật vật liệu' },
+  { n: 'Công nghệ sinh học, nông nghiệp công nghệ cao', c: 'IRS', s: ['SI', 'HO', 'TO'], ex: 'Công nghệ sinh học, Nông học, Bảo vệ thực vật, Thú y, Nuôi trồng thuỷ sản' },
+  { n: 'Y khoa, răng hàm mặt, dược', c: 'ISR', s: ['SI', 'HO', 'TO'], ex: 'Y khoa, Răng – Hàm – Mặt, Dược học, Y học cổ truyền' },
+  { n: 'Điều dưỡng, kĩ thuật y học, phục hồi chức năng', c: 'SIR', s: ['SI', 'HO', 'TO'], ex: 'Điều dưỡng, Hộ sinh, Kĩ thuật xét nghiệm y học, Kĩ thuật phục hồi chức năng, Dinh dưỡng' },
+  { n: 'Tâm lí học, công tác xã hội', c: 'SIA', s: ['VA', 'SI', 'KP'], ex: 'Tâm lí học, Tâm lí học giáo dục, Công tác xã hội' },
+  { n: 'Sư phạm khối tự nhiên, tin học', c: 'SIC', s: ['TO', 'LI', 'HO', 'SI', 'TI'], ex: 'Sư phạm Toán, Vật lí, Hoá học, Sinh học, Tin học, Khoa học tự nhiên' },
+  { n: 'Sư phạm khối xã hội, ngoại ngữ, tiểu học, mầm non', c: 'SAE', s: ['VA', 'SU', 'DI', 'AN'], ex: 'Sư phạm Ngữ văn, Lịch sử – Địa lí, Tiếng Anh, Giáo dục tiểu học, Giáo dục mầm non' },
+  { n: 'Ngôn ngữ, biên – phiên dịch', c: 'ASE', s: ['AN', 'VA'], ex: 'Ngôn ngữ Anh, Ngôn ngữ Trung, Ngôn ngữ Hàn, Ngôn ngữ Nhật, Biên – phiên dịch' },
+  { n: 'Báo chí, truyền thông, quan hệ công chúng', c: 'AES', s: ['VA', 'AN', 'SU'], ex: 'Báo chí, Truyền thông đa phương tiện, Quan hệ công chúng, Xuất bản' },
+  { n: 'Văn học, lịch sử, văn hoá học, du lịch văn hoá', c: 'AIS', s: ['VA', 'SU', 'DI'], ex: 'Văn học, Lịch sử, Văn hoá học, Việt Nam học, Quản lí văn hoá' },
+  { n: 'Thiết kế đồ hoạ, thời trang, mĩ thuật', c: 'AER', s: ['MT', 'TI', 'VA'], ex: 'Thiết kế đồ hoạ, Thiết kế thời trang, Hội hoạ, Thiết kế công nghiệp' },
+  { n: 'Âm nhạc, sân khấu, điện ảnh, nhiếp ảnh', c: 'ASE', s: ['AM', 'VA', 'MT'], ex: 'Thanh nhạc, Biểu diễn nhạc cụ, Diễn viên, Đạo diễn, Quay phim, Nhiếp ảnh' },
+  { n: 'Quản trị kinh doanh, marketing', c: 'ESC', s: ['TO', 'AN', 'VA', 'KP'], ex: 'Quản trị kinh doanh, Marketing, Quản trị nhân lực, Kinh doanh thương mại' },
+  { n: 'Kinh doanh quốc tế, thương mại điện tử', c: 'ECS', s: ['TO', 'AN', 'TI'], ex: 'Kinh doanh quốc tế, Kinh tế đối ngoại, Thương mại điện tử' },
+  { n: 'Khởi nghiệp, kinh doanh tự do', c: 'EAR', s: ['TO', 'VA', 'KP'], ex: 'Quản trị khởi nghiệp, kinh doanh hộ gia đình, nông nghiệp – dịch vụ tự chủ' },
+  { n: 'Tài chính, ngân hàng, bảo hiểm', c: 'CEI', s: ['TO', 'AN', 'KP'], ex: 'Tài chính – Ngân hàng, Bảo hiểm, Công nghệ tài chính' },
+  { n: 'Kế toán, kiểm toán', c: 'CIE', s: ['TO', 'TI', 'KP'], ex: 'Kế toán, Kiểm toán' },
+  { n: 'Kinh tế học, thống kê kinh tế', c: 'ICE', s: ['TO', 'AN', 'KP'], ex: 'Kinh tế học, Kinh tế phát triển, Thống kê kinh tế' },
+  { n: 'Logistics, quản lí chuỗi cung ứng', c: 'CER', s: ['TO', 'AN', 'DI'], ex: 'Logistics và quản lí chuỗi cung ứng, Khai thác vận tải' },
+  { n: 'Luật', c: 'ESI', s: ['VA', 'SU', 'KP', 'AN'], ex: 'Luật, Luật kinh tế, Luật quốc tế' },
+  { n: 'Hành chính, quản lí nhà nước, lưu trữ', c: 'CSE', s: ['VA', 'SU', 'KP'], ex: 'Quản lí nhà nước, Hành chính học, Lưu trữ học, Quản trị văn phòng' },
+  { n: 'Du lịch, khách sạn, nhà hàng', c: 'ESC', s: ['AN', 'DI', 'VA'], ex: 'Quản trị dịch vụ du lịch và lữ hành, Quản trị khách sạn, Quản trị nhà hàng' },
+  { n: 'Hàng không, hàng hải, vận tải', c: 'RCE', s: ['TO', 'LI', 'AN'], ex: 'Điều khiển tàu biển, Khai thác máy tàu, Kĩ thuật hàng không, Quản trị hàng không' },
+  { n: 'Thể dục thể thao, huấn luyện', c: 'RSE', s: ['TC', 'SI'], ex: 'Giáo dục thể chất, Huấn luyện thể thao, Quản lí thể dục thể thao' },
+  { n: 'Công an, quân đội', c: 'RSE', s: ['TO', 'VA', 'TC'], ex: 'Các trường công an, quân đội (cần sức khoẻ, sơ tuyển riêng)' },
+  { n: 'Nghề kĩ thuật (cao đẳng, trung cấp)', c: 'RCI', s: ['CN', 'TO', 'LI'], ex: 'Điện công nghiệp, Hàn, Sửa chữa ô tô, Điện lạnh, Cắt gọt kim loại, Lắp đặt điện nước' },
+  { n: 'Nghề dịch vụ – chăm sóc (cao đẳng, trung cấp)', c: 'SRE', s: ['SI', 'VA', 'AN'], ex: 'Điều dưỡng, Chăm sóc sắc đẹp, Kĩ thuật chế biến món ăn, Hướng dẫn du lịch' }
+];
+
+/* ───────────── TRẠNG THÁI ───────────── */
+const KEY = 'tvts01-labanhuongnghiep-v1';
+const S = { step: 0, maxStep: 0, info: {}, r: {}, b: {}, v: {}, c: {}, sub: {}, need: '' };
+function load() { try { const x = JSON.parse(localStorage.getItem(KEY) || 'null'); if (x && typeof x === 'object') Object.assign(S, x); } catch (e) {} }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), 2400); }
+
+/* ───────────── DỰNG CÂU HỎI ───────────── */
+function renderLikert(container, items, key, labels, offset) {
+  const store = S[key];
+  container.innerHTML = items.map((it, i) => {
+    const name = key + i;
+    const opts = labels.map((lb, j) => {
+      const val = j + offset;
+      const ck = store[i] === val ? ' checked' : '';
+      return `<label><input type="radio" name="${name}" value="${val}"${ck} aria-label="${esc(lb)}"><span>${esc(lb)}</span></label>`;
+    }).join('');
+    return `<div class="q" id="q-${name}"><div class="t"><b>${i + 1}.</b><span>${esc(it[1])}</span></div><div class="opts">${opts}</div></div>`;
+  }).join('');
+  container.addEventListener('change', e => {
+    const inp = e.target; if (!inp.name) return;
+    const i = +inp.name.slice(key.length);
+    store[i] = +inp.value;
+    inp.closest('.q').classList.remove('missing');
+    save(); updateProgress();
+  });
+}
+function renderSubjects() {
+  const box = $('#qSubj');
+  box.innerHTML = SUBJECTS.map(([k, name]) => {
+    const opts = SUBJ_SCALE.map((lb, j) => {
+      const ck = S.sub[k] === j ? ' checked' : '';
+      return `<label><input type="radio" name="sub-${k}" value="${j}"${ck} aria-label="${esc(name)}: ${esc(lb)}"><span>${esc(lb)}</span></label>`;
+    }).join('');
+    return `<div class="n">${esc(name)}</div><div class="opts s6" id="q-sub-${k}">${opts}</div>`;
+  }).join('');
+  box.addEventListener('change', e => {
+    const k = e.target.name.replace('sub-', ''); S.sub[k] = +e.target.value; save(); updateProgress();
+  });
+}
+
+const PAGES = ['p-intro', 'p-riasec', 'p-big5', 'p-values', 'p-caas', 'p-subj', 'p-result'];
+const STEP_LABELS = ['Bắt đầu', '1. Sở thích', '2. Tính cách', '3. Giá trị', '4. Sẵn sàng', '5. Học lực', 'Kết quả'];
+const SECTIONS = [null, ['r', RIASEC_ITEMS.length], ['b', BIG5_ITEMS.length], ['v', VALUE_ITEMS.length], ['c', CAAS_ITEMS.length], ['sub', SUBJECTS.length]];
+
+function answered(key) { return Object.values(S[key]).filter(v => v !== null && v !== undefined).length; }
+function updateProgress() {
+  const total = RIASEC_ITEMS.length + BIG5_ITEMS.length + VALUE_ITEMS.length + CAAS_ITEMS.length + SUBJECTS.length;
+  const done = answered('r') + answered('b') + answered('v') + answered('c') + answered('sub');
+  $('#progBar').style.width = Math.round(100 * done / total) + '%';
+  renderSteps();
+}
+function renderSteps() {
+  $('#steps').innerHTML = STEP_LABELS.map((lb, i) => {
+    let cls = i === S.step ? 'on' : '';
+    const sec = SECTIONS[i];
+    if (sec && answered(sec[0]) >= sec[1] && i !== S.step) cls = 'done';
+    const dis = i > S.maxStep ? ' disabled' : '';
+    return `<button type="button" class="${cls}" data-go="${i}"${dis}>${esc(lb)}</button>`;
+  }).join('');
+}
+function go(i) {
+  S.step = i; S.maxStep = Math.max(S.maxStep, i);
+  PAGES.forEach((p, j) => $('#' + p).classList.toggle('on', j === i));
+  if (i === 6) renderResult();
+  renderSteps(); save();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function checkSection(i) {
+  const [key, n] = SECTIONS[i];
+  if (key === 'sub') {
+    const rated = SUBJECTS.filter(([k]) => S.sub[k] > 0).length;
+    if (rated < 3) { toast('Em hãy đánh giá ít nhất 3 môn mình có học.'); return false; }
+    return true;
+  }
+  const miss = [];
+  for (let j = 0; j < n; j++) if (S[key][j] === undefined || S[key][j] === null) miss.push(j);
+  $$('.q', $('#' + PAGES[i])).forEach(el => el.classList.remove('missing'));
+  if (miss.length) {
+    miss.forEach(j => { const el = $('#q-' + key + j); if (el) el.classList.add('missing'); });
+    const first = $('#q-' + key + miss[0]); if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    toast(`Còn ${miss.length} câu chưa trả lời.`);
+    return false;
+  }
+  return true;
+}
+
+/* ───────────── CHẤM ĐIỂM ───────────── */
+function scoreRiasec() {
+  const s = {}; ORDER.forEach(t => s[t] = 0);
+  RIASEC_ITEMS.forEach((it, i) => { s[it[0]] += (S.r[i] || 0); });
+  return s; // 0–20 mỗi nhóm
+}
+function scoreBig5() {
+  const sum = { E: 0, A: 0, C: 0, N: 0, O: 0 }, cnt = { E: 0, A: 0, C: 0, N: 0, O: 0 };
+  BIG5_ITEMS.forEach((it, i) => { let v = S.b[i]; if (v == null) return; if (it[2]) v = 6 - v; sum[it[0]] += v; cnt[it[0]]++; });
+  const m = k => cnt[k] ? sum[k] / cnt[k] : 0;
+  return { O: m('O'), C: m('C'), E: m('E'), A: m('A'), S: cnt.N ? 6 - m('N') : 0 }; // 1–5
+}
+function scoreValues() {
+  const sum = {}, cnt = {}; V_ORDER.forEach(k => { sum[k] = 0; cnt[k] = 0; });
+  VALUE_ITEMS.forEach((it, i) => { const v = S.v[i]; if (v == null) return; sum[it[0]] += v; cnt[it[0]]++; });
+  const out = {}; V_ORDER.forEach(k => out[k] = cnt[k] ? sum[k] / cnt[k] : 0); return out; // 1–5
+}
+function scoreCaas() {
+  const sum = {}, cnt = {}; C_ORDER.forEach(k => { sum[k] = 0; cnt[k] = 0; });
+  CAAS_ITEMS.forEach((it, i) => { const v = S.c[i]; if (v == null) return; sum[it[0]] += v; cnt[it[0]]++; });
+  const out = {}; C_ORDER.forEach(k => out[k] = cnt[k] ? sum[k] / cnt[k] : 0);
+  out.total = C_ORDER.reduce((a, k) => a + out[k], 0) / 4; return out; // 1–5
+}
+// Mã Holland 3 chữ; khi điểm bằng nhau giữ thứ tự RIASEC và báo để GV lưu ý.
+function hollandCode(s) {
+  const sorted = ORDER.slice().sort((a, b) => s[b] - s[a] || ORDER.indexOf(a) - ORDER.indexOf(b));
+  const ties = s[sorted[2]] === s[sorted[3]] || s[sorted[1]] === s[sorted[2]] || s[sorted[0]] === s[sorted[1]];
+  return { code: sorted.slice(0, 3), sorted, ties };
+}
+// Tính nhất quán theo lục giác (Holland, 1997, Table 3): kề nhau = cao, cách 1 = trung bình, đối diện = thấp.
+function consistency(a, b) {
+  const d = Math.abs(ORDER.indexOf(a) - ORDER.indexOf(b)); const k = Math.min(d, 6 - d);
+  return k === 1 ? 'cao' : k === 2 ? 'trung bình' : 'thấp';
+}
+function subjectFit(keys) {
+  const vals = keys.map(k => S.sub[k]).filter(v => v > 0);
+  if (!vals.length) return null;
+  return vals.reduce((a, v) => a + (v - 1) / 4, 0) / vals.length; // 0–1
+}
+function rankMajors(s) {
+  const p = {}; ORDER.forEach(t => p[t] = s[t] / 20);
+  const W = [3, 2, 1];
+  return MAJORS.map(m => {
+    const letters = m.c.split('');
+    const interest = letters.reduce((a, t, i) => a + W[i] * p[t], 0) / W.slice(0, letters.length).reduce((a, b) => a + b, 0);
+    const subj = subjectFit(m.s);
+    const total = subj == null ? interest : 0.65 * interest + 0.35 * subj;
+    return Object.assign({}, m, { interest, subj, total });
+  }).sort((a, b) => b.total - a.total);
+}
+const lvl = (v, hi, mid) => v >= hi ? 'g' : v >= mid ? 'y' : 'r';
+const pct = (v, max) => Math.max(2, Math.round(100 * v / max));
+
+/* ───────────── KẾT QUẢ ───────────── */
+function bars(list) {
+  return '<div class="bars">' + list.map(x =>
+    `<div class="bar${x.hi ? ' hi' : ''}"><div class="l">${esc(x.label)}</div><div class="tr"><div class="fi" style="width:${x.w}%;background:${x.color}"></div></div><div class="v">${esc(x.v)}</div></div>`
+  ).join('') + '</div>';
+}
+function hexSvg(s) {
+  const cx = 160, cy = 150, R = 92, ang = i => (-90 + 60 * i) * Math.PI / 180;
+  const pt = (i, r) => [cx + r * Math.cos(ang(i)), cy + r * Math.sin(ang(i))];
+  const outline = ORDER.map((t, i) => pt(i, R).map(n => n.toFixed(1)).join(',')).join(' ');
+  const rings = [0.25, 0.5, 0.75].map(f => `<polygon points="${ORDER.map((t, i) => pt(i, R * f).map(n => n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="#E2E7E3"/>`).join('');
+  const poly = ORDER.map((t, i) => pt(i, R * Math.max(0.04, s[t] / 20)).map(n => n.toFixed(1)).join(',')).join(' ');
+  const labels = ORDER.map((t, i) => { const cs = Math.cos(ang(i)); const anc = cs > 0.3 ? 'start' : cs < -0.3 ? 'end' : 'middle'; let [x, y] = pt(i, R + 12); if (anc === 'middle') y += (Math.sin(ang(i)) < 0 ? -14 : 12); return `<text x="${x.toFixed(1)}" y="${(y + 2).toFixed(1)}" text-anchor="${anc}" font-size="15" font-weight="700" fill="${TYPES[t].hex}">${t}</text><text x="${x.toFixed(1)}" y="${(y + 16).toFixed(1)}" text-anchor="${anc}" font-size="10.5" fill="#4E5D68">${esc(TYPES[t].name)}</text>`; }).join('');
+  return `<svg viewBox="-10 0 340 310" class="venn" style="max-width:360px" role="img" aria-label="Lục giác sở thích Holland">${rings}<polygon points="${outline}" fill="none" stroke="#C4CDC7"/><polygon points="${poly}" fill="rgba(15,107,85,.22)" stroke="#0F6B55" stroke-width="2"/>${labels}</svg>`;
+}
+function vennSvg(top) {
+  const items = top.slice(0, 3).map(m => esc(m.n.length > 30 ? m.n.slice(0, 28) + '…' : m.n));
+  return `<svg viewBox="0 0 520 380" class="venn" role="img" aria-label="Mô hình ba vòng tròn">
+    <circle cx="190" cy="140" r="120" fill="rgba(47,109,176,.14)" stroke="#2F6DB0" stroke-width="1.5"/>
+    <circle cx="330" cy="140" r="120" fill="rgba(15,107,85,.14)" stroke="#0F6B55" stroke-width="1.5"/>
+    <circle cx="260" cy="250" r="120" fill="rgba(214,161,48,.16)" stroke="#C98A12" stroke-width="1.5"/>
+    <text x="135" y="80" text-anchor="middle" font-size="18" font-weight="700" fill="#1F4E79">Em thích</text>
+    <text x="135" y="98" text-anchor="middle" font-size="11" fill="#4E5D68">Phần 1, 2, 3</text>
+    <text x="385" y="80" text-anchor="middle" font-size="18" font-weight="700" fill="#0F6B55">Em làm tốt</text>
+    <text x="385" y="98" text-anchor="middle" font-size="11" fill="#4E5D68">Phần 4, 5</text>
+    <text x="260" y="345" text-anchor="middle" font-size="18" font-weight="700" fill="#8A5F06">Xã hội cần</text>
+    <text x="260" y="362" text-anchor="middle" font-size="11" fill="#4E5D68">Tìm hiểu thêm cùng thầy cô</text>
+    ${items.map((t, i) => `<text x="260" y="${176 + i * 20}" text-anchor="middle" font-size="13" font-weight="600" fill="#10212B">${t}</text>`).join('')}
+  </svg>`;
+}
+
+function renderResult() {
+  const s = scoreRiasec(), b = scoreBig5(), v = scoreValues(), c = scoreCaas();
+  const hc = hollandCode(s), [t1, t2, t3] = hc.code;
+  const diff = s[hc.sorted[0]] - s[hc.sorted[5]];
+  const cons = consistency(t1, t2);
+  const majors = rankMajors(s);
+  const top = majors.slice(0, 8);
+  const vSorted = V_ORDER.slice().sort((a, x) => v[x] - v[a]);
+  const info = S.info || {};
+  const name = info.name ? esc(info.name) : 'Em';
+  const subjRated = SUBJECTS.filter(([k]) => S.sub[k] > 0).sort((a, x) => S.sub[x[0]] - S.sub[a[0]]);
+  const strongSubj = subjRated.filter(([k]) => S.sub[k] >= 4).map(x => x[1]);
+
+  let diffText, diffPill;
+  if (diff >= 8) { diffText = 'Sở thích của em <b>khá rõ nét</b>: có nhóm nổi trội hẳn so với nhóm thấp nhất.'; diffPill = 'g'; }
+  else if (diff >= 4) { diffText = 'Sở thích của em <b>tương đối rõ</b>.'; diffPill = 'y'; }
+  else { diffText = 'Hồ sơ sở thích của em <b>còn khá phẳng</b> — các nhóm gần như bằng nhau. Điều này thường gặp ở tuổi học sinh; em nên trải nghiệm thêm nhiều hoạt động rồi làm lại sau vài tháng.'; diffPill = 'r'; }
+  const consText = { 'cao': 'hai nhóm đứng đầu nằm <b>kề nhau</b> trên lục giác — chúng bổ trợ nhau, dễ tìm được nghề kết hợp cả hai.', 'trung bình': 'hai nhóm đứng đầu <b>cách nhau một đỉnh</b> trên lục giác — vẫn có nhiều nghề dung hoà được.', 'thấp': 'hai nhóm đứng đầu nằm <b>đối diện</b> trên lục giác — khá khác nhau; em có thể chọn nghề theo một nhóm và nuôi nhóm kia bằng sở thích riêng, hoặc tìm vị trí kết hợp hiếm hơn.' }[cons];
+
+  // Big Five ↔ RIASEC (Larson, Rottinghaus & Borgen, 2002)
+  const links = [];
+  if (b.O >= 3.5 && (t1 === 'A' || t2 === 'A')) links.push('Em cởi mở và thích nghệ thuật — hai điều này thường đi cùng nhau (r = .48).');
+  if (b.O >= 3.5 && (t1 === 'I' || t2 === 'I')) links.push('Sự cởi mở, tò mò của em ăn khớp với sở thích nghiên cứu (r = .28).');
+  if (b.E >= 3.5 && (t1 === 'E' || t2 === 'E')) links.push('Em hướng ngoại và thích dẫn dắt, kinh doanh — một cặp phổ biến (r = .41).');
+  if (b.E >= 3.5 && (t1 === 'S' || t2 === 'S')) links.push('Em hướng ngoại và thích làm việc với con người (r = .31).');
+  if (b.A >= 3.5 && (t1 === 'S' || t2 === 'S')) links.push('Sự dễ chịu, biết cảm thông hỗ trợ tốt cho các nghề xã hội (r = .19).');
+  if (b.C >= 3.5 && (t1 === 'C' || t2 === 'C')) links.push('Tính tận tâm, ngăn nắp hợp với công việc nghiệp vụ, quy trình (r = .25).');
+  if (b.E < 2.5 && (t1 === 'E' || t1 === 'S')) links.push('Em thích nhóm nghề làm việc nhiều với người nhưng lại khá trầm — hoàn toàn được; hãy chọn vị trí hợp nhịp của mình (chuyên môn, tư vấn 1–1, hậu trường).');
+
+  const caasLow = C_ORDER.filter(k => c[k] < 3);
+  const html = `
+    <div class="kicker">Kết quả của ${name}${info.grade ? ' · ' + esc(info.grade) : ''}${info.school ? ' · ' + esc(info.school) : ''}</div>
+    <h1>Mã Holland của em: ${hc.code.join('')}</h1>
+    <div class="code">${hc.code.map(t => `<span style="background:${TYPES[t].hex}">${t}</span>`).join('')}</div>
+    <p class="lead">${esc(TYPES[t1].name)} – ${esc(TYPES[t2].name)} – ${esc(TYPES[t3].name)}. Mã này cho biết <b>kiểu môi trường làm việc</b> em có thể thấy hứng thú nhất; em sẽ hợp nhất với nơi có nhiều người cùng kiểu với mình.</p>
+    ${hc.ties ? '<div class="card warn small">Một số nhóm có điểm bằng nhau, nên thứ tự chữ cái trong mã chỉ mang tính tương đối. Hãy xem cả biểu đồ bên dưới.</div>' : ''}
+
+    <div class="card">
+      <h3 style="margin-top:0">1 · Sở thích nghề (thang 0–20)</h3>
+      <div class="grid2" style="align-items:center">
+        <div>${hexSvg(s)}</div>
+        <div>${bars(hc.sorted.map(t => ({ label: t + ' · ' + TYPES[t].name, w: pct(s[t], 20), color: TYPES[t].hex, v: s[t], hi: hc.code.includes(t) })))}</div>
+      </div>
+      ${hc.code.map(t => `<div class="typebox" style="border-color:${TYPES[t].hex}"><b>${t} · ${esc(TYPES[t].name)}.</b> ${esc(TYPES[t].desc)} <span class="muted">Môi trường điển hình: ${esc(TYPES[t].env)}.</span></div>`).join('')}
+      <p class="small"><span class="pill ${diffPill}">Độ phân hoá ${diff}/20</span> ${diffText}</p>
+      <p class="small"><span class="pill ${cons === 'cao' ? 'g' : cons === 'trung bình' ? 'y' : 'r'}">Độ nhất quán ${cons}</span> ${t1}${t2}: ${consText}</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Nhóm ngành gợi ý cho em</h3>
+      <p class="small muted" style="margin-top:0">Xếp theo mức khớp với sở thích (65%) và học lực các môn then chốt (35%). Đây là gợi ý để tìm hiểu, không phải danh sách bắt buộc.</p>
+      ${top.map((m, i) => `
+        <div class="major">
+          <div class="h"><strong>${i + 1}. ${esc(m.n)}</strong><span class="pill">${m.c.split('').join('')}</span></div>
+          <div class="meter"><span>Sở thích: <b>${Math.round(m.interest * 100)}%</b></span><span>Học lực môn then chốt: <b>${m.subj == null ? 'chưa có' : Math.round(m.subj * 100) + '%'}</b></span><span>Môn then chốt: ${m.s.map(k => esc((SUBJECTS.find(x => x[0] === k) || [k, k])[1])).join(', ')}</span></div>
+          <div class="ex muted">Ví dụ: ${esc(m.ex)}</div>
+        </div>`).join('')}
+      ${info.dream ? `<p class="small">Nghề em đang nghĩ tới: <b>${esc(info.dream)}</b>. Hãy so sánh nghề này với các nhóm trên — nếu khác xa, đó là chủ đề rất đáng để trao đổi với thầy cô.</p>` : ''}
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">2 · Tính cách (thang 1–5)</h3>
+      ${bars(B5_ORDER.map(k => ({ label: BIG5[k].name, w: pct(b[k] - 1, 4), color: 'var(--lam-suong)', v: b[k].toFixed(1) })))}
+      <ul class="tight small">${B5_ORDER.map(k => `<li><b>${esc(BIG5[k].name)}:</b> ${b[k] >= 3.5 ? esc(BIG5[k].hi) : b[k] <= 2.5 ? esc(BIG5[k].lo) : 'ở mức cân bằng giữa hai đầu'}.</li>`).join('')}</ul>
+      ${links.length ? `<div class="card tint small" style="margin-bottom:0"><b>Tính cách và sở thích của em ăn khớp ở chỗ:</b><ul class="tight">${links.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">3 · Giá trị nghề em coi trọng (thang 1–5)</h3>
+      ${bars(vSorted.map((k, i) => ({ label: VALUES[k].name, w: pct(v[k] - 1, 4), color: i < 2 ? 'var(--tho)' : '#C9CFC9', v: v[k].toFixed(1), hi: i < 2 })))}
+      <p class="small">Hai giá trị em đặt lên đầu: <b>${esc(VALUES[vSorted[0]].name)}</b> (${esc(VALUES[vSorted[0]].desc)}) và <b>${esc(VALUES[vSorted[1]].name)}</b> (${esc(VALUES[vSorted[1]].desc)}). Khi tìm hiểu một nghề, hãy hỏi: nghề này có cho em ${esc(VALUES[vSorted[0]].hint)} không?</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">4 · Sẵn sàng chọn nghề — khả năng thích ứng (thang 1–5)</h3>
+      ${bars(C_ORDER.map(k => ({ label: CAAS[k].name, w: pct(c[k] - 1, 4), color: c[k] >= 4 ? 'var(--luc)' : c[k] >= 3 ? 'var(--tho)' : 'var(--son)', v: c[k].toFixed(1) })))}
+      <p class="small">Điểm chung: <b>${c.total.toFixed(2)}</b>. ${c.total >= 4 ? 'Em đã có nhiều “nguồn lực” để chủ động chọn nghề.' : c.total >= 3 ? 'Em đã có nền tảng khá; vài khía cạnh còn có thể bồi đắp thêm.' : 'Em cần thêm thời gian và hỗ trợ để sẵn sàng chọn nghề — điều hoàn toàn bình thường ở tuổi học sinh.'}</p>
+      ${caasLow.length ? `<div class="card warn small" style="margin-bottom:0"><b>Gợi ý rèn luyện:</b><ul class="tight">${caasLow.map(k => `<li><b>${esc(CAAS[k].name)}.</b> ${esc(CAAS[k].low)}</li>`).join('')}</ul></div>` : ''}
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">5 · Học lực tự đánh giá</h3>
+      ${bars(subjRated.map(([k, nm]) => ({ label: nm, w: pct(S.sub[k] - 1, 4), color: S.sub[k] >= 4 ? 'var(--luc)' : S.sub[k] === 3 ? 'var(--luc-non)' : '#C9CFC9', v: SUBJ_SCALE[S.sub[k]] })))}
+      ${strongSubj.length ? `<p class="small">Môn mạnh của em: <b>${strongSubj.map(esc).join(', ')}</b>. Hãy đối chiếu với tổ hợp môn xét tuyển của các ngành em quan tâm.</p>` : '<p class="small">Em chưa tự xếp môn nào ở mức Giỏi trở lên. Hãy chọn ngành có môn then chốt là những môn em đang khá nhất, và đặt mục tiêu nâng 1–2 môn đó.</p>'}
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Ghép lại: mô hình 3 vòng tròn</h3>
+      ${vennSvg(top)}
+      <div class="cols3">
+        <div class="card"><b>Em thích</b><p class="small" style="margin:6px 0 0">Nhóm ${esc(TYPES[t1].name)}, ${esc(TYPES[t2].name)}; coi trọng ${esc(VALUES[vSorted[0]].name.toLowerCase())}.</p></div>
+        <div class="card"><b>Em làm tốt</b><p class="small" style="margin:6px 0 0">${strongSubj.length ? 'Môn ' + strongSubj.slice(0, 4).map(esc).join(', ') : 'Cần xác định rõ hơn'}; tính cách nổi bật: ${esc(BIG5[B5_ORDER.slice().sort((a, x) => b[x] - b[a])[0]].name.toLowerCase())}.</p></div>
+        <div class="card"><b>Xã hội cần</b><p class="small" style="margin:6px 0 0">${S.need ? esc(S.need) : 'Em chưa ghi. Hãy hỏi thầy cô, gia đình và tìm thông tin tuyển dụng ở địa phương.'}</p></div>
+      </div>
+      <p class="small">Vùng giao của ba vòng tròn là nơi nên ưu tiên tìm hiểu. Ba nhóm ngành ở giữa hình là ba nhóm khớp nhất với em theo phần 1 và phần 5.</p>
+    </div>
+
+    <div class="card tint">
+      <h3 style="margin-top:0">Việc nên làm tiếp theo</h3>
+      <ul class="tight">
+        <li>Chọn 2–3 nhóm ngành ở trên, tìm hiểu: học gì, làm gì hằng ngày, thu nhập, nơi đào tạo, tổ hợp xét tuyển.</li>
+        <li>Gặp hoặc phỏng vấn một người đang làm nghề đó; nếu được, tham quan nơi làm việc của họ.</li>
+        <li>Mang bản kết quả này đến buổi tư vấn với giáo viên chủ nhiệm hoặc giáo viên hướng nghiệp.</li>
+        <li>Trao đổi với gia đình: chia sẻ kết quả, lắng nghe mong muốn của bố mẹ, cùng tìm điểm chung.</li>
+        <li>Làm lại bộ trắc nghiệm sau 6–12 tháng — sở thích ở tuổi học sinh vẫn đang hình thành và thay đổi.</li>
+      </ul>
+    </div>
+
+    <details class="card small">
+      <summary style="cursor:pointer;font-weight:600">Về các thang đo và tài liệu tham khảo</summary>
+      <p>Câu hỏi được dịch và phỏng theo các công cụ công khai dưới đây. Bản tiếng Việt chưa được kiểm định trên học sinh Việt Nam, nên kết quả chỉ dùng để tham khảo, không dùng để xếp loại hay ra quyết định thay học sinh. Phần giá trị nghề dùng thang 1–5 thay cho cách xếp thẻ của bản gốc. Mã Holland của các nhóm ngành do người biên soạn gán gần đúng.</p>
+      <div class="refs">
+        <p>Donnellan, M. B., Oswald, F. L., Baird, B. M., & Lucas, R. E. (2006). The Mini-IPIP scales: Tiny-yet-effective measures of the Big Five factors of personality. <i>Psychological Assessment, 18</i>(2), 192–203.</p>
+        <p>Holland, J. L. (1997). <i>Making vocational choices: A theory of vocational personalities and work environments</i> (3rd ed.). Psychological Assessment Resources.</p>
+        <p>Larson, L. M., Rottinghaus, P. J., & Borgen, F. H. (2002). Meta-analyses of Big Six interests and Big Five personality factors. <i>Journal of Vocational Behavior, 61</i>(2), 217–239.</p>
+        <p>Maggiori, C., Rossier, J., & Savickas, M. L. (2017). Career Adapt-Abilities Scale–Short Form (CAAS-SF): Construction and validation. <i>Journal of Career Assessment, 25</i>(2), 312–325.</p>
+        <p>McCloy, R., Waugh, G., Medsker, G., Wall, J., Rivkin, D., & Lewis, P. (1999). <i>Development of the O*NET paper-and-pencil Work Importance Locator</i>. National Center for O*NET Development.</p>
+        <p>Rounds, J., Ming, C. W. J., Cao, M., Song, C., & Lewis, P. (2016). <i>Development of an O*NET Mini Interest Profiler (Mini-IP) for mobile devices: Psychometric characteristics</i>. National Center for O*NET Development.</p>
+        <p>Savickas, M. L. (2005). The theory and practice of career construction. In S. D. Brown & R. W. Lent (Eds.), <i>Career development and counseling</i> (pp. 42–70). Wiley.</p>
+        <p>Savickas, M. L., & Porfeli, E. J. (2012). Career Adapt-Abilities Scale: Construction, reliability, and measurement equivalence across 13 countries. <i>Journal of Vocational Behavior, 80</i>(3), 661–673.</p>
+      </div>
+    </details>`;
+  $('#resultBody').innerHTML = html;
+  renderResult.last = { s, b, v, c, hc, majors, top, vSorted, diff, cons };
+}
+
+function summaryText() {
+  const R = renderResult.last; if (!R) return '';
+  const i = S.info || {};
+  const lines = [
+    `LA BÀN HƯỚNG NGHIỆP — ${i.name || 'Học sinh'}${i.grade ? ', ' + i.grade : ''}${i.school ? ', ' + i.school : ''}`,
+    `Mã Holland: ${R.hc.code.join('')} (${R.hc.code.map(t => TYPES[t].name).join(' – ')})`,
+    `Sở thích (0–20): ${ORDER.map(t => t + '=' + R.s[t]).join(', ')} · Độ phân hoá ${R.diff} · Nhất quán ${R.cons}`,
+    `Tính cách (1–5): ${B5_ORDER.map(k => BIG5[k].name + ' ' + R.b[k].toFixed(1)).join('; ')}`,
+    `Giá trị nghề ưu tiên: ${R.vSorted.slice(0, 2).map(k => VALUES[k].name).join(', ')}`,
+    `Sẵn sàng chọn nghề (1–5): ${C_ORDER.map(k => CAAS[k].name + ' ' + R.c[k].toFixed(1)).join('; ')}; chung ${R.c.total.toFixed(2)}`,
+    `Nhóm ngành gợi ý: ${R.top.slice(0, 5).map(m => m.n).join('; ')}`
+  ];
+  if (i.dream) lines.push('Nghề đang nghĩ tới: ' + i.dream);
+  if (S.need) lines.push('Xã hội cần (theo em): ' + S.need);
+  return lines.join('\n');
+}
+function downloadCsv() {
+  const R = renderResult.last; if (!R) return;
+  const i = S.info || {};
+  const head = ['thoi_gian', 'ho_ten', 'lop', 'truong', 'ma_holland', ...ORDER.map(t => 'RIASEC_' + t), 'phan_hoa', 'nhat_quan',
+    ...B5_ORDER.map(k => 'BIG5_' + k), ...V_ORDER.map(k => 'GT_' + k), ...C_ORDER.map(k => 'CAAS_' + k), 'CAAS_chung',
+    ...SUBJECTS.map(([k]) => 'MON_' + k), 'nganh_goi_y_1', 'nganh_goi_y_2', 'nganh_goi_y_3', 'nghe_mo_uoc', 'xa_hoi_can',
+    ...RIASEC_ITEMS.map((x, j) => 'r' + (j + 1)), ...BIG5_ITEMS.map((x, j) => 'b' + (j + 1)), ...VALUE_ITEMS.map((x, j) => 'v' + (j + 1)), ...CAAS_ITEMS.map((x, j) => 'c' + (j + 1))];
+  const row = [new Date().toISOString(), i.name || '', i.grade || '', i.school || '', R.hc.code.join(''), ...ORDER.map(t => R.s[t]), R.diff, R.cons,
+    ...B5_ORDER.map(k => R.b[k].toFixed(2)), ...V_ORDER.map(k => R.v[k].toFixed(2)), ...C_ORDER.map(k => R.c[k].toFixed(2)), R.c.total.toFixed(2),
+    ...SUBJECTS.map(([k]) => S.sub[k] || 0), R.top[0].n, R.top[1].n, R.top[2].n, i.dream || '', S.need || '',
+    ...RIASEC_ITEMS.map((x, j) => S.r[j]), ...BIG5_ITEMS.map((x, j) => S.b[j]), ...VALUE_ITEMS.map((x, j) => S.v[j]), ...CAAS_ITEMS.map((x, j) => S.c[j])];
+  const q = x => '"' + String(x == null ? '' : x).replace(/"/g, '""') + '"';
+  const csv = '﻿' + head.map(q).join(',') + '\r\n' + row.map(q).join(',') + '\r\n';
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ket-qua-huong-nghiep' + (i.name ? '-' + i.name.replace(/[^\p{L}\p{N}]+/gu, '-') : '') + '.csv';
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+/* ───────────── KHỞI TẠO ───────────── */
+function init() {
+  load();
+  renderLikert($('#qRiasec'), RIASEC_ITEMS, 'r', RIASEC_SCALE, 0);
+  renderLikert($('#qBig5'), BIG5_ITEMS, 'b', AGREE5, 1);
+  renderLikert($('#qValues'), VALUE_ITEMS, 'v', IMPORT5, 1);
+  renderLikert($('#qCaas'), CAAS_ITEMS, 'c', STRONG5, 1);
+  renderSubjects();
+  ['name', 'grade', 'school', 'dream'].forEach(k => {
+    const el = $('#in' + k.charAt(0).toUpperCase() + k.slice(1));
+    if (S.info && S.info[k]) el.value = S.info[k];
+    el.addEventListener('input', () => { S.info = S.info || {}; S.info[k] = el.value.trim(); save(); });
+  });
+  const need = $('#inNeed'); need.value = S.need || ''; need.addEventListener('input', () => { S.need = need.value.trim(); save(); });
+
+  document.addEventListener('click', e => {
+    const g = e.target.closest('[data-go]');
+    if (g && !g.disabled) { go(+g.dataset.go); return; }
+    const n = e.target.closest('[data-next]');
+    if (n) { const i = +n.dataset.next; if (checkSection(i)) go(i + 1); }
+  });
+  $('#btnPrint').addEventListener('click', () => window.print());
+  $('#btnCsv').addEventListener('click', downloadCsv);
+  $('#btnCopy').addEventListener('click', () => {
+    const t = summaryText();
+    const done = () => toast('Đã sao chép tóm tắt kết quả.');
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, () => fallbackCopy(t));
+    else fallbackCopy(t);
+  });
+  $('#btnReset').addEventListener('click', () => {
+    if (!confirm('Xoá toàn bộ câu trả lời trên máy này và làm lại từ đầu?')) return;
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    location.reload();
+  });
+  updateProgress();
+  go(Math.min(S.step || 0, 6));
+}
+function fallbackCopy(t) {
+  const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); toast('Đã sao chép tóm tắt kết quả.'); } catch (e) { toast('Không sao chép được — hãy dùng nút In / Lưu PDF.'); }
+  ta.remove();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+</body>
+</html>
