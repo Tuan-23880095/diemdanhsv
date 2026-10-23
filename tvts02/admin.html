@@ -120,7 +120,7 @@ function detailHtml(d) {
   return `<div style="display:flex;justify-content:space-between;gap:10px;align-items:start"><div><h2>${esc(d.name || 'Học sinh')} · ${esc(d.code)}</h2><div class="muted small">${esc(d.time)} · ${esc(d.grade)} · ${esc(d.school)} · ${esc(d.gender)} · model: ${esc(d.model)}</div></div><button class="btn ghost small" id="mClose">Đóng</button></div>
     ${d.flag ? `<div class="card" style="background:#FDF0EC;border-color:#F0C9BD"><b>Cần quan tâm:</b> ${esc(d.flag_note || '')}. Hãy liên hệ giáo viên chủ nhiệm hoặc bộ phận tư vấn tâm lý của trường để hỗ trợ học sinh.</div>` : ''}
     <p class="small"><b>RIASEC (0–20):</b> ${['R','I','A','S','E','C'].map(t => t + '=' + (sc[t] ?? '')).join(' · ')} — mã ${esc(rs.code || '')}, phân hoá ${esc(rs.diff)}, nhất quán ${esc(rs.cons || '')}. <b>Mã từ bài viết:</b> ${esc(rep.ma_bai_viet || '—')}</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"><a class="btn ghost small" href="/TVTS02.html?ma=${encodeURIComponent(d.code)}" target="_blank" rel="noopener">Xem bản của học sinh</a><button class="btn ghost small" id="mRe">Phân tích lại</button></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"><a class="btn ghost small" href="/TVTS02.html?ma=${encodeURIComponent(d.code)}" target="_blank" rel="noopener">Xem bản của học sinh</a><button class="btn ghost small" id="mRe">Phân tích lại</button><button class="btn ghost small" id="mDel" style="color:var(--son);border-color:#E3A99A">Xoá bài</button></div>
     <div class="two"><div><h3 style="font-family:var(--serif)">Bài viết</h3>${essays}</div>
       <div><h3 style="font-family:var(--serif)">Bản phân tích</h3>${rep.chan_dung ? `<p>${esc(rep.chan_dung)}</p><p><i>${esc(rep.chu_de || '')}</i></p>${ins}<p><b>Đối chiếu:</b> ${esc(rep.doi_chieu || '')}</p><ol>${mj}</ol>` : `<p class="muted">Chưa có bản phân tích (${esc(rep.loi || 'đang chờ')}).</p>`}</div></div>`;
 }
@@ -128,7 +128,8 @@ async function openDetail(code) {
   const d = await admin('detail', { code });
   $('#mbox').innerHTML = detailHtml(d); $('#modal').classList.add('on');
   $('#mClose').onclick = () => $('#modal').classList.remove('on');
-  $('#mRe').onclick = async () => { $('#mRe').textContent = 'Đang phân tích…'; $('#mRe').disabled = true; try { const x = await admin('reanalyze', { code }); $('#mbox').innerHTML = detailHtml(x); $('#mClose').onclick = () => $('#modal').classList.remove('on'); reload(); } catch (e) { alert(e.message); $('#mRe').textContent = 'Phân tích lại'; $('#mRe').disabled = false; } };
+  $('#mDel').onclick = async () => { if (!confirm('Xoá vĩnh viễn bài ' + code + '? Thao tác này không hoàn tác được.')) return; try { await admin('delete', { code }); $('#modal').classList.remove('on'); reload(); } catch (e) { alert(e.message); } };
+  $('#mRe').onclick = async () => { $('#mRe').textContent = 'Đang phân tích…'; $('#mRe').disabled = true; try { await admin('reanalyze', { code }); await openDetail(code); reload(); } catch (e) { alert(e.message); $('#mRe').textContent = 'Phân tích lại'; $('#mRe').disabled = false; } };
 }
 function download(name, text, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
 async function exportAll(kind) {

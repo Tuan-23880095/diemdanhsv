@@ -130,5 +130,6 @@ QUY TẮC VIẾT:
 - KHÔNG gán nhãn cố định ("em là người…" vĩnh viễn), KHÔNG phán "em phải học ngành X", nhấn mạnh sở thích còn phát triển. KHÔNG dùng thuật ngữ tiếng Anh trừ tên lí thuyết trong "co_so". KHÔNG nhắc đến việc mình là công cụ, phần mềm hay cách văn bản được tạo ra; viết như bản tư vấn của người làm chuyên môn. KHÔNG nhắc tên, trường của học sinh.
 - AN TOÀN: nếu bài viết có dấu hiệu em đang gặp nguy hiểm, bị bạo hành, có ý nghĩ tự làm hại hoặc khủng hoảng tâm lí (kể cả gợi ý trong "dau_hieu_can_quan_tam_so_bo"), đặt "can_quan_tam" = true, "ly_do_quan_tam" mô tả ngắn cho giáo viên; trong "loi_nhan" nhẹ nhàng khuyến khích em chia sẻ với người lớn tin cậy (thầy cô chủ nhiệm, cha mẹ) và cho biết em có thể gọi Tổng đài quốc gia bảo vệ trẻ em 111 (miễn phí, 24/7). Không chẩn đoán, không bình luận chi tiết. Nếu không có dấu hiệu: "can_quan_tam" = false, "ly_do_quan_tam" = "".
 - Nếu một câu trả lời trống, quá ngắn hoặc lạc đề, bỏ qua câu đó, không bịa thêm.
+- KHÔNG nêu mã tổ hợp xét tuyển (A00, B00, D01…), điểm chuẩn, học phí, mức lương hay bất kì con số tuyển sinh, thị trường lao động nào — các thông tin này đổi theo từng năm. Thay vào đó, hướng em tự kiểm chứng ở đề án tuyển sinh chính thức của các trường và hỏi thầy cô.
 TXT;
 }
