@@ -1,6 +1,6 @@
 {
  "1": {
-  "title": "Tuần 1 – Khoáng vật (1/2): mô tả 7 khoáng vật tạo đá phổ biến",
+  "title": "Tuần 1 – Khoáng vật (1/2): mô tả 10 mẫu khoáng vật",
   "tuan": 1,
   "ngay": "24/10/2026",
   "sections": [
@@ -21,17 +21,18 @@
    {
     "id": "mau",
     "type": "info",
-    "title": "Mẫu của buổi (thứ tự mẫu phát có thể khác)",
+    "title": "Mẫu của buổi",
     "lines": [
-     "7 khoáng vật: Thạch anh (SiO₂), Felspat kali (K-feldspar), Plagioclas, Muscovit, Biotit, Canxit (CaCO₃), Dolomit.",
-     "Mỗi mẫu: quan sát, thử độ cứng, cát khai, phản ứng HCl (khi được hướng dẫn) rồi điền đủ các cột và chụp ảnh mẫu.",
-     "An toàn: chỉ dùng HCl loãng khi có giảng viên hướng dẫn; không nếm mẫu (kể cả halit); rửa tay sau buổi thực tập."
+     "Giảng viên phát 10 mẫu khoáng vật lấy trong bảng đối chiếu của học phần (bảng tra khoáng vật). Mỗi mẫu: quan sát, thử độ cứng, vết vạch, cát khai, phản ứng HCl (khi được hướng dẫn), đối chiếu bảng tra rồi điền đủ các cột, gọi tên và chụp ảnh mẫu.",
+     "Trọng tâm tuần 1: nguyên tố tự sinh, sulfur, oxit và hydroxit, cùng các khoáng vật tạo đá phổ biến (thạch anh, felspat, mica, canxit).",
+     "Điểm chấm theo từng mẫu: mô tả có khớp lý thuyết của khoáng vật em đã gọi tên hay không.",
+     "An toàn: chỉ dùng HCl loãng khi có giảng viên hướng dẫn; không nếm mẫu (kể cả halit, sylvin); rửa tay sau buổi thực tập."
     ]
    },
    {
     "id": "mota",
     "type": "table",
-    "title": "Bảng mô tả 7 mẫu khoáng vật",
+    "title": "Bảng mô tả 10 mẫu khoáng vật",
     "columns": [
      "Màu sắc",
      "Màu vết vạch",
@@ -53,7 +54,10 @@
      "Mẫu 4",
      "Mẫu 5",
      "Mẫu 6",
-     "Mẫu 7"
+     "Mẫu 7",
+     "Mẫu 8",
+     "Mẫu 9",
+     "Mẫu 10"
     ],
     "photos": true,
     "photo_label": "Ảnh mẫu",
@@ -70,15 +74,11 @@
      },
      {
       "id": "q2",
-      "text": "Felspat kali và plagioclas đều có hai phương cát khai gần vuông góc, độ cứng khoảng 6. Nêu dấu hiệu giúp phân biệt hai khoáng vật này trên mẫu tay."
+      "text": "Hematit và magnetit đều có thể màu đen, ánh kim. Nêu hai phép thử giúp phân biệt."
      },
      {
       "id": "q3",
-      "text": "Biotit và muscovit đóng vai trò gì đối với đất khi đá mẹ bị phong hóa?"
-     },
-     {
-      "id": "q4",
-      "text": "Phân biệt canxit với dolomit bằng phép thử nào? Vì sao đá giàu canxit hoặc dolomit được dùng để cải tạo đất chua?"
+      "text": "Vì sao vết vạch đáng tin cậy hơn màu sắc khi nhận biết khoáng vật? Lấy một ví dụ trong các mẫu hôm nay."
      }
     ]
    },
@@ -88,8 +88,8 @@
     "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
     "items": [
      "Thử độ cứng bằng móng tay, đồng xu, dao thép đúng cách",
-     "Phân biệt cát khai với vết vỡ",
-     "Gọi tên 7 khoáng vật với ít nhất 2 dấu hiệu",
+     "Thử vết vạch trên tấm sứ",
+     "Đối chiếu bảng tra để gọi tên 10 mẫu",
      "Nêu vai trò của khoáng vật đối với đất"
     ]
    }
@@ -97,35 +97,74 @@
   "rubric": {
    "criteria": [
     {
-     "id": "mota",
-     "name": "Bảng mô tả: đủ ô, đúng tính chất, có ảnh mẫu",
-     "max": 4
+     "id": "m1",
+     "name": "Mẫu 1: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
     },
     {
-     "id": "ten",
-     "name": "Gọi tên đúng khoáng vật",
-     "max": 3
+     "id": "m2",
+     "name": "Mẫu 2: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m3",
+     "name": "Mẫu 3: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m4",
+     "name": "Mẫu 4: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m5",
+     "name": "Mẫu 5: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m6",
+     "name": "Mẫu 6: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m7",
+     "name": "Mẫu 7: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m8",
+     "name": "Mẫu 8: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m9",
+     "name": "Mẫu 9: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m10",
+     "name": "Mẫu 10: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
     },
     {
      "id": "vd",
      "name": "Câu hỏi vận dụng",
-     "max": 2
+     "max": 1.5
     },
     {
      "id": "td",
      "name": "Trình bày, tự đánh giá",
-     "max": 1
+     "max": 0.5
     }
    ]
   },
   "answer_key": {
    "q1": "X là thạch anh: độ cứng 7 nên vạch được kính, không cát khai, vết vỡ vỏ sò, không phản ứng HCl. Y là canxit: độ cứng 3 nên bị dao thép vạch, cát khai ba phương dạng thoi, sủi bọt mạnh với HCl loãng. Phép thử quyết định: thử độ cứng bằng mảnh kính hoặc dao thép và nhỏ HCl loãng.",
-   "q2": "Plagioclas thường có các vạch song song mảnh trên mặt cát khai (song tinh), màu trắng, xám. Felspat kali không có các vạch này, thường có màu hồng, đỏ nhạt hoặc trắng.",
-   "q3": "Biotit phong hóa tương đối nhanh, giải phóng K, Fe, Mg, góp phần cung cấp dinh dưỡng cho đất. Muscovit bền hơn, tồn tại lâu dưới dạng vảy trong vật liệu phong hóa và góp phần hình thành khoáng vật sét.",
-   "q4": "Canxit sủi bọt mạnh khi nhỏ HCl loãng nguội; dolomit chỉ phản ứng yếu khi ở dạng khối (rõ hơn khi tán bột) và cứng hơn (3,5–4 so với 3). Đá giàu carbonat trung hòa axit, nâng pH và cung cấp Ca (dolomit cung cấp thêm Mg) nên dùng cải tạo đất chua."
+   "q2": "Thử vết vạch trên tấm sứ: hematit cho vết vạch đỏ nâu, magnetit cho vết vạch đen. Thử từ tính: magnetit bị nam châm hút mạnh, hematit không.",
+   "q3": "Màu của một khoáng vật thay đổi theo tạp chất, mức phong hóa và lớp xỉn bề mặt, còn màu bột (vết vạch) ít đổi. Ví dụ hematit có thể đen hoặc xám thép nhưng vết vạch luôn đỏ nâu; pyrit vàng nhưng vết vạch đen lục; thạch anh nhiều màu nhưng vết vạch trắng."
   },
-  "reference": "Dữ liệu chuẩn 7 khoáng vật tuần 1 (theo bảng mô tả khoáng vật mẫu của học phần; độ cứng và màu có thể thay đổi theo thành phần và mức phong hóa). Thạch anh SiO₂: không màu, trắng, xám; ánh thủy tinh; độ cứng 7; không cát khai, vết vỡ vỏ sò; vết vạch trắng; cứng, khó bị dao thép làm xước, vạch được kính; là thành phần phổ biến của cát và đất cát, ảnh hưởng thành phần cơ giới và khả năng giữ nước của đất; có trong đá magma, trầm tích, biến chất. Felspat kali: trắng, hồng, đỏ nhạt; ánh thủy tinh; độ cứng 6; hai phương cát khai gần vuông góc; mặt cát khai tương đối phẳng; khoáng vật tạo đất, cung cấp kali khi phong hóa. Plagioclas: trắng, xám; ánh thủy tinh; độ cứng 6–6,5; hai phương cát khai gần vuông góc; một số mẫu có các vạch song song trên mặt cát khai; tham gia hình thành đất từ đá magma, cung cấp Ca và Na. Muscovit: không màu, trắng bạc, vàng nhạt; ánh thủy tinh đến ngọc trai; độ cứng 2–2,5; một phương cát khai hoàn toàn, tách lá mỏng trong, ánh bạc; có trong đá mẹ và vật liệu phong hóa, góp phần hình thành khoáng vật sét. Biotit: nâu sẫm, nâu đen, đen; ánh thủy tinh đến ngọc trai; độ cứng 2,5–3; một phương cát khai hoàn toàn, tách lá mỏng màu sẫm; khi phong hóa giải phóng K, Fe, Mg, cung cấp dinh dưỡng cho đất. Canxit CaCO₃: không màu, trắng, đôi khi nhiều màu; ánh thủy tinh; độ cứng 3; ba phương cát khai dạng thoi; sủi bọt mạnh khi nhỏ HCl loãng; thành phần của đá vôi, dùng cải tạo đất chua và sản xuất vật liệu xây dựng. Dolomit CaMg(CO₃)₂: trắng, xám, hồng nhạt; ánh thủy tinh; độ cứng 3,5–4; ba phương cát khai dạng thoi; phản ứng yếu với HCl loãng nguội khi ở dạng khối; nguyên liệu vật liệu xây dựng, cung cấp Ca và Mg cho đất khi phong hóa. Vết vạch của 7 khoáng vật này đều trắng hoặc không màu. Vật thử độ cứng: móng tay khoảng 2,5; đồng xu khoảng 3,5; dao thép hoặc mảnh kính khoảng 5,5.",
-  "answer_hints": "X thạch anh (H7, vạch kính), Y canxit (H3, sủi HCl). Plagioclas có vạch song song trên mặt cát khai; felspat kali thường hồng, không có vạch. Biotit phong hóa giải phóng K, Fe, Mg; muscovit bền, góp phần tạo khoáng vật sét. Canxit sủi mạnh HCl nguội, dolomit phản ứng yếu ở dạng khối; carbonat trung hòa đất chua, cung cấp Ca, Mg.",
+  "reference": "BẢNG ĐỐI CHIẾU KHOÁNG VẬT của học phần (dùng chung cho mọi buổi khoáng vật; mẫu phát ở phòng thực tập lấy trong bảng này). Vật thử độ cứng: móng tay khoảng 2,5; đồng xu khoảng 3,5; dao thép, mảnh kính khoảng 5,5. Màu có thể đổi theo tạp chất và mức phong hóa; vết vạch ổn định hơn màu. — NGUYÊN TỐ TỰ SINH. Graphit C: đen chì, vạch đen xám, ánh kim loại đến mỡ, độ cứng 1, cát khai hoàn toàn 1 phương, vảy mềm trơn, bẩn tay, dẫn điện; ruột bút chì, vật liệu chịu lửa. Vàng Au: vàng kim, vạch vàng, ánh kim, độ cứng 2,5–3, không cát khai, dẻo, rất nặng; kim loại quý. — SULFUR VÀ TƯƠNG TỰ. Pyrit FeS₂: vàng đồng thau nhạt, vạch đen hơi lục, ánh kim, độ cứng 6–6,5, không cát khai, tinh thể lập phương có vết khía; phong hóa sinh axit sulfuric (liên quan đất phèn); nguyên liệu axit sulfuric. Chalcopyrit CuFeS₂: vàng đồng thau đậm, mặt thường xỉn sặc sỡ, vạch đen lục, ánh kim, độ cứng 3,5–4, không cát khai rõ; quặng đồng. Arsenopyrit FeAsS: trắng bạc đến xám thép, vạch đen xám, ánh kim, độ cứng 5,5–6, tinh thể trụ thoi, đập có mùi tỏi; quặng asen. Pyrotin Fe₁₋ₓS: vàng đồng thau ánh nâu đỏ, vạch xám đen, ánh kim, độ cứng 3,5–4,5, có từ tính yếu. Galenit PbS: xám chì, vạch xám chì đến đen, ánh kim mạnh, độ cứng 2,5–3, cát khai hoàn toàn 3 phương lập phương, rất nặng; quặng chì. Antimonit Sb₂S₃: xám chì, vạch xám chì, ánh kim, độ cứng 2, tinh thể que kim tỏa tia có vạch dọc, cát khai hoàn toàn 1 phương; quặng antimon. Molipdenit MoS₂: xám chì ánh lam, vạch xám lục, ánh kim, độ cứng 1–1,5, vảy mềm bẩn tay (khác graphit ở vết vạch ánh lục và nặng hơn); quặng molipden. Sphalerit ZnS: nâu, vàng nâu, đen, vạch nâu nhạt đến trắng vàng, ánh kim cương đến nhựa, độ cứng 3,5–4, cát khai hoàn toàn nhiều phương; quặng kẽm. Bornit Cu₅FeS₄: đỏ đồng trên mặt vỡ mới, mặt cũ xỉn tím xanh sặc sỡ, vạch xám đen, ánh kim, độ cứng 3; quặng đồng. — OXIT VÀ HYDROXIT. Magnetit Fe₃O₄: đen, vạch đen, ánh kim, độ cứng 5,5–6,5, không cát khai, có từ tính mạnh; quặng sắt. Hematit Fe₂O₃: đỏ nâu, xám thép, đen, vạch đỏ nâu (đỏ anh đào), ánh kim đến ánh đất, độ cứng 5–6,5, không cát khai; quặng sắt, tạo màu đỏ cho đất. Goethit FeO(OH): nâu đến nâu đen, vạch nâu vàng, ánh bán kim đến ánh đất, độ cứng 5–5,5; thành phần chính của limonit, tạo màu vàng nâu cho đất. Pyrolusit MnO₂: đen, vạch đen, ánh bán kim đến ánh đất, độ cứng 2–6 (dạng bột mềm, bẩn tay), dạng cành cây hoặc kết hạch; quặng mangan. Manganit MnO(OH): đen đến xám thép, vạch nâu đen, ánh bán kim, độ cứng 4, lăng trụ có khía dọc; quặng mangan. Psilomelan (Ba,Mn) oxit mangan ngậm nước: đen, vạch nâu đen, dạng thận, chùm nho, độ cứng 5–6; quặng mangan. Corindon Al₂O₃: xám, nâu, xanh, đỏ (ruby, saphia), ánh thủy tinh, độ cứng 9, lăng trụ hoặc tháp đôi sáu phương, không cát khai; vật liệu mài, đá quý. Diaspor AlO(OH): trắng, xám, ánh thủy tinh đến ngọc trai, độ cứng 6,5–7, cát khai hoàn toàn 1 phương; thành phần bauxit. Boehmit AlO(OH): trắng, độ cứng 3–3,5, thường ẩn tinh trong bauxit. Gibbsit (gipxit) Al(OH)₃: trắng, xám, ánh ngọc trai đến thủy tinh, độ cứng 2,5–3,5, cát khai hoàn toàn 1 phương; quặng nhôm chính của bauxit nhiệt đới. Thạch anh SiO₂: không màu, trắng, xám, tím, ánh thủy tinh, độ cứng 7, không cát khai, vết vỡ vỏ sò, vạch được kính; thành phần chính của cát và đất cát. Opal SiO₂·nH₂O: không màu, trắng, nhiều màu, ánh thủy tinh đến nhựa, vô định hình, độ cứng 5,5–6,5, vết vỡ vỏ sò. Chalcedon SiO₂ ẩn tinh: trắng, xám, nhiều màu, dạng thận, chùm nho, dải đồng tâm (agat), ánh sáp, độ cứng 6,5–7, vết vỡ vỏ sò. Quặng limonit: hỗn hợp hydroxit sắt (chủ yếu goethit), vàng nâu đến nâu đen, vạch nâu vàng, dạng đất, xốp, kết hạch; có trong laterit, tạo màu vàng nâu cho đất; quặng sắt nghèo. Quặng bauxit: hỗn hợp gibbsit, boehmit, diaspor cùng oxit sắt và kaolinit, dạng hạt đậu (pizolit) hoặc đất, đỏ nâu, trắng, xám; quặng nhôm, sản phẩm phong hóa laterit nhiệt đới. — SILICAT VÀ ALUMOSILICAT. Olivin (Mg,Fe)₂SiO₄: xanh lục, vàng lục, ánh thủy tinh, độ cứng 6,5–7, không cát khai rõ, dạng hạt; trong đá mafic và siêu mafic, phong hóa nhanh giải phóng Mg, Fe. Pyroxen (augit): đen lục, lục sẫm, ánh thủy tinh, độ cứng 5,5–6, 2 phương cát khai gần vuông góc (khoảng 87°), lăng trụ ngắn; trong đá mafic. Amfibol (hornblend): đen, lục đen, ánh thủy tinh, độ cứng 5,5–6, 2 phương cát khai giao nhau khoảng 124° và 56°, lăng trụ dài; trong đá trung tính, biến chất. Mica – muscovit: không màu, trắng bạc, vàng nhạt, ánh thủy tinh đến ngọc trai, độ cứng 2–2,5, cát khai hoàn toàn 1 phương, tách lá mỏng đàn hồi; góp phần hình thành khoáng vật sét. Mica – biotit: nâu sẫm, nâu đen, đen, độ cứng 2,5–3, cát khai hoàn toàn 1 phương, lá mỏng; phong hóa giải phóng K, Fe, Mg. Felspat – felspat kali (orthoclas, microclin): trắng, hồng, đỏ nhạt, ánh thủy tinh, độ cứng 6, 2 phương cát khai gần vuông góc, không có vạch song song; cung cấp kali khi phong hóa, tạo sét. Felspat – plagioclas: trắng, xám, độ cứng 6–6,5, 2 phương cát khai gần vuông góc, có vạch song song (song tinh) trên mặt cát khai; cung cấp Ca, Na khi phong hóa. Turmalin: đen (schorl), nâu, lục, hồng, ánh thủy tinh, độ cứng 7–7,5, không cát khai, lăng trụ có khía dọc, mặt cắt tam giác cầu; trong pegmatit, granit. Kaolinit: trắng, trắng ngà, xám nhạt, ánh đất, mờ, độ cứng 2–2,5, dạng đất mịn, dẻo khi ướt; khoáng vật sét, ảnh hưởng tính chất cơ lý và giữ nước của đất; nguyên liệu gốm sứ. Talc: trắng, xanh nhạt, xám lục, ánh ngọc trai đến mỡ, độ cứng 1, cát khai hoàn toàn 1 phương, trơn như xà phòng; khoáng sản công nghiệp. Serpentin: lục, lục vàng, lục đen, ánh mỡ đến sáp, độ cứng 2,5–4, sờ trơn, dạng khối hoặc sợi (chrysotil, amiăng); sản phẩm biến đổi olivin, pyroxen. Granat: đỏ, đỏ nâu, nâu, ánh thủy tinh đến nhựa, độ cứng 6,5–7,5, không cát khai, tinh thể 12 mặt thoi hoặc 24 mặt; trong đá biến chất; vật liệu mài, đá quý. — CARBONAT. Canxit CaCO₃: không màu, trắng, ánh thủy tinh, độ cứng 3, cát khai hoàn toàn 3 phương dạng thoi, sủi bọt mạnh với HCl loãng nguội; thành phần đá vôi, cải tạo đất chua. Aragonit CaCO₃: trắng, ánh thủy tinh, độ cứng 3,5–4, lăng trụ kim, tỏa tia, không có cát khai thoi rõ, sủi bọt HCl. Dolomit CaMg(CO₃)₂: trắng, xám, hồng nhạt, độ cứng 3,5–4, cát khai thoi, phản ứng yếu với HCl loãng nguội ở dạng khối (rõ hơn khi tán bột); cung cấp Ca, Mg. Magnezit MgCO₃: trắng, xám, độ cứng 3,5–4,5, dạng khối hạt mịn như sứ, chỉ sủi bọt với HCl nóng; vật liệu chịu lửa. Siderit FeCO₃: vàng nâu đến nâu, độ cứng 3,5–4, cát khai thoi, khá nặng, sủi bọt với HCl nóng; quặng sắt. Rodocrozit MnCO₃: hồng đến đỏ hồng, độ cứng 3,5–4, cát khai thoi, sủi bọt với HCl nóng; quặng mangan, đá trang trí. Malachit Cu₂CO₃(OH)₂: lục, vạch lục nhạt, dạng thận, dải đồng tâm, độ cứng 3,5–4, sủi bọt HCl; quặng đồng, đá trang trí. Azurit Cu₃(CO₃)₂(OH)₂: lam đậm, vạch lam nhạt, độ cứng 3,5–4, sủi bọt HCl; quặng đồng. — SULFAT. Barit BaSO₄: trắng, xám, hồng nhạt, ánh thủy tinh, độ cứng 3–3,5, cát khai 3 phương, nặng bất thường; dung dịch khoan, chất độn. Thạch cao CaSO₄·2H₂O: trắng, không màu, xám nhạt, ánh thủy tinh đến ngọc trai, độ cứng 2, cát khai hoàn toàn 1 phương, bị móng tay vạch; vật liệu xây dựng, cải tạo đất mặn kiềm. — WOLFRAMAT. Wolframit (Fe,Mn)WO₄: nâu đen đến đen, vạch nâu đen, ánh bán kim, độ cứng 4–4,5, cát khai hoàn toàn 1 phương, rất nặng; quặng vonfram. — HALOGENUA. Halit NaCl: không màu, trắng, ánh thủy tinh, độ cứng 2,5, cát khai 3 phương lập phương, tan trong nước, vị mặn (không nếm); liên quan đất mặn. Sylvin KCl: không màu, trắng, hồng, độ cứng 2, cát khai lập phương, tan trong nước, vị đắng (không nếm); phân kali. Fluorit CaF₂: tím, lục, vàng, không màu, ánh thủy tinh, độ cứng 4, cát khai hoàn toàn 4 phương (bát diện), thường phát quang; trợ dung luyện kim, sản xuất HF.",
+  "answer_hints": "X thạch anh (H7, vạch kính), Y canxit (H3, sủi HCl). Hematit vạch đỏ nâu, không từ tính; magnetit vạch đen, hút nam châm. Vết vạch ổn định hơn màu (tạp chất, phong hóa làm đổi màu).",
   "mon": {
    "ma": "Đ&KV",
    "ten": "Thực tập Đá và Khoáng vật",
@@ -136,14 +175,14 @@
   },
   "cham": {
    "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu mô tả mẫu khoáng vật và đá trong buổi thực tập của sinh viên.",
-   "quy_tac_bang": "Bảng mô tả mẫu: mỗi hàng là một mẫu phòng thực hành phát; thứ tự mẫu có thể khác thứ tự trong 'du_lieu_chuan'. Xác định khoáng vật sinh viên gọi tên ở cột 'Tên khoáng vật xác định', rồi đối chiếu từng ô tính chất với dữ liệu chuẩn của chính khoáng vật đó: khớp là đúng; mô tả hợp lý với biến thể thật của mẫu (màu đổi do tạp chất, mức phong hóa) là đúng hoặc đúng một phần; độ cứng lệch không quá 0,5 bậc Mohs là đúng. Tên đúng nhưng tính chất mâu thuẫn với tên thì trừ ở ô tính chất; tên phải thuộc danh sách mẫu của buổi. Ô vết vạch, độ trong suốt, vết vỡ, hình dạng: chấp nhận mô tả hợp lý. Hai cột ý nghĩa đối với đất và kinh tế: đối chiếu ý chính trong dữ liệu chuẩn.",
-   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng (không trừ quá 0,25 điểm mỗi bảng). Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
+   "quy_tac_bang": "Bảng 'mota' có 10 hàng 'Mẫu 1'…'Mẫu 10'; hàng 'Mẫu k' ứng với tiêu chí 'm{k}' trong rubric (chấm RIÊNG từng mẫu). Giảng viên phát mẫu khoáng vật thật nên KHÔNG có đáp án cố định cho từng hàng. Với mỗi hàng: (1) lấy tên sinh viên ghi ở cột 'Tên khoáng vật xác định'; (2) tra tên đó trong 'du_lieu_chuan' (bảng đối chiếu của học phần); tên không có trong bảng thì đối chiếu theo lý thuyết khoáng vật học chuẩn và ghi chú; (3) đối chiếu TỪNG ô mô tả với lý thuyết của chính tên đã gọi: khớp là đúng; biến thể hợp lý của mẫu thật (màu đổi do tạp chất, mức phong hóa) là đúng hoặc đúng một phần; độ cứng lệch không quá 0,5 bậc Mohs là đúng; ô mâu thuẫn với tên đã gọi (vd ghi độ cứng 7 mà gọi canxit) là sai; ô trống là thiếu. (4) điểm 'm{k}' = tỉ lệ ô đúng (đúng một phần tính nửa) nhân điểm tối đa của tiêu chí; tên gọi nhất quán với các tính chất mô tả chiếm khoảng một phần tư điểm của mẫu. Hàng hoàn toàn trống: 0 điểm. Hai hàng mô tả giống hệt nhau thì chỉ cho điểm hàng đầu và ghi cờ. Ảnh mẫu do giảng viên tự xem để kiểm chứng; không suy đoán nội dung ảnh. Trong 'doi_chieu', mỗi mẫu một dòng: 'muc' = 'Mẫu k – <tên đã gọi>', 'bai_lam' tóm tắt mô tả, 'dap_an' tóm tắt lý thuyết của tên đó.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, tấm sứ thử vết vạch, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
   },
   "max_attempts": 2,
   "score_policy": "BEST"
  },
  "2": {
-  "title": "Tuần 2 – Khoáng vật (2/2): mô tả 7 khoáng vật còn lại",
+  "title": "Tuần 2 – Khoáng vật (2/2): mô tả 10 mẫu khoáng vật",
   "tuan": 2,
   "ngay": "31/10/2026",
   "sections": [
@@ -164,17 +203,18 @@
    {
     "id": "mau",
     "type": "info",
-    "title": "Mẫu của buổi (thứ tự mẫu phát có thể khác)",
+    "title": "Mẫu của buổi",
     "lines": [
-     "7 khoáng vật: Kaolinit, Talc, Thạch cao (gypsum), Halit (NaCl), Hematit, Magnetit, Olivin.",
-     "Thử từ tính của magnetit bằng nam châm nhỏ của phòng thực hành; thử vết vạch trên tấm sứ nhám.",
-     "An toàn: chỉ dùng HCl loãng khi có giảng viên hướng dẫn; không nếm mẫu (kể cả halit); rửa tay sau buổi thực tập."
+     "Giảng viên phát 10 mẫu khoáng vật lấy trong bảng đối chiếu của học phần (bảng tra khoáng vật); có thể gồm cả mẫu ôn lại của tuần 1.",
+     "Trọng tâm tuần 2: silicat và alumosilicat, carbonat, sulfat, wolframat, halogenua. Thử từ tính bằng nam châm nhỏ, thử vết vạch trên tấm sứ nhám.",
+     "Điểm chấm theo từng mẫu: mô tả có khớp lý thuyết của khoáng vật em đã gọi tên hay không.",
+     "An toàn: chỉ dùng HCl loãng khi có giảng viên hướng dẫn; không nếm mẫu (kể cả halit, sylvin); rửa tay sau buổi thực tập."
     ]
    },
    {
     "id": "mota",
     "type": "table",
-    "title": "Bảng mô tả 7 mẫu khoáng vật",
+    "title": "Bảng mô tả 10 mẫu khoáng vật",
     "columns": [
      "Màu sắc",
      "Màu vết vạch",
@@ -196,7 +236,10 @@
      "Mẫu 4",
      "Mẫu 5",
      "Mẫu 6",
-     "Mẫu 7"
+     "Mẫu 7",
+     "Mẫu 8",
+     "Mẫu 9",
+     "Mẫu 10"
     ],
     "photos": true,
     "photo_label": "Ảnh mẫu",
@@ -209,7 +252,7 @@
     "items": [
      {
       "id": "q1",
-      "text": "Hematit và magnetit đều có thể có màu đen, ánh kim. Nêu hai phép thử giúp phân biệt."
+      "text": "Felspat kali và plagioclas đều có hai phương cát khai gần vuông góc, độ cứng khoảng 6. Nêu dấu hiệu giúp phân biệt hai khoáng vật này trên mẫu tay."
      },
      {
       "id": "q2",
@@ -217,11 +260,7 @@
      },
      {
       "id": "q3",
-      "text": "Kaolinit ảnh hưởng thế nào đến tính chất của đất? Vì sao hematit làm đất có màu đỏ hoặc nâu đỏ?"
-     },
-     {
-      "id": "q4",
-      "text": "Olivin thường gặp trong loại đá nào? Vì sao đất hình thành trên đá giàu olivin thường giàu Mg và Fe?"
+      "text": "Kaolinit và biotit đóng vai trò gì đối với đất? Vì sao đá giàu canxit hoặc dolomit được dùng để cải tạo đất chua?"
      }
     ]
    },
@@ -230,45 +269,84 @@
     "type": "self",
     "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
     "items": [
-     "Thử vết vạch và từ tính",
+     "Phân biệt cát khai với vết vỡ",
      "Phân biệt các khoáng vật mềm (độ cứng 1–2,5)",
-     "Gọi tên 7 khoáng vật với ít nhất 2 dấu hiệu",
-     "Liên hệ khoáng vật với màu sắc và tính chất của đất"
+     "Đối chiếu bảng tra để gọi tên 10 mẫu",
+     "Liên hệ khoáng vật với tính chất của đất"
     ]
    }
   ],
   "rubric": {
    "criteria": [
     {
-     "id": "mota",
-     "name": "Bảng mô tả: đủ ô, đúng tính chất, có ảnh mẫu",
-     "max": 4
+     "id": "m1",
+     "name": "Mẫu 1: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
     },
     {
-     "id": "ten",
-     "name": "Gọi tên đúng khoáng vật",
-     "max": 3
+     "id": "m2",
+     "name": "Mẫu 2: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m3",
+     "name": "Mẫu 3: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m4",
+     "name": "Mẫu 4: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m5",
+     "name": "Mẫu 5: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m6",
+     "name": "Mẫu 6: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m7",
+     "name": "Mẫu 7: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m8",
+     "name": "Mẫu 8: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m9",
+     "name": "Mẫu 9: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
+    },
+    {
+     "id": "m10",
+     "name": "Mẫu 10: mô tả khớp lý thuyết của khoáng vật đã gọi tên, gọi tên nhất quán, có ảnh",
+     "max": 0.8
     },
     {
      "id": "vd",
      "name": "Câu hỏi vận dụng",
-     "max": 2
+     "max": 1.5
     },
     {
      "id": "td",
      "name": "Trình bày, tự đánh giá",
-     "max": 1
+     "max": 0.5
     }
    ]
   },
   "answer_key": {
-   "q1": "Thử vết vạch trên tấm sứ: hematit cho vết vạch đỏ nâu, magnetit cho vết vạch đen. Thử từ tính: magnetit bị nam châm hút, hematit không (hoặc rất yếu).",
+   "q1": "Plagioclas thường có các vạch song song mảnh trên mặt cát khai (song tinh), màu trắng, xám. Felspat kali không có các vạch này, thường có màu hồng, đỏ nhạt hoặc trắng.",
    "q2": "Talc độ cứng 1, rất mềm, trơn như xà phòng, ánh ngọc trai đến mỡ. Thạch cao độ cứng 2, bị móng tay vạch, một phương cát khai hoàn toàn. Halit độ cứng 2,5, cát khai ba phương vuông góc tạo khối lập phương, tan trong nước.",
-   "q3": "Kaolinit là khoáng vật sét hạt mịn, ảnh hưởng tính chất cơ lý (dẻo, dính) và khả năng giữ nước của đất; cũng là nguyên liệu gốm sứ. Hematit là oxit sắt, khi có trong đất tạo màu đỏ, nâu đỏ (đặc trưng đất phong hóa vùng nhiệt đới).",
-   "q4": "Olivin gặp trong đá magma mafic và siêu mafic (bazan, gabro, peridotit). Olivin kém bền, phong hóa nhanh nên giải phóng nhiều Mg và Fe vào vật liệu tạo đất."
+   "q3": "Kaolinit là khoáng vật sét hạt mịn, ảnh hưởng tính chất cơ lý (dẻo, dính) và khả năng giữ nước của đất. Biotit phong hóa giải phóng K, Fe, Mg, cung cấp dinh dưỡng. Đá giàu carbonat trung hòa axit, nâng pH và cung cấp Ca (dolomit cung cấp thêm Mg) nên dùng cải tạo đất chua."
   },
-  "reference": "Dữ liệu chuẩn 7 khoáng vật tuần 2 (theo bảng mô tả khoáng vật mẫu của học phần). Kaolinit: trắng, trắng ngà, xám nhạt; ánh đất, mờ; độ cứng 2–2,5; cát khai kém rõ; mềm, dạng đất hoặc khối mịn; khoáng vật sét quan trọng, ảnh hưởng tính chất cơ lý và khả năng giữ nước của đất; nguyên liệu gốm sứ. Talc: trắng, xanh nhạt, xám lục; ánh ngọc trai đến mỡ; độ cứng 1; một phương cát khai hoàn toàn; rất mềm, trơn như xà phòng; khoáng sản công nghiệp. Thạch cao CaSO₄·2H₂O: trắng, không màu, xám nhạt; ánh thủy tinh đến ngọc trai; độ cứng 2; một phương cát khai hoàn toàn; bị móng tay vạch; nguyên liệu vật liệu xây dựng, có thể cung cấp Ca và S cho đất. Halit NaCl: không màu, trắng; ánh thủy tinh; độ cứng 2,5; ba phương cát khai lập phương; tan trong nước, vị mặn (không nếm mẫu thực hành); liên quan đất mặn và tích tụ muối; nguyên liệu công nghiệp. Hematit Fe₂O₃: đỏ nâu, xám thép, đen; ánh kim loại đến ánh đất; độ cứng 5–6,5; không cát khai rõ, vết vỡ không đều; vết vạch đỏ nâu; tạo màu đỏ, nâu đỏ cho đất; quặng sắt. Magnetit Fe₃O₄: đen; ánh kim loại; độ cứng 5,5–6,5; không cát khai rõ, vết vỡ không đều; có từ tính, vết vạch đen; quặng sắt, có trong đất và trầm tích nguồn gốc đá magma. Olivin (Mg,Fe)₂SiO₄: xanh lục, vàng lục; ánh thủy tinh; độ cứng 6,5–7; không cát khai rõ, vết vỡ không đều; dạng hạt, thường trong đá magma mafic và siêu mafic; phong hóa giải phóng Mg và Fe. Vết vạch: hematit đỏ nâu, magnetit đen, các khoáng vật còn lại trắng hoặc không màu.",
-  "answer_hints": "Hematit vạch đỏ nâu, không từ tính; magnetit vạch đen, hút nam châm. Talc H1 trơn; thạch cao H2 móng tay vạch; halit H2,5 cát khai lập phương, tan trong nước. Kaolinit: khoáng vật sét, giữ nước, cơ lý, gốm sứ; hematit tạo màu đỏ. Olivin trong đá mafic, siêu mafic, phong hóa nhanh giải phóng Mg, Fe.",
+  "reference": "BẢNG ĐỐI CHIẾU KHOÁNG VẬT của học phần (dùng chung cho mọi buổi khoáng vật; mẫu phát ở phòng thực tập lấy trong bảng này). Vật thử độ cứng: móng tay khoảng 2,5; đồng xu khoảng 3,5; dao thép, mảnh kính khoảng 5,5. Màu có thể đổi theo tạp chất và mức phong hóa; vết vạch ổn định hơn màu. — NGUYÊN TỐ TỰ SINH. Graphit C: đen chì, vạch đen xám, ánh kim loại đến mỡ, độ cứng 1, cát khai hoàn toàn 1 phương, vảy mềm trơn, bẩn tay, dẫn điện; ruột bút chì, vật liệu chịu lửa. Vàng Au: vàng kim, vạch vàng, ánh kim, độ cứng 2,5–3, không cát khai, dẻo, rất nặng; kim loại quý. — SULFUR VÀ TƯƠNG TỰ. Pyrit FeS₂: vàng đồng thau nhạt, vạch đen hơi lục, ánh kim, độ cứng 6–6,5, không cát khai, tinh thể lập phương có vết khía; phong hóa sinh axit sulfuric (liên quan đất phèn); nguyên liệu axit sulfuric. Chalcopyrit CuFeS₂: vàng đồng thau đậm, mặt thường xỉn sặc sỡ, vạch đen lục, ánh kim, độ cứng 3,5–4, không cát khai rõ; quặng đồng. Arsenopyrit FeAsS: trắng bạc đến xám thép, vạch đen xám, ánh kim, độ cứng 5,5–6, tinh thể trụ thoi, đập có mùi tỏi; quặng asen. Pyrotin Fe₁₋ₓS: vàng đồng thau ánh nâu đỏ, vạch xám đen, ánh kim, độ cứng 3,5–4,5, có từ tính yếu. Galenit PbS: xám chì, vạch xám chì đến đen, ánh kim mạnh, độ cứng 2,5–3, cát khai hoàn toàn 3 phương lập phương, rất nặng; quặng chì. Antimonit Sb₂S₃: xám chì, vạch xám chì, ánh kim, độ cứng 2, tinh thể que kim tỏa tia có vạch dọc, cát khai hoàn toàn 1 phương; quặng antimon. Molipdenit MoS₂: xám chì ánh lam, vạch xám lục, ánh kim, độ cứng 1–1,5, vảy mềm bẩn tay (khác graphit ở vết vạch ánh lục và nặng hơn); quặng molipden. Sphalerit ZnS: nâu, vàng nâu, đen, vạch nâu nhạt đến trắng vàng, ánh kim cương đến nhựa, độ cứng 3,5–4, cát khai hoàn toàn nhiều phương; quặng kẽm. Bornit Cu₅FeS₄: đỏ đồng trên mặt vỡ mới, mặt cũ xỉn tím xanh sặc sỡ, vạch xám đen, ánh kim, độ cứng 3; quặng đồng. — OXIT VÀ HYDROXIT. Magnetit Fe₃O₄: đen, vạch đen, ánh kim, độ cứng 5,5–6,5, không cát khai, có từ tính mạnh; quặng sắt. Hematit Fe₂O₃: đỏ nâu, xám thép, đen, vạch đỏ nâu (đỏ anh đào), ánh kim đến ánh đất, độ cứng 5–6,5, không cát khai; quặng sắt, tạo màu đỏ cho đất. Goethit FeO(OH): nâu đến nâu đen, vạch nâu vàng, ánh bán kim đến ánh đất, độ cứng 5–5,5; thành phần chính của limonit, tạo màu vàng nâu cho đất. Pyrolusit MnO₂: đen, vạch đen, ánh bán kim đến ánh đất, độ cứng 2–6 (dạng bột mềm, bẩn tay), dạng cành cây hoặc kết hạch; quặng mangan. Manganit MnO(OH): đen đến xám thép, vạch nâu đen, ánh bán kim, độ cứng 4, lăng trụ có khía dọc; quặng mangan. Psilomelan (Ba,Mn) oxit mangan ngậm nước: đen, vạch nâu đen, dạng thận, chùm nho, độ cứng 5–6; quặng mangan. Corindon Al₂O₃: xám, nâu, xanh, đỏ (ruby, saphia), ánh thủy tinh, độ cứng 9, lăng trụ hoặc tháp đôi sáu phương, không cát khai; vật liệu mài, đá quý. Diaspor AlO(OH): trắng, xám, ánh thủy tinh đến ngọc trai, độ cứng 6,5–7, cát khai hoàn toàn 1 phương; thành phần bauxit. Boehmit AlO(OH): trắng, độ cứng 3–3,5, thường ẩn tinh trong bauxit. Gibbsit (gipxit) Al(OH)₃: trắng, xám, ánh ngọc trai đến thủy tinh, độ cứng 2,5–3,5, cát khai hoàn toàn 1 phương; quặng nhôm chính của bauxit nhiệt đới. Thạch anh SiO₂: không màu, trắng, xám, tím, ánh thủy tinh, độ cứng 7, không cát khai, vết vỡ vỏ sò, vạch được kính; thành phần chính của cát và đất cát. Opal SiO₂·nH₂O: không màu, trắng, nhiều màu, ánh thủy tinh đến nhựa, vô định hình, độ cứng 5,5–6,5, vết vỡ vỏ sò. Chalcedon SiO₂ ẩn tinh: trắng, xám, nhiều màu, dạng thận, chùm nho, dải đồng tâm (agat), ánh sáp, độ cứng 6,5–7, vết vỡ vỏ sò. Quặng limonit: hỗn hợp hydroxit sắt (chủ yếu goethit), vàng nâu đến nâu đen, vạch nâu vàng, dạng đất, xốp, kết hạch; có trong laterit, tạo màu vàng nâu cho đất; quặng sắt nghèo. Quặng bauxit: hỗn hợp gibbsit, boehmit, diaspor cùng oxit sắt và kaolinit, dạng hạt đậu (pizolit) hoặc đất, đỏ nâu, trắng, xám; quặng nhôm, sản phẩm phong hóa laterit nhiệt đới. — SILICAT VÀ ALUMOSILICAT. Olivin (Mg,Fe)₂SiO₄: xanh lục, vàng lục, ánh thủy tinh, độ cứng 6,5–7, không cát khai rõ, dạng hạt; trong đá mafic và siêu mafic, phong hóa nhanh giải phóng Mg, Fe. Pyroxen (augit): đen lục, lục sẫm, ánh thủy tinh, độ cứng 5,5–6, 2 phương cát khai gần vuông góc (khoảng 87°), lăng trụ ngắn; trong đá mafic. Amfibol (hornblend): đen, lục đen, ánh thủy tinh, độ cứng 5,5–6, 2 phương cát khai giao nhau khoảng 124° và 56°, lăng trụ dài; trong đá trung tính, biến chất. Mica – muscovit: không màu, trắng bạc, vàng nhạt, ánh thủy tinh đến ngọc trai, độ cứng 2–2,5, cát khai hoàn toàn 1 phương, tách lá mỏng đàn hồi; góp phần hình thành khoáng vật sét. Mica – biotit: nâu sẫm, nâu đen, đen, độ cứng 2,5–3, cát khai hoàn toàn 1 phương, lá mỏng; phong hóa giải phóng K, Fe, Mg. Felspat – felspat kali (orthoclas, microclin): trắng, hồng, đỏ nhạt, ánh thủy tinh, độ cứng 6, 2 phương cát khai gần vuông góc, không có vạch song song; cung cấp kali khi phong hóa, tạo sét. Felspat – plagioclas: trắng, xám, độ cứng 6–6,5, 2 phương cát khai gần vuông góc, có vạch song song (song tinh) trên mặt cát khai; cung cấp Ca, Na khi phong hóa. Turmalin: đen (schorl), nâu, lục, hồng, ánh thủy tinh, độ cứng 7–7,5, không cát khai, lăng trụ có khía dọc, mặt cắt tam giác cầu; trong pegmatit, granit. Kaolinit: trắng, trắng ngà, xám nhạt, ánh đất, mờ, độ cứng 2–2,5, dạng đất mịn, dẻo khi ướt; khoáng vật sét, ảnh hưởng tính chất cơ lý và giữ nước của đất; nguyên liệu gốm sứ. Talc: trắng, xanh nhạt, xám lục, ánh ngọc trai đến mỡ, độ cứng 1, cát khai hoàn toàn 1 phương, trơn như xà phòng; khoáng sản công nghiệp. Serpentin: lục, lục vàng, lục đen, ánh mỡ đến sáp, độ cứng 2,5–4, sờ trơn, dạng khối hoặc sợi (chrysotil, amiăng); sản phẩm biến đổi olivin, pyroxen. Granat: đỏ, đỏ nâu, nâu, ánh thủy tinh đến nhựa, độ cứng 6,5–7,5, không cát khai, tinh thể 12 mặt thoi hoặc 24 mặt; trong đá biến chất; vật liệu mài, đá quý. — CARBONAT. Canxit CaCO₃: không màu, trắng, ánh thủy tinh, độ cứng 3, cát khai hoàn toàn 3 phương dạng thoi, sủi bọt mạnh với HCl loãng nguội; thành phần đá vôi, cải tạo đất chua. Aragonit CaCO₃: trắng, ánh thủy tinh, độ cứng 3,5–4, lăng trụ kim, tỏa tia, không có cát khai thoi rõ, sủi bọt HCl. Dolomit CaMg(CO₃)₂: trắng, xám, hồng nhạt, độ cứng 3,5–4, cát khai thoi, phản ứng yếu với HCl loãng nguội ở dạng khối (rõ hơn khi tán bột); cung cấp Ca, Mg. Magnezit MgCO₃: trắng, xám, độ cứng 3,5–4,5, dạng khối hạt mịn như sứ, chỉ sủi bọt với HCl nóng; vật liệu chịu lửa. Siderit FeCO₃: vàng nâu đến nâu, độ cứng 3,5–4, cát khai thoi, khá nặng, sủi bọt với HCl nóng; quặng sắt. Rodocrozit MnCO₃: hồng đến đỏ hồng, độ cứng 3,5–4, cát khai thoi, sủi bọt với HCl nóng; quặng mangan, đá trang trí. Malachit Cu₂CO₃(OH)₂: lục, vạch lục nhạt, dạng thận, dải đồng tâm, độ cứng 3,5–4, sủi bọt HCl; quặng đồng, đá trang trí. Azurit Cu₃(CO₃)₂(OH)₂: lam đậm, vạch lam nhạt, độ cứng 3,5–4, sủi bọt HCl; quặng đồng. — SULFAT. Barit BaSO₄: trắng, xám, hồng nhạt, ánh thủy tinh, độ cứng 3–3,5, cát khai 3 phương, nặng bất thường; dung dịch khoan, chất độn. Thạch cao CaSO₄·2H₂O: trắng, không màu, xám nhạt, ánh thủy tinh đến ngọc trai, độ cứng 2, cát khai hoàn toàn 1 phương, bị móng tay vạch; vật liệu xây dựng, cải tạo đất mặn kiềm. — WOLFRAMAT. Wolframit (Fe,Mn)WO₄: nâu đen đến đen, vạch nâu đen, ánh bán kim, độ cứng 4–4,5, cát khai hoàn toàn 1 phương, rất nặng; quặng vonfram. — HALOGENUA. Halit NaCl: không màu, trắng, ánh thủy tinh, độ cứng 2,5, cát khai 3 phương lập phương, tan trong nước, vị mặn (không nếm); liên quan đất mặn. Sylvin KCl: không màu, trắng, hồng, độ cứng 2, cát khai lập phương, tan trong nước, vị đắng (không nếm); phân kali. Fluorit CaF₂: tím, lục, vàng, không màu, ánh thủy tinh, độ cứng 4, cát khai hoàn toàn 4 phương (bát diện), thường phát quang; trợ dung luyện kim, sản xuất HF.",
+  "answer_hints": "Plagioclas có vạch song song trên mặt cát khai; felspat kali thường hồng, không có vạch. Talc H1 trơn; thạch cao H2 móng tay vạch; halit H2,5 cát khai lập phương, tan trong nước. Kaolinit: sét, giữ nước, cơ lý; biotit giải phóng K, Fe, Mg; carbonat trung hòa đất chua, cung cấp Ca, Mg.",
   "mon": {
    "ma": "Đ&KV",
    "ten": "Thực tập Đá và Khoáng vật",
@@ -279,14 +357,14 @@
   },
   "cham": {
    "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu mô tả mẫu khoáng vật và đá trong buổi thực tập của sinh viên.",
-   "quy_tac_bang": "Bảng mô tả mẫu: mỗi hàng là một mẫu phòng thực hành phát; thứ tự mẫu có thể khác thứ tự trong 'du_lieu_chuan'. Xác định khoáng vật sinh viên gọi tên ở cột 'Tên khoáng vật xác định', rồi đối chiếu từng ô tính chất với dữ liệu chuẩn của chính khoáng vật đó: khớp là đúng; mô tả hợp lý với biến thể thật của mẫu (màu đổi do tạp chất, mức phong hóa) là đúng hoặc đúng một phần; độ cứng lệch không quá 0,5 bậc Mohs là đúng. Tên đúng nhưng tính chất mâu thuẫn với tên thì trừ ở ô tính chất; tên phải thuộc danh sách mẫu của buổi. Ô vết vạch, độ trong suốt, vết vỡ, hình dạng: chấp nhận mô tả hợp lý. Hai cột ý nghĩa đối với đất và kinh tế: đối chiếu ý chính trong dữ liệu chuẩn.",
-   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng (không trừ quá 0,25 điểm mỗi bảng). Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
+   "quy_tac_bang": "Bảng 'mota' có 10 hàng 'Mẫu 1'…'Mẫu 10'; hàng 'Mẫu k' ứng với tiêu chí 'm{k}' trong rubric (chấm RIÊNG từng mẫu). Giảng viên phát mẫu khoáng vật thật nên KHÔNG có đáp án cố định cho từng hàng. Với mỗi hàng: (1) lấy tên sinh viên ghi ở cột 'Tên khoáng vật xác định'; (2) tra tên đó trong 'du_lieu_chuan' (bảng đối chiếu của học phần); tên không có trong bảng thì đối chiếu theo lý thuyết khoáng vật học chuẩn và ghi chú; (3) đối chiếu TỪNG ô mô tả với lý thuyết của chính tên đã gọi: khớp là đúng; biến thể hợp lý của mẫu thật (màu đổi do tạp chất, mức phong hóa) là đúng hoặc đúng một phần; độ cứng lệch không quá 0,5 bậc Mohs là đúng; ô mâu thuẫn với tên đã gọi (vd ghi độ cứng 7 mà gọi canxit) là sai; ô trống là thiếu. (4) điểm 'm{k}' = tỉ lệ ô đúng (đúng một phần tính nửa) nhân điểm tối đa của tiêu chí; tên gọi nhất quán với các tính chất mô tả chiếm khoảng một phần tư điểm của mẫu. Hàng hoàn toàn trống: 0 điểm. Hai hàng mô tả giống hệt nhau thì chỉ cho điểm hàng đầu và ghi cờ. Ảnh mẫu do giảng viên tự xem để kiểm chứng; không suy đoán nội dung ảnh. Trong 'doi_chieu', mỗi mẫu một dòng: 'muc' = 'Mẫu k – <tên đã gọi>', 'bai_lam' tóm tắt mô tả, 'dap_an' tóm tắt lý thuyết của tên đó.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, tấm sứ thử vết vạch, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
   },
   "max_attempts": 2,
   "score_policy": "BEST"
  },
  "3": {
-  "title": "Tuần 3 – Đá magma: kiến trúc, thành phần, xâm nhập và phun trào",
+  "title": "Tuần 3 – Đá magma: mô tả 5 mẫu",
   "tuan": 3,
   "ngay": "07/11/2026",
   "sections": [
@@ -307,16 +385,17 @@
    {
     "id": "mau",
     "type": "info",
-    "title": "Mẫu của buổi (thứ tự mẫu phát có thể khác)",
+    "title": "Mẫu của buổi",
     "lines": [
-     "6 mẫu đá magma: Granit, Diorit, Gabro, Riolit, Andesit, Bazan.",
-     "Quan sát độ hạt (thấy hạt bằng mắt hay không), ước lượng chỉ số màu, nhận ra khoáng vật đã học ở tuần 1–2."
+     "Giảng viên phát 5 mẫu đá magma lấy trong bảng đối chiếu (granit, diorit, gabro, peridotit, riolit, andesit, bazan, obsidian, đá bọt).",
+     "Quan sát độ hạt (thấy hạt bằng mắt hay không), ước lượng chỉ số màu, nhận ra khoáng vật đã học ở tuần 1–2.",
+     "Điểm chấm theo từng mẫu: mô tả có khớp lý thuyết của loại đá em đã gọi tên hay không."
     ]
    },
    {
     "id": "mota",
     "type": "table",
-    "title": "Bảng mô tả 6 mẫu đá magma",
+    "title": "Bảng mô tả 5 mẫu đá magma",
     "columns": [
      "Màu sắc, chỉ số màu",
      "Kiến trúc (độ hạt)",
@@ -332,8 +411,7 @@
      "Mẫu 2",
      "Mẫu 3",
      "Mẫu 4",
-     "Mẫu 5",
-     "Mẫu 6"
+     "Mẫu 5"
     ],
     "photos": true,
     "photo_label": "Ảnh mẫu",
@@ -365,7 +443,7 @@
     "items": [
      "Phân biệt kiến trúc hạt thô, hạt mịn, ban trạng",
      "Ước lượng chỉ số màu",
-     "Định danh 6 mẫu đá magma",
+     "Định danh 5 mẫu đá magma",
      "Liên hệ đá mẹ magma với đất"
     ]
    }
@@ -373,24 +451,39 @@
   "rubric": {
    "criteria": [
     {
-     "id": "mota",
-     "name": "Bảng mô tả: đủ ô, đúng đặc điểm, có ảnh mẫu",
-     "max": 4
+     "id": "m1",
+     "name": "Mẫu 1: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng nhóm, có ảnh",
+     "max": 1.6
     },
     {
-     "id": "ten",
-     "name": "Gọi tên đúng đá và nhóm nguồn gốc",
-     "max": 3
+     "id": "m2",
+     "name": "Mẫu 2: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng nhóm, có ảnh",
+     "max": 1.6
+    },
+    {
+     "id": "m3",
+     "name": "Mẫu 3: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng nhóm, có ảnh",
+     "max": 1.6
+    },
+    {
+     "id": "m4",
+     "name": "Mẫu 4: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng nhóm, có ảnh",
+     "max": 1.6
+    },
+    {
+     "id": "m5",
+     "name": "Mẫu 5: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng nhóm, có ảnh",
+     "max": 1.6
     },
     {
      "id": "vd",
      "name": "Câu hỏi vận dụng",
-     "max": 2
+     "max": 1.5
     },
     {
      "id": "td",
      "name": "Trình bày, tự đánh giá",
-     "max": 1
+     "max": 0.5
     }
    ]
   },
@@ -399,7 +492,7 @@
    "q2": "Bazan và gabro là đá bazơ (mafic), chứa nhiều khoáng vật sẫm màu giàu Fe, Mg như pyroxen, olivin cùng plagioclas, chỉ số màu cao. Granit là đá axit (felsic), chủ yếu thạch anh và felspat sáng màu, ít khoáng vật sẫm màu.",
    "q3": "Bazan giàu khoáng vật mafic và plagioclas chứa Ca, kém bền, phong hóa nhanh trong khí hậu nhiệt đới ẩm; silic và cation kiềm bị rửa trôi, oxit sắt và nhôm tích tụ nên đất có màu đỏ, tầng dày, giàu sắt, thích hợp cây công nghiệp lâu năm."
   },
-  "reference": "Dữ liệu chuẩn đá magma. Granit: xâm nhập, axit (felsic), hạt thô thấy bằng mắt, sáng màu (trắng, hồng, xám), thạch anh, felspat kali, plagioclas, biotit hoặc muscovit; đá xây dựng, ốp lát; phong hóa cho đất nhiều cát thạch anh. Diorit: xâm nhập, trung tính, hạt thô, đốm trắng đen kiểu muối tiêu, chủ yếu plagioclas và amfibol, hầu như không có thạch anh. Gabro: xâm nhập, bazơ (mafic), hạt thô, sẫm màu, nặng, plagioclas và pyroxen, có thể có olivin. Riolit: phun trào, axit, hạt mịn hoặc ban trạng, sáng màu (hồng, xám nhạt), có thể có ban tinh thạch anh, felspat. Andesit: phun trào, trung tính, hạt mịn hoặc ban trạng, xám đến xám sẫm, ban tinh plagioclas, amfibol hoặc pyroxen. Bazan: phun trào, bazơ (mafic), hạt rất mịn, đen hoặc xám đen, chắc, đôi khi có lỗ hổng bọt khí, plagioclas, pyroxen, olivin; phong hóa nhiệt đới tạo đất đỏ bazan. Chỉ số màu: axit dưới 15 phần trăm, trung tính 15–40, bazơ 40–70, siêu bazơ trên 70. Đây là bộ mẫu dự kiến, giảng viên có thể điều chỉnh.",
+  "reference": "BẢNG ĐỐI CHIẾU ĐÁ MAGMA. Chỉ số màu: axit (felsic) dưới 15 phần trăm, trung tính 15–40, bazơ (mafic) 40–70, siêu bazơ trên 70. Granit: xâm nhập, axit, hạt thô thấy bằng mắt, sáng màu (trắng, hồng, xám), thạch anh, felspat kali, plagioclas, biotit hoặc muscovit; đá xây dựng, ốp lát; phong hóa cho đất nhiều cát thạch anh. Diorit: xâm nhập, trung tính, hạt thô, đốm trắng đen kiểu muối tiêu, chủ yếu plagioclas và amfibol, hầu như không có thạch anh. Gabro: xâm nhập, bazơ, hạt thô, sẫm màu, nặng, plagioclas và pyroxen, có thể có olivin. Peridotit: xâm nhập, siêu bazơ, hạt thô, lục sẫm đến đen lục, chủ yếu olivin và pyroxen; dễ biến đổi thành serpentinit. Riolit: phun trào, axit, hạt mịn hoặc ban trạng, sáng màu (hồng, xám nhạt), có thể có ban tinh thạch anh, felspat. Andesit: phun trào, trung tính, hạt mịn hoặc ban trạng, xám đến xám sẫm, ban tinh plagioclas, amfibol hoặc pyroxen. Bazan: phun trào, bazơ, hạt rất mịn, đen hoặc xám đen, chắc, đôi khi có lỗ hổng bọt khí, plagioclas, pyroxen, olivin; phong hóa nhiệt đới tạo đất đỏ bazan. Obsidian: phun trào, thủy tinh núi lửa, đen bóng, vết vỡ vỏ sò. Đá bọt (pumice): phun trào axit, nhiều bọt khí, rất nhẹ, nổi trên nước, sáng màu. Bảng đối chiếu có nhiều loại đá hơn số mẫu phát; giảng viên chọn 5 mẫu cho buổi học.",
   "answer_hints": "Granit xâm nhập nguội chậm hạt thô; riolit phun trào nguội nhanh hạt mịn. Bazơ nhiều khoáng vật sẫm giàu Fe, Mg; axit nhiều thạch anh, felspat. Bazan phong hóa nhiệt đới: rửa trôi Si, kiềm, tích tụ Fe, Al → đất đỏ.",
   "mon": {
    "ma": "Đ&KV",
@@ -411,14 +504,14 @@
   },
   "cham": {
    "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu mô tả mẫu khoáng vật và đá trong buổi thực tập của sinh viên.",
-   "quy_tac_bang": "Bảng mô tả mẫu đá: mỗi hàng là một mẫu phòng thực hành phát; thứ tự có thể khác 'du_lieu_chuan'. Xác định đá sinh viên gọi tên ở cột 'Tên đá', rồi đối chiếu màu, kiến trúc, cấu tạo, thành phần khoáng vật và nhóm nguồn gốc với dữ liệu chuẩn của chính đá đó: khớp là đúng; mô tả hợp lý với biến thể thật của mẫu là đúng hoặc đúng một phần. Tên đúng nhưng đặc điểm mâu thuẫn với tên thì trừ ở ô đặc điểm; tên phải thuộc danh sách mẫu của buổi. Cột ý nghĩa đối với đất đai: đối chiếu ý chính trong dữ liệu chuẩn.",
-   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng (không trừ quá 0,25 điểm mỗi bảng). Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
+   "quy_tac_bang": "Bảng 'mota' có 5 hàng 'Mẫu 1'…'Mẫu 5'; hàng 'Mẫu k' ứng với tiêu chí 'm{k}' trong rubric (chấm RIÊNG từng mẫu). Giảng viên phát mẫu đá thật nên KHÔNG có đáp án cố định cho từng hàng. Với mỗi hàng: (1) lấy tên sinh viên ghi ở cột 'Tên đá'; (2) tra tên đó trong 'du_lieu_chuan' (bảng đối chiếu của học phần); tên không có trong bảng thì đối chiếu theo lý thuyết đá học chuẩn và ghi chú; (3) đối chiếu TỪNG ô mô tả với lý thuyết của chính tên đã gọi: khớp là đúng; biến thể hợp lý của mẫu thật (màu đổi do tạp chất, mức phong hóa) là đúng hoặc đúng một phần; độ cứng lệch không quá 0,5 bậc Mohs là đúng; ô mâu thuẫn với tên đã gọi (vd ghi độ cứng 7 mà gọi canxit) là sai; ô trống là thiếu. (4) điểm 'm{k}' = tỉ lệ ô đúng (đúng một phần tính nửa) nhân điểm tối đa của tiêu chí; tên gọi nhất quán với các tính chất mô tả chiếm khoảng một phần tư điểm của mẫu. Hàng hoàn toàn trống: 0 điểm. Hai hàng mô tả giống hệt nhau thì chỉ cho điểm hàng đầu và ghi cờ. Ảnh mẫu do giảng viên tự xem để kiểm chứng; không suy đoán nội dung ảnh. Trong 'doi_chieu', mỗi mẫu một dòng: 'muc' = 'Mẫu k – <tên đã gọi>', 'bai_lam' tóm tắt mô tả, 'dap_an' tóm tắt lý thuyết của tên đó.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, tấm sứ thử vết vạch, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
   },
   "max_attempts": 2,
   "score_policy": "BEST"
  },
  "4": {
-  "title": "Tuần 4 – Đá trầm tích: cỡ hạt, thành phần, nguồn gốc",
+  "title": "Tuần 4 – Đá trầm tích: mô tả 5 mẫu",
   "tuan": 4,
   "ngay": "14/11/2026",
   "sections": [
@@ -439,17 +532,18 @@
    {
     "id": "mau",
     "type": "info",
-    "title": "Mẫu của buổi (thứ tự mẫu phát có thể khác)",
+    "title": "Mẫu của buổi",
     "lines": [
-     "6 mẫu: Cuội kết, Cát kết, Bột kết, Sét kết, Đá vôi, Laterit (đá ong).",
+     "Giảng viên phát 5 mẫu đá trầm tích lấy trong bảng đối chiếu (cuội kết, dăm kết, cát kết, bột kết, sét kết, đá vôi, đá dolomit, laterit, than đá).",
      "Ước lượng cỡ hạt theo thang Wentworth (cuội trên 2 mm, cát 2–0,0625 mm, bột 0,0625–0,004 mm, sét dưới 0,004 mm); thử HCl loãng khi được hướng dẫn.",
-     "An toàn: chỉ dùng HCl loãng khi có giảng viên hướng dẫn; không nếm mẫu (kể cả halit); rửa tay sau buổi thực tập."
+     "Điểm chấm theo từng mẫu: mô tả có khớp lý thuyết của loại đá em đã gọi tên hay không.",
+     "An toàn: chỉ dùng HCl loãng khi có giảng viên hướng dẫn; không nếm mẫu (kể cả halit, sylvin); rửa tay sau buổi thực tập."
     ]
    },
    {
     "id": "mota",
     "type": "table",
-    "title": "Bảng mô tả 6 mẫu đá trầm tích",
+    "title": "Bảng mô tả 5 mẫu đá trầm tích",
     "columns": [
      "Màu sắc",
      "Cỡ hạt / tinh thể",
@@ -466,8 +560,7 @@
      "Mẫu 2",
      "Mẫu 3",
      "Mẫu 4",
-     "Mẫu 5",
-     "Mẫu 6"
+     "Mẫu 5"
     ],
     "photos": true,
     "photo_label": "Ảnh mẫu",
@@ -499,7 +592,7 @@
     "items": [
      "Dùng thang Wentworth gọi tên cấp hạt",
      "Đánh giá chọn lọc, mài tròn",
-     "Định danh 6 mẫu đá trầm tích",
+     "Định danh 5 mẫu đá trầm tích",
      "Liên hệ đá trầm tích với đất"
     ]
    }
@@ -507,24 +600,39 @@
   "rubric": {
    "criteria": [
     {
-     "id": "mota",
-     "name": "Bảng mô tả: đủ ô, đúng đặc điểm, có ảnh mẫu",
-     "max": 4
+     "id": "m1",
+     "name": "Mẫu 1: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng nhóm, có ảnh",
+     "max": 1.6
     },
     {
-     "id": "ten",
-     "name": "Gọi tên đúng đá và nhóm nguồn gốc",
-     "max": 3
+     "id": "m2",
+     "name": "Mẫu 2: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng nhóm, có ảnh",
+     "max": 1.6
+    },
+    {
+     "id": "m3",
+     "name": "Mẫu 3: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng nhóm, có ảnh",
+     "max": 1.6
+    },
+    {
+     "id": "m4",
+     "name": "Mẫu 4: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng nhóm, có ảnh",
+     "max": 1.6
+    },
+    {
+     "id": "m5",
+     "name": "Mẫu 5: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng nhóm, có ảnh",
+     "max": 1.6
     },
     {
      "id": "vd",
      "name": "Câu hỏi vận dụng",
-     "max": 2
+     "max": 1.5
     },
     {
      "id": "td",
      "name": "Trình bày, tự đánh giá",
-     "max": 1
+     "max": 0.5
     }
    ]
   },
@@ -533,7 +641,7 @@
    "q2": "Nhỏ HCl loãng: đá vôi (canxit) sủi bọt mạnh. Đá vôi là nguyên liệu xi măng, vôi, vật liệu xây dựng; bột đá vôi dùng cải tạo đất chua; đất trên đá vôi thường trung tính đến kiềm, vùng đá vôi có địa hình karst.",
    "q3": "Laterit hình thành do phong hóa hóa học mạnh trong khí hậu nhiệt đới ẩm: silic và cation kiềm bị rửa trôi, sắt và nhôm tích tụ; mực nước ngầm dao động theo mùa làm sắt kết tủa thành kết von, lộ ra không khí thì cứng lại. Tầng laterit làm đất mỏng, khó canh tác, rễ khó xuyên; đá ong được khai thác làm vật liệu xây dựng."
   },
-  "reference": "Dữ liệu chuẩn đá trầm tích. Cuội kết: hạt trên 2 mm tròn cạnh gắn bằng xi măng, nhiều màu, trầm tích vụn cơ học. Cát kết: hạt cát 2–0,0625 mm, chủ yếu thạch anh, có thể có felspat và mảnh đá, màu vàng, nâu, đỏ, xám, có thể phân lớp; vụn cơ học; phong hóa cho đất cát nhẹ, thoát nước tốt. Bột kết: hạt 0,0625–0,004 mm, xám, nâu, phân lớp mỏng; vụn cơ học. Sét kết: hạt dưới 0,004 mm, mềm, mặt trơn, phân phiến hoặc lớp mỏng, khoáng vật sét; nguyên liệu gạch, gốm; cho đất nặng, giữ nước. Đá vôi: chủ yếu canxit, sủi bọt mạnh với HCl loãng, trắng, xám, có thể chứa hóa thạch, trầm tích hóa học hoặc sinh hóa; nguyên liệu xi măng, vôi, cải tạo đất chua. Laterit (đá ong): nâu đỏ, kết von sắt nhôm, lỗ hổng dạng tổ ong, không sủi HCl, sản phẩm phong hóa nhiệt đới (tàn tích); vật liệu xây dựng, làm đất mỏng khó canh tác. Đây là bộ mẫu dự kiến, giảng viên có thể điều chỉnh.",
+  "reference": "BẢNG ĐỐI CHIẾU ĐÁ TRẦM TÍCH. Cấp hạt Wentworth: trên 2 mm cuội, sỏi; 2–0,0625 mm cát; 0,0625–0,004 mm bột; dưới 0,004 mm sét. Cuội kết: hạt trên 2 mm tròn cạnh gắn bằng xi măng, nhiều màu, vụn cơ học. Dăm kết: hạt trên 2 mm sắc cạnh, vụn cơ học, gần nguồn. Cát kết: hạt cát, chủ yếu thạch anh, có thể có felspat và mảnh đá, vàng, nâu, đỏ, xám, nhám tay, có thể phân lớp; phong hóa cho đất cát nhẹ, thoát nước tốt. Bột kết: hạt bột, xám, nâu, hơi nhám mịn, phân lớp mỏng. Sét kết: hạt sét, mềm, mặt trơn, phân phiến hoặc lớp mỏng, khoáng vật sét, dẻo khi ướt; nguyên liệu gạch, gốm; cho đất nặng, giữ nước. Đá vôi: chủ yếu canxit, sủi bọt mạnh với HCl loãng, trắng, xám, có thể chứa hóa thạch, trầm tích hóa học hoặc sinh hóa; nguyên liệu xi măng, vôi, cải tạo đất chua; địa hình karst. Đá dolomit: chủ yếu dolomit, phản ứng yếu với HCl nguội (rõ hơn khi tán bột), xám, trắng ngà. Laterit (đá ong): nâu đỏ, kết von sắt nhôm, lỗ hổng dạng tổ ong, không sủi HCl, sản phẩm phong hóa nhiệt đới; vật liệu xây dựng; làm đất mỏng, khó canh tác. Than đá: đen, nhẹ, bẩn tay hoặc ánh bán kim, phân lớp, trầm tích sinh vật (thực vật). Bảng đối chiếu có nhiều loại đá hơn số mẫu phát; giảng viên chọn 5 mẫu cho buổi học.",
   "answer_hints": "Cát nhám thấy hạt, bột hơi nhám, sét trơn dẻo. Đá vôi sủi HCl; xi măng, vôi, cải tạo đất chua, karst. Laterit: phong hóa nhiệt đới, rửa trôi Si, tích Fe-Al, nước ngầm dao động; đất mỏng, đá ong làm vật liệu.",
   "mon": {
    "ma": "Đ&KV",
@@ -545,14 +653,14 @@
   },
   "cham": {
    "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu mô tả mẫu khoáng vật và đá trong buổi thực tập của sinh viên.",
-   "quy_tac_bang": "Bảng mô tả mẫu đá: mỗi hàng là một mẫu phòng thực hành phát; thứ tự có thể khác 'du_lieu_chuan'. Xác định đá sinh viên gọi tên ở cột 'Tên đá', rồi đối chiếu màu, kiến trúc, cấu tạo, thành phần khoáng vật và nhóm nguồn gốc với dữ liệu chuẩn của chính đá đó: khớp là đúng; mô tả hợp lý với biến thể thật của mẫu là đúng hoặc đúng một phần. Tên đúng nhưng đặc điểm mâu thuẫn với tên thì trừ ở ô đặc điểm; tên phải thuộc danh sách mẫu của buổi. Cột ý nghĩa đối với đất đai: đối chiếu ý chính trong dữ liệu chuẩn.",
-   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng (không trừ quá 0,25 điểm mỗi bảng). Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
+   "quy_tac_bang": "Bảng 'mota' có 5 hàng 'Mẫu 1'…'Mẫu 5'; hàng 'Mẫu k' ứng với tiêu chí 'm{k}' trong rubric (chấm RIÊNG từng mẫu). Giảng viên phát mẫu đá thật nên KHÔNG có đáp án cố định cho từng hàng. Với mỗi hàng: (1) lấy tên sinh viên ghi ở cột 'Tên đá'; (2) tra tên đó trong 'du_lieu_chuan' (bảng đối chiếu của học phần); tên không có trong bảng thì đối chiếu theo lý thuyết đá học chuẩn và ghi chú; (3) đối chiếu TỪNG ô mô tả với lý thuyết của chính tên đã gọi: khớp là đúng; biến thể hợp lý của mẫu thật (màu đổi do tạp chất, mức phong hóa) là đúng hoặc đúng một phần; độ cứng lệch không quá 0,5 bậc Mohs là đúng; ô mâu thuẫn với tên đã gọi (vd ghi độ cứng 7 mà gọi canxit) là sai; ô trống là thiếu. (4) điểm 'm{k}' = tỉ lệ ô đúng (đúng một phần tính nửa) nhân điểm tối đa của tiêu chí; tên gọi nhất quán với các tính chất mô tả chiếm khoảng một phần tư điểm của mẫu. Hàng hoàn toàn trống: 0 điểm. Hai hàng mô tả giống hệt nhau thì chỉ cho điểm hàng đầu và ghi cờ. Ảnh mẫu do giảng viên tự xem để kiểm chứng; không suy đoán nội dung ảnh. Trong 'doi_chieu', mỗi mẫu một dòng: 'muc' = 'Mẫu k – <tên đã gọi>', 'bai_lam' tóm tắt mô tả, 'dap_an' tóm tắt lý thuyết của tên đó.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, tấm sứ thử vết vạch, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
   },
   "max_attempts": 2,
   "score_policy": "BEST"
  },
  "5": {
-  "title": "Tuần 5 – Đá biến chất: có phiến, không phiến, đá mẹ",
+  "title": "Tuần 5 – Đá biến chất: mô tả 5 mẫu",
   "tuan": 5,
   "ngay": "21/11/2026",
   "sections": [
@@ -573,17 +681,18 @@
    {
     "id": "mau",
     "type": "info",
-    "title": "Mẫu của buổi (thứ tự mẫu phát có thể khác)",
+    "title": "Mẫu của buổi",
     "lines": [
-     "6 mẫu: Đá phiến sét (slate), Phyllit, Đá phiến mica, Gneis, Quarzit, Đá hoa (marble).",
+     "Giảng viên phát 5 mẫu đá biến chất lấy trong bảng đối chiếu (đá phiến sét, phyllit, đá phiến mica, gneis, quarzit, đá hoa, hornfels, amfibolit, serpentinit).",
      "Quan sát cấu tạo phiến hay dạng khối, độ hạt, khoáng vật nhận ra; thử độ cứng và HCl để phân biệt đá hoa với quarzit.",
-     "An toàn: chỉ dùng HCl loãng khi có giảng viên hướng dẫn; không nếm mẫu (kể cả halit); rửa tay sau buổi thực tập."
+     "Điểm chấm theo từng mẫu: mô tả có khớp lý thuyết của loại đá em đã gọi tên hay không.",
+     "An toàn: chỉ dùng HCl loãng khi có giảng viên hướng dẫn; không nếm mẫu (kể cả halit, sylvin); rửa tay sau buổi thực tập."
     ]
    },
    {
     "id": "mota",
     "type": "table",
-    "title": "Bảng mô tả 6 mẫu đá biến chất",
+    "title": "Bảng mô tả 5 mẫu đá biến chất",
     "columns": [
      "Màu sắc",
      "Có phiến / không phiến",
@@ -600,8 +709,7 @@
      "Mẫu 2",
      "Mẫu 3",
      "Mẫu 4",
-     "Mẫu 5",
-     "Mẫu 6"
+     "Mẫu 5"
     ],
     "photos": true,
     "photo_label": "Ảnh mẫu",
@@ -633,7 +741,7 @@
     "items": [
      "Phân biệt cấu tạo phiến và không phiến",
      "Xếp chuỗi đá phiến sét → gneis theo mức độ biến chất",
-     "Xác định đá mẹ của 6 mẫu",
+     "Xác định đá mẹ của 5 mẫu",
      "Liên hệ đá biến chất với đất"
     ]
    }
@@ -641,24 +749,39 @@
   "rubric": {
    "criteria": [
     {
-     "id": "mota",
-     "name": "Bảng mô tả: đủ ô, đúng đặc điểm, có ảnh mẫu",
-     "max": 4
+     "id": "m1",
+     "name": "Mẫu 1: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng đá mẹ, có ảnh",
+     "max": 1.6
     },
     {
-     "id": "ten",
-     "name": "Gọi tên đúng đá và nhóm nguồn gốc",
-     "max": 3
+     "id": "m2",
+     "name": "Mẫu 2: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng đá mẹ, có ảnh",
+     "max": 1.6
+    },
+    {
+     "id": "m3",
+     "name": "Mẫu 3: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng đá mẹ, có ảnh",
+     "max": 1.6
+    },
+    {
+     "id": "m4",
+     "name": "Mẫu 4: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng đá mẹ, có ảnh",
+     "max": 1.6
+    },
+    {
+     "id": "m5",
+     "name": "Mẫu 5: mô tả khớp lý thuyết của loại đá đã gọi tên, đúng đá mẹ, có ảnh",
+     "max": 1.6
     },
     {
      "id": "vd",
      "name": "Câu hỏi vận dụng",
-     "max": 2
+     "max": 1.5
     },
     {
      "id": "td",
      "name": "Trình bày, tự đánh giá",
-     "max": 1
+     "max": 0.5
     }
    ]
   },
@@ -667,7 +790,7 @@
    "q2": "Đá hoa sủi bọt với HCl loãng, độ cứng khoảng 3, bị dao thép vạch, tinh thể canxit lấp lánh; đá mẹ là đá vôi hoặc dolomit. Quarzit không sủi HCl, độ cứng khoảng 7, vạch được kính, vỡ xuyên qua hạt; đá mẹ là cát kết thạch anh.",
    "q3": "Đá hoa (carbonat) bị hòa tan, đất thường mỏng, giàu Ca, pH trung tính đến kiềm, có thể là đất đỏ trên đá vôi. Quarzit rất bền, phong hóa chậm, cho đất mỏng nhiều cát thạch anh, nghèo dinh dưỡng, thoát nước nhanh."
   },
-  "reference": "Dữ liệu chuẩn đá biến chất. Đá phiến sét (slate): xám đến đen, phiến rất mịn, tách tấm phẳng, đá mẹ sét kết, biến chất khu vực mức thấp; lợp mái, ốp lát. Phyllit: phiến gợn sóng, ánh lụa do mica vi tinh, từ đá phiến sét, mức thấp đến trung bình. Đá phiến mica (schist): phiến rõ, vảy mica nhìn thấy lấp lánh, có thể có granat, thạch anh; biến chất khu vực mức trung bình. Gneis: phân dải sáng tối, hạt thô, thạch anh và felspat xen mica hoặc amfibol; biến chất khu vực mức cao; đá mẹ granit hoặc đá trầm tích sét. Quarzit: không phiến, trắng, xám, hồng, độ cứng 7, vỡ xuyên hạt, chủ yếu thạch anh; đá mẹ cát kết thạch anh; rất bền phong hóa, cho đất mỏng nhiều cát. Đá hoa (marble): không phiến, tinh thể canxit lấp lánh, sủi bọt HCl, độ cứng 3; đá mẹ đá vôi hoặc dolomit; ốp lát, điêu khắc, nguyên liệu vôi. Đây là bộ mẫu dự kiến, giảng viên có thể điều chỉnh.",
+  "reference": "BẢNG ĐỐI CHIẾU ĐÁ BIẾN CHẤT. Đá phiến sét (slate): xám đến đen, phiến rất mịn, tách tấm phẳng, đá mẹ sét kết, biến chất khu vực mức thấp; lợp mái, ốp lát. Phyllit: phiến gợn sóng, ánh lụa do mica vi tinh, mức thấp đến trung bình. Đá phiến mica (schist): phiến rõ, vảy mica nhìn thấy lấp lánh, có thể có granat, thạch anh; biến chất khu vực mức trung bình. Gneis: phân dải sáng tối, hạt thô, thạch anh và felspat xen mica hoặc amfibol; biến chất khu vực mức cao; đá mẹ granit hoặc đá trầm tích sét. Quarzit: không phiến, trắng, xám, hồng, độ cứng 7, vỡ xuyên hạt, chủ yếu thạch anh; đá mẹ cát kết thạch anh; rất bền phong hóa, cho đất mỏng nhiều cát. Đá hoa (marble): không phiến, tinh thể canxit lấp lánh, sủi bọt HCl, độ cứng 3; đá mẹ đá vôi hoặc dolomit; ốp lát, điêu khắc, nguyên liệu vôi. Hornfels: không phiến, hạt rất mịn, sẫm, chắc, vỡ sắc cạnh; biến chất tiếp xúc từ đá sét. Amfibolit: lục sẫm đến đen, hạt vừa đến thô, chủ yếu amfibol và plagioclas, có thể định hướng; biến chất khu vực từ đá bazơ. Serpentinit: lục đến lục đen, ánh mỡ, sờ trơn, chủ yếu serpentin; biến chất từ đá siêu bazơ. Bảng đối chiếu có nhiều loại đá hơn số mẫu phát; giảng viên chọn 5 mẫu cho buổi học.",
   "answer_hints": "Slate → phyllit → schist → gneis: hạt lớn dần, phiến mịn → ánh lụa → vảy mica → dải sọc. Đá hoa sủi HCl H3 (từ đá vôi); quarzit không sủi H7 (từ cát kết thạch anh). Đất trên đá hoa giàu Ca, pH cao; trên quarzit mỏng, cát, nghèo.",
   "mon": {
    "ma": "Đ&KV",
@@ -679,8 +802,8 @@
   },
   "cham": {
    "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu mô tả mẫu khoáng vật và đá trong buổi thực tập của sinh viên.",
-   "quy_tac_bang": "Bảng mô tả mẫu đá: mỗi hàng là một mẫu phòng thực hành phát; thứ tự có thể khác 'du_lieu_chuan'. Xác định đá sinh viên gọi tên ở cột 'Tên đá', rồi đối chiếu màu, kiến trúc, cấu tạo, thành phần khoáng vật và nhóm nguồn gốc với dữ liệu chuẩn của chính đá đó: khớp là đúng; mô tả hợp lý với biến thể thật của mẫu là đúng hoặc đúng một phần. Tên đúng nhưng đặc điểm mâu thuẫn với tên thì trừ ở ô đặc điểm; tên phải thuộc danh sách mẫu của buổi. Cột ý nghĩa đối với đất đai: đối chiếu ý chính trong dữ liệu chuẩn.",
-   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng (không trừ quá 0,25 điểm mỗi bảng). Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
+   "quy_tac_bang": "Bảng 'mota' có 5 hàng 'Mẫu 1'…'Mẫu 5'; hàng 'Mẫu k' ứng với tiêu chí 'm{k}' trong rubric (chấm RIÊNG từng mẫu). Giảng viên phát mẫu đá thật nên KHÔNG có đáp án cố định cho từng hàng. Với mỗi hàng: (1) lấy tên sinh viên ghi ở cột 'Tên đá'; (2) tra tên đó trong 'du_lieu_chuan' (bảng đối chiếu của học phần); tên không có trong bảng thì đối chiếu theo lý thuyết đá học chuẩn và ghi chú; (3) đối chiếu TỪNG ô mô tả với lý thuyết của chính tên đã gọi: khớp là đúng; biến thể hợp lý của mẫu thật (màu đổi do tạp chất, mức phong hóa) là đúng hoặc đúng một phần; độ cứng lệch không quá 0,5 bậc Mohs là đúng; ô mâu thuẫn với tên đã gọi (vd ghi độ cứng 7 mà gọi canxit) là sai; ô trống là thiếu. (4) điểm 'm{k}' = tỉ lệ ô đúng (đúng một phần tính nửa) nhân điểm tối đa của tiêu chí; tên gọi nhất quán với các tính chất mô tả chiếm khoảng một phần tư điểm của mẫu. Hàng hoàn toàn trống: 0 điểm. Hai hàng mô tả giống hệt nhau thì chỉ cho điểm hàng đầu và ghi cờ. Ảnh mẫu do giảng viên tự xem để kiểm chứng; không suy đoán nội dung ảnh. Trong 'doi_chieu', mỗi mẫu một dòng: 'muc' = 'Mẫu k – <tên đã gọi>', 'bai_lam' tóm tắt mô tả, 'dap_an' tóm tắt lý thuyết của tên đó.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, tấm sứ thử vết vạch, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
   },
   "max_attempts": 2,
   "score_policy": "BEST"
