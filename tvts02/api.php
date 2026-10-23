@@ -332,6 +332,13 @@ function tvts_admin(array $in): void
         }
         api_ok(tvts_admin_row($x, true));
     }
+    if ($op === 'delete') {                          // xoá vĩnh viễn theo yêu cầu (học sinh/phụ huynh) hoặc bài thử
+        $code = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) ($in['code'] ?? '')) ?? '');
+        $n = tvts_run(function (PDO $pdo) use ($code) { $st = $pdo->prepare('DELETE FROM tvts02_reports WHERE code = ?'); $st->execute([$code]); return $st->rowCount(); });
+        if (!$n) api_fail('Không tìm thấy bài để xoá.');
+        error_log('[tvts02] admin ' . $me['userId'] . ' xoá bài ' . $code);
+        api_ok(['deleted' => $code]);
+    }
     if ($op === 'export') {
         $rows = tvts_run(fn(PDO $pdo) => $pdo->query('SELECT * FROM tvts02_reports ORDER BY ts ASC')->fetchAll());
         $head = ['ma_tra_cuu', 'thoi_gian', 'ho_ten', 'lop', 'truong', 'gioi_tinh'];
