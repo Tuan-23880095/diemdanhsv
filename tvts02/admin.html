@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Quản trị La bàn Hướng nghiệp</title>
+<link rel="icon" type="image/svg+xml" href="/images/logo-sen.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root { --luc: #0F6B55; --luc-non: #46A385; --lam: #1F4E79; --muc: #10212B; --giay: #F4F5F1; --line: #D9DFE3; --mute: #4E5D68; --soft: #EEF2EE; --son: #C2432A; --tho: #C98A12;
+  --serif: 'Source Serif 4', Georgia, serif; --sans: 'Be Vietnam Pro', system-ui, sans-serif; }
+* { box-sizing: border-box; } body { margin: 0; font-family: var(--sans); color: var(--muc); background: var(--giay); font-size: 15px; line-height: 1.5; }
+button, input, select { font: inherit; }
+header { background: #fff; border-bottom: 1px solid var(--line); }
+header .w { max-width: 1240px; margin: auto; padding: 0 16px; height: 58px; display: flex; align-items: center; gap: 12px; }
+header img { width: 34px; height: 34px; } .brand { font-family: var(--serif); font-weight: 700; font-size: 1.1rem; } .grow { flex: 1; }
+.w { max-width: 1240px; margin: auto; padding: 0 16px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin: 14px 0; }
+.btn { border: 0; border-radius: 9px; padding: 9px 16px; font-weight: 600; cursor: pointer; background: var(--luc); color: #fff; }
+.btn.ghost { background: transparent; color: var(--luc); border: 1px solid var(--luc-non); }
+.btn.small { padding: 5px 10px; font-size: .85rem; }
+input[type=text], input[type=password], select { border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px; background: #fff; }
+.login { max-width: 380px; margin: 60px auto; } .login label { display: block; font-weight: 600; margin: 10px 0 4px; } .login input { width: 100%; }
+.stats { display: flex; gap: 12px; flex-wrap: wrap; } .stat { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; min-width: 150px; }
+.stat b { display: block; font-family: var(--serif); font-size: 1.6rem; } .stat span { color: var(--mute); font-size: .85rem; }
+.tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 14px 0; }
+table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: .88rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; } th { background: var(--soft); color: var(--mute); font-weight: 600; font-size: .8rem; }
+tr.flag td { background: #FDF0EC; } tr:hover td { background: #F7FAF8; cursor: pointer; }
+.pill { display: inline-block; border-radius: 99px; padding: 1px 9px; font-size: .75rem; font-weight: 600; background: var(--soft); color: var(--mute); }
+.pill.r { background: #FBE3DC; color: #A43A20; } .pill.y { background: #FBF0D9; color: #8A5F06; } .pill.g { background: #E3F2EA; color: var(--luc); }
+.modal { position: fixed; inset: 0; background: rgba(16,33,43,.45); display: none; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 30px 12px; z-index: 50; }
+.modal.on { display: flex; } .modal .box { background: #fff; border-radius: 14px; max-width: 960px; width: 100%; padding: 22px; }
+.modal h2 { font-family: var(--serif); margin: 0 0 6px; } .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; } @media (max-width: 800px) { .two { grid-template-columns: 1fr; } }
+.qa { margin: 10px 0; } .qa .q { font-weight: 600; font-size: .86rem; color: var(--lam); } .qa .a { white-space: pre-wrap; background: #F8FAF8; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin-top: 4px; font-size: .9rem; }
+blockquote { margin: 4px 0; padding: 4px 10px; border-left: 3px solid #B9CFC2; color: #2C3E46; font-style: italic; font-size: .88rem; background: #F6F8F5; }
+.muted { color: var(--mute); } .small { font-size: .85rem; } .err { color: var(--son); font-weight: 600; }
+</style>
+</head>
+<body>
+<header><div class="w"><img src="/images/logo-sen.svg" alt=""><div class="brand">Quản trị · La bàn Hướng nghiệp</div><div class="grow"></div><span id="who" class="muted small"></span><button class="btn ghost small" id="btnOut" style="display:none">Đăng xuất</button></div></header>
+
+<div class="w">
+  <div id="vLogin" class="login card">
+    <h2 style="font-family:var(--serif);margin-top:0">Đăng nhập quản trị</h2>
+    <p class="muted small">Dùng tài khoản quản trị (vai trò ADMIN) của hệ thống diemdanhsv.com.</p>
+    <label for="u">Tên đăng nhập</label><input type="text" id="u" autocomplete="username">
+    <label for="p">Mật khẩu</label><input type="password" id="p" autocomplete="current-password">
+    <p id="loginErr" class="err small"></p>
+    <button class="btn" id="btnLogin" style="width:100%">Đăng nhập</button>
+  </div>
+
+  <div id="vMain" style="display:none">
+    <div class="stats" style="margin-top:18px">
+      <div class="stat"><b id="sN">0</b><span>Bài đã nộp</span></div>
+      <div class="stat"><b id="sF" style="color:var(--son)">0</b><span>Cần quan tâm</span></div>
+      <div class="stat"><b id="sP" style="color:var(--tho)">0</b><span>Chờ phân tích</span></div>
+    </div>
+    <div class="tools">
+      <input type="text" id="q" placeholder="Tìm theo mã, tên, trường, lớp…" style="flex:1;min-width:220px">
+      <select id="filt"><option value="">Tất cả</option><option value="flag">Cần quan tâm</option><option value="pending">Chờ phân tích</option></select>
+      <button class="btn ghost" id="btnReload">Tải lại</button>
+      <button class="btn" id="btnCsv">Tải toàn bộ (.csv)</button>
+      <button class="btn ghost" id="btnJson">Tải toàn bộ (.json)</button>
+    </div>
+    <p class="small muted">File CSV gồm: thông tin học sinh, điểm 6 nhóm RIASEC, 30 câu trả lời gốc (r1–r30), 10 bài tự luận (q1–q10), mã Holland từ bài viết, chủ đề, nhóm ngành gợi ý, cờ cần quan tâm. Mở bằng Excel (mã hoá UTF-8). Khi dùng cho nghiên cứu, hãy bỏ cột họ tên và trường.</p>
+    <table><thead><tr><th>Thời gian</th><th>Mã</th><th>Họ tên</th><th>Lớp</th><th>Trường</th><th>Mã TN</th><th>Mã BV</th><th>Trạng thái</th></tr></thead><tbody id="rows"></tbody></table>
+  </div>
+</div>
+
+<div class="modal" id="modal"><div class="box" id="mbox"></div></div>
+
+<script>
+(function () {
+'use strict';
+const API = '/tvts02/api.php', AUTH = '/api/index.php';
+const ESSAYQ = { q1: 'Hình mẫu ngưỡng mộ', q2: 'Kênh, sách, chương trình theo dõi', q3: 'Câu chuyện, phim yêu thích', q4: 'Châm ngôn', q5: 'Nghề mơ ước', q6: 'Việc quên thời gian / tự hào', q7: 'Môn làm tốt / thấy khó', q8: 'Một ngày năm 30 tuổi', q9: 'Mong muốn của gia đình', q10: 'Điều băn khoăn' };
+let token = ''; try { token = sessionStorage.getItem('tvts02-admin') || ''; } catch (e) {}
+let ROWS = [];
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+async function call(body, url) {
+  const r = await fetch(url || API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => null);
+  if (!j) throw new Error('Không kết nối được máy chủ.');
+  if (j.status !== 'success') throw new Error(j.message || 'Lỗi');
+  return j.data;
+}
+const admin = (op, extra) => call(Object.assign({ a: 'admin', token, op }, extra || {}));
+function show(main) { $('#vLogin').style.display = main ? 'none' : ''; $('#vMain').style.display = main ? '' : 'none'; $('#btnOut').style.display = main ? '' : 'none'; }
+async function login() {
+  $('#loginErr').textContent = '';
+  try {
+    const d = await call({ action: 'login', username: $('#u').value.trim(), password: $('#p').value }, AUTH);
+    if (d.role !== 'ADMIN') throw new Error('Tài khoản này không có quyền quản trị (cần vai trò ADMIN).');
+    token = d.token; try { sessionStorage.setItem('tvts02-admin', token); } catch (e) {}
+    $('#p').value = ''; await boot();
+  } catch (e) { $('#loginErr').textContent = e.message; }
+}
+async function boot() {
+  try { const me = await admin('me'); $('#who').textContent = me.name; show(true); await reload(); }
+  catch (e) { token = ''; try { sessionStorage.removeItem('tvts02-admin'); } catch (x) {} show(false); if (e.message && !/hết hạn/.test(e.message)) $('#loginErr').textContent = e.message; }
+}
+async function reload() {
+  const d = await admin('list');
+  ROWS = d.rows; $('#sN').textContent = d.stats.n; $('#sF').textContent = d.stats.flag; $('#sP').textContent = d.stats.pending;
+  draw();
+}
+function draw() {
+  const q = $('#q').value.trim().toLowerCase(), f = $('#filt').value;
+  const list = ROWS.filter(r => (!f || (f === 'flag' ? r.flag : r.status === 'pending')) && (!q || [r.code, r.name, r.school, r.grade].join(' ').toLowerCase().includes(q)));
+  $('#rows').innerHTML = list.map(r => `<tr class="${r.flag ? 'flag' : ''}" data-code="${esc(r.code)}"><td>${esc(r.time)}</td><td><b>${esc(r.code)}</b></td><td>${esc(r.name)}</td><td>${esc(r.grade)}</td><td>${esc(r.school)}</td><td>${esc(r.ma_tn)}</td><td>${esc(r.ma_bv)}</td><td>${r.flag ? '<span class="pill r">Cần quan tâm</span> ' : ''}${r.status === 'pending' ? '<span class="pill y">Chờ phân tích</span>' : '<span class="pill g">Đã phân tích</span>'}</td></tr>`).join('') || '<tr><td colspan="8" class="muted">Chưa có bài.</td></tr>';
+}
+function detailHtml(d) {
+  const rep = d.report || {}, rs = d.riasec || {}, sc = rs.scores || {};
+  const essays = Object.keys(ESSAYQ).map(k => `<div class="qa"><div class="q">${k.toUpperCase()} · ${ESSAYQ[k]}</div><div class="a">${esc(d.essays[k] || '—')}</div></div>`).join('');
+  const ins = (rep.nhan_dinh || []).map(x => `<p><b>${esc(x.khia_canh)}:</b> ${esc(x.noi_dung)}</p>${(x.trich || []).map(t => `<blockquote>${esc(t)}</blockquote>`).join('')}`).join('');
+  const mj = (rep.nhom_nganh || []).map((m, i) => `<li><b>${esc(m.ten)}</b> — ${esc(m.ly_do)}</li>`).join('');
+  return `<div style="display:flex;justify-content:space-between;gap:10px;align-items:start"><div><h2>${esc(d.name || 'Học sinh')} · ${esc(d.code)}</h2><div class="muted small">${esc(d.time)} · ${esc(d.grade)} · ${esc(d.school)} · ${esc(d.gender)} · model: ${esc(d.model)}</div></div><button class="btn ghost small" id="mClose">Đóng</button></div>
+    ${d.flag ? `<div class="card" style="background:#FDF0EC;border-color:#F0C9BD"><b>Cần quan tâm:</b> ${esc(d.flag_note || '')}. Hãy liên hệ giáo viên chủ nhiệm hoặc bộ phận tư vấn tâm lý của trường để hỗ trợ học sinh.</div>` : ''}
+    <p class="small"><b>RIASEC (0–20):</b> ${['R','I','A','S','E','C'].map(t => t + '=' + (sc[t] ?? '')).join(' · ')} — mã ${esc(rs.code || '')}, phân hoá ${esc(rs.diff)}, nhất quán ${esc(rs.cons || '')}. <b>Mã từ bài viết:</b> ${esc(rep.ma_bai_viet || '—')}</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"><a class="btn ghost small" href="/TVTS02.html?ma=${encodeURIComponent(d.code)}" target="_blank" rel="noopener">Xem bản của học sinh</a><button class="btn ghost small" id="mRe">Phân tích lại</button></div>
+    <div class="two"><div><h3 style="font-family:var(--serif)">Bài viết</h3>${essays}</div>
+      <div><h3 style="font-family:var(--serif)">Bản phân tích</h3>${rep.chan_dung ? `<p>${esc(rep.chan_dung)}</p><p><i>${esc(rep.chu_de || '')}</i></p>${ins}<p><b>Đối chiếu:</b> ${esc(rep.doi_chieu || '')}</p><ol>${mj}</ol>` : `<p class="muted">Chưa có bản phân tích (${esc(rep.loi || 'đang chờ')}).</p>`}</div></div>`;
+}
+async function openDetail(code) {
+  const d = await admin('detail', { code });
+  $('#mbox').innerHTML = detailHtml(d); $('#modal').classList.add('on');
+  $('#mClose').onclick = () => $('#modal').classList.remove('on');
+  $('#mRe').onclick = async () => { $('#mRe').textContent = 'Đang phân tích…'; $('#mRe').disabled = true; try { const x = await admin('reanalyze', { code }); $('#mbox').innerHTML = detailHtml(x); $('#mClose').onclick = () => $('#modal').classList.remove('on'); reload(); } catch (e) { alert(e.message); $('#mRe').textContent = 'Phân tích lại'; $('#mRe').disabled = false; } };
+}
+function download(name, text, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
+async function exportAll(kind) {
+  const d = await admin('export');
+  const stamp = new Date().toISOString().slice(0, 10);
+  if (kind === 'csv') download(`tvts02-du-lieu-${stamp}.csv`, d.csv, 'text/csv;charset=utf-8');
+  else download(`tvts02-du-lieu-${stamp}.json`, JSON.stringify(d.json, null, 1), 'application/json');
+}
+$('#btnLogin').onclick = login; $('#p').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+$('#btnOut').onclick = () => { token = ''; try { sessionStorage.removeItem('tvts02-admin'); } catch (e) {} show(false); };
+$('#btnReload').onclick = () => reload().catch(e => alert(e.message));
+$('#btnCsv').onclick = () => exportAll('csv').catch(e => alert(e.message));
+$('#btnJson').onclick = () => exportAll('json').catch(e => alert(e.message));
+$('#q').oninput = draw; $('#filt').onchange = draw;
+$('#rows').addEventListener('click', e => { const tr = e.target.closest('tr[data-code]'); if (tr) openDetail(tr.dataset.code).catch(x => alert(x.message)); });
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') $('#modal').classList.remove('on'); });
+if (token) boot(); else show(false);
+})();
+</script>
+</body>
+</html>
