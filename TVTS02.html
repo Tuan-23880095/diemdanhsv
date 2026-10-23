@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La bàn Hướng nghiệp</title>
+<meta name="description" content="Bộ công cụ định hướng nghề nghiệp cho học sinh: trắc nghiệm sở thích Holland (O*NET) kết hợp 10 câu tự luận theo Phỏng vấn kiến tạo nghề nghiệp, cho bản phân tích cá nhân có trích dẫn bằng chứng.">
+<link rel="icon" type="image/svg+xml" href="/images/logo-sen.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --luc: #0F6B55; --luc-non: #46A385; --lam: #1F4E79; --lam-suong: #2F6DB0;
+  --muc: #10212B; --giay: #F4F5F1; --card: #FFFFFF; --line: #D9DFE3; --mute: #4E5D68; --soft: #EEF2EE;
+  --son: #C2432A; --tho: #C98A12;
+  --R: #B5532F; --I: #2F6DB0; --A: #6B4A9E; --S: #0F6B55; --E: #C98A12; --C: #4E5D68;
+  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--sans); color: var(--muc); background: var(--giay); line-height: 1.6; font-size: 16px; -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--lam-suong); }
+.wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+
+header.top { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 30; }
+header.top .wrap { display: flex; align-items: center; gap: 12px; height: 62px; }
+header.top img { width: 38px; height: 38px; }
+.brand { font-family: var(--serif); font-weight: 700; font-size: 1.15rem; line-height: 1.15; }
+.brand small { display: block; font-family: var(--sans); font-weight: 500; font-size: .72rem; color: var(--mute); letter-spacing: .03em; }
+.grow { flex: 1; }
+.linkbtn { background: none; border: 0; color: var(--lam); font-weight: 600; font-size: .86rem; cursor: pointer; padding: 6px 8px; white-space: nowrap; }
+.prog { height: 3px; background: var(--soft); }
+.prog > i { display: block; height: 100%; width: 0; background: var(--luc); transition: width .35s ease; }
+
+main { padding: 10px 0 90px; }
+section.page { display: none; }
+section.page.on { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+h1 { font-family: var(--serif); font-size: clamp(1.8rem, 5.2vw, 2.6rem); line-height: 1.15; margin: 26px 0 12px; letter-spacing: -.01em; }
+h2 { font-family: var(--serif); font-size: clamp(1.4rem, 4vw, 1.8rem); line-height: 1.2; margin: 22px 0 8px; }
+h3 { font-family: var(--serif); font-size: 1.2rem; margin: 0 0 8px; }
+.t1note { background: #F0F6F2; border-color: #CFE4D8; font-size: .92rem; }
+.kicker { font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--luc); margin-top: 22px; }
+.lead { font-size: 1.07rem; color: var(--mute); margin: 0 0 16px; }
+.muted { color: var(--mute); } .small { font-size: .87rem; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin: 14px 0; }
+.card.tint { background: #EFF6F1; border-color: #CDE3D6; }
+.card.warn { background: #FFF8EB; border-color: #EEDCB3; }
+.card.alert { background: #FDF0EC; border-color: #F0C9BD; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 700px) { .grid3, .grid2 { grid-template-columns: 1fr; } }
+.feat { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: #fff; }
+.feat .n { font-family: var(--serif); font-size: 1.6rem; font-weight: 700; color: var(--luc); line-height: 1; }
+.feat h4 { margin: 8px 0 4px; font-size: 1rem; }
+.feat p { margin: 0; font-size: .87rem; color: var(--mute); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 10px; padding: 12px 20px; font-weight: 600; cursor: pointer; background: var(--luc); color: #fff; }
+.btn:hover { background: #0B5845; }
+.btn.ghost { background: transparent; color: var(--luc); border: 1px solid var(--luc-non); }
+.btn.ghost:hover { background: #EAF4EF; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.bar-sticky { position: sticky; bottom: 0; padding: 16px 0 12px; background: linear-gradient(transparent, var(--giay) 35%); pointer-events: none; }
+.bar-sticky .nav { pointer-events: auto; margin: 0; }
+label.f { display: block; font-weight: 600; font-size: .9rem; margin-bottom: 4px; }
+input[type=text], select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fff; }
+textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
+input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px solid var(--lam-suong); outline-offset: 1px; }
+.check { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }
+.check input { width: 20px; height: 20px; margin-top: 2px; flex: none; accent-color: var(--luc); }
+details.ref summary { cursor: pointer; font-weight: 600; }
+.refs p { margin: 5px 0; padding-left: 1.6em; text-indent: -1.6em; font-size: .84rem; color: var(--mute); }
+
+/* Câu trắc nghiệm */
+.q { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin: 10px 0; }
+.q.missing { border-color: var(--son); box-shadow: 0 0 0 2px rgba(194,67,42,.12); }
+.q .t { font-weight: 500; margin-bottom: 10px; display: flex; gap: 10px; }
+.q .t b { color: var(--mute); font-weight: 600; min-width: 1.8em; font-variant-numeric: tabular-nums; }
+.opts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.opts label { position: relative; display: block; cursor: pointer; }
+.opts input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.opts span { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 44px; padding: 6px 4px; border: 1px solid var(--line); border-radius: 9px; font-size: .78rem; line-height: 1.2; color: var(--mute); background: #FBFCFA; transition: all .15s; }
+.opts input:checked + span { background: var(--luc); border-color: var(--luc); color: #fff; font-weight: 600; }
+.opts input:focus-visible + span { outline: 2px solid var(--lam-suong); outline-offset: 1px; }
+@media (max-width: 520px) { .opts span { font-size: .7rem; min-height: 48px; } }
+
+/* Câu tự luận */
+.essay { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin: 14px 0; }
+.essay.missing { border-color: var(--son); }
+.essay .num { font-family: var(--serif); font-weight: 700; color: var(--luc); font-size: 1.05rem; }
+.essay .qq { font-weight: 600; margin: 2px 0 6px; font-size: 1.02rem; }
+.essay .hint { font-size: .84rem; color: var(--mute); margin: 0 0 10px; }
+.essay .meta { display: flex; justify-content: space-between; font-size: .78rem; color: var(--mute); margin-top: 6px; }
+.essay .meta .ok { color: var(--luc); font-weight: 600; }
+
+/* Chờ */
+.wait { text-align: center; padding: 60px 10px; }
+.spinner { width: 46px; height: 46px; border: 4px solid #DCE6E0; border-top-color: var(--luc); border-radius: 50%; margin: 0 auto 18px; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.wait ol { text-align: left; display: inline-block; color: var(--mute); font-size: .92rem; padding-left: 20px; }
+.wait li.on { color: var(--muc); font-weight: 600; }
+.wait li.done { color: var(--luc); }
+
+/* Kết quả */
+.rhead { border-bottom: 2px solid var(--muc); padding-bottom: 12px; margin-bottom: 8px; }
+.rhead .code { font-variant-numeric: tabular-nums; letter-spacing: .12em; font-weight: 700; background: var(--soft); padding: 2px 8px; border-radius: 6px; }
+.theme { font-family: var(--serif); font-size: 1.35rem; font-style: italic; line-height: 1.35; border-left: 4px solid var(--luc); padding: 4px 0 4px 14px; margin: 14px 0; color: var(--lam); }
+.sec { margin: 26px 0 10px; display: flex; align-items: baseline; gap: 10px; }
+.sec .no { font-family: var(--serif); font-weight: 700; color: var(--luc); font-size: 1.1rem; }
+.sec h2 { margin: 0; font-size: 1.35rem; }
+.codebox { display: flex; gap: 8px; }
+.codebox span { width: 46px; height: 46px; border-radius: 10px; color: #fff; display: grid; place-items: center; font-family: var(--serif); font-weight: 700; font-size: 1.45rem; }
+.bars { display: grid; gap: 8px; margin: 8px 0; }
+.bar { display: grid; grid-template-columns: minmax(110px, 34%) 1fr 2.6em; gap: 10px; align-items: center; font-size: .9rem; }
+.bar .tr { height: 12px; background: #E7ECE9; border-radius: 99px; overflow: hidden; }
+.bar .fi { height: 100%; border-radius: 99px; }
+.bar .v { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.insight { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.insight:last-child { border-bottom: 0; }
+.insight .k { font-size: .74rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--luc); }
+.insight p { margin: 4px 0 8px; }
+blockquote { margin: 6px 0; padding: 8px 12px; background: #F6F8F5; border-left: 3px solid #B9CFC2; border-radius: 0 8px 8px 0; font-family: var(--serif); font-style: italic; color: #2C3E46; font-size: .95rem; }
+.basis { font-size: .76rem; color: var(--mute); }
+.major { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 10px 0; background: #fff; }
+.major .h { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.major .h strong { font-size: 1.02rem; }
+.pill { display: inline-block; border-radius: 99px; padding: 2px 10px; font-size: .76rem; font-weight: 600; background: var(--soft); color: var(--mute); white-space: nowrap; }
+.major .ex { font-size: .85rem; color: var(--mute); margin-top: 6px; }
+.major .chk { font-size: .87rem; margin-top: 6px; }
+ol.steps { padding-left: 22px; } ol.steps li { margin: 6px 0; }
+.toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); background: var(--muc); color: #fff; padding: 10px 16px; border-radius: 10px; font-size: .9rem; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 60; max-width: 92vw; }
+.toast.on { opacity: 1; }
+footer { border-top: 1px solid var(--line); padding: 22px 0 40px; color: var(--mute); font-size: .82rem; }
+footer .wrap { display: flex; gap: 12px; align-items: flex-start; }
+footer img { width: 40px; height: 40px; flex: none; }
+@media (max-width: 560px) { .brand small { display: none; } .brand { font-size: 1.02rem; white-space: nowrap; } .linkbtn { padding: 6px 4px; } }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+@media print {
+  header.top, .nav, .noprint, footer, .bar-sticky { display: none !important; }
+  body { background: #fff; font-size: 11.5pt; }
+  section.page { display: none !important; }
+  section.page#p-result { display: block !important; }
+  .card, .major, .insight { break-inside: avoid; }
+  .card { border-color: #ccc; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <img src="/images/logo-sen.svg" alt="">
+    <div class="brand">La bàn Hướng nghiệp<small>Định hướng nghề nghiệp có cơ sở khoa học</small></div>
+    <div class="grow"></div>
+    <button class="linkbtn noprint" type="button" data-go="lookup">Tra cứu kết quả</button>
+  </div>
+  <div class="prog"><i id="progBar"></i></div>
+</header>
+
+<div class="wrap">
+<main>
+
+<!-- TRANG ĐẦU -->
+<section class="page" id="p-home">
+  <div class="kicker">Dành cho học sinh THCS – THPT</div>
+  <h1>Hiểu mình trước khi chọn ngành</h1>
+  <div class="card t1note" id="t1Home" style="display:none"></div>
+  <p class="lead">Bộ công cụ gồm một phần trắc nghiệm ngắn và mười câu hỏi để em kể về bản thân. Bản phân tích trả về được viết riêng cho em, mỗi nhận định đều dẫn lại chính lời em đã viết.</p>
+  <div class="grid3">
+    <div class="feat"><div class="n">30</div><h4>Câu trắc nghiệm sở thích</h4><p>Đo 6 nhóm sở thích nghề theo lý thuyết Holland, dùng bộ câu hỏi O*NET Mini Interest Profiler.</p></div>
+    <div class="feat"><div class="n">10</div><h4>Câu hỏi tự luận</h4><p>Theo Phỏng vấn kiến tạo nghề nghiệp của Savickas và phương pháp “nghề mơ ước” của Holland.</p></div>
+    <div class="feat"><div class="n">1</div><h4>Bản phân tích cá nhân</h4><p>Chân dung bản thân, hồ sơ sở thích, điểm mạnh, giá trị, nhóm ngành gợi ý và việc nên làm tiếp.</p></div>
+  </div>
+  <div class="card">
+    <h3>Trước khi bắt đầu</h3>
+    <ul class="small" style="margin:6px 0 0;padding-left:20px">
+      <li>Thời gian khoảng <b>30–40 phút</b>. Em nên làm trên máy tính hoặc điện thoại ở nơi yên tĩnh.</li>
+      <li>Không có câu trả lời đúng hay sai. Hãy viết thật, viết cụ thể — bài càng cụ thể, bản phân tích càng sát với em.</li>
+      <li>Bài làm được lưu tạm trên máy; em có thể dừng và quay lại sau trên cùng thiết bị.</li>
+      <li>Nếu em đã làm <a href="/TVTS01/index.htm">Bước 1 — bộ trắc nghiệm 5 phần</a>, hãy mở trang này bằng nút <b>“Làm tiếp Bước 2”</b> ở trang kết quả Bước 1 để 30 câu sở thích được điền sẵn.</li>
+      <li>Kết quả là <b>tài liệu tham khảo để trao đổi</b> với thầy cô và gia đình, không thay cho quyết định của em.</li>
+    </ul>
+  </div>
+  <details class="card ref">
+    <summary>Cơ sở khoa học của bộ công cụ</summary>
+    <p class="small">Phần trắc nghiệm dùng 30 câu của <b>O*NET Mini Interest Profiler</b> (Bộ Lao động Hoa Kỳ phát triển, công bố công khai), đo 6 nhóm sở thích của <b>lý thuyết Holland</b> — lý thuyết hướng nghiệp được kiểm chứng nhiều nhất. Phần tự luận theo <b>Phỏng vấn kiến tạo nghề nghiệp</b> của Savickas: hình mẫu, môi trường ưa thích, câu chuyện, châm ngôn; kết hợp <b>nghề mơ ước</b> của Holland (có giá trị dự báo lựa chọn nghề tương đương trắc nghiệm), cùng các khái niệm tự hiệu quả, kỳ vọng kết quả, rào cản – hỗ trợ của <b>lý thuyết nhận thức xã hội về nghề nghiệp</b> (Lent, Brown, Hackett). Khi phân tích có lưu ý đến vai trò gia đình trong văn hoá Việt Nam.</p>
+    <div class="refs">
+      <p>Holland, J. L. (1997). <i>Making vocational choices</i> (3rd ed.). Psychological Assessment Resources.</p>
+      <p>Rounds, J., Ming, C. W. J., Cao, M., Song, C., & Lewis, P. (2016). <i>Development of an O*NET Mini Interest Profiler for mobile devices</i>. National Center for O*NET Development.</p>
+      <p>Savickas, M. L. (2005). The theory and practice of career construction. In S. D. Brown & R. W. Lent (Eds.), <i>Career development and counseling</i> (pp. 42–70). Wiley.</p>
+      <p>Savickas, M. L. (2021). Career construction theory and counseling model. In S. D. Brown & R. W. Lent (Eds.), <i>Career development and counseling</i> (3rd ed.). Wiley.</p>
+      <p>Lent, R. W., Brown, S. D., & Hackett, G. (1994). Toward a unifying social cognitive theory of career and academic interest, choice, and performance. <i>Journal of Vocational Behavior, 45</i>(1), 79–122.</p>
+      <p>Bandura, A. (1997). <i>Self-efficacy: The exercise of control</i>. W. H. Freeman.</p>
+      <p>Larson, L. M., Rottinghaus, P. J., & Borgen, F. H. (2002). Meta-analyses of Big Six interests and Big Five personality factors. <i>Journal of Vocational Behavior, 61</i>(2), 217–239.</p>
+      <p>Leong, F. T. L. (2002). Challenges for career counseling in Asia: Variations in cultural accommodation. <i>The Career Development Quarterly, 50</i>(3), 277–284.</p>
+      <p>Sawitri, D. R., Creed, P. A., & Zimmer-Gembeck, M. J. (2013). Parental influences and adolescent career behaviours in a collectivist cultural setting. <i>International Journal for Educational and Vocational Guidance, 14</i>(2), 161–180.</p>
+    </div>
+  </details>
+  <div class="nav"><button class="btn ghost" type="button" data-go="lookup">Em đã làm — tra cứu kết quả</button><button class="btn" type="button" data-go="consent">Bắt đầu →</button></div>
+</section>
+
+<!-- ĐỒNG Ý -->
+<section class="page" id="p-consent">
+  <div class="kicker">Phần 1 / 4 · Đồng ý tham gia</div>
+  <h2>Thông tin và sự đồng ý</h2>
+  <div class="card">
+    <label class="check"><input type="checkbox" id="c1"><span>Em tham gia <b>tự nguyện</b> và có thể dừng bất cứ lúc nào.</span></label>
+    <label class="check"><input type="checkbox" id="c2"><span>Nếu em dưới 18 tuổi, <b>cha mẹ hoặc người giám hộ</b> của em biết và đồng ý cho em tham gia.</span></label>
+    <label class="check"><input type="checkbox" id="c3"><span>Em đồng ý để bài làm được <b>lưu lại phục vụ tư vấn hướng nghiệp và nghiên cứu khoa học giáo dục</b>. Thông tin không được công bố kèm danh tính của em.</span></label>
+    <label class="check"><input type="checkbox" id="c4"><span>Em hiểu bài viết được <b>xử lý tự động bằng phần mềm phân tích văn bản trực tuyến</b>, đối chiếu với tài liệu khoa học về hướng nghiệp; kết quả mang tính tham khảo và có thể được thầy cô xem lại.</span></label>
+  </div>
+  <details class="card ref small">
+    <summary>Chi tiết về dữ liệu</summary>
+    <p>Bài làm (câu trả lời trắc nghiệm, bài viết, lớp, trường, họ tên hoặc biệt danh nếu em ghi) được lưu trên máy chủ của diemdanhsv.com. Phần bài viết được gửi qua dịch vụ xử lý văn bản trực tuyến của Google để soạn bản phân tích; dịch vụ không nhận họ tên và trường của em. Chỉ người quản lý chương trình được xem toàn bộ bài làm. Khi dùng cho nghiên cứu, dữ liệu được ẩn danh. Nếu bài viết cho thấy em có thể đang gặp khó khăn nghiêm trọng, thầy cô phụ trách sẽ được thông báo để kịp thời hỗ trợ. Muốn xoá bài làm, em hoặc cha mẹ liên hệ người quản lý và cung cấp mã tra cứu.</p>
+  </details>
+  <div class="nav"><button class="btn ghost" type="button" data-go="home">← Quay lại</button><button class="btn" type="button" id="btnConsent">Tiếp tục →</button></div>
+</section>
+
+<!-- THÔNG TIN + TRẮC NGHIỆM -->
+<section class="page" id="p-mcq">
+  <div class="kicker">Phần 2 / 4 · Thông tin và trắc nghiệm sở thích</div>
+  <div class="card t1note" id="t1Mcq" style="display:none"></div>
+  <h2>Một chút về em</h2>
+  <div class="card">
+    <div class="grid2">
+      <div><label class="f" for="inName">Họ tên hoặc biệt danh <span class="muted">(không bắt buộc)</span></label><input type="text" id="inName" maxlength="60" autocomplete="off"></div>
+      <div><label class="f" for="inGrade">Lớp</label>
+        <select id="inGrade"><option value="">— Chọn —</option><option>Lớp 8</option><option>Lớp 9</option><option>Lớp 10</option><option>Lớp 11</option><option>Lớp 12</option><option>Khác</option></select></div>
+      <div><label class="f" for="inSchool">Trường <span class="muted">(không bắt buộc)</span></label><input type="text" id="inSchool" maxlength="120" autocomplete="off"></div>
+      <div><label class="f" for="inGender">Giới tính <span class="muted">(không bắt buộc)</span></label>
+        <select id="inGender"><option value="">— Không muốn nói —</option><option>Nam</option><option>Nữ</option><option>Khác</option></select></div>
+    </div>
+  </div>
+  <h2>Em thích làm những việc này đến mức nào?</h2>
+  <p class="lead">Đừng lo em có làm được, có học qua hay có thu nhập cao không. Chỉ tự hỏi: <i>mình có thích làm việc này không?</i></p>
+  <div id="qMcq"></div>
+  <div class="bar-sticky"><div class="nav"><button class="btn ghost" type="button" data-go="consent">← Quay lại</button><button class="btn" type="button" id="btnMcq">Tiếp: Phần tự luận →</button></div></div>
+</section>
+
+<!-- TỰ LUẬN -->
+<section class="page" id="p-essay">
+  <div class="kicker">Phần 3 / 4 · Tự luận</div>
+  <h2>Kể về em</h2>
+  <p class="lead">Mỗi câu, em viết khoảng 3–6 câu văn. Hãy kể cụ thể: tên người, tên kênh, việc em đã làm, cảm xúc của em. Cần trả lời ít nhất 7 trên 10 câu.</p>
+  <div id="qEssay"></div>
+  <input type="text" class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <div class="bar-sticky"><div class="nav"><button class="btn ghost" type="button" data-go="mcq">← Quay lại</button><button class="btn" type="button" id="btnSubmit">Gửi bài và nhận phân tích →</button></div></div>
+</section>
+
+<!-- CHỜ -->
+<section class="page" id="p-wait">
+  <div class="wait">
+    <div class="spinner"></div>
+    <h2 style="margin-top:0">Đang soạn bản phân tích cho em</h2>
+    <p class="muted">Quá trình này thường mất 20–60 giây. Em đừng đóng trang nhé.</p>
+    <ol id="waitSteps"><li>Chấm phần trắc nghiệm sở thích</li><li>Đọc các câu trả lời tự luận</li><li>Đối chiếu với các khung lý thuyết hướng nghiệp</li><li>Kiểm tra từng trích dẫn với bài viết của em</li><li>Hoàn thiện bản phân tích</li></ol>
+  </div>
+</section>
+
+<!-- TRA CỨU -->
+<section class="page" id="p-lookup">
+  <div class="kicker">Tra cứu</div>
+  <h2>Xem lại bản phân tích</h2>
+  <p class="lead">Nhập mã tra cứu 8 ký tự em nhận được sau khi gửi bài.</p>
+  <div class="card"><div style="display:flex;gap:10px;flex-wrap:wrap"><input type="text" id="inCode" maxlength="12" placeholder="Ví dụ: K7MPQ3AC" style="flex:1;min-width:200px;text-transform:uppercase;letter-spacing:.1em"><button class="btn" type="button" id="btnLookup">Xem kết quả</button></div></div>
+  <div class="nav"><button class="btn ghost" type="button" data-go="home">← Trang đầu</button></div>
+</section>
+
+<!-- KẾT QUẢ -->
+<section class="page" id="p-result">
+  <div id="resultBody"></div>
+  <div class="nav noprint">
+    <button class="btn ghost" type="button" data-go="home">← Trang đầu</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" type="button" id="btnCopyCode">Sao chép mã tra cứu</button><button class="btn" type="button" id="btnPrint">In / Lưu PDF</button></div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <img src="/images/logo-sen.svg" alt="">
+    <div>La bàn Hướng nghiệp · Biên soạn: ThS. Đinh Quốc Tuấn. Phần trắc nghiệm dịch từ O*NET Mini Interest Profiler (công bố công khai); phần tự luận theo Phỏng vấn kiến tạo nghề nghiệp (Savickas) và phương pháp nghề mơ ước (Holland). Bản tiếng Việt đang trong quá trình chuẩn hoá trên học sinh Việt Nam.</div>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+'use strict';
+const API = '/tvts02/api.php';
+const KEY = 'tvts02-v1';
+const TYPES = {
+  R: ['Kỹ thuật', '#B5532F', 'thích làm việc với đồ vật, máy móc, công cụ, cây trồng, vật nuôi; ưa hoạt động thực tế, thấy ngay kết quả'],
+  I: ['Nghiên cứu', '#2F6DB0', 'thích quan sát, tìm hiểu, phân tích, giải quyết vấn đề bằng tư duy'],
+  A: ['Nghệ thuật', '#6B4A9E', 'thích sáng tạo, tự do thể hiện bằng chữ viết, âm nhạc, hình ảnh, sân khấu'],
+  S: ['Xã hội', '#0F6B55', 'thích làm việc với con người: dạy, giúp đỡ, chăm sóc, tư vấn'],
+  E: ['Quản lý', '#C98A12', 'thích dẫn dắt, thuyết phục, kinh doanh, tổ chức'],
+  C: ['Nghiệp vụ', '#4E5D68', 'thích công việc có quy trình rõ ràng, làm với số liệu, hồ sơ, cẩn thận và chính xác']
+};
+const ORDER = ['R', 'I', 'A', 'S', 'E', 'C'];
+const ITEMS = [ // O*NET Mini Interest Profiler — Rounds et al. (2016)
+  'Đóng tủ bếp, kệ gỗ', 'Nghiên cứu phát triển một loại thuốc mới', 'Viết sách hoặc kịch bản sân khấu', 'Giúp người khác vượt qua khó khăn cá nhân hay cảm xúc', 'Quản lý một phòng ban trong công ty lớn', 'Cài đặt phần mềm cho các máy tính trong một hệ thống mạng lớn',
+  'Sửa chữa đồ điện gia dụng', 'Tìm cách giảm ô nhiễm nguồn nước', 'Sáng tác hoặc phối khí âm nhạc', 'Tư vấn nghề nghiệp cho người khác', 'Tự khởi nghiệp kinh doanh', 'Dùng máy tính cầm tay để tính toán số liệu',
+  'Lắp ráp linh kiện điện tử', 'Làm thí nghiệm hoá học', 'Làm kỹ xảo cho phim', 'Hướng dẫn người bệnh tập phục hồi chức năng', 'Đàm phán hợp đồng kinh doanh', 'Ghi chép sổ sách hàng nhập, hàng xuất',
+  'Lái xe tải giao hàng đến văn phòng và nhà dân', 'Quan sát mẫu máu dưới kính hiển vi', 'Vẽ phông cảnh cho vở kịch', 'Làm tình nguyện cho một tổ chức phi lợi nhuận', 'Tiếp thị (marketing) một dòng quần áo mới', 'Kiểm kê vật tư bằng máy quét cầm tay',
+  'Kiểm tra chất lượng linh kiện trước khi xuất xưởng', 'Tìm cách dự báo thời tiết chính xác hơn', 'Viết kịch bản phim hoặc chương trình truyền hình', 'Dạy một lớp học trung học phổ thông', 'Bán hàng ở trung tâm thương mại', 'Đóng dấu, phân loại và chuyển công văn, thư từ cho một cơ quan'
+];
+const SCALE = ['Rất không thích', 'Không thích', 'Chưa chắc', 'Thích', 'Rất thích'];
+const ESSAYS = [ // đồng bộ với tvts02/kb.php
+  ['q1', 'Kể 3 người em ngưỡng mộ (người thật hoặc nhân vật). Ở mỗi người, em quý điều gì nhất?', 'Có thể là người trong gia đình, thầy cô, người nổi tiếng, nhân vật truyện, phim, trò chơi. Không cần là người làm nghề em thích.'],
+  ['q2', 'Những kênh, trang, sách hay chương trình nào em theo dõi đều đặn? Điều gì ở đó cuốn hút em?', 'Kênh YouTube, TikTok, trang báo, tạp chí, podcast, chương trình truyền hình… Ghi tên cụ thể và điều em thích ở đó.'],
+  ['q3', 'Câu chuyện, bộ phim hoặc cuốn sách em thích nhất là gì? Kể ngắn nội dung chính và điều em nhớ nhất.', 'Kể như đang kể cho một người bạn chưa xem: nhân vật chính là ai, gặp chuyện gì, vượt qua ra sao.'],
+  ['q4', 'Câu nói, châm ngôn hoặc lời khuyên nào em hay tự nhắc mình? Vì sao?', 'Có thể là câu em đọc được, nghe từ người thân, hoặc câu em tự nghĩ ra.'],
+  ['q5', 'Liệt kê tất cả những nghề em từng mơ ước hoặc từng nghĩ tới, từ nhỏ đến bây giờ (càng nhiều càng tốt).', 'Ghi cả những nghề em đã bỏ qua. Nếu được, ghi thêm vì sao từng thích.'],
+  ['q6', 'Kể một lần em làm một việc gì đó đến quên cả thời gian, hoặc một việc em thấy tự hào nhất. Em đã làm gì?', 'Ở trường, ở nhà, trong câu lạc bộ, khi chơi… Kể cụ thể em đã làm những gì.'],
+  ['q7', 'Môn học hoặc việc gì em làm tốt — theo em là nhờ đâu? Môn nào em thấy khó — vì sao?', 'Hãy nghĩ về cách em học, sự giúp đỡ em nhận được, và cảm giác của em khi học môn đó.'],
+  ['q8', 'Hãy hình dung một ngày làm việc của em năm 30 tuổi: em làm ở đâu, với ai, làm những việc gì?', 'Không cần biết tên nghề. Hãy tả nơi làm việc, những người xung quanh, các việc em làm từ sáng đến chiều.'],
+  ['q9', 'Gia đình mong em theo nghề hoặc ngành nào? Em nghĩ sao về mong muốn đó?', 'Mong muốn của cha mẹ, ông bà, anh chị… Em đồng ý, chưa đồng ý hay còn phân vân, và vì sao.'],
+  ['q10', 'Khi nghĩ đến chuyện chọn ngành, điều gì làm em băn khoăn hoặc lo lắng nhất?', 'Chẳng hạn: chưa biết mình thích gì, sợ điểm không đủ, chi phí, khác ý gia đình, sợ chọn sai…']
+];
+const MIN_ANSWERED = 7, MIN_CHARS_GOOD = 120;
+const PAGES = ['home', 'consent', 'mcq', 'essay', 'wait', 'lookup', 'result'];
+
+const S = { page: 'home', consent: false, info: {}, r: {}, e: {}, t1: '' };
+function load() { try { const x = JSON.parse(localStorage.getItem(KEY) || 'null'); if (x && typeof x === 'object') Object.assign(S, x); } catch (e) {} }
+function save() { try { const c = Object.assign({}, S); if (c.page === 'wait' || c.page === 'result' || c.page === 'lookup') c.page = 'home'; localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {} }
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 2800); }
+
+function go(p) {
+  S.page = p;
+  PAGES.forEach(x => $('#p-' + x).classList.toggle('on', x === p));
+  updateProgress(); save();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function updateProgress() {
+  const nR = Object.keys(S.r).length, nE = ESSAYS.filter(([k]) => (S.e[k] || '').trim().length >= 10).length;
+  const map = { home: 0, consent: 5, lookup: 0 };
+  let w = map[S.page] != null ? map[S.page] : 10 + Math.round(45 * nR / 30) + Math.round(40 * nE / 10);
+  if (S.page === 'result') w = 100; if (S.page === 'wait') w = 96;
+  $('#progBar').style.width = w + '%';
+}
+
+function renderMcq() {
+  $('#qMcq').innerHTML = ITEMS.map((t, i) => `<div class="q" id="q-${i}"><div class="t"><b>${i + 1}.</b><span>${esc(t)}</span></div><div class="opts">${SCALE.map((lb, v) => `<label><input type="radio" name="r${i}" value="${v}"${S.r[i] === v ? ' checked' : ''} aria-label="${esc(lb)}"><span>${esc(lb)}</span></label>`).join('')}</div></div>`).join('');
+  $('#qMcq').addEventListener('change', e => { const i = +e.target.name.slice(1); S.r[i] = +e.target.value; e.target.closest('.q').classList.remove('missing'); save(); updateProgress(); });
+}
+function renderEssays() {
+  $('#qEssay').innerHTML = ESSAYS.map(([k, q, h], i) => `<div class="essay" id="es-${k}"><div class="num">Câu ${i + 1}</div><div class="qq">${esc(q)}</div><p class="hint">${esc(h)}</p><textarea id="ta-${k}" maxlength="1500" aria-label="${esc(q)}">${esc(S.e[k] || '')}</textarea><div class="meta"><span id="ct-${k}"></span><span>tối đa 1500 ký tự</span></div></div>`).join('');
+  ESSAYS.forEach(([k]) => { const ta = $('#ta-' + k); const upd = () => { const n = ta.value.trim().length; const el = $('#ct-' + k); el.textContent = n === 0 ? 'Chưa trả lời' : n < MIN_CHARS_GOOD ? `${n} ký tự — em viết thêm chi tiết nhé` : `${n} ký tự`; el.className = n >= MIN_CHARS_GOOD ? 'ok' : ''; }; upd(); ta.addEventListener('input', () => { S.e[k] = ta.value; upd(); save(); updateProgress(); $('#es-' + k).classList.remove('missing'); }); });
+}
+
+async function post(body) {
+  const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => null);
+  if (!j) throw new Error('Không kết nối được máy chủ. Em kiểm tra mạng rồi thử lại.');
+  if (j.status !== 'success') throw new Error(j.message || 'Có lỗi xảy ra.');
+  return j.data;
+}
+async function submit() {
+  const answered = ESSAYS.filter(([k]) => (S.e[k] || '').trim().length >= 10);
+  if (answered.length < MIN_ANSWERED) {
+    ESSAYS.forEach(([k]) => { if ((S.e[k] || '').trim().length < 10) $('#es-' + k).classList.add('missing'); });
+    const first = $('.essay.missing'); if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    toast(`Em cần trả lời ít nhất ${MIN_ANSWERED} câu (hiện có ${answered.length}).`); return;
+  }
+  go('wait');
+  const lis = $$('#waitSteps li'); let st = 0; lis.forEach(l => l.className = '');
+  const tick = setInterval(() => { if (st < lis.length) { if (st > 0) lis[st - 1].className = 'done'; lis[st].className = 'on'; st++; } }, 6000);
+  lis[0].className = 'on'; st = 1;
+  try {
+    const r = []; for (let i = 0; i < 30; i++) r.push(S.r[i]);
+    const e = {}; ESSAYS.forEach(([k]) => e[k] = (S.e[k] || '').trim());
+    const data = await post({ a: 'analyze', consent: true, info: S.info, r, e, t1: S.t1 || '', hp: $('#hp').value });
+    clearInterval(tick);
+    try { localStorage.setItem(KEY + '-last', data.code); } catch (x) {}
+    renderResult(data); go('result');
+  } catch (err) {
+    clearInterval(tick); go('essay'); toast(err.message);
+  }
+}
+/* Nối từ Bước 1 (/TVTS01): ?t1=MÃ → điền sẵn 30 câu sở thích + thông tin, gửi kèm mã khi nộp bài. */
+function drawT1() {
+  const on = !!S.t1;
+  $('#t1Home').style.display = on ? '' : 'none'; $('#t1Mcq').style.display = on ? '' : 'none';
+  if (!on) return;
+  $('#t1Home').innerHTML = `Đã nhận kết quả <b>Bước 1</b> của em (mã <b>${esc(S.t1)}</b>). Đây là <b>Bước 2 — phần tự luận</b>; 30 câu sở thích em đã làm được điền sẵn.`;
+  $('#t1Mcq').innerHTML = `30 câu dưới đây đã được điền từ kết quả Bước 1 (mã <b>${esc(S.t1)}</b>). Em xem lại nhanh, sửa nếu thấy chưa đúng, rồi bấm <b>Tiếp: Phần tự luận</b>.`;
+}
+async function linkT1(code) {
+  code = (code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (code.length !== 8) return;
+  try {
+    const r = await fetch(API + '?a=get1&code=' + encodeURIComponent(code));
+    const j = await r.json();
+    if (j.status !== 'success') throw new Error(j.message);
+    const d = j.data;
+    if (S.t1 !== d.code || Object.keys(S.r).length === 0) {
+      S.r = {}; (d.r || []).forEach((v, i) => { if (Number.isInteger(v)) S.r[i] = v; });
+      $$('#qMcq input[type=radio]').forEach(el => { el.checked = S.r[+el.name.slice(1)] === +el.value; });
+    }
+    S.t1 = d.code;
+    [['inName', 'name'], ['inGrade', 'grade'], ['inSchool', 'school']].forEach(([id, k]) => { if (!S.info[k] && d.info && d.info[k]) { S.info[k] = d.info[k]; $('#' + id).value = d.info[k]; } });
+    save(); drawT1(); updateProgress();
+  } catch (e) { toast(e.message || 'Không lấy được kết quả Bước 1.'); }
+  try { history.replaceState(null, '', location.pathname); } catch (e) {}
+}
+async function lookup(code) {
+  code = (code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (code.length !== 8) { toast('Mã tra cứu gồm 8 ký tự.'); return; }
+  try {
+    const r = await fetch(API + '?a=get&code=' + encodeURIComponent(code));
+    const j = await r.json();
+    if (j.status !== 'success') throw new Error(j.message);
+    renderResult(j.data); go('result');
+  } catch (e) { toast(e.message || 'Không tra cứu được.'); }
+}
+
+function hexSvg(s) {
+  const cx = 160, cy = 150, R = 92, ang = i => (-90 + 60 * i) * Math.PI / 180, pt = (i, r) => [cx + r * Math.cos(ang(i)), cy + r * Math.sin(ang(i))];
+  const poly = f => ORDER.map((t, i) => pt(i, typeof f === 'function' ? f(t) : R * f).map(n => n.toFixed(1)).join(',')).join(' ');
+  const rings = [0.25, 0.5, 0.75, 1].map(f => `<polygon points="${poly(f)}" fill="none" stroke="#E0E6E2"/>`).join('');
+  const labels = ORDER.map((t, i) => { const cs = Math.cos(ang(i)); const anc = cs > 0.3 ? 'start' : cs < -0.3 ? 'end' : 'middle'; let [x, y] = pt(i, R + 12); if (anc === 'middle') y += Math.sin(ang(i)) < 0 ? -14 : 12; return `<text x="${x.toFixed(1)}" y="${(y + 2).toFixed(1)}" text-anchor="${anc}" font-size="15" font-weight="700" fill="${TYPES[t][1]}">${t}</text><text x="${x.toFixed(1)}" y="${(y + 16).toFixed(1)}" text-anchor="${anc}" font-size="10.5" fill="#4E5D68">${TYPES[t][0]}</text>`; }).join('');
+  return `<svg viewBox="-10 0 340 310" style="width:100%;max-width:340px;display:block;margin:auto" role="img" aria-label="Lục giác sở thích">${rings}<polygon points="${poly(t => R * Math.max(0.04, s[t] / 20))}" fill="rgba(15,107,85,.2)" stroke="#0F6B55" stroke-width="2"/>${labels}</svg>`;
+}
+function quotes(arr) { return (arr || []).map(q => `<blockquote>“${esc(q)}”</blockquote>`).join(''); }
+
+function renderResult(d) {
+  const rs = d.riasec || {}, sc = rs.scores || {}, rep = d.report, info = d.info || {};
+  const code = (rs.code || '').split('');
+  const date = d.ts ? new Date(d.ts * 1000) : new Date();
+  let h = `<div class="rhead"><div class="kicker" style="margin-top:14px">Bản phân tích hướng nghiệp cá nhân</div>
+    <h1 style="margin:6px 0 8px">${info.name ? esc(info.name) : 'Bản phân tích của em'}</h1>
+    <div class="small muted">${info.grade ? esc(info.grade) + ' · ' : ''}${info.school ? esc(info.school) + ' · ' : ''}Ngày ${date.toLocaleDateString('vi-VN')} · Mã tra cứu <span class="code">${esc(d.code)}</span></div></div>
+    <p class="small muted noprint">Em hãy ghi lại mã tra cứu để xem lại bản phân tích bất cứ lúc nào.</p>`;
+  if (d.support || (rep && rep.can_quan_tam)) h += `<div class="card alert"><b>Một lời dành riêng cho em.</b> Nếu em đang thấy mệt mỏi, buồn bã hay gặp chuyện khó nói, em không phải chịu đựng một mình. Hãy chia sẻ với thầy cô chủ nhiệm, cha mẹ hoặc một người lớn em tin tưởng. Em cũng có thể gọi <b>Tổng đài quốc gia bảo vệ trẻ em 111</b> (miễn phí, 24/7).</div>`;
+  if (rep) h += `<div class="sec"><span class="no">I</span><h2>Chân dung của em</h2></div><p>${esc(rep.chan_dung)}</p>${rep.chu_de ? `<div class="theme">${esc(rep.chu_de)}</div>` : ''}`;
+  h += `<div class="sec"><span class="no">${rep ? 'II' : 'I'}</span><h2>Hồ sơ sở thích nghề</h2></div>
+    <div class="card"><div class="grid2" style="align-items:center"><div>${hexSvg(sc)}</div><div>
+      <div class="small muted">Mã theo trắc nghiệm</div><div class="codebox" style="margin:4px 0 10px">${code.map(t => `<span style="background:${TYPES[t] ? TYPES[t][1] : '#888'}">${t}</span>`).join('')}</div>
+      ${rep && rep.ma_bai_viet ? `<div class="small muted">Mã theo bài viết (nghề mơ ước, lời kể)</div><div class="codebox" style="margin:4px 0 10px">${rep.ma_bai_viet.split('').map(t => `<span style="background:${TYPES[t] ? TYPES[t][1] : '#888'};opacity:.85">${t}</span>`).join('')}</div>` : ''}
+      <div class="bars">${(rs.sorted || ORDER).map(t => `<div class="bar"><div>${t} · ${TYPES[t][0]}</div><div class="tr"><div class="fi" style="width:${Math.max(2, sc[t] / 20 * 100)}%;background:${TYPES[t][1]}"></div></div><div class="v">${sc[t]}</div></div>`).join('')}</div>
+    </div></div>
+    ${code.length ? `<p class="small" style="margin-bottom:0">Ba nhóm nổi bật: ${code.map(t => `<b>${TYPES[t][0]}</b> (${TYPES[t][2]})`).join('; ')}. Độ phân hoá ${rs.diff}/20, độ nhất quán ${esc(rs.cons || '')} (Holland, 1997).</p>` : ''}
+    ${rep && rep.doi_chieu ? `<p class="small" style="margin-bottom:0"><b>Đối chiếu hai nguồn:</b> ${esc(rep.doi_chieu)}</p>` : ''}</div>`;
+  if (rep) {
+    h += `<div class="sec"><span class="no">III</span><h2>Những điều nổi bật từ bài viết của em</h2></div><div class="card">${(rep.nhan_dinh || []).map(x => `<div class="insight"><div class="k">${esc(x.khia_canh)}</div><p>${esc(x.noi_dung)}</p>${quotes(x.trich)}${x.co_so ? `<div class="basis">Cơ sở: ${esc(x.co_so)}</div>` : ''}</div>`).join('')}</div>`;
+    h += `<div class="sec"><span class="no">IV</span><h2>Nhóm ngành gợi ý</h2></div><p class="small muted">Xếp theo mức phù hợp với sở thích, điểm mạnh và giá trị em thể hiện. Đây là gợi ý để tìm hiểu, không phải danh sách bắt buộc.</p>
+      ${(rep.nhom_nganh || []).map((m, i) => `<div class="major"><div class="h"><strong>${i + 1}. ${esc(m.ten)}</strong><span class="pill">${esc(m.ma)}</span></div><p style="margin:6px 0">${esc(m.ly_do)}</p>${quotes(m.trich)}<div class="ex">Ví dụ ngành: ${esc(m.vi_du)} · Môn then chốt: ${esc(m.mon)}</div>${m.can_tim_hieu ? `<div class="chk"><b>Em cần tìm hiểu thêm:</b> ${esc(m.can_tim_hieu)}</div>` : ''}</div>`).join('')}`;
+    h += `<div class="sec"><span class="no">V</span><h2>Việc nên làm trong 1–3 tháng tới</h2></div><div class="card"><ol class="steps">${(rep.buoc_tiep || []).map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>`;
+    if (rep.loi_nhan) h += `<div class="card tint"><b>Lời nhắn</b><p style="margin:6px 0 0">${esc(rep.loi_nhan)}</p></div>`;
+  } else {
+    h += `<div class="card warn"><b>Bản phân tích chi tiết đang được hoàn thiện.</b> Bài làm của em đã được lưu. Em dùng mã tra cứu <b>${esc(d.code)}</b> để xem lại sau 1–2 ngày, khi thầy cô hoàn tất phần phân tích bài viết.</div>`;
+  }
+  h += `<div class="card small muted" style="margin-top:22px"><b>Về bản phân tích này.</b> Phần sở thích tính từ 30 câu O*NET Mini Interest Profiler (thang 0–20 mỗi nhóm). Phần nhận định dựa trên bài viết của em, đối chiếu với lý thuyết Holland, Phỏng vấn kiến tạo nghề nghiệp (Savickas) và lý thuyết nhận thức xã hội về nghề nghiệp (Lent, Brown, Hackett); các trích dẫn được đối chiếu nguyên văn với bài viết. Sở thích ở tuổi học sinh vẫn đang hình thành — em nên trao đổi kết quả với thầy cô, gia đình và làm lại sau 6–12 tháng.</div>`;
+  $('#resultBody').innerHTML = h;
+  renderResult.code = d.code;
+}
+
+function init() {
+  load(); renderMcq(); renderEssays();
+  [['inName', 'name'], ['inGrade', 'grade'], ['inSchool', 'school'], ['inGender', 'gender']].forEach(([id, k]) => { const el = $('#' + id); el.value = (S.info || {})[k] || ''; el.addEventListener('input', () => { S.info[k] = el.value.trim(); save(); }); el.addEventListener('change', () => { S.info[k] = el.value.trim(); save(); }); });
+  ['c1', 'c2', 'c3', 'c4'].forEach(id => { $('#' + id).checked = !!S.consent; });
+  document.addEventListener('click', e => { const g = e.target.closest('[data-go]'); if (g) go(g.dataset.go); });
+  $('#btnConsent').addEventListener('click', () => { const ok = ['c1', 'c2', 'c3', 'c4'].every(id => $('#' + id).checked); if (!ok) { toast('Em cần đánh dấu đủ 4 mục để tiếp tục.'); return; } S.consent = true; go('mcq'); });
+  $('#btnMcq').addEventListener('click', () => {
+    if (!S.info.grade) { toast('Em chọn lớp giúp thầy cô nhé.'); $('#inGrade').focus(); return; }
+    const miss = []; for (let i = 0; i < 30; i++) if (S.r[i] == null) miss.push(i);
+    $$('.q').forEach(q => q.classList.remove('missing'));
+    if (miss.length) { miss.forEach(i => $('#q-' + i).classList.add('missing')); $('#q-' + miss[0]).scrollIntoView({ behavior: 'smooth', block: 'center' }); toast(`Còn ${miss.length} câu chưa trả lời.`); return; }
+    go('essay');
+  });
+  $('#btnSubmit').addEventListener('click', submit);
+  $('#btnLookup').addEventListener('click', () => lookup($('#inCode').value));
+  $('#inCode').addEventListener('keydown', e => { if (e.key === 'Enter') lookup(e.target.value); });
+  $('#btnPrint').addEventListener('click', () => window.print());
+  $('#btnCopyCode').addEventListener('click', () => { const c = renderResult.code || ''; (navigator.clipboard ? navigator.clipboard.writeText(c) : Promise.reject()).then(() => toast('Đã sao chép mã ' + c), () => toast('Mã tra cứu: ' + c)); });
+  const qs = new URLSearchParams(location.search), qp = qs.get('ma'), qt = qs.get('t1');
+  drawT1();
+  if (qp) { lookup(qp); return; }
+  if (qt) linkT1(qt);
+  go(['consent', 'mcq', 'essay'].includes(S.page) && S.consent ? S.page : 'home');
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+</body>
+</html>

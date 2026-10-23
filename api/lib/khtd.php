@@ -21,6 +21,7 @@
 require_once __DIR__ . '/khtd_kb.php';
 require_once __DIR__ . '/khtd_exam.php';
 require_once __DIR__ . '/chd.php';
+require_once __DIR__ . '/dkv.php';
 
 const KHTD_TOKEN_TTL = 3 * 3600;
 
@@ -913,8 +914,11 @@ function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $fi
         $lines[] = '• ĐIỂM CHÍNH THỨC (giảng viên duyệt): ' . number_format($final, 2) . '/10';
         if ($note) { $lines[] = '• Nhận xét của giảng viên: ' . $note; }
     } elseif ($ai) {
-        $lines[] = '• Điểm tạm tính (trợ lý AI chấm theo ' . $mon['rubric'] . ', giảng viên sẽ duyệt lại): ' . number_format((float) $ai['total'], 2) . '/10';
+        $lines[] = $mon['nhan_cham'] !== ''
+            ? '• Điểm tạm tính (' . $mon['nhan_cham'] . '): ' . number_format((float) $ai['total'], 2) . '/10'
+            : '• Điểm tạm tính (trợ lý AI chấm theo ' . $mon['rubric'] . ', giảng viên sẽ duyệt lại): ' . number_format((float) $ai['total'], 2) . '/10';
     }
+    if ($ai && $mon['nhan_cham'] !== '') $ai = dkv_loc_ai_ket_qua($ai);   // bộ Đ&KV: nội dung gửi SV không nhắc tới AI
     if ($ai) {
         $lines[] = '';
         $lines[] = 'Chi tiết theo tiêu chí:';
@@ -952,13 +956,27 @@ function action_khtd_seed_worksheets(array $params): void
     $me = require_role((string) ($params['token'] ?? ''), ['LECTURER', 'ADMIN']);
     $classId = trim((string) ($params['classId'] ?? ''));
     assert_class_access($me, $classId);
-    $created = [];
+    $created = []; $updated = [];
     $bo = strtolower(trim((string) ($params['bo'] ?? 'khtd')));
-    $defs = $bo === 'chd' ? chd_default_worksheets() : khtd_default_worksheets();
+    $defs = $bo === 'chd' ? chd_default_worksheets() : ($bo === 'dkv' ? dkv_default_worksheets() : khtd_default_worksheets());
     foreach ($defs as $no => $def) {
-        $stmt = db()->prepare('SELECT WorksheetID FROM khtd_worksheets WHERE ClassID = :c AND No = :n LIMIT 1');
+        $stmt = db()->prepare('SELECT WorksheetID, SchemaJSON FROM khtd_worksheets WHERE ClassID = :c AND No = :n LIMIT 1');
         $stmt->execute(['c' => $classId, 'n' => $no]);
-        if ($stmt->fetch()) continue;
+        if ($old = $stmt->fetch()) {
+            // Bộ Đ&KV: phiếu đã tạo nhưng CHƯA có bài làm nào (kể cả nháp) → cập nhật nội dung theo dkv_phieu.json mới.
+            if ($bo === 'dkv') {
+                $cnt = db()->prepare('SELECT COUNT(*) FROM khtd_submissions WHERE WorksheetID = :w');
+                $cnt->execute(['w' => $old['WorksheetID']]);
+                $nd = $def; unset($nd['max_attempts'], $nd['score_policy'], $nd['status']);
+                $json = json_encode($nd, JSON_UNESCAPED_UNICODE);
+                if ((int) $cnt->fetchColumn() === 0 && $json !== (string) $old['SchemaJSON']) {
+                    db()->prepare('UPDATE khtd_worksheets SET Title = :t, SchemaJSON = :s WHERE WorksheetID = :id')
+                        ->execute(['t' => $def['title'], 's' => $json, 'id' => $old['WorksheetID']]);
+                    $updated[] = ['no' => $no, 'id' => $old['WorksheetID']];
+                }
+            }
+            continue;
+        }
         $id = new_id('WSH');
         $maxA = (int) ($def['max_attempts'] ?? 1); $pol = ($def['score_policy'] ?? 'BEST') === 'LAST' ? 'LAST' : 'BEST';
         $st = in_array($def['status'] ?? 'OPEN', ['OPEN', 'CLOSED', 'HIDDEN'], true) ? ($def['status'] ?? 'OPEN') : 'OPEN';   // vd mốc chuyên đề CHĐ tạo ở trạng thái Ẩn
@@ -967,8 +985,8 @@ function action_khtd_seed_worksheets(array $params): void
             ->execute(['id' => $id, 'c' => $classId, 'n' => $no, 't' => $def['title'], 's' => json_encode($def, JSON_UNESCAPED_UNICODE), 'by' => $me['userId'] ?? ($me['UserID'] ?? null), 'ma' => $maxA, 'sp' => $pol, 'st' => $st]);
         $created[] = ['no' => $no, 'id' => $id];
     }
-    log_audit((string) ($me['userId'] ?? ($me['UserID'] ?? '')), 'LECTURER', 'khtdSeedWorksheets', 'class', $classId, ['created' => count($created), 'bo' => $bo]);
-    api_ok(['created' => $created]);
+    log_audit((string) ($me['userId'] ?? ($me['UserID'] ?? '')), 'LECTURER', 'khtdSeedWorksheets', 'class', $classId, ['created' => count($created), 'updated' => count($updated), 'bo' => $bo]);
+    api_ok(['created' => $created, 'updated' => $updated]);
 }
 
 /** POST khtdSetWorksheetStatus {token, worksheetId, status, closeAt?} */

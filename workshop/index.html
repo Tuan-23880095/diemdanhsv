@@ -16,8 +16,8 @@ html, body { height: 100%; overflow: hidden; background: #E7EAE5; }
 body.notes-view, body.print-view { overflow: auto; height: auto; }
 
 /* ───────── Sân khấu: slide 1600×900 co giãn vừa màn hình ───────── */
-#stage { position: fixed; inset: 0; display: grid; place-items: center; }
-#scaler { width: 1600px; height: 900px; transform-origin: center center; position: relative; }
+#stage { position: fixed; inset: 0; overflow: hidden; }
+#scaler { width: 1600px; height: 900px; transform-origin: center center; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
 .slide { position: absolute; inset: 0; background: var(--giay); border-radius: 6px; overflow: hidden; box-shadow: 0 20px 60px rgba(16,33,43,.18); display: flex; flex-direction: column; font-size: 26px; line-height: 1.45; padding: 58px 84px 0; }
 .slide.enter { animation: sIn .38s cubic-bezier(.2,.8,.2,1); }
 @keyframes sIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -155,30 +155,58 @@ table.cmp td:last-child { background: color-mix(in srgb, var(--sec) 7%, white); 
 .shape-card .lb { font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); margin-bottom: 2px; }
 .shape-card .try { margin-top: auto; background: color-mix(in srgb, var(--c) 9%, white); border-radius: 10px; padding: 10px 12px; }
 
-/* điều khiển (tự ẩn) */
-#ctrl { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 6px; align-items: center; background: rgba(16,33,43,.88); color: #fff; padding: 6px 8px; border-radius: 14px; font-size: 14px; z-index: 20; opacity: 0; transition: opacity .25s; }
+/* điều khiển (tự ẩn) — co giãn theo % bề ngang màn hình */
+#ctrl { position: fixed; left: 50%; bottom: max(1.6vh, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: max-content; max-width: 96%; display: flex; gap: .3em; align-items: stretch; background: rgba(16,33,43,.9); color: #fff; padding: .4em; border-radius: 1em; font-size: clamp(12px, .55vw + 7px, 15px); z-index: 20; opacity: 0; transition: opacity .25s; box-sizing: border-box; }
 body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
-#ctrl button, #ctrl a { background: transparent; border: 0; color: #fff; padding: 8px 11px; border-radius: 9px; cursor: pointer; text-decoration: none; white-space: nowrap; }
+#ctrl button, #ctrl a { flex: 0 1 auto; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: .4em; background: transparent; border: 0; color: #fff; font: inherit; padding: .55em .75em; border-radius: .65em; cursor: pointer; text-decoration: none; white-space: nowrap; }
 #ctrl button:hover, #ctrl a:hover { background: rgba(255,255,255,.14); }
-#ctrl .pos { padding: 0 8px; font-variant-numeric: tabular-nums; opacity: .8; white-space: nowrap; }
+#ctrl .ic { width: 1.3em; height: 1.3em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#ctrl .lb { overflow: hidden; text-overflow: ellipsis; }
+#ctrl .pos { flex: 0 0 auto; align-self: center; padding: 0 .4em; font-variant-numeric: tabular-nums; opacity: .85; white-space: nowrap; }
+/* màn hình hẹp (điện thoại, máy tính bảng dọc): chỉ biểu tượng, mỗi nút chia đều bề ngang */
+@media (max-width: 960px) {
+  #ctrl { width: 96%; gap: 1%; padding: .35em; }
+  #ctrl button, #ctrl a { flex: 1 1 0; padding: .7em 0; }
+  #ctrl .lb { display: none; }
+  #ctrl .pos { flex: 1.4 1 0; text-align: center; padding: 0; }
+}
+@media (max-width: 520px) { #ctrl .opt { display: none; } }
 #progress { position: fixed; left: 0; top: 0; height: 4px; background: var(--luc); z-index: 21; transition: width .3s; }
 
 /* đồng hồ */
-#timer { position: fixed; right: 22px; top: 18px; z-index: 22; background: var(--muc); color: #fff; border-radius: 18px; padding: 10px 18px 10px 20px; display: none; align-items: center; gap: 14px; font-variant-numeric: tabular-nums; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+#timer { position: fixed; right: 2%; top: 2.5%; z-index: 22; background: var(--muc); color: #fff; border-radius: 1em; padding: .5em .8em .5em 1em; display: none; align-items: center; gap: .7em; font-size: clamp(12px, .5vw + 8px, 16px); font-variant-numeric: tabular-nums; box-shadow: 0 10px 30px rgba(0,0,0,.25); max-width: 96%; box-sizing: border-box; }
 #timer.on { display: flex; }
-#timer .tv { font: 700 44px/1 var(--sans); }
+#timer .tv { font: 700 clamp(24px, 2.4vw + 10px, 44px)/1 var(--sans); }
 #timer.done { background: var(--son); animation: blink 1s 6; }
 @keyframes blink { 50% { opacity: .55; } }
-#timer button { background: rgba(255,255,255,.14); border: 0; color: #fff; border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+#timer button { background: rgba(255,255,255,.14); border: 0; color: #fff; border-radius: .5em; padding: .4em .65em; cursor: pointer; font: inherit; }
+
+/* quay số may mắn */
+#lucky { position: fixed; inset: 0; z-index: 40; background: radial-gradient(circle at 50% 35%, #1d3a4d, #10212B 70%); color: #fff; display: none; align-items: center; justify-content: center; text-align: center; padding: 3%; }
+#lucky.on { display: flex; }
+#lucky .lk-in { width: 100%; }
+#lucky .lk-t { font: 700 clamp(28px, 4.2vw, 64px)/1.1 var(--serif); margin: 0 0 .25em; }
+#lucky .lk-sub { font-size: clamp(14px, 1.5vw, 24px); opacity: .85; margin: 0 0 1.4em; }
+#lucky .lk-codes { display: flex; flex-wrap: wrap; gap: clamp(10px, 2vw, 36px); justify-content: center; }
+#lucky .lk-code { font: 700 clamp(36px, 7vw, 120px)/1 "SFMono-Regular", Consolas, "Liberation Mono", monospace; letter-spacing: .08em; background: rgba(255,255,255,.1); border: 2px solid rgba(255,255,255,.25); color: #fff; border-radius: .16em; padding: .2em .32em; min-width: 5.6ch; }
+#lucky .lk-code.done { background: #fff; color: var(--muc); border-color: #F3C969; box-shadow: 0 0 0 .08em #F3C969, 0 12px 40px rgba(243,201,105,.35); animation: lkPop .45s cubic-bezier(.2,.9,.3,1.4); }
+#lucky .lk-code small { display: block; font: 600 clamp(11px, 1vw, 16px) var(--sans); letter-spacing: 0; color: var(--mute); margin-top: .5em; }
+#lucky .lk-note { font-size: clamp(13px, 1.3vw, 20px); opacity: .8; margin: 1.4em 0 1em; }
+#lucky .btn { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.3); }
+@keyframes lkPop { from { transform: scale(.7); } to { transform: none; } }
+.sm-item { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+.sm-item .sc { font: 700 20px var(--sans); color: var(--luc); }
+.sm-item .sc small { display: block; font-size: 11px; color: var(--mute); font-weight: 600; }
+.sm-item .meta { font-size: 12.5px; color: var(--mute); margin-top: 2px; }
 
 /* hộp thoại */
-.modal { position: fixed; inset: 0; background: rgba(16,33,43,.55); z-index: 30; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal { position: fixed; inset: 0; background: rgba(16,33,43,.55); z-index: 30; display: none; align-items: center; justify-content: center; padding: 2.5%; }
 .modal.on { display: flex; }
-.panel { background: #fff; border-radius: 18px; width: min(980px, 100%); max-height: 92vh; overflow: auto; padding: 24px 28px; font-size: 15px; box-shadow: 0 30px 80px rgba(0,0,0,.3); }
+.panel { background: #fff; border-radius: 18px; width: min(980px, 100%); max-height: 92vh; overflow: auto; padding: clamp(14px, 3%, 28px); font-size: 15px; box-shadow: 0 30px 80px rgba(0,0,0,.3); }
 .panel h2 { font: 700 24px var(--serif); margin: 0 0 4px; }
 .panel h3 { font-size: 15px; margin: 20px 0 8px; text-transform: uppercase; letter-spacing: .06em; color: var(--mute); }
 .panel .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.panel input[type=password], .panel input[type=text] { font: inherit; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; min-width: 220px; }
+.panel input[type=password], .panel input[type=text] { font: inherit; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; min-width: min(220px, 100%); }
 .btn { font: 600 14px var(--sans); border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 13px; cursor: pointer; }
 .btn:hover { border-color: var(--luc); }
 .btn.pri { background: var(--luc); color: #fff; border-color: var(--luc); }
@@ -189,11 +217,11 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 .hq { display: grid; grid-template-columns: 40px 1fr auto; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); align-items: center; }
 .hq.hid { opacity: .4; }
 .goal-txt { padding: 8px 0; border-top: 1px solid var(--line); }
-.overview { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.overview { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(190px, 45%), 1fr)); gap: 10px; }
 .overview button { text-align: left; border: 1px solid var(--line); background: var(--giay); border-radius: 10px; padding: 10px 12px; cursor: pointer; font-size: 14px; line-height: 1.3; }
 .overview button.cur { border-color: var(--luc); background: #E3F1EA; }
 .overview button small { display: block; color: var(--mute); font-size: 12px; }
-.keys { columns: 2; font-size: 14px; color: var(--mute); }
+.keys { columns: 2 240px; font-size: 14px; color: var(--mute); }
 .keys kbd { font: 600 12px var(--sans); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; color: var(--muc); background: #fff; }
 
 /* cửa sổ ghi chú diễn giả */
@@ -227,17 +255,17 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 <div id="timer" role="timer" aria-live="polite"><span class="tv" id="timerV">05:00</span><button id="timerP" type="button">Tạm dừng</button><button id="timerX" type="button" aria-label="Tắt đồng hồ">✕</button></div>
 
 <nav id="ctrl" aria-label="Điều khiển trình chiếu">
-  <a href="../index.html" title="Về trang chủ diemdanhsv">← diemdanhsv</a>
-  <button type="button" data-k="prev" title="Slide trước (←)">‹</button>
+  <a class="opt" href="../index.html" title="Về trang chủ diemdanhsv" aria-label="Về trang chủ diemdanhsv"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg><span class="lb">diemdanhsv</span></a>
+  <button type="button" data-k="prev" title="Slide trước (←)" aria-label="Slide trước"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
   <span class="pos" id="pos">1 / 1</span>
-  <button type="button" data-k="next" title="Slide sau (→, Space)">›</button>
-  <button type="button" data-k="overview" title="Mục lục (O)">Mục lục</button>
-  <button type="button" data-k="timer" title="Đồng hồ hoạt động (T)">Đồng hồ</button>
-  <button type="button" data-k="notes" title="Ghi chú diễn giả ở cửa sổ riêng (P)">Ghi chú</button>
-  <button type="button" data-k="full" title="Toàn màn hình (F)">Toàn màn hình</button>
-  <button type="button" data-k="host" title="Bảng diễn giả (H)">Diễn giả</button>
-  <a href="sv.html" target="_blank" rel="noopener" title="Trang tham gia của sinh viên">Trang SV</a>
-  <a href="cam-nang.html" target="_blank" rel="noopener" title="Cẩm nang in được">Cẩm nang</a>
+  <button type="button" data-k="next" title="Slide sau (→, Space)" aria-label="Slide sau"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  <button type="button" data-k="overview" title="Mục lục (O)" aria-label="Mục lục"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg><span class="lb">Mục lục</span></button>
+  <button type="button" data-k="timer" title="Đồng hồ hoạt động (T)" aria-label="Đồng hồ"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 10v3.5l2.5 2M9.5 2.5h5"/></svg><span class="lb">Đồng hồ</span></button>
+  <button class="opt" type="button" data-k="notes" title="Ghi chú diễn giả ở cửa sổ riêng (P)" aria-label="Ghi chú diễn giả"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9.5 11.5h6M9.5 15.5h6"/></svg><span class="lb">Ghi chú</span></button>
+  <button type="button" data-k="full" title="Toàn màn hình (F)" aria-label="Toàn màn hình"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="lb">Toàn màn hình</span></button>
+  <button type="button" data-k="host" title="Bảng diễn giả (H)" aria-label="Bảng diễn giả"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c1.4-3.8 4.3-5.8 7.5-5.8s6.1 2 7.5 5.8"/></svg><span class="lb">Diễn giả</span></button>
+  <a href="sv.html" target="_blank" rel="noopener" title="Trang tham gia của sinh viên" aria-label="Trang sinh viên"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18h2"/></svg><span class="lb">Trang SV</span></a>
+  <a class="opt" href="cam-nang.html" target="_blank" rel="noopener" title="Cẩm nang in được" aria-label="Cẩm nang"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5z"/><path d="M5 20.5V5.5"/></svg><span class="lb">Cẩm nang</span></a>
 </nav>
 
 <!-- Mục lục -->
@@ -265,6 +293,16 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 </div>
 
 <!-- Bảng diễn giả -->
+<div id="lucky" role="dialog" aria-modal="true" aria-label="Quay số may mắn">
+  <div class="lk-in">
+    <p class="lk-t">🎁 Quay số may mắn</p>
+    <p class="lk-sub" id="lkSub"></p>
+    <div class="lk-codes" id="lkCodes"></div>
+    <p class="lk-note" id="lkNote"></p>
+    <button class="btn" type="button" id="lkClose">Đóng (Esc)</button>
+  </div>
+</div>
+
 <div class="modal" id="mHost" role="dialog" aria-modal="true" aria-labelledby="hostT">
   <div class="panel">
     <button class="btn close" type="button" data-close>Đóng</button>
@@ -290,6 +328,18 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
       <h3>Mục tiêu SMART &amp; góp ý của sinh viên (không chiếu)</h3>
       <div class="row"><button class="btn" type="button" data-detail="muctieu">Xem mục tiêu</button><button class="btn" type="button" data-detail="danhgia">Xem góp ý</button></div>
       <div id="hdList"></div>
+      <h3>Quà tặng</h3>
+      <div class="row"><button class="btn" type="button" id="smAuto">Xếp hạng mục tiêu SMART (tự động)</button><button class="btn" type="button" id="smAi">Nhờ Gemini chấm mục tiêu</button></div>
+      <p class="muted" style="margin:4px 0 0;font-size:13px">Danh sách gợi ý để diễn giả chọn; không chiếu. Gemini chỉ nhận nội dung mục tiêu, không kèm mã thiết bị.</p>
+      <div id="smList"></div>
+      <div class="row" style="margin-top:10px">
+        <label>Số quà <input type="number" id="ldN" value="3" min="1" max="10" style="width:56px" class="btn"></label>
+        <button class="btn pri" type="button" id="ldGo">🎲 Quay số may mắn</button>
+        <button class="btn" type="button" id="ldInfoBtn">Ai đủ điều kiện?</button>
+        <button class="btn warn" type="button" id="ldReset">Xóa kết quả quay</button>
+      </div>
+      <p class="muted" style="margin:4px 0 0;font-size:13px">Chỉ thiết bị đã làm ≥ 3 trong 7 hoạt động workshop (không tính khảo sát nghiên cứu). Người đã trúng không quay lại. Mã may mắn hiện trên đầu trang SV.</p>
+      <div class="msg" id="ldMsg"></div>
       <h3>Xuất dữ liệu minh chứng</h3>
       <div class="row"><button class="btn pri" type="button" id="expJson">Tải JSON</button><button class="btn pri" type="button" id="expCsv">Tải CSV (Excel)</button><button class="btn pri" type="button" id="expNc">Tải dữ liệu nghiên cứu (CSV)</button></div>
       <p class="muted" style="margin:6px 0 0;font-size:13px">Dữ liệu nghiên cứu: mỗi dòng một người (theo mã ẩn danh), nối đầu buổi – cuối buổi – sau 2 tuần – sau 6 tuần. Chỉ gồm người đã đồng ý.</p>
@@ -311,6 +361,6 @@ body.show-ctrl #ctrl, #ctrl:hover, #ctrl:focus-within { opacity: 1; }
 
 <script src="vendor/qrcode-generator-1.4.4.js?v=20261015"></script>
 <script src="ws-common.js?v=20261016"></script>
-<script src="deck.js?v=20261016"></script>
+<script src="deck.js?v=20261019"></script>
 </body>
 </html>

@@ -50,6 +50,9 @@ const RATE_LIMIT_DEFAULTS = [
     'checkin_ip'       => [60, 600],  // 60 mã SAI / 10 phút / IP — lớp 100 em trên WiFi chung vẫn dư
     'gradecode_req_ip' => [30, 900],  // 30 lần xin mã (mọi lượt) / 15 phút / IP
     'gradecode_ver_ip' => [50, 900],  // 50 lần nhập mã SAI / 15 phút / IP (đã có 5 lần/SV)
+    'tvts_submit_ip'   => [60, 600],  // TVTS02: nộp bài phân tích / 10 phút / IP — cả lớp ~45 HS chung Wi-Fi trường; chặn bấm liên tục tốn hạn mức Gemini
+    'tvts_get_ip'      => [120, 600], // TVTS02: tra cứu kết quả bằng mã SAI / 10 phút / IP — chặn dò mã
+    'tvts1_save_ip'    => [300, 600], // TVTS01: lưu/cập nhật kết quả Bước 1 / 10 phút / IP — cả lớp chung Wi-Fi, mỗi em có thể sửa vài lần
 ];
 
 /** Độ dài tối đa của ClientKey — khớp VARCHAR(64) trong db/schema.sql. */

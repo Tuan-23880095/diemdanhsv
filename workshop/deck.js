@@ -429,7 +429,8 @@
   function fit() {
     var w = window.innerWidth, h = window.innerHeight;
     var k = Math.min(w / 1600, h / 900);
-    scaler.style.transform = 'scale(' + k + ')';
+    // Căn giữa bằng translate rồi mới scale: cửa sổ hẹp hơn 1600px (laptop, máy chiếu 1366/1280) vẫn nằm giữa.
+    scaler.style.transform = 'translate(-50%, -50%) scale(' + k + ')';
   }
 
   function go(i, fromRemote) {
@@ -613,6 +614,71 @@
       download('nghien-cuu-k26-' + stamp() + '.csv', d.csv, 'text/csv;charset=utf-8');
     }).catch(function (e) { msg('hostMsg', e.message, true); });
   };
+  /* ───── quà tặng: xếp hạng mục tiêu SMART + quay số may mắn ───── */
+  function smRender(d, ai) {
+    var box = document.getElementById('smList');
+    var gm = ai ? '' : '<p class="muted" style="margin:8px 0 0">Gemini trên máy chủ: ' + (d.co_gemini ? '✅ sẵn sàng' : '⚠ chưa cấu hình khóa — chỉ dùng được xếp hạng tự động') + '</p>';
+    if (!d.items.length) { box.innerHTML = gm + '<p class="muted">Chưa có mục tiêu nào.</p>'; return; }
+    box.innerHTML = gm + '<p class="muted" style="margin:8px 0 0">' + (ai ? 'Gemini (' + esc(d.model) + ') chấm ' + d.xet + ' mục tiêu, chọn ' + d.items.length + ':' : 'Điểm gợi ý tự động (0–10) trên ' + d.xet + ' mục tiêu — 10 mục cao nhất:') + '</p>' +
+      d.items.map(function (g) {
+        var meta = ai ? 'S' + g.smart.S + ' M' + g.smart.M + ' A' + g.smart.A + ' R' + g.smart.R + ' T' + g.smart.T + ' · ' + esc(g.nhan_xet)
+                      : esc((g.dau || []).join(' · ')) + ' · tự kiểm ' + g.tu_kiem + '/5' + (g.trung_noi_dung ? ' · ⚠ trùng nội dung' : '');
+        return '<div class="sm-item"><div class="sc">' + g.diem + '<small>mã ' + esc(g.code) + '</small></div><div>' + esc(g.text) + '<div class="meta">' + meta + '</div></div></div>';
+      }).join('');
+  }
+  document.getElementById('smAuto').onclick = function () {
+    document.getElementById('smList').innerHTML = '<p class="muted">Đang xếp hạng…</p>';
+    admin('smart_rank', { ai: 0 }).then(function (d) { smRender(d, false); }).catch(function (e) { document.getElementById('smList').innerHTML = '<p style="color:var(--son)">' + esc(e.message) + '</p>'; });
+  };
+  document.getElementById('smAi').onclick = function () {
+    document.getElementById('smList').innerHTML = '<p class="muted">Gemini đang chấm (10–30 giây)…</p>';
+    admin('smart_rank', { ai: 1 }).then(function (d) { smRender(d, true); }).catch(function (e) { document.getElementById('smList').innerHTML = '<p style="color:var(--son)">' + esc(e.message) + '</p>'; });
+  };
+  var LK_ABC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', lkTimers = [];
+  function lkRand() { var s = ''; for (var i = 0; i < 5; i++) s += LK_ABC[Math.floor(Math.random() * LK_ABC.length)]; return s; }
+  function lkClose() { lkTimers.forEach(clearInterval); lkTimers = []; document.getElementById('lucky').classList.remove('on'); }
+  function lkShow(d) {
+    lkTimers.forEach(clearInterval); lkTimers = [];
+    var ov = document.getElementById('lucky'), box = document.getElementById('lkCodes');
+    document.getElementById('lkSub').textContent = d.du_dieu_kien + ' bạn đủ điều kiện (làm ≥ ' + d.min + ' hoạt động) · mở điện thoại xem “Mã may mắn” trên đầu trang';
+    document.getElementById('lkNote').textContent = '';
+    ov.classList.add('on');
+    if (!d.moi.length) { box.innerHTML = '<p style="font-size:clamp(18px,2vw,30px)">Không còn ai đủ điều kiện để quay.</p>'; return; }
+    box.innerHTML = d.moi.map(function () { return '<div class="lk-code">' + lkRand() + '</div>'; }).join('');
+    var els = box.querySelectorAll('.lk-code');
+    d.moi.forEach(function (w, i) {
+      var el = els[i], t = setInterval(function () { el.firstChild.nodeValue = lkRand(); }, 60);
+      lkTimers.push(t);
+      setTimeout(function () {
+        clearInterval(t);
+        el.innerHTML = esc(w.code) + '<small>' + w.n + '/7 hoạt động' + (w.trung ? ' · ⚠ mã trùng, kiểm tra điện thoại' : '') + '</small>';
+        el.classList.add('done');
+        if (i === d.moi.length - 1) {
+          beep();
+          var old = d.da_trung.map(function (x) { return x.code; });
+          document.getElementById('lkNote').textContent = 'Bạn có mã trùng lên nhận quà nhé!' + (old.length ? ' · Đã trúng trước: ' + old.join(', ') : '');
+        }
+      }, 1800 + i * 900);
+    });
+  }
+  document.getElementById('lkClose').onclick = lkClose;
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.getElementById('lucky').classList.contains('on')) { e.stopImmediatePropagation(); lkClose(); } }, true);
+  document.getElementById('ldGo').onclick = function () {
+    var n = Math.max(1, Math.min(10, parseInt(document.getElementById('ldN').value, 10) || 3));
+    msg('ldMsg', 'Đang quay…');
+    admin('lucky_draw', { n: n, min: 3 }).then(function (d) { msg('ldMsg', 'Đã quay ' + d.moi.length + ' mã · còn ' + d.con_lai + ' bạn đủ điều kiện chưa trúng.'); lkShow(d); })
+      .catch(function (e) { msg('ldMsg', e.message, true); });
+  };
+  document.getElementById('ldInfoBtn').onclick = function () {
+    admin('lucky_info', { min: 3 }).then(function (d) {
+      msg('ldMsg', d.thiet_bi + ' thiết bị đã làm hoạt động · ' + d.du_dieu_kien + ' đủ điều kiện (≥ 3) · ' + d.con_lai + ' chưa trúng' + (d.da_trung.length ? ' · đã trúng: ' + d.da_trung.map(function (x) { return x.code; }).join(', ') : ''));
+    }).catch(function (e) { msg('ldMsg', e.message, true); });
+  };
+  document.getElementById('ldReset').onclick = function () {
+    if (!confirm('Xóa danh sách mã đã trúng? (Chỉ nên làm sau khi chạy thử.)')) return;
+    admin('lucky_reset').then(function () { msg('ldMsg', '✅ Đã xóa kết quả quay.'); }).catch(function (e) { msg('ldMsg', e.message, true); });
+  };
+
   document.getElementById('rsGo').onclick = function () {
     var w = document.getElementById('rsWhat');
     var label = w.options[w.selectedIndex].text;
@@ -682,7 +748,9 @@
   document.getElementById('stage').addEventListener('touchend', function (e) { if (tx == null) return; var dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1)); tx = null; });
 
   var hideT = null;
-  document.addEventListener('mousemove', function () { document.body.classList.add('show-ctrl'); clearTimeout(hideT); hideT = setTimeout(function () { document.body.classList.remove('show-ctrl'); }, 2200); });
+  function showCtrl(ms) { document.body.classList.add('show-ctrl'); clearTimeout(hideT); hideT = setTimeout(function () { document.body.classList.remove('show-ctrl'); }, ms); }
+  document.addEventListener('mousemove', function () { showCtrl(2200); });
+  document.addEventListener('touchstart', function () { showCtrl(4000); }, { passive: true }); // điện thoại: chạm để hiện thanh điều khiển
 
   /* bản in: dựng toàn bộ slide (Ctrl+P) */
   window.addEventListener('beforeprint', function () {
