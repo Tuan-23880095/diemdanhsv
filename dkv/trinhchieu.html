@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trình chiếu Bài giảng - Đá &amp; Khoáng vật (LEC10001) · HCMUS</title>
+  
+  <link rel="icon" type="image/svg+xml" href="assets/logo-sen.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,400&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+  
+  <!-- MathJax render công thức hóa học / địa chất -->
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- CSS định dạng Slide chuẩn workshop diemdanhsv -->
+  <link rel="stylesheet" href="deck.css?v=20261023-tachlop">
+</head>
+<body>
+
+  <!-- Thanh tiến trình trên cùng -->
+  <div id="progress"></div>
+
+  <!-- Sân khấu trình chiếu co giãn 1600x900 -->
+  <div id="stage">
+    <div id="scaler">
+      <div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:24px;color:var(--mute)">
+        Đang khởi tạo trình chiếu bài giảng...
+      </div>
+    </div>
+  </div>
+
+  <!-- Vùng in PDF -->
+  <div id="print-container" style="display:none"></div>
+
+  <!-- Thanh điều khiển phía dưới -->
+  <nav id="ctrl" aria-label="Điều khiển trình chiếu">
+    <a class="back" href="index.html" title="Về trang lớp học Đá &amp; Khoáng vật" style="text-decoration:none;font-weight:600">← Trang lớp</a>
+    <select id="lessonSelect" title="Chọn bài giảng" style="background:#223340;border:1px solid #4E5D68;color:#fff;border-radius:6px;padding:4px 8px;font-size:14px;cursor:pointer">
+      <!-- Tự động đổ danh sách 8 bài giảng -->
+    </select>
+    
+    <button type="button" data-k="prev" title="Slide trước (←, PgUp)">‹</button>
+    <span class="pos" id="pos">1 / 1</span>
+    <button type="button" data-k="next" title="Slide sau (→, Space, PgDn)">›</button>
+    
+    <button type="button" data-k="overview" title="Mục lục bài (O)">Mục lục</button>
+    <button type="button" data-k="full" title="Toàn màn hình (F)">Toàn màn hình</button>
+    <a href="sv.html" target="_blank" rel="noopener" style="background:var(--luc);color:#fff;border-radius:8px;padding:7px 12px;text-decoration:none;font-weight:600;font-size:14px" title="Mở trang tương tác sinh viên">Trang Sinh viên</a>
+    <button type="button" class="print-btn" onclick="window.print()" title="In Slide ra PDF (Ctrl+P)">In PDF</button>
+  </nav>
+
+  <!-- Modal Mục lục -->
+  <div class="modal" id="mOverview" role="dialog" aria-modal="true" aria-labelledby="ovT">
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <h2 id="ovT" style="margin:0">Mục lục slide</h2>
+        <button type="button" data-close style="background:var(--giay);border:1px solid var(--line);border-radius:8px;padding:6px 14px;cursor:pointer;font-weight:600">Đóng (ESC)</button>
+      </div>
+      <p style="color:var(--mute);margin:0 0 16px;font-size:16px">Bấm vào slide bất kỳ để chuyển đến trang tương ứng:</p>
+      <div class="overview-grid" id="ovList"></div>
+      
+      <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--line);color:var(--mute);font-size:14px">
+        <b>Phím tắt:</b> <kbd>→</kbd> / <kbd>Space</kbd>: Tiếp tục · <kbd>←</kbd>: Quay lại · <kbd>F</kbd>: Toàn màn hình · <kbd>O</kbd>: Mục lục · <kbd>Ctrl+P</kbd>: In PDF
+      </div>
+    </div>
+  </div>
+
+  <!-- Dữ liệu bài giảng tải trực tiếp dưới dạng JS (hỗ trợ cả file:// offline và https:// online không bị lỗi CORS) -->
+  <script src="slidesData.js"></script>
+
+  <!-- JavaScript xử lý -->
+  <script src="deck-engine.js?v=20261023-mobile"></script>
+</body>
+</html>

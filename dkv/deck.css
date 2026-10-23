@@ -450,6 +450,7 @@ table.styled-tbl tr:nth-child(even) td { background: var(--giay); }
   #ctrl button, #ctrl a { padding: 6px 10px; font-size: 13px; white-space: nowrap; }
   #ctrl .pos { white-space: nowrap; padding: 0 6px; }
   #ctrl [data-k="full"], #ctrl .print-btn { display: none; }
+  #ctrl .back { order: 1; }
   .modal .panel { width: calc(100vw - 16px) !important; max-height: calc(100vh - 16px); overflow: auto; }
 }
 @media (max-width: 900px) and (orientation: landscape) {
