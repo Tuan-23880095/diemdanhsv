@@ -69,6 +69,7 @@ SSH: `ssh -p 65002 u464424582@<host>` rồi **`cd domains/diemdanhsv.com/public_
 | gia cố | M4 rate limit theo IP, M5 kẹp phút, M2 gửi lại không ghi đè, L8 một thông báo lỗi, L13 import lọc cột, L11 SV ghi danh muộn, chống cache `config.js` | `docs/04` mục 19–22; smoke test **193 kiểm tra** |
 | 10 | **Cutover**: `DEFAULT_API = 'php'`, `?api=gas` làm đường lùi, workflow Firebase chỉ chạy tay, tài liệu này | PR GĐ10 |
 | 13 | **Thực tập Cơ học đất `chd-tt/`** (14/10/2026): bộ 6 phiếu thực hành + 5 mốc chuyên đề nhóm trên module phiếu online KHTD, ảnh minh chứng, Gemini chấm theo môn | `docs/04` mục 34; `tools/smoke_chd.php` 33 ca |
+| 14 | **Đá và Khoáng vật `dkv/`** (23/10/2026): tab Đ&KV, trang lớp Lý thuyết + Thực tập, 5 phiếu tuần (14 khoáng vật, đá magma, trầm tích, biến chất) có cột ảnh mẫu; điểm gửi SV ghi "phần mềm chấm tự động, giảng viên chưa chốt điểm" | `docs/04` mục 35; `tools/smoke_dkv.php` 30 ca |
 
 Kiểm thử: `php tools/smoke_test.php --config=../private/config.test.php` trên
 host → **0 FAIL** (193 kiểm tra, 13 action cũ + 18 action quản trị + các bản

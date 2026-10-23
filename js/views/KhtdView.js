@@ -274,7 +274,9 @@ class KhtdView {
   renderResult(sub, att) {
     const box = this.$('ws-result'); if (!box) return;
     if (!sub || sub.Status === 'DRAFT') { box.classList.add('hidden'); return; }
-    const ai = sub.ai;
+    // Trang của môn đặt window.KHTD_NHAN_CHAM (vd dkv/online.html) → nhãn điểm tạm tính theo môn, bỏ câu nhắc tới AI trong nhận xét.
+    const nhan = window.KHTD_NHAN_CHAM || '';
+    const ai = nhan && sub.ai ? this._locAi(sub.ai) : sub.ai;
     const multi = att && (att.allowed !== 1 || att.extra > 0 || (att.attempts || []).length > 1);
     if (ai && ai.exam) {   // phiếu luyện thi
       let x = `<p class="text-sm">Lần luyện ${this._esc(sub.AttemptNo)} — nộp lúc <b>${this._esc(sub.SubmittedAt || '')}</b>.</p>` + this.examResultHtml(ai);
@@ -284,7 +286,7 @@ class KhtdView {
     }
     let h = `<p class="text-sm">${multi ? `Lần ${this._esc(sub.AttemptNo)} — đ` : 'Đ'}ã nộp lúc <b>${this._esc(sub.SubmittedAt || '')}</b>.</p>`;
     if (sub.FinalScore != null) h += `<p class="mt-1 text-lg">Điểm chính thức${multi ? ' lần này' : ''}: <b>${this._esc(sub.FinalScore)}/10</b></p>${sub.FinalNote ? `<p class="text-sm">Nhận xét GV: ${this._esc(sub.FinalNote)}</p>` : ''}`;
-    else if (ai) h += `<p class="mt-1 text-lg">Điểm tạm tính${multi ? ' lần này' : ''} (AI, GV sẽ duyệt): <b>${this._esc(ai.total)}/10</b></p>`;
+    else if (ai) h += `<p class="mt-1 text-lg">Điểm tạm tính${multi ? ' lần này' : ''} ${nhan ? ` (${this._esc(nhan)})` : ' (AI, GV sẽ duyệt)'}: <b>${this._esc(ai.total)}/10</b></p>`;
     else h += '<p class="mt-1 text-sm text-slate-600">Đang chờ giảng viên chấm.</p>';
     if (multi && att.score != null) h += `<p class="text-sm">Điểm phiếu đang được tính: <b>${this._esc(att.score)}/10</b> (lần ${this._esc(att.countedNo)}, ${att.policy === 'LAST' ? 'lần cuối' : 'cao nhất'}).</p>`;
     if (ai) h += `<ul class="mt-2 list-disc pl-5 text-sm">${ai.criteria.map((c) => `<li><b>${this._esc(c.name)}</b>: ${this._esc(c.score)}/${this._esc(c.max)}${c.comment ? ' — ' + this._esc(c.comment) : ''}</li>`).join('')}</ul>${ai.feedback ? `<p class="mt-2 text-sm italic">${this._esc(ai.feedback)}</p>` : ''}`;
@@ -294,6 +296,17 @@ class KhtdView {
     if (att && att.canRetake) h += `<p class="mt-3 text-sm font-semibold text-blue-800">Muốn cải thiện điểm? Bấm “Làm lại” ở cuối trang${att.remaining != null ? ` (còn ${this._esc(att.remaining)} lượt)` : ''}.</p>`;
     else if (att && att.allowed === 1 && !att.extra) h += '<p class="mt-3 text-xs text-slate-500">Bấm nhầm “Nộp phiếu”? Báo giảng viên để được cấp thêm một lượt làm lại.</p>';
     box.innerHTML = h; box.classList.remove('hidden');
+  }
+
+  /** Bản sao kết quả chấm đã bỏ các câu nhắc tới AI/chatbot (trang môn khai báo KHTD_NHAN_CHAM). */
+  _locAi(ai) {
+    const re = /(^|[^\p{L}])(AI|A\.I\.|[Cc]hatbot|[Cc]hat ?GPT|Gemini|LLM|[Tt]rí tuệ nhân tạo|[Tt]rợ lý ảo|[Mm]ô hình ngôn ngữ)(?![\p{L}])/u;   // phân biệt hoa thường: không bắt chữ “ai” tiếng Việt
+    const loc = (t) => { const x = String(t == null ? '' : t); if (!re.test(x)) return x; return x.split(/(?<=[.!?;])\s+/u).filter((p) => !re.test(p)).join(' ').trim(); };
+    const out = { ...ai };
+    out.criteria = (ai.criteria || []).map((c) => ({ ...c, comment: loc(c.comment) }));
+    if (Array.isArray(ai.sua_bai)) out.sua_bai = ai.sua_bai.map((f) => ({ ...f, muc: loc(f.muc), van_de: loc(f.van_de), cach_sua: loc(f.cach_sua) }));
+    if (ai.feedback) out.feedback = loc(ai.feedback);
+    return out;
   }
 
   collectAnswers(schema) {
