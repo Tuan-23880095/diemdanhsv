@@ -21,6 +21,8 @@ function khtd_mon(array $schema): array
         'ten'    => (string) ($m['ten'] ?? 'Khoa học Trái đất, thực tập'),
         'rubric' => (string) ($m['rubric'] ?? (isset($m['ma']) ? 'rubric của phiếu' : 'rubric R2')),
         'url'    => (string) ($m['url'] ?? 'https://diemdanhsv.com/khtd/online.html'),
+        // Cách gọi điểm tạm tính trong nội dung gửi SV; rỗng = câu cũ "trợ lý AI chấm theo …" (bộ Đ&KV: api/lib/dkv.php).
+        'nhan_cham' => (string) ($m['nhan_cham'] ?? ''),
     ];
 }
 

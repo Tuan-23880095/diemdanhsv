@@ -21,6 +21,7 @@
 require_once __DIR__ . '/khtd_kb.php';
 require_once __DIR__ . '/khtd_exam.php';
 require_once __DIR__ . '/chd.php';
+require_once __DIR__ . '/dkv.php';
 
 const KHTD_TOKEN_TTL = 3 * 3600;
 
@@ -913,8 +914,11 @@ function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $fi
         $lines[] = '• ĐIỂM CHÍNH THỨC (giảng viên duyệt): ' . number_format($final, 2) . '/10';
         if ($note) { $lines[] = '• Nhận xét của giảng viên: ' . $note; }
     } elseif ($ai) {
-        $lines[] = '• Điểm tạm tính (trợ lý AI chấm theo ' . $mon['rubric'] . ', giảng viên sẽ duyệt lại): ' . number_format((float) $ai['total'], 2) . '/10';
+        $lines[] = $mon['nhan_cham'] !== ''
+            ? '• Điểm tạm tính (' . $mon['nhan_cham'] . '): ' . number_format((float) $ai['total'], 2) . '/10'
+            : '• Điểm tạm tính (trợ lý AI chấm theo ' . $mon['rubric'] . ', giảng viên sẽ duyệt lại): ' . number_format((float) $ai['total'], 2) . '/10';
     }
+    if ($ai && $mon['nhan_cham'] !== '') $ai = dkv_loc_ai_ket_qua($ai);   // bộ Đ&KV: nội dung gửi SV không nhắc tới AI
     if ($ai) {
         $lines[] = '';
         $lines[] = 'Chi tiết theo tiêu chí:';
@@ -954,7 +958,7 @@ function action_khtd_seed_worksheets(array $params): void
     assert_class_access($me, $classId);
     $created = [];
     $bo = strtolower(trim((string) ($params['bo'] ?? 'khtd')));
-    $defs = $bo === 'chd' ? chd_default_worksheets() : khtd_default_worksheets();
+    $defs = $bo === 'chd' ? chd_default_worksheets() : ($bo === 'dkv' ? dkv_default_worksheets() : khtd_default_worksheets());
     foreach ($defs as $no => $def) {
         $stmt = db()->prepare('SELECT WorksheetID FROM khtd_worksheets WHERE ClassID = :c AND No = :n LIMIT 1');
         $stmt->execute(['c' => $classId, 'n' => $no]);
