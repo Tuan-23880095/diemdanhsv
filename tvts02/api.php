@@ -48,15 +48,24 @@ const TVTS_MIN_ANSWERED = 7;     // số câu tự luận tối thiểu phải t
 const TVTS_MIN_TOTAL = 350;      // tổng ký tự tối thiểu của phần tự luận
 
 /* ───────────── CSDL ───────────── */
-function tvts_db(): PDO
+/**
+ * Kết nối CSDL. $fresh = true: mở kết nối MỚI — dùng sau lượt gọi phân tích dài (20–60 giây),
+ * vì MySQL của hosting dùng chung đóng kết nối rảnh ("MySQL server has gone away").
+ */
+function tvts_db(bool $fresh = false): PDO
 {
     global $sqlitePath;
     static $pdo = null;
-    if ($pdo) return $pdo;
+    if ($pdo && !$fresh) return $pdo;
     if ($sqlitePath) {
         $pdo = new PDO('sqlite:' . $sqlitePath, null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
-    } else {
+    } elseif (!$fresh) {
         $pdo = db();
+    } else {
+        $cfg = app_config()['db'] ?? [];
+        $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $cfg['host'] ?? 'localhost', $cfg['name'] ?? '', $cfg['charset'] ?? 'utf8mb4');
+        $pdo = new PDO($dsn, (string) ($cfg['user'] ?? ''), (string) ($cfg['pass'] ?? ''), [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_EMULATE_PREPARES => false]);
     }
     return $pdo;
 }
@@ -91,6 +100,9 @@ function tvts_run(callable $fn)
         return $fn(tvts_db());
     } catch (PDOException $e) {
         $m = $e->getMessage();
+        if (stripos($m, 'gone away') !== false || stripos($m, 'Lost connection') !== false || stripos($m, '2006') !== false) {
+            return $fn(tvts_db(true));                   // kết nối bị đóng do chờ lâu → mở lại một lần
+        }
         if ($e->getCode() === '42S02' || stripos($m, 'no such table') !== false || stripos($m, "doesn't exist") !== false) {
             tvts_schema();
             return $fn(tvts_db());
@@ -308,6 +320,7 @@ function tvts_admin(array $in): void
                 'dau_hieu_can_quan_tam_so_bo' => tvts_risk($all),
             ];
             [$raw, $model, $err] = tvts_analyze($payload);
+            tvts_db(true);
             $report = $raw ? tvts_shape_report($raw, tvts_norm($all)) : null;
             if (!$report) api_fail('Phân tích lại chưa được: ' . $err);
             $flag = ((int) $x['flag'] === 1 || $report['can_quan_tam']) ? 1 : 0;
@@ -431,6 +444,7 @@ try {
 
     // 2) Phân tích rồi cập nhật.
     [$raw, $model, $err] = tvts_analyze($payload);
+    tvts_db(true);                                   // mở kết nối mới sau lượt chờ dài
     $hay = tvts_norm($all);
     $report = $raw ? tvts_shape_report($raw, $hay) : null;
     if ($report && !$report['nhan_dinh'] && !$report['nhom_nganh']) $report = null;
@@ -445,10 +459,10 @@ try {
     api_ok(['code' => $code, 'info' => $info, 'riasec' => $rs, 'report' => $report, 'status' => $status, 'support' => $flag === 1]);
 } catch (PDOException $e) {
     error_log('[tvts02] db: ' . $e->getMessage());
-    api_fail('Máy chủ đang bận. Em thử lại sau ít phút nhé.');
+    api_fail('Máy chủ đang bận. Em thử lại sau ít phút nhé. (mã lỗi D' . (int) ($e->errorInfo[1] ?? 0) . ')');
 } catch (RuntimeException $e) {                     // lỗi nghiệp vụ viết sẵn (vd require_role: hết phiên, không đủ quyền)
     api_fail($e->getMessage());
 } catch (Throwable $e) {
-    error_log('[tvts02] ' . $e->getMessage());
-    api_fail('Máy chủ đang bận. Em thử lại sau ít phút nhé.');
+    error_log('[tvts02] ' . get_class($e) . ' ' . $e->getMessage() . ' @' . $e->getLine());
+    api_fail('Máy chủ đang bận. Em thử lại sau ít phút nhé. (mã lỗi T' . $e->getLine() . ')');
 }
