@@ -9,8 +9,8 @@
 <link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png?v=20261014-logo">
 <meta name="theme-color" content="#0b4f9e">
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css?v=20261023-dkv">
-<script src="../js/ui/logo-fallback.js?v=20261023-dkv"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261023-dkv10">
+<script src="../js/ui/logo-fallback.js?v=20261023-dkv10"></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
@@ -47,7 +47,7 @@
   <section id="list" class="hidden">
     <h2 class="mb-3 text-lg font-bold">Phiếu thực tập của bạn</h2>
     <div id="ws-list" class="space-y-2"></div>
-    <p class="mt-4 text-xs text-slate-500">Phiếu 1–5 ứng với 5 tuần thực tập (tuần 1–2: 14 khoáng vật; tuần 3: đá magma; tuần 4: đá trầm tích; tuần 5: đá biến chất). Tuần 6 thi, hình thức do giảng viên công bố. Nộp phiếu xong có điểm tạm tính do phần mềm chấm tự động và danh sách chỗ cần sửa gửi về email; <b>giảng viên chưa chốt điểm</b> cho tới khi duyệt.</p>
+    <p class="mt-4 text-xs text-slate-500">Phiếu 1–5 ứng với 5 tuần thực tập (tuần 1–2: mỗi buổi 10 mẫu khoáng vật; tuần 3, 4, 5: mỗi buổi 5 mẫu đá magma, trầm tích, biến chất). Điểm chấm theo từng mẫu. Tuần 6 thi, hình thức do giảng viên công bố. Nộp phiếu xong có điểm tạm tính do phần mềm chấm tự động và danh sách chỗ cần sửa gửi về email; <b>giảng viên chưa chốt điểm</b> cho tới khi duyệt.</p>
   </section>
 
   <!-- Làm phiếu -->
@@ -69,11 +69,11 @@
 </main>
 
 <script>window.KHTD_NHAN_CHAM = 'phần mềm chấm tự động, giảng viên chưa chốt điểm';</script>
-<script src="../js/config/config.js?v=20261023-dkv"></script>
-<script src="../js/services/APIService.js?v=20261023-dkv"></script>
-<script src="../js/views/KhtdView.js?v=20261023-dkv"></script>
-<script src="../js/views/KhtdExamView.js?v=20261023-dkv"></script>
-<script src="../js/controllers/KhtdController.js?v=20261023-dkv"></script>
+<script src="../js/config/config.js?v=20261023-dkv10"></script>
+<script src="../js/services/APIService.js?v=20261023-dkv10"></script>
+<script src="../js/views/KhtdView.js?v=20261023-dkv10"></script>
+<script src="../js/views/KhtdExamView.js?v=20261023-dkv10"></script>
+<script src="../js/controllers/KhtdController.js?v=20261023-dkv10"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     new KhtdController(new APIService(CONFIG.API_URL), new KhtdView(), 'student').init();

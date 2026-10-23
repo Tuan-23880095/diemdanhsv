@@ -99,7 +99,12 @@ foreach ($defs as $no => $d) {
 check('mỗi phiếu rubric tổng 10 điểm', $okRub);
 check('mỗi phiếu có bảng mô tả mẫu với cột "Ảnh mẫu"', $okPhoto);
 check('mỗi phiếu có thông tin môn Đ&KV, link dkv/online.html', $okMon);
-check('tuần 1–2: mỗi tuần 7 khoáng vật (14 khoáng vật)', count($defs[1]['sections'][2]['rows']) === 7 && count($defs[2]['sections'][2]['rows']) === 7);
+$rowsOf = static function (array $d): int { foreach ($d['sections'] as $s) if (($s['id'] ?? '') === 'mota') return count($s['rows']); return 0; };
+check('phiếu khoáng vật 10 mẫu, phiếu đá 5 mẫu', $rowsOf($defs[1]) === 10 && $rowsOf($defs[2]) === 10 && $rowsOf($defs[3]) === 5 && $rowsOf($defs[4]) === 5 && $rowsOf($defs[5]) === 5);
+$okCrit = true;
+foreach ($defs as $d) { $n = $rowsOf($d); $ids = array_column($d['rubric']['criteria'], 'id'); for ($k = 1; $k <= $n; $k++) if (!in_array("m$k", $ids, true)) $okCrit = false; }
+check('rubric chấm riêng từng mẫu (tiêu chí m1…mN)', $okCrit);
+check('bảng đối chiếu khoáng vật có các khoáng vật ngoài 14 mẫu (vd pyrit, galenit, fluorit)', str_contains($defs[1]['reference'], 'Pyrit') && str_contains($defs[1]['reference'], 'Galenit') && str_contains($defs[2]['reference'], 'Fluorit'));
 $nhan = (string) ($defs[1]['mon']['nhan_cham'] ?? '');
 check('nhãn điểm gửi SV: phần mềm chấm tự động, GV chưa chốt, không chữ AI', str_contains($nhan, 'phần mềm chấm tự động') && str_contains($nhan, 'chưa chốt') && !preg_match('/\bAI\b|trí tuệ nhân tạo/u', $nhan), $nhan);
 
@@ -108,7 +113,10 @@ $r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' =
 check('GV tạo 5 phiếu Đ&KV', ok($r) && count($r['data']['created']) === 5, $r);
 $ids = []; foreach (($r['data']['created'] ?? []) as $c) $ids[(int) $c['no']] = $c['id'];
 $r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'DKT_C1', 'bo' => 'dkv']);
-check('tạo lại không trùng (0 phiếu mới)', ok($r) && count($r['data']['created']) === 0, $r);
+check('tạo lại không trùng (0 phiếu mới, 0 cập nhật)', ok($r) && count($r['data']['created']) === 0 && count($r['data']['updated'] ?? []) === 0, $r);
+$pdo->prepare("UPDATE khtd_worksheets SET SchemaJSON = :s WHERE WorksheetID = :id")->execute(['s' => '{"title":"cũ","sections":[],"rubric":{"criteria":[]}}', 'id' => $ids[2]]);
+$r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'DKT_C1', 'bo' => 'dkv']);
+check('phiếu đã tạo nhưng chưa có bài làm → cập nhật nội dung mới', ok($r) && array_column($r['data']['updated'] ?? [], 'no') === [2], $r['data'] ?? $r);
 $st = $pdo->query("SELECT No, Status, MaxAttempts, ScorePolicy FROM khtd_worksheets WHERE ClassID = 'DKT_C1' ORDER BY No")->fetchAll();
 check('5 phiếu đều mở, làm tối đa 2 lần, lấy điểm cao nhất', count($st) === 5 && !array_filter($st, static fn ($x) => $x['Status'] !== 'OPEN' || (int) $x['MaxAttempts'] !== 2 || $x['ScorePolicy'] !== 'BEST'), $st);
 $r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'DKT_C2']);
@@ -123,7 +131,7 @@ $r = call('GET', ['action' => 'khtdGetWorksheet', 'token' => $sv, 'worksheetId' 
 $schema = $r['data']['worksheet']['schema'] ?? ($r['data']['schema'] ?? []);
 check('SV mở phiếu 1: không lộ đáp án / dữ liệu chuẩn / lời dặn chấm', ok($r) && !isset($schema['answer_key']) && !isset($schema['reference']) && !isset($schema['answer_hints']), array_keys($schema));
 $sec = null; foreach ($schema['sections'] ?? [] as $s) if (($s['id'] ?? '') === 'mota') $sec = $s;
-check('bảng mô tả có cột "Ảnh mẫu" và 12 cột tính chất', $sec && !empty($sec['photos']) && ($sec['photo_label'] ?? '') === 'Ảnh mẫu' && count($sec['columns']) === 12, $sec);
+check('bảng mô tả có cột "Ảnh mẫu", 12 cột tính chất, 10 mẫu', $sec && !empty($sec['photos']) && ($sec['photo_label'] ?? '') === 'Ảnh mẫu' && count($sec['columns']) === 12 && count($sec['rows']) === 10, $sec);
 
 $png = 'data:image/png;base64,' . base64_encode(base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='));
 $r = call('POST', ['action' => 'khtdUploadPhoto', 'token' => $sv, 'worksheetId' => $ids[1], 'sectionId' => 'mota', 'row' => 0, 'image' => $png]);
@@ -141,12 +149,15 @@ $row = $pdo->query("SELECT SubmissionID, AnswersJSON, Status FROM khtd_submissio
 $saved = json_decode((string) $row['AnswersJSON'], true);
 check('bài nộp giữ tham chiếu ảnh mẫu', ($saved['_photos']['mota']['0'][0] ?? ($saved['_photos']['mota'][0][0] ?? '')) === $pid, $saved['_photos'] ?? null);
 check('trạng thái SUBMITTED', $row['Status'] === 'SUBMITTED', $row['Status']);
+$pdo->prepare("UPDATE khtd_worksheets SET SchemaJSON = REPLACE(SchemaJSON, 'Tuần 1', 'Tuan 1') WHERE WorksheetID = :id")->execute(['id' => $ids[1]]);
+$r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'DKT_C1', 'bo' => 'dkv']);
+check('phiếu đã có bài làm → KHÔNG cập nhật nội dung', ok($r) && !in_array(1, array_column($r['data']['updated'] ?? [], 'no'), true), $r['data'] ?? $r);
 
 echo "== Chấm theo môn, nội dung gửi sinh viên ==\n";
 $wsRow = khtd_worksheet($ids[1]);
 $sys = khtd_grade_system($wsRow['schema']);
 check('lời dặn chấm: vai trò môn Đá và khoáng vật', str_contains($sys, 'môn Đá và khoáng vật (LEC10001') && !str_contains($sys, 'Khoa học Trái đất'), mb_substr($sys, 0, 160));
-check('lời dặn chấm: đối chiếu theo tên khoáng vật, lệch ≤ 0,5 bậc Mohs', str_contains($sys, 'không quá 0,5 bậc Mohs'));
+check('lời dặn chấm: chấm riêng từng mẫu theo tên đã gọi, lệch ≤ 0,5 bậc Mohs', str_contains($sys, "ứng với tiêu chí 'm{k}'") && str_contains($sys, 'lý thuyết của chính tên đã gọi') && str_contains($sys, 'không quá 0,5 bậc Mohs'));
 check('lời dặn chấm: nhận xét gửi SV không nhắc AI, giữ khuôn JSON', str_contains($sys, 'KHÔNG nhắc tới AI') && str_contains($sys, '"criteria"'));
 $m = khtd_mon($wsRow['schema']);
 check('email Đ&KV: tiêu đề [Đ&KV], link dkv, nhãn phần mềm chấm tự động', $m['ma'] === 'Đ&KV' && str_contains($m['url'], 'dkv/online.html') && str_contains($m['nhan_cham'], 'phần mềm chấm tự động'), $m);

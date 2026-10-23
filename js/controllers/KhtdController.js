@@ -313,7 +313,14 @@ class KhtdController {
 
   async seed() {
     if (!this.classId) return this.view.msg('Chọn lớp trước.', 'err');
-    try { const d = await this.api.khtdSeedWorksheets(this.token, this.classId, window.KHTD_BO || ''); this.view.msg(d.created.length ? `Đã tạo ${d.created.length} phiếu mặc định (phiếu số ${d.created.map((x) => x.no).join(', ')}).` : 'Lớp đã đủ các phiếu mặc định.', 'ok'); this.loadClass(); }
+    try {
+      const d = await this.api.khtdSeedWorksheets(this.token, this.classId, window.KHTD_BO || '');
+      const up = d.updated || [];   // bộ Đ&KV: phiếu chưa có bài làm được cập nhật nội dung mới
+      const parts = [];
+      if (d.created.length) parts.push(`Đã tạo ${d.created.length} phiếu mặc định (phiếu số ${d.created.map((x) => x.no).join(', ')}).`);
+      if (up.length) parts.push(`Đã cập nhật nội dung ${up.length} phiếu chưa có bài làm (phiếu số ${up.map((x) => x.no).join(', ')}).`);
+      this.view.msg(parts.length ? parts.join(' ') : 'Lớp đã đủ các phiếu mặc định.', 'ok'); this.loadClass();
+    }
     catch (err) { this.view.msg(err.message, 'err'); }
   }
 
