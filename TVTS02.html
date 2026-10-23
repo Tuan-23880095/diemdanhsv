@@ -42,6 +42,7 @@ section.page.on { display: block; animation: fadeIn .3s ease; }
 h1 { font-family: var(--serif); font-size: clamp(1.8rem, 5.2vw, 2.6rem); line-height: 1.15; margin: 26px 0 12px; letter-spacing: -.01em; }
 h2 { font-family: var(--serif); font-size: clamp(1.4rem, 4vw, 1.8rem); line-height: 1.2; margin: 22px 0 8px; }
 h3 { font-family: var(--serif); font-size: 1.2rem; margin: 0 0 8px; }
+.t1note { background: #F0F6F2; border-color: #CFE4D8; font-size: .92rem; }
 .kicker { font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--luc); margin-top: 22px; }
 .lead { font-size: 1.07rem; color: var(--mute); margin: 0 0 16px; }
 .muted { color: var(--mute); } .small { font-size: .87rem; }
@@ -166,6 +167,7 @@ footer img { width: 40px; height: 40px; flex: none; }
 <section class="page" id="p-home">
   <div class="kicker">Dành cho học sinh THCS – THPT</div>
   <h1>Hiểu mình trước khi chọn ngành</h1>
+  <div class="card t1note" id="t1Home" style="display:none"></div>
   <p class="lead">Bộ công cụ gồm một phần trắc nghiệm ngắn và mười câu hỏi để em kể về bản thân. Bản phân tích trả về được viết riêng cho em, mỗi nhận định đều dẫn lại chính lời em đã viết.</p>
   <div class="grid3">
     <div class="feat"><div class="n">30</div><h4>Câu trắc nghiệm sở thích</h4><p>Đo 6 nhóm sở thích nghề theo lý thuyết Holland, dùng bộ câu hỏi O*NET Mini Interest Profiler.</p></div>
@@ -178,6 +180,7 @@ footer img { width: 40px; height: 40px; flex: none; }
       <li>Thời gian khoảng <b>30–40 phút</b>. Em nên làm trên máy tính hoặc điện thoại ở nơi yên tĩnh.</li>
       <li>Không có câu trả lời đúng hay sai. Hãy viết thật, viết cụ thể — bài càng cụ thể, bản phân tích càng sát với em.</li>
       <li>Bài làm được lưu tạm trên máy; em có thể dừng và quay lại sau trên cùng thiết bị.</li>
+      <li>Nếu em đã làm <a href="/TVTS01/index.htm">Bước 1 — bộ trắc nghiệm 5 phần</a>, hãy mở trang này bằng nút <b>“Làm tiếp Bước 2”</b> ở trang kết quả Bước 1 để 30 câu sở thích được điền sẵn.</li>
       <li>Kết quả là <b>tài liệu tham khảo để trao đổi</b> với thầy cô và gia đình, không thay cho quyết định của em.</li>
     </ul>
   </div>
@@ -201,7 +204,7 @@ footer img { width: 40px; height: 40px; flex: none; }
 
 <!-- ĐỒNG Ý -->
 <section class="page" id="p-consent">
-  <div class="kicker">Bước 1 / 4 · Đồng ý tham gia</div>
+  <div class="kicker">Phần 1 / 4 · Đồng ý tham gia</div>
   <h2>Thông tin và sự đồng ý</h2>
   <div class="card">
     <label class="check"><input type="checkbox" id="c1"><span>Em tham gia <b>tự nguyện</b> và có thể dừng bất cứ lúc nào.</span></label>
@@ -218,7 +221,8 @@ footer img { width: 40px; height: 40px; flex: none; }
 
 <!-- THÔNG TIN + TRẮC NGHIỆM -->
 <section class="page" id="p-mcq">
-  <div class="kicker">Bước 2 / 4 · Thông tin và trắc nghiệm sở thích</div>
+  <div class="kicker">Phần 2 / 4 · Thông tin và trắc nghiệm sở thích</div>
+  <div class="card t1note" id="t1Mcq" style="display:none"></div>
   <h2>Một chút về em</h2>
   <div class="card">
     <div class="grid2">
@@ -238,7 +242,7 @@ footer img { width: 40px; height: 40px; flex: none; }
 
 <!-- TỰ LUẬN -->
 <section class="page" id="p-essay">
-  <div class="kicker">Bước 3 / 4 · Tự luận</div>
+  <div class="kicker">Phần 3 / 4 · Tự luận</div>
   <h2>Kể về em</h2>
   <p class="lead">Mỗi câu, em viết khoảng 3–6 câu văn. Hãy kể cụ thể: tên người, tên kênh, việc em đã làm, cảm xúc của em. Cần trả lời ít nhất 7 trên 10 câu.</p>
   <div id="qEssay"></div>
@@ -322,7 +326,7 @@ const ESSAYS = [ // đồng bộ với tvts02/kb.php
 const MIN_ANSWERED = 7, MIN_CHARS_GOOD = 120;
 const PAGES = ['home', 'consent', 'mcq', 'essay', 'wait', 'lookup', 'result'];
 
-const S = { page: 'home', consent: false, info: {}, r: {}, e: {} };
+const S = { page: 'home', consent: false, info: {}, r: {}, e: {}, t1: '' };
 function load() { try { const x = JSON.parse(localStorage.getItem(KEY) || 'null'); if (x && typeof x === 'object') Object.assign(S, x); } catch (e) {} }
 function save() { try { const c = Object.assign({}, S); if (c.page === 'wait' || c.page === 'result' || c.page === 'lookup') c.page = 'home'; localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {} }
 const $ = (s, r) => (r || document).querySelector(s);
@@ -374,13 +378,39 @@ async function submit() {
   try {
     const r = []; for (let i = 0; i < 30; i++) r.push(S.r[i]);
     const e = {}; ESSAYS.forEach(([k]) => e[k] = (S.e[k] || '').trim());
-    const data = await post({ a: 'analyze', consent: true, info: S.info, r, e, hp: $('#hp').value });
+    const data = await post({ a: 'analyze', consent: true, info: S.info, r, e, t1: S.t1 || '', hp: $('#hp').value });
     clearInterval(tick);
     try { localStorage.setItem(KEY + '-last', data.code); } catch (x) {}
     renderResult(data); go('result');
   } catch (err) {
     clearInterval(tick); go('essay'); toast(err.message);
   }
+}
+/* Nối từ Bước 1 (/TVTS01): ?t1=MÃ → điền sẵn 30 câu sở thích + thông tin, gửi kèm mã khi nộp bài. */
+function drawT1() {
+  const on = !!S.t1;
+  $('#t1Home').style.display = on ? '' : 'none'; $('#t1Mcq').style.display = on ? '' : 'none';
+  if (!on) return;
+  $('#t1Home').innerHTML = `Đã nhận kết quả <b>Bước 1</b> của em (mã <b>${esc(S.t1)}</b>). Đây là <b>Bước 2 — phần tự luận</b>; 30 câu sở thích em đã làm được điền sẵn.`;
+  $('#t1Mcq').innerHTML = `30 câu dưới đây đã được điền từ kết quả Bước 1 (mã <b>${esc(S.t1)}</b>). Em xem lại nhanh, sửa nếu thấy chưa đúng, rồi bấm <b>Tiếp: Phần tự luận</b>.`;
+}
+async function linkT1(code) {
+  code = (code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (code.length !== 8) return;
+  try {
+    const r = await fetch(API + '?a=get1&code=' + encodeURIComponent(code));
+    const j = await r.json();
+    if (j.status !== 'success') throw new Error(j.message);
+    const d = j.data;
+    if (S.t1 !== d.code || Object.keys(S.r).length === 0) {
+      S.r = {}; (d.r || []).forEach((v, i) => { if (Number.isInteger(v)) S.r[i] = v; });
+      $$('#qMcq input[type=radio]').forEach(el => { el.checked = S.r[+el.name.slice(1)] === +el.value; });
+    }
+    S.t1 = d.code;
+    [['inName', 'name'], ['inGrade', 'grade'], ['inSchool', 'school']].forEach(([id, k]) => { if (!S.info[k] && d.info && d.info[k]) { S.info[k] = d.info[k]; $('#' + id).value = d.info[k]; } });
+    save(); drawT1(); updateProgress();
+  } catch (e) { toast(e.message || 'Không lấy được kết quả Bước 1.'); }
+  try { history.replaceState(null, '', location.pathname); } catch (e) {}
 }
 async function lookup(code) {
   code = (code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -452,8 +482,10 @@ function init() {
   $('#inCode').addEventListener('keydown', e => { if (e.key === 'Enter') lookup(e.target.value); });
   $('#btnPrint').addEventListener('click', () => window.print());
   $('#btnCopyCode').addEventListener('click', () => { const c = renderResult.code || ''; (navigator.clipboard ? navigator.clipboard.writeText(c) : Promise.reject()).then(() => toast('Đã sao chép mã ' + c), () => toast('Mã tra cứu: ' + c)); });
-  const qp = new URLSearchParams(location.search).get('ma');
+  const qs = new URLSearchParams(location.search), qp = qs.get('ma'), qt = qs.get('t1');
+  drawT1();
   if (qp) { lookup(qp); return; }
+  if (qt) linkT1(qt);
   go(['consent', 'mcq', 'essay'].includes(S.page) && S.consent ? S.page : 'home');
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
