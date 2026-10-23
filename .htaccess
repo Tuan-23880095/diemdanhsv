@@ -9,6 +9,14 @@ RewriteEngine On
 # Cho phép thư mục xác minh SSL miễn phí (Let's Encrypt) — KHÔNG được chặn
 RewriteRule ^\.well-known/ - [L]
 
+# La bàn Hướng nghiệp: gõ kiểu nào cũng tới đúng trang (không phân biệt hoa/thường, có/không đuôi .html)
+#   tvts01, tvts01/, tvts01.html, TVTS01.htm…  → /TVTS01/index.htm
+#   tvts02, tvts02/, tvts02.html (trừ đúng /TVTS02.html) → /TVTS02.html
+RewriteCond %{REQUEST_URI} !^/TVTS01/index\.htm$
+RewriteRule ^tvts01(\.html?|/|/index\.html?)?$ /TVTS01/index.htm [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/TVTS02\.html$
+RewriteRule ^tvts02(\.html?|/)?$ /TVTS02.html [NC,R=301,L]
+
 # Chặn file/thư mục ẩn: .git, .github, .gitignore, .firebaserc…
 RewriteRule (^|/)\. - [F,L]
 
