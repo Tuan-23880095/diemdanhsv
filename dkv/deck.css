@@ -42,8 +42,14 @@ html, body {
 #scaler {
   width: 1600px;
   height: 900px;
+  /* Đặt tâm slide đúng tâm màn hình rồi mới thu nhỏ (deck-engine.js autoScale).
+     Trước đây dùng grid place-items:center: khi màn hình hẹp hơn 1600px (điện thoại),
+     ô lưới bị kéo rộng theo slide nên slide trôi ra ngoài màn hình. */
+  position: absolute;
+  left: 50%;
+  top: 50%;
   transform-origin: center center;
-  position: relative;
+  transform: translate(-50%, -50%);
 }
 
 .slide {
@@ -418,6 +424,7 @@ table.styled-tbl tr:nth-child(even) td { background: var(--giay); }
   cursor: pointer;
   text-decoration: none;
   font-size: 14px;
+  white-space: nowrap;
 }
 #ctrl button:hover, #ctrl a:hover {
   background: rgba(255,255,255,0.16);
@@ -426,6 +433,27 @@ table.styled-tbl tr:nth-child(even) td { background: var(--giay); }
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   padding: 0 10px;
+}
+
+/* Điện thoại / màn hình hẹp: thanh điều khiển gói gọn trong bề rộng màn hình */
+@media (max-width: 900px) {
+  #ctrl {
+    left: 8px; right: 8px; bottom: 8px;
+    transform: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 8px;
+    border-radius: 12px;
+  }
+  #ctrl select { flex: 1 1 100%; max-width: 100%; min-width: 0; }
+  #ctrl button, #ctrl a { padding: 6px 10px; font-size: 13px; white-space: nowrap; }
+  #ctrl .pos { white-space: nowrap; padding: 0 6px; }
+  #ctrl [data-k="full"], #ctrl .print-btn { display: none; }
+  .modal .panel { width: calc(100vw - 16px) !important; max-height: calc(100vh - 16px); overflow: auto; }
+}
+@media (max-width: 900px) and (orientation: landscape) {
+  #ctrl select { flex: 1 1 200px; }
 }
 
 /* Thanh tiến trình trên cùng */
