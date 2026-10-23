@@ -21,8 +21,15 @@
   // Khởi động
   async function init() {
     try {
-      var resp = await fetch('slidesData.json');
-      state.lessons = await resp.json();
+      if (window.SLIDES_DATA) {
+        state.lessons = window.SLIDES_DATA;
+      } else {
+        var resp = await fetch('slidesData.json');
+        state.lessons = await resp.json();
+      }
+      
+      // Lắng nghe phản hồi trực tiếp từ điện thoại sinh viên (BroadcastChannel)
+      setupLiveListener();
       
       // Đọc URL hash hoặc query ?lesson=4-1#1
       var params = new URLSearchParams(window.location.search);
@@ -408,6 +415,29 @@
           (sl.next ? '<p style="color:var(--son);font-weight:700;margin-top:20px;font-size:22px">' + esc(sl.next) + '</p>' : '') +
         '</div>' +
       '</div>';
+  }
+
+  // --- Nhận tín hiệu tương tác thời gian thực từ trang SV ---
+  function setupLiveListener() {
+    try {
+      var ch = new BroadcastChannel('dkv_live_session');
+      ch.onmessage = function(e) {
+        var msg = e.data;
+        if (!msg) return;
+        var toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;top:20px;right:20px;background:rgba(16,33,43,0.92);color:#fff;padding:12px 20px;border-radius:12px;z-index:9999;font-size:16px;box-shadow:0 8px 25px rgba(0,0,0,0.3);border-left:5px solid var(--luc-non);animation:sIn .3s ease;';
+        
+        if (msg.type === 'quiz') {
+          toast.innerHTML = '⚡ <b>Sinh viên vừa trả lời:</b> Câu ' + (msg.data.qIdx + 1) + ' chọn <b>' + msg.data.choice + '</b> ' + (msg.data.correct ? '✔' : '✖');
+        } else if (msg.type === 'group') {
+          toast.innerHTML = '👥 <b>Ý kiến mới từ ' + esc(msg.data.group) + ':</b> ' + esc(msg.data.answer.substring(0, 45)) + '...';
+        } else if (msg.type === 'qa') {
+          toast.innerHTML = '💬 <b>Câu hỏi mới:</b> ' + esc(msg.data.q.substring(0, 50)) + '...';
+        }
+        document.body.appendChild(toast);
+        setTimeout(function() { toast.remove(); }, 4000);
+      };
+    } catch(err) {}
   }
 
   // --- Kiểm tra Quiz ---
