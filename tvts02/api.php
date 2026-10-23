@@ -18,6 +18,7 @@ declare(strict_types=1);
  *
  * POST {a:'analyze', consent:true, info:{...}, r:[30 số 0–4], e:{q1..q10}, hp:''}
  * GET  ?a=get&code=XXXXXXXX
+ * Bước 1 (TVTS01): xem buoc1.php — POST {a:'save1',…}, GET ?a=get1&code=…, quản trị op list1|detail1|delete1|export1.
  *
  * Chạy thử cục bộ: TVTS_SQLITE=/tmp/t.sqlite TVTS_FAKE=/path/fake.json php -S localhost:8000
  * (chỉ CLI/cli-server; TVTS_FAKE = file JSON giả lập câu trả lời của Gemini).
@@ -31,6 +32,7 @@ header('Cache-Control: no-store');
 $root = dirname(__DIR__);
 require $root . '/api/lib/response.php';
 require __DIR__ . '/kb.php';
+require __DIR__ . '/buoc1.php';               // Bước 1 (TVTS01): lưu kết quả trắc nghiệm, nối sang Bước 2
 
 $LOCAL = in_array(PHP_SAPI, ['cli', 'cli-server'], true);
 $sqlitePath = $LOCAL ? getenv('TVTS_SQLITE') : false;
@@ -286,7 +288,7 @@ function tvts_admin_row(array $x, bool $full): array
     $o = ['code' => $x['code'], 'ts' => (int) $x['ts'], 'time' => date('Y-m-d H:i', (int) $x['ts']),
           'name' => $info['name'] ?? '', 'grade' => $x['grade'], 'school' => $x['school'], 'gender' => $info['gender'] ?? '',
           'ma_tn' => $rs['code'] ?? '', 'ma_bv' => $rep['ma_bai_viet'] ?? '', 'status' => $x['status'],
-          'flag' => (int) $x['flag'], 'flag_note' => $x['flag_note'], 'model' => $x['model']];
+          'flag' => (int) $x['flag'], 'flag_note' => $x['flag_note'], 'model' => $x['model'], 't1' => $info['t1'] ?? ''];
     if ($full) { $o['info'] = $info; $o['riasec'] = $rs; $o['essays'] = json_decode((string) $x['essays'], true) ?: []; $o['report'] = $rep; }
     return $o;
 }
@@ -295,6 +297,7 @@ function tvts_admin(array $in): void
     $me = tvts_admin_me($in);
     $op = (string) ($in['op'] ?? '');
     if ($op === 'me') api_ok(['name' => $me['name']]);
+    if (in_array($op, ['list1', 'detail1', 'delete1', 'export1'], true)) t1_admin($op, $in, $me);
     if ($op === 'list') {
         $rows = tvts_run(function (PDO $pdo) use ($in) {
             $where = !empty($in['flagOnly']) ? 'WHERE flag = 1' : '';
@@ -341,7 +344,7 @@ function tvts_admin(array $in): void
     }
     if ($op === 'export') {
         $rows = tvts_run(fn(PDO $pdo) => $pdo->query('SELECT * FROM tvts02_reports ORDER BY ts ASC')->fetchAll());
-        $head = ['ma_tra_cuu', 'thoi_gian', 'ho_ten', 'lop', 'truong', 'gioi_tinh'];
+        $head = ['ma_tra_cuu', 'ma_buoc1', 'thoi_gian', 'ho_ten', 'lop', 'truong', 'gioi_tinh'];
         foreach (TVTS_ORDER as $t) $head[] = 'RIASEC_' . $t;
         array_push($head, 'ma_holland_tn', 'do_phan_hoa', 'do_nhat_quan');
         for ($i = 1; $i <= count(TVTS_RIASEC_ITEMS); $i++) $head[] = 'r' . $i;
@@ -351,7 +354,7 @@ function tvts_admin(array $in): void
         foreach ($rows as $x) {
             $info = json_decode((string) $x['info'], true) ?: []; $rs = json_decode((string) $x['riasec'], true) ?: [];
             $es = json_decode((string) $x['essays'], true) ?: []; $rep = json_decode((string) $x['report'], true) ?: [];
-            $line = [$x['code'], date('Y-m-d H:i:s', (int) $x['ts']), $info['name'] ?? '', $x['grade'], $x['school'], $info['gender'] ?? ''];
+            $line = [$x['code'], $info['t1'] ?? '', date('Y-m-d H:i:s', (int) $x['ts']), $info['name'] ?? '', $x['grade'], $x['school'], $info['gender'] ?? ''];
             foreach (TVTS_ORDER as $t) $line[] = $rs['scores'][$t] ?? '';
             array_push($line, $rs['code'] ?? '', $rs['diff'] ?? '', $rs['cons'] ?? '');
             for ($i = 0; $i < count(TVTS_RIASEC_ITEMS); $i++) $line[] = $rs['r'][$i] ?? '';
@@ -373,6 +376,7 @@ try {
     if ($method === 'GET') {
         $a = (string) ($_GET['a'] ?? '');
         if ($a === 'ping') api_ok(['ok' => true]);
+        if ($a === 'get1') t1_get((string) ($_GET['code'] ?? ''));
         if ($a !== 'get') api_fail('Thao tác không hợp lệ.');
         $code = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) ($_GET['code'] ?? '')) ?? '');
         tvts_guard('tvts_get_ip');
@@ -390,6 +394,7 @@ try {
 
     $in = json_decode((string) file_get_contents('php://input'), true);
     if (is_array($in) && ($in['a'] ?? '') === 'admin') tvts_admin($in);
+    if (is_array($in) && ($in['a'] ?? '') === 'save1') t1_save($in);
     if (!is_array($in) || ($in['a'] ?? '') !== 'analyze') api_fail('Dữ liệu không hợp lệ.');
     if (!empty($in['hp'])) api_fail('Dữ liệu không hợp lệ.');                 // bẫy máy gửi tự động
     if (($in['consent'] ?? false) !== true) api_fail('Em cần đánh dấu đồng ý trước khi gửi bài.');
@@ -403,6 +408,8 @@ try {
     $infoIn = is_array($in['info'] ?? null) ? $in['info'] : [];
     $info = ['name' => tvts_str($infoIn['name'] ?? '', 60), 'grade' => tvts_str($infoIn['grade'] ?? '', 16),
              'school' => tvts_str($infoIn['school'] ?? '', 120), 'gender' => tvts_str($infoIn['gender'] ?? '', 16)];
+    $t1 = t1_code_in($in['t1'] ?? '');
+    if (strlen($t1) === TVTS_CODE_LEN) $info['t1'] = $t1;   // mã kết quả Bước 1 (TVTS01) — nối hai bước khi phân tích dữ liệu
 
     $eIn = is_array($in['e'] ?? null) ? $in['e'] : [];
     $essays = []; $answered = 0; $total = 0;

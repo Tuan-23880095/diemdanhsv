@@ -35,6 +35,13 @@ tr.flag td { background: #FDF0EC; } tr:hover td { background: #F7FAF8; cursor: p
 .modal h2 { font-family: var(--serif); margin: 0 0 6px; } .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; } @media (max-width: 800px) { .two { grid-template-columns: 1fr; } }
 .qa { margin: 10px 0; } .qa .q { font-weight: 600; font-size: .86rem; color: var(--lam); } .qa .a { white-space: pre-wrap; background: #F8FAF8; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin-top: 4px; font-size: .9rem; }
 blockquote { margin: 4px 0; padding: 4px 10px; border-left: 3px solid #B9CFC2; color: #2C3E46; font-style: italic; font-size: .88rem; background: #F6F8F5; }
+.tabs { display: flex; gap: 6px; margin-top: 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.tabs button { border: 1px solid var(--line); border-bottom: 0; background: #F7F8F5; color: var(--mute); padding: 9px 16px; border-radius: 10px 10px 0 0; font-weight: 600; cursor: pointer; margin-bottom: -1px; }
+.tabs button.on { background: #fff; color: var(--luc); }
+.grid-sc { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+.grid-sc .card { margin: 0; padding: 12px; } .grid-sc h4 { margin: 0 0 6px; font-size: .86rem; color: var(--lam); }
+.kv { display: flex; justify-content: space-between; font-size: .86rem; border-bottom: 1px dashed #E6EAE7; padding: 2px 0; }
+.ans { font-family: ui-monospace, Consolas, monospace; font-size: .8rem; word-break: break-all; background: #F8FAF8; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
 .muted { color: var(--mute); } .small { font-size: .85rem; } .err { color: var(--son); font-weight: 600; }
 </style>
 </head>
@@ -52,6 +59,25 @@ blockquote { margin: 4px 0; padding: 4px 10px; border-left: 3px solid #B9CFC2; c
   </div>
 
   <div id="vMain" style="display:none">
+    <div class="tabs"><button id="tab1" data-tab="1">Bước 1 · Trắc nghiệm 5 phần (TVTS01)</button><button id="tab2" data-tab="2">Bước 2 · Tự luận (TVTS02)</button></div>
+
+    <div id="pane1" style="display:none">
+    <div class="stats" style="margin-top:18px">
+      <div class="stat"><b id="s1N">0</b><span>Kết quả Bước 1</span></div>
+      <div class="stat"><b id="s1L" style="color:var(--lam)">0</b><span>Đã làm tiếp Bước 2</span></div>
+    </div>
+    <div class="tools">
+      <input type="text" id="q1" placeholder="Tìm theo mã, tên, trường, lớp, mã Holland…" style="flex:1;min-width:220px">
+      <select id="filt1"><option value="">Tất cả</option><option value="b2">Đã làm Bước 2</option><option value="no">Chưa làm Bước 2</option></select>
+      <button class="btn ghost" id="btnReload1">Tải lại</button>
+      <button class="btn" id="btnCsv1">Tải toàn bộ (.csv)</button>
+      <button class="btn ghost" id="btnJson1">Tải toàn bộ (.json)</button>
+    </div>
+    <p class="small muted">File CSV gồm: mã Bước 1 và mã Bước 2 (nếu học sinh làm tiếp), thông tin học sinh, điểm RIASEC (0–20), Big Five, giá trị nghề, CAAS (1–5), tự đánh giá 14 môn (0 = không học, 1–5), 3 nhóm ngành gợi ý, nghề mơ ước, ý kiến "xã hội cần", và toàn bộ câu trả lời gốc r1–r30, b1–b20, v1–v20, c1–c12 (b: câu đảo chiều chưa đổi). Nối với file Bước 2 qua cột <b>ma_buoc1</b>. Khi dùng cho nghiên cứu, hãy bỏ cột họ tên và trường.</p>
+    <table><thead><tr><th>Thời gian</th><th>Mã</th><th>Họ tên</th><th>Lớp</th><th>Trường</th><th>Mã Holland</th><th>Nhóm ngành gợi ý 1</th><th>Bước 2</th></tr></thead><tbody id="rows1"></tbody></table>
+    </div>
+
+    <div id="pane2">
     <div class="stats" style="margin-top:18px">
       <div class="stat"><b id="sN">0</b><span>Bài đã nộp</span></div>
       <div class="stat"><b id="sF" style="color:var(--son)">0</b><span>Cần quan tâm</span></div>
@@ -64,8 +90,9 @@ blockquote { margin: 4px 0; padding: 4px 10px; border-left: 3px solid #B9CFC2; c
       <button class="btn" id="btnCsv">Tải toàn bộ (.csv)</button>
       <button class="btn ghost" id="btnJson">Tải toàn bộ (.json)</button>
     </div>
-    <p class="small muted">File CSV gồm: thông tin học sinh, điểm 6 nhóm RIASEC, 30 câu trả lời gốc (r1–r30), 10 bài tự luận (q1–q10), mã Holland từ bài viết, chủ đề, nhóm ngành gợi ý, cờ cần quan tâm. Mở bằng Excel (mã hoá UTF-8). Khi dùng cho nghiên cứu, hãy bỏ cột họ tên và trường.</p>
-    <table><thead><tr><th>Thời gian</th><th>Mã</th><th>Họ tên</th><th>Lớp</th><th>Trường</th><th>Mã TN</th><th>Mã BV</th><th>Trạng thái</th></tr></thead><tbody id="rows"></tbody></table>
+    <p class="small muted">File CSV gồm: mã tra cứu, mã Bước 1 (ma_buoc1, nếu học sinh đi từ TVTS01), thông tin học sinh, điểm 6 nhóm RIASEC, 30 câu trả lời gốc (r1–r30), 10 bài tự luận (q1–q10), mã Holland từ bài viết, chủ đề, nhóm ngành gợi ý, cờ cần quan tâm. Mở bằng Excel (mã hoá UTF-8). Khi dùng cho nghiên cứu, hãy bỏ cột họ tên và trường.</p>
+    <table><thead><tr><th>Thời gian</th><th>Mã</th><th>Họ tên</th><th>Lớp</th><th>Trường</th><th>Mã TN</th><th>Mã BV</th><th>Mã B1</th><th>Trạng thái</th></tr></thead><tbody id="rows"></tbody></table>
+    </div>
   </div>
 </div>
 
@@ -79,6 +106,7 @@ const ESSAYQ = { q1: 'Hình mẫu ngưỡng mộ', q2: 'Kênh, sách, chương t
 let token = ''; try { token = sessionStorage.getItem('tvts02-admin') || ''; } catch (e) {}
 let ROWS = [];
 const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 async function call(body, url) {
   const r = await fetch(url || API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -99,7 +127,7 @@ async function login() {
   } catch (e) { $('#loginErr').textContent = e.message; }
 }
 async function boot() {
-  try { const me = await admin('me'); $('#who').textContent = me.name; show(true); await reload(); }
+  try { const me = await admin('me'); $('#who').textContent = me.name; show(true); setTab(TAB); }
   catch (e) { token = ''; try { sessionStorage.removeItem('tvts02-admin'); } catch (x) {} show(false); if (e.message && !/hết hạn/.test(e.message)) $('#loginErr').textContent = e.message; }
 }
 async function reload() {
@@ -110,7 +138,7 @@ async function reload() {
 function draw() {
   const q = $('#q').value.trim().toLowerCase(), f = $('#filt').value;
   const list = ROWS.filter(r => (!f || (f === 'flag' ? r.flag : r.status === 'pending')) && (!q || [r.code, r.name, r.school, r.grade].join(' ').toLowerCase().includes(q)));
-  $('#rows').innerHTML = list.map(r => `<tr class="${r.flag ? 'flag' : ''}" data-code="${esc(r.code)}"><td>${esc(r.time)}</td><td><b>${esc(r.code)}</b></td><td>${esc(r.name)}</td><td>${esc(r.grade)}</td><td>${esc(r.school)}</td><td>${esc(r.ma_tn)}</td><td>${esc(r.ma_bv)}</td><td>${r.flag ? '<span class="pill r">Cần quan tâm</span> ' : ''}${r.status === 'pending' ? '<span class="pill y">Chờ phân tích</span>' : '<span class="pill g">Đã phân tích</span>'}</td></tr>`).join('') || '<tr><td colspan="8" class="muted">Chưa có bài.</td></tr>';
+  $('#rows').innerHTML = list.map(r => `<tr class="${r.flag ? 'flag' : ''}" data-code="${esc(r.code)}"><td>${esc(r.time)}</td><td><b>${esc(r.code)}</b></td><td>${esc(r.name)}</td><td>${esc(r.grade)}</td><td>${esc(r.school)}</td><td>${esc(r.ma_tn)}</td><td>${esc(r.ma_bv)}</td><td>${esc(r.t1 || '')}</td><td>${r.flag ? '<span class="pill r">Cần quan tâm</span> ' : ''}${r.status === 'pending' ? '<span class="pill y">Chờ phân tích</span>' : '<span class="pill g">Đã phân tích</span>'}</td></tr>`).join('') || '<tr><td colspan="9" class="muted">Chưa có bài.</td></tr>';
 }
 function detailHtml(d) {
   const rep = d.report || {}, rs = d.riasec || {}, sc = rs.scores || {};
@@ -138,8 +166,72 @@ async function exportAll(kind) {
   if (kind === 'csv') download(`tvts02-du-lieu-${stamp}.csv`, d.csv, 'text/csv;charset=utf-8');
   else download(`tvts02-du-lieu-${stamp}.json`, JSON.stringify(d.json, null, 1), 'application/json');
 }
+/* ───── Bước 1 (TVTS01) ───── */
+let ROWS1 = [], TAB = '1'; try { TAB = sessionStorage.getItem('tvts-admin-tab') || '1'; } catch (e) {}
+const B5N = { O: 'Cởi mở', C: 'Tận tâm', E: 'Hướng ngoại', A: 'Dễ chịu', S: 'Ổn định cảm xúc' };
+const GTN = { ACH: 'Thành tựu', WC: 'Điều kiện làm việc', REC: 'Được ghi nhận', REL: 'Quan hệ & giúp người', SUP: 'Được hỗ trợ', IND: 'Tự chủ' };
+const CAN = { CON: 'Quan tâm tương lai', COL: 'Tự chủ', CUR: 'Tò mò', COF: 'Tự tin', total: 'Chung' };
+const MON = { TO: 'Toán', VA: 'Ngữ văn', AN: 'Tiếng Anh', LI: 'Vật lí', HO: 'Hoá học', SI: 'Sinh học', SU: 'Lịch sử', DI: 'Địa lí', KP: 'GD KT&PL', TI: 'Tin học', CN: 'Công nghệ', MT: 'Mĩ thuật', AM: 'Âm nhạc', TC: 'Thể chất' };
+const MONL = ['Không học', 'Yếu', 'TB', 'Khá', 'Giỏi', 'Xuất sắc'];
+const loaded = { 1: false, 2: false };
+function setTab(t) {
+  TAB = t; try { sessionStorage.setItem('tvts-admin-tab', t); } catch (e) {}
+  $('#pane1').style.display = t === '1' ? '' : 'none'; $('#pane2').style.display = t === '2' ? '' : 'none';
+  $('#tab1').classList.toggle('on', t === '1'); $('#tab2').classList.toggle('on', t === '2');
+  if (!loaded[t]) (t === '1' ? reload1() : reload()).then(() => { loaded[t] = true; }).catch(e => alert(e.message));
+}
+async function reload1() {
+  const d = await admin('list1');
+  ROWS1 = d.rows; $('#s1N').textContent = d.stats.n; $('#s1L').textContent = d.stats.linked; draw1();
+}
+function draw1() {
+  const q = $('#q1').value.trim().toLowerCase(), f = $('#filt1').value;
+  const list = ROWS1.filter(r => (!f || (f === 'b2' ? r.b2.length : !r.b2.length)) && (!q || [r.code, r.name, r.school, r.grade, r.ma, r.b2.join(' ')].join(' ').toLowerCase().includes(q)));
+  $('#rows1').innerHTML = list.map(r => `<tr data-code1="${esc(r.code)}"><td>${esc(r.time)}${r.upd !== r.time ? `<div class="small muted">sửa ${esc(r.upd)}</div>` : ''}</td><td><b>${esc(r.code)}</b></td><td>${esc(r.name)}</td><td>${esc(r.grade)}</td><td>${esc(r.school)}</td><td><b>${esc(r.ma)}</b></td><td>${esc(r.top1)}</td><td>${r.b2.length ? r.b2.map(c => `<span class="pill g">${esc(c)}</span>`).join(' ') : '<span class="muted small">—</span>'}</td></tr>`).join('') || '<tr><td colspan="8" class="muted">Chưa có kết quả.</td></tr>';
+}
+function kvs(obj, names, fmt) { return Object.keys(names).map(k => `<div class="kv"><span>${esc(names[k])}</span><b>${obj && obj[k] != null ? esc(fmt ? fmt(obj[k]) : obj[k]) : '—'}</b></div>`).join(''); }
+function detail1Html(d) {
+  const sc = d.scores || {}, a = d.answers || {}, i = d.info || {};
+  const f2 = x => Number(x).toFixed(2);
+  const subj = Object.keys(MON).filter(k => (a.sub || {})[k] > 0).map(k => `<div class="kv"><span>${MON[k]}</span><b>${MONL[a.sub[k]]}</b></div>`).join('') || '<p class="muted small">Không có.</p>';
+  const raw = k => `<div class="small" style="margin:6px 0 2px"><b>${k}</b></div><div class="ans">${esc((a[k] || []).join(' '))}</div>`;
+  return `<div style="display:flex;justify-content:space-between;gap:10px;align-items:start"><div><h2>${esc(d.name || 'Học sinh')} · ${esc(d.code)}</h2><div class="muted small">Nộp ${esc(d.time)} · sửa lần cuối ${esc(d.upd)} · ${esc(d.grade)} · ${esc(d.school)}</div></div><button class="btn ghost small" id="mClose">Đóng</button></div>
+    <p class="small"><b>Mã Holland:</b> ${esc(sc.code || '')} — phân hoá ${esc(sc.diff)}, nhất quán ${esc(sc.cons || '')}. ${d.b2.length ? '<b>Bước 2:</b> ' + d.b2.map(c => `<a href="#" data-b2="${esc(c)}">${esc(c)}</a>`).join(', ') : '<span class="muted">Chưa làm Bước 2.</span>'}</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><button class="btn ghost small" id="mDel1" style="color:var(--son);border-color:#E3A99A">Xoá kết quả</button></div>
+    <div class="grid-sc">
+      <div class="card"><h4>Sở thích RIASEC (0–20)</h4>${kvs(sc.riasec, { R: 'R · Kĩ thuật', I: 'I · Nghiên cứu', A: 'A · Nghệ thuật', S: 'S · Xã hội', E: 'E · Quản lý', C: 'C · Nghiệp vụ' })}</div>
+      <div class="card"><h4>Tính cách Big Five (1–5)</h4>${kvs(sc.b5, B5N, f2)}</div>
+      <div class="card"><h4>Giá trị nghề (1–5)</h4>${kvs(sc.gt, GTN, f2)}</div>
+      <div class="card"><h4>Sẵn sàng chọn nghề CAAS (1–5)</h4>${kvs(sc.caas, CAN, f2)}</div>
+      <div class="card"><h4>Học lực tự đánh giá</h4>${subj}</div>
+      <div class="card"><h4>Nhóm ngành gợi ý</h4><ol class="small" style="margin:0;padding-left:18px">${(sc.top || []).map(t => `<li>${esc(t)}</li>`).join('')}</ol></div>
+    </div>
+    <div class="qa"><div class="q">Nghề đang nghĩ tới</div><div class="a">${esc(i.dream || '—')}</div></div>
+    <div class="qa"><div class="q">Xã hội cần gì (theo em)</div><div class="a">${esc(a.need || '—')}</div></div>
+    <details class="small"><summary style="cursor:pointer;font-weight:600">Câu trả lời gốc</summary>${raw('r')}${raw('b')}${raw('v')}${raw('c')}</details>`;
+}
+async function openDetail1(code) {
+  const d = await admin('detail1', { code });
+  $('#mbox').innerHTML = detail1Html(d); $('#modal').classList.add('on');
+  $('#mClose').onclick = () => $('#modal').classList.remove('on');
+  $('#mDel1').onclick = async () => { if (!confirm('Xoá vĩnh viễn kết quả Bước 1 ' + code + '? Thao tác này không hoàn tác được.')) return; try { await admin('delete1', { code }); $('#modal').classList.remove('on'); reload1(); } catch (e) { alert(e.message); } };
+  $$('[data-b2]').forEach(a => a.onclick = ev => { ev.preventDefault(); openDetail(a.dataset.b2).catch(x => alert(x.message)); });
+}
+async function exportAll1(kind) {
+  const d = await admin('export1');
+  const stamp = new Date().toISOString().slice(0, 10);
+  if (kind === 'csv') download(`tvts01-du-lieu-${stamp}.csv`, d.csv, 'text/csv;charset=utf-8');
+  else download(`tvts01-du-lieu-${stamp}.json`, JSON.stringify(d.json, null, 1), 'application/json');
+}
+$('#tab1').onclick = () => setTab('1'); $('#tab2').onclick = () => setTab('2');
+$('#btnReload1').onclick = () => reload1().catch(e => alert(e.message));
+$('#btnCsv1').onclick = () => exportAll1('csv').catch(e => alert(e.message));
+$('#btnJson1').onclick = () => exportAll1('json').catch(e => alert(e.message));
+$('#q1').oninput = draw1; $('#filt1').onchange = draw1;
+$('#rows1').addEventListener('click', e => { const tr = e.target.closest('tr[data-code1]'); if (tr) openDetail1(tr.dataset.code1).catch(x => alert(x.message)); });
+
 $('#btnLogin').onclick = login; $('#p').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
-$('#btnOut').onclick = () => { token = ''; try { sessionStorage.removeItem('tvts02-admin'); } catch (e) {} show(false); };
+$('#btnOut').onclick = () => { token = ''; loaded[1] = loaded[2] = false; try { sessionStorage.removeItem('tvts02-admin'); } catch (e) {} show(false); };
 $('#btnReload').onclick = () => reload().catch(e => alert(e.message));
 $('#btnCsv').onclick = () => exportAll('csv').catch(e => alert(e.message));
 $('#btnJson').onclick = () => exportAll('json').catch(e => alert(e.message));
