@@ -47,7 +47,7 @@ class KhtdController {
     try {
       const d = await this.api.khtdLogin(mssv, code);
       this.token = d.token; sessionStorage.setItem('khtd_token', d.token);
-      if (!d.email) this.view.msg('Hồ sơ của bạn chưa có email — kết quả sẽ không gửi được qua thư; báo giảng viên cập nhật.', 'err');
+      if (!d.email) this.view.msg('Hồ sơ của bạn chưa có email — điểm chính thức sau khi giảng viên duyệt sẽ không gửi được qua thư; báo giảng viên cập nhật.', 'err');
       this.showList();
     } catch (err) { this.view.msg(err.message, 'err'); }
   }
@@ -136,10 +136,9 @@ class KhtdController {
       const d = await this.api.khtdSubmit(this.token, this.ws.id, answers);
       this._stopTimer();
       let m = `${auto === true ? 'Hết giờ — bài đã tự nộp' : 'Đã nộp thành công'}${d.attemptNo > 1 ? ' lần ' + d.attemptNo : ''}.`;
-      if (d.ai) m += d.ai.exam ? ` Dự báo điểm bài thi: ${d.ai.total}/10.` : ` Điểm tạm tính: ${d.ai.total}/10.`;
+      if (d.ai) m += d.ai.exam ? ` Dự báo điểm bài thi: ${d.ai.total}/10.` : ` Điểm tạm tính (hệ thống chấm điểm, giảng viên chưa chốt điểm): ${d.ai.total}/10.`;
       if (d.attempt && d.attempt.score != null && (d.attempt.allowed !== 1 || d.attempt.used > 1)) m += ` Điểm phiếu đang tính: ${d.attempt.score}/10.`;
-      if (d.emailSent) m += ` Kết quả đã gửi tới ${d.emailTo}.`;
-      else if (d.ai) m += ' (Không gửi được email — xem kết quả tại đây.)';
+      if (d.ai) m += ' Xem phiếu báo điểm bên dưới — bấm “Lưu PDF / In phiếu báo điểm” hoặc chụp màn hình để lưu. Điểm chính thức gửi qua email sau khi giảng viên duyệt.';
       if (d.aiError) m += ' ' + d.aiError;
       this.view.msg(m, 'ok');
       await this.openWorksheet(this.ws.id);
@@ -403,15 +402,15 @@ class KhtdController {
       box.textContent = JSON.stringify(d, null, 2);
       this.view.msg(d.ket_luan || 'Đã kiểm tra.', d.goi_thu && d.goi_thu.ok ? 'ok' : 'err');
     } catch (err) { box.textContent = 'Lỗi: ' + err.message; this.view.msg(err.message, 'err'); }
-    finally { btn.disabled = false; btn.textContent = 'Kiểm tra Gemini'; }
+    finally { btn.disabled = false; btn.textContent = 'Kiểm tra hệ thống chấm điểm'; }
   }
 
   async regrade() {
     const id = document.getElementById('sub-detail').dataset.sub;
     const btn = document.getElementById('btn-regrade'); btn.disabled = true; btn.textContent = 'Đang chấm…';
-    try { await this.api.khtdRegrade(this.token, id); this.view.msg('AI đã chấm lại.', 'ok'); await this.openSubmission(id); this.loadClass(); }
+    try { await this.api.khtdRegrade(this.token, id); this.view.msg('Hệ thống đã chấm lại.', 'ok'); await this.openSubmission(id); this.loadClass(); }
     catch (err) { this.view.msg(err.message, 'err'); }
-    finally { btn.disabled = false; btn.textContent = 'Chấm lại bằng AI'; }
+    finally { btn.disabled = false; btn.textContent = 'Chấm lại bằng hệ thống'; }
   }
 
   async exportCsv() {

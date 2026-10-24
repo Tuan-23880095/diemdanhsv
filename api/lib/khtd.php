@@ -8,8 +8,8 @@
  *  2. SV: khtdLogin(mssv, code) — mã 4 ký tự của phiên điểm danh đang OPEN → token Kind 'KHTD' (3 giờ).
  *     Dự phòng: token GRADE (mã gửi qua email, verifyGradeCode) cũng được chấp nhận.
  *  3. SV: khtdListWorksheets → khtdGetWorksheet → khtdSaveDraft (tự lưu) → khtdSubmit (một lần).
- *  4. khtdSubmit gọi Gemini chấm theo rubric trong SchemaJSON → lưu AiScore/AiJSON → gửi email cho SV
- *     (students.Email) với ghi chú "điểm tạm tính, GV duyệt". Không có key Gemini thì chỉ lưu SUBMITTED.
+ *  4. khtdSubmit gọi Gemini chấm theo rubric trong SchemaJSON → lưu AiScore/AiJSON → trả phiếu báo điểm cho trang web
+ *     (KHÔNG gửi email từ 24/10/2026). Không có key Gemini thì chỉ lưu SUBMITTED. SV chỉ thấy cách gọi "hệ thống chấm điểm".
  *  5. GV: khtdLecturerList(classId) → khtdLecturerGrade(submissionId, finalScore, note, sendEmail)
  *     → khtdExportCsv(classId) để dán vào bảng điểm.
  *
@@ -28,6 +28,17 @@ const KHTD_TOKEN_TTL = 3 * 3600;
 /* ------------------------------------------------------------------ */
 /* Xác thực sinh viên                                                  */
 /* ------------------------------------------------------------------ */
+
+/**
+ * Kết quả chấm trước khi trả cho SINH VIÊN (trang web): bỏ phần chỉ GV xem (nguy cơ, phản biện, tên model)
+ * và các câu nhắc tới AI / Gemini / trí tuệ nhân tạo trong nhận xét — sinh viên chỉ thấy "hệ thống chấm điểm".
+ */
+function khtd_ai_for_student(?array $ai): ?array
+{
+    if (!is_array($ai)) return null;
+    unset($ai['ai_risk'], $ai['phan_bien'], $ai['model']);
+    return dkv_loc_ai_ket_qua($ai);
+}
 
 /** Chấp nhận token Kind KHTD hoặc GRADE. Trả về studentId, mssv, fullName, email. */
 function khtd_require_student(string $token): array
@@ -289,7 +300,7 @@ function action_khtd_get_worksheet(array $params): void
         if (is_array($sub['ai']) && !$isExam && !($sub['Status'] === 'FINAL' && !$sum['canRetake'])) {
             unset($sub['ai']['doi_chieu']);
         }
-        if (is_array($sub['ai'])) unset($sub['ai']['ai_risk'], $sub['ai']['phan_bien']);     // chỉ dành cho GV
+        $sub['ai'] = khtd_ai_for_student(is_array($sub['ai']) ? $sub['ai'] : null);           // bỏ phần chỉ GV xem + lọc thuật ngữ
         $ansArr = json_decode((string) $sub['AnswersJSON'], true) ?: [];
         unset($sub['AnswersJSON'], $sub['AiJSON']);
     }
@@ -358,7 +369,8 @@ function action_khtd_save_draft(array $params): void
     api_ok(['submissionId' => $id, 'attemptNo' => $no, 'savedAt' => db_now()]);
 }
 
-/** POST khtdSubmit {token, worksheetId, answers} — nộp lần đang làm, chấm AI, gửi email. */
+/** POST khtdSubmit {token, worksheetId, answers} — nộp lần đang làm, hệ thống chấm theo rubric, trả phiếu báo điểm
+ * hiển thị trên web (KHÔNG gửi email — email chỉ gửi khi giảng viên duyệt điểm, action_khtd_lecturer_grade). */
 function action_khtd_submit(array $params): void
 {
     $me = khtd_require_student((string) ($params['token'] ?? ''));
@@ -416,19 +428,16 @@ function action_khtd_submit(array $params): void
             ->execute(['j' => json_encode(['error' => $aiErr ?: 'Chưa cấu hình Gemini', 'at' => date('Y-m-d H:i:s')], JSON_UNESCAPED_UNICODE), 'id' => $id]);
     }
     $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), $extra);
-    // Email kết quả tạm tính.
-    $mailed = false;
-    if ($ai && $me['email'] !== '') {
-        $mailed = khtd_send_result_mail($me, $ws, $ai, null, null, khtd_attempt_mail_line($sum, $no));
-        if ($mailed) db()->prepare('UPDATE khtd_submissions SET EmailSentAt = NOW(), EmailTo = :e WHERE SubmissionID = :id')->execute(['e' => $me['email'], 'id' => $id]);
-    }
-    if ($ai) {   // đáp án: SV chỉ xem sau khi GV duyệt (phiếu luyện thi: xem ngay); nguy cơ AI, phản biện: chỉ GV
-        unset($ai['ai_risk'], $ai['phan_bien']);
+    // 24/10/2026: KHÔNG gửi email lúc nộp (hạn mức hộp thư ~100 thư/ngày). Sinh viên xem phiếu báo điểm ngay trên
+    // trang, lưu PDF hoặc chụp màn hình; email (kèm PDF) chỉ gửi khi giảng viên duyệt và chốt điểm.
+    if ($ai) {   // đáp án: SV chỉ xem sau khi GV duyệt (phiếu luyện thi: xem ngay)
+        $ai = khtd_ai_for_student($ai);
         if (!$isExam) unset($ai['doi_chieu']);
     }
     api_ok(['submissionId' => $id, 'attemptNo' => $no, 'status' => $ai ? 'AI_GRADED' : 'SUBMITTED', 'ai' => $ai,
             'attempt' => khtd_attempt_public($sum),
-            'emailSent' => $mailed, 'emailTo' => $me['email'], 'aiError' => $ai ? null : ($aiErr ?: 'Chưa cấu hình Gemini — giảng viên sẽ chấm tay.')]);
+            'emailSent' => false, 'emailTo' => $me['email'],
+            'aiError' => $ai ? null : 'Hệ thống chấm điểm chưa chấm được bài này — giảng viên sẽ chấm trực tiếp.']);
 }
 
 /**
@@ -914,11 +923,9 @@ function khtd_send_result_mail(array $student, array $ws, ?array $ai, ?float $fi
         $lines[] = '• ĐIỂM CHÍNH THỨC (giảng viên duyệt): ' . number_format($final, 2) . '/10';
         if ($note) { $lines[] = '• Nhận xét của giảng viên: ' . $note; }
     } elseif ($ai) {
-        $lines[] = $mon['nhan_cham'] !== ''
-            ? '• Điểm tạm tính (' . $mon['nhan_cham'] . '): ' . number_format((float) $ai['total'], 2) . '/10'
-            : '• Điểm tạm tính (trợ lý AI chấm theo ' . $mon['rubric'] . ', giảng viên sẽ duyệt lại): ' . number_format((float) $ai['total'], 2) . '/10';
+        $lines[] = '• Điểm tạm tính (' . $mon['nhan_cham'] . '): ' . number_format((float) $ai['total'], 2) . '/10';
     }
-    if ($ai && $mon['nhan_cham'] !== '') $ai = dkv_loc_ai_ket_qua($ai);   // bộ Đ&KV: nội dung gửi SV không nhắc tới AI
+    if ($ai) $ai = dkv_loc_ai_ket_qua($ai);   // nội dung gửi SV không nhắc tới AI / Gemini / trí tuệ nhân tạo
     if ($ai) {
         $lines[] = '';
         $lines[] = 'Chi tiết theo tiêu chí:';
