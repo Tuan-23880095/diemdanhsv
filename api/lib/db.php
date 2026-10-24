@@ -9,10 +9,16 @@ declare(strict_types=1);
  * không cần CSDL nên không đụng tới file này.
  */
 
-/** Trả về kết nối PDO dùng chung cho cả request hiện tại. */
-function db(): PDO
+/**
+ * Trả về kết nối PDO dùng chung cho cả request hiện tại.
+ * $reconnect = true: bỏ kết nối cũ, mở kết nối mới (dùng sau lời gọi mạng lâu — xem db_ensure_alive()).
+ */
+function db(bool $reconnect = false): PDO
 {
     static $pdo = null;
+    if ($reconnect) {
+        $pdo = null;
+    }
     if ($pdo !== null) {
         return $pdo;
     }
@@ -36,6 +42,20 @@ function db(): PDO
     ]);
 
     return $pdo;
+}
+
+/**
+ * Kiểm tra kết nối còn sống; nếu MySQL đã đóng kết nối (vd "MySQL server has gone away" vì chờ Gemini chấm
+ * lâu hơn wait_timeout của Hostinger) thì mở kết nối mới. Gọi ngay sau mỗi lời gọi mạng dài trước khi ghi CSDL.
+ */
+function db_ensure_alive(): void
+{
+    try {
+        db()->query('SELECT 1')->fetchColumn();
+    } catch (Throwable $e) {
+        error_log('[db] kết nối đã đóng, mở lại: ' . $e->getMessage());
+        db(true);
+    }
 }
 
 /**

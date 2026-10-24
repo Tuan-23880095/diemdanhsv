@@ -415,6 +415,7 @@ function action_khtd_submit(array $params): void
     $ai = null; $aiErr = null;
     try {
         $ai = khtd_grade($ws, $answers, $me);
+        db_ensure_alive();
         if ($ai) {
             db()->prepare("UPDATE khtd_submissions SET Status = 'AI_GRADED', AiScore = :sc, AiJSON = :j, AiModel = :m, AiGradedAt = NOW() WHERE SubmissionID = :id")
                 ->execute(['sc' => $ai['total'], 'j' => json_encode($ai, JSON_UNESCAPED_UNICODE), 'm' => $ai['model'], 'id' => $id]);
@@ -423,6 +424,7 @@ function action_khtd_submit(array $params): void
         $aiErr = $e->getMessage();
         error_log('khtd gemini: ' . $aiErr);
     }
+    db_ensure_alive();
     if (!$ai) {   // lưu lý do để giảng viên thấy trên trang duyệt (cột AI)
         db()->prepare('UPDATE khtd_submissions SET AiJSON = :j WHERE SubmissionID = :id')
             ->execute(['j' => json_encode(['error' => $aiErr ?: 'Chưa cấu hình Gemini', 'at' => date('Y-m-d H:i:s')], JSON_UNESCAPED_UNICODE), 'id' => $id]);
@@ -634,6 +636,10 @@ function khtd_long_request(): void
     @set_time_limit(170);
     @ini_set('max_execution_time', '170');
     ignore_user_abort(true);
+    // Hostinger đóng kết nối MySQL để yên lâu (wait_timeout ngắn) trong khi chờ Gemini chấm phiếu 10 mẫu
+    // → câu UPDATE lưu điểm báo "MySQL server has gone away". Kéo dài cho riêng kết nối này; sau lời gọi mạng
+    // vẫn gọi db_ensure_alive() phòng khi máy chủ không cho đặt.
+    try { db()->exec('SET SESSION wait_timeout = 600'); } catch (Throwable $e) { error_log('[khtd] wait_timeout: ' . $e->getMessage()); }
 }
 
 /** Bài làm mẫu để chấm thử (khtdAiTest): điền ngắn gọn vào mọi ô của phiếu theo cấu trúc. */
@@ -1189,6 +1195,7 @@ function action_khtd_lecturer_grade(array $params): void
         $wsRow = khtd_worksheet((string) $row['WorksheetID']);
         $sum = khtd_attempt_summary($wsRow, khtd_student_attempts((string) $row['WorksheetID'], (string) $row['StudentID']), khtd_extra_attempts((string) $row['WorksheetID'], (string) $row['StudentID']));
         $mailed = khtd_send_result_mail($student, $row, $ai, $score, $note, khtd_attempt_mail_line($sum, (int) $row['AttemptNo']), $att);
+        db_ensure_alive();
         if ($mailed) db()->prepare('UPDATE khtd_submissions SET EmailSentAt = NOW(), EmailTo = :e WHERE SubmissionID = :id')->execute(['e' => $row['Email'], 'id' => $row['SubmissionID']]);
     }
     api_ok(['submissionId' => $row['SubmissionID'], 'finalScore' => $score, 'emailSent' => $mailed, 'pdfName' => $pdfName, 'pdfError' => $pdfErr]);
@@ -1280,7 +1287,8 @@ function action_khtd_regrade(array $params): void
     khtd_long_request();
     try {
         $ai = khtd_grade($ws, json_decode((string) $row['AnswersJSON'], true) ?: [], $student);
-    } catch (Throwable $e) { api_fail('Chấm AI lỗi: ' . $e->getMessage()); return; }
+    } catch (Throwable $e) { api_fail('Hệ thống chấm điểm lỗi: ' . $e->getMessage()); return; }
+    db_ensure_alive();
     if (!$ai) { api_fail('Chưa cấu hình key Gemini trong private/config.php.'); return; }
     $newStatus = $row['Status'] === 'FINAL' ? 'FINAL' : 'AI_GRADED';
     db()->prepare("UPDATE khtd_submissions SET Status = :st, AiScore = :sc, AiJSON = :j, AiModel = :m, AiGradedAt = NOW() WHERE SubmissionID = :id")
