@@ -742,7 +742,7 @@ chữ thường; **không chứa dữ liệu sinh viên**.
 |---|---|---|---|
 | `login_ip` | `login` | lần **sai** / IP | 20 lần / 15 phút |
 | `login_user` | `login` | lần **sai** / tên đăng nhập (chặn dò phân tán từ nhiều IP vào một tài khoản) | 10 lần / 15 phút |
-| `checkin_ip` | `checkin` | mã **sai hoặc không mở** / IP (sai định dạng cũng tính) | 60 lần / 10 phút |
+| `checkin_ip` | `checkin` | mã **sai hoặc không mở** / IP (sai định dạng cũng tính) | 120 lần / 10 phút (2–3 lớp song song chung Wi-Fi) |
 | `gradecode_req_ip` | `requestGradeCode` | **mọi** lượt / IP — mỗi lượt hợp lệ là một email | 30 lần / 15 phút |
 | `gradecode_ver_ip` | `verifyGradeCode` | lần **sai** / IP (MSSV không có, mã hết hạn, mã sai, bị khoá) | 50 lần / 15 phút |
 
@@ -1088,7 +1088,7 @@ Mục đích: sinh viên làm 6 phiếu học tập thực tập Khoa học Trá
 
 **CSDL** — migration `006-khtd-worksheets.sql`: `auth_tokens.Kind` thêm `KHTD`; bảng `khtd_worksheets` (SchemaJSON: sections/rubric/answer_hints), `khtd_submissions` (AnswersJSON, AiScore/AiJSON, FinalScore, EmailSentAt). Chạy `php tools/migrate.php`.
 
-**Cấu hình** `../private/config.php`: mục `gemini` (`api_key`, `model` mặc định `gemini-2.0-flash`); rate limit `khtd_login_ip`, `khtd_submit_ip` (mặc định 30/10 phút). Không có key → bài nộp ở trạng thái SUBMITTED, GV chấm tay.
+**Cấu hình** `../private/config.php`: mục `gemini` (`api_key`, `model` mặc định `gemini-2.0-flash`); rate limit `khtd_login_ip` (mặc định 60/10 phút), `khtd_submit_ip` (mặc định 800/10 phút) — tính chung mọi lớp trên Wi-Fi trường. Không có key → bài nộp ở trạng thái SUBMITTED, GV chấm tay.
 
 **Đăng nhập SV**: `khtdLogin` POST {mssv, code} — `code` là mã 4 ký tự của phiên điểm danh đang OPEN (bảng `attendance_keys`), SV phải ghi danh lớp đó (`identify_student`). Cấp token Kind KHTD hạn 3 giờ. Token GRADE (mã qua email, mục 10) cũng được chấp nhận ở mọi action SV.
 
@@ -1166,7 +1166,7 @@ Thay đổi ở action cũ: `khtdSaveDraft`/`khtdSubmit` làm trên lần mới 
 
 **Giao diện**: `khtd/online.html` — hộp xác nhận nộp riêng (đếm ô trống, nói rõ “chỉ nộp một lần” / “lần cuối” / “còn k lượt”, nút mặc định là *Quay lại làm tiếp*), khung các lần làm, nút **Làm lại**. `khtd/quanly.html` — mỗi thẻ phiếu có ô *Số lần nộp* và *Điểm tính*; bảng bài nộp có cột *Lần* (★ = lần được tính) và nút **Cho làm lại**. `?v=20261014-lamlai`.
 
-**Lưu ý vận hành**: mỗi lần nộp gọi Gemini một lần — phiếu “không giới hạn” tốn hạn mức AI hơn; rate limit `khtd_submit_ip` (30/10 phút/IP) tính chung cả lớp nếu dùng chung Wi-Fi. Kiểm thử: `php tools/smoke_khtd_attempts.php --config=<CSDL thử>` (38 ca).
+**Lưu ý vận hành**: mỗi lần nộp gọi Gemini một lần — phiếu “không giới hạn” tốn hạn mức AI hơn; rate limit `khtd_submit_ip` (800/10 phút/IP, đủ 2–3 lớp × 50 SV song song) tính chung mọi lớp dùng chung Wi-Fi trường. Kiểm thử: `php tools/smoke_khtd_attempts.php --config=<CSDL thử>` (38 ca).
 
 ## 30. GĐ11e — Ảnh chụp mẫu vật trong bảng mô tả (14/10/2026)
 
@@ -1180,7 +1180,7 @@ Mục đích: mỗi mẫu (một hàng) của bảng mô tả có ô **Ảnh m�
 
 | Action | Method | Ai | Tham số | Ghi chú |
 |---|---|---|---|---|
-| khtdUploadPhoto | POST | SV | token, worksheetId, sectionId, row, image (data URL) | Chỉ khi phiếu mở và lần làm hiện tại chưa nộp; JPG/PNG/WebP ≤ 4 MB; ≤ 80 ảnh/SV/phiếu; rate limit `khtd_upload_ip` 600/10 phút. Trả `photoId`. |
+| khtdUploadPhoto | POST | SV | token, worksheetId, sectionId, row, image (data URL) | Chỉ khi phiếu mở và lần làm hiện tại chưa nộp; JPG/PNG/WebP ≤ 4 MB; ≤ 80 ảnh/SV/phiếu; rate limit `khtd_upload_ip` 2000/10 phút (2–3 lớp song song chung Wi-Fi; phiếu Đá & Khoáng vật 10 mẫu × 1–3 ảnh). Trả `photoId`. |
 
 **Xem ảnh**: `khtd/anh.php?id=PHO_…` với header `X-Token` (trang dùng fetch → blob, token không nằm trong URL ảnh). Được xem: SV chủ ảnh (token KHTD/GRADE) hoặc GV/Admin có quyền lớp; còn lại 403.
 
@@ -1224,7 +1224,7 @@ Mục đích: hết học kỳ, giảng viên tải toàn bộ dữ liệu của
 
 **So sánh qua các năm** `archiveList` (GET): các lớp RESET mà GV đứng tên (Admin: tất cả). `pages/luu-tru.html` mục "So sánh qua các năm": theo môn — mỗi học kỳ một dòng (SV, có mặt TB, tổng kết TB, TB từng phiếu + % ≥ 8), bảng % đạt từng tiêu chí rubric + % "Tự tin"; lớp đang chọn (chưa lưu trữ) hiện nền vàng để so với các năm trước; tải CSV.
 
-**Khác**: giới hạn nộp phiếu đổi thành `khtd_submit_ip` 400/10 phút (cả lớp chung Wi-Fi) + `khtd_submit_student` 8/10 phút/SV. Kiểm thử: `tools/smoke_archive.php` (28 ca). Link "Lưu trữ" ở `pages/lecturer.html` và `khtd/quanly.html`.
+**Khác**: giới hạn nộp phiếu đổi thành `khtd_submit_ip` 400/10 phút (cả lớp chung Wi-Fi; từ 24/10/2026 nâng 800 cho 2–3 lớp song song) + `khtd_submit_student` 8/10 phút/SV. Kiểm thử: `tools/smoke_archive.php` (28 ca). Link "Lưu trữ" ở `pages/lecturer.html` và `khtd/quanly.html`.
 
 ## 33. GĐ11g — Phiếu luyện thi cuối khóa, dự báo điểm thi, điểm cộng & thái độ (14/10/2026) — `api/lib/khtd_exam.php`, `api/lib/khtd_kb.php`
 
