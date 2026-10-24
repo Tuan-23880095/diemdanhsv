@@ -104,6 +104,7 @@ class KhtdView {
 
   /* ---------- Sinh viên ---------- */
   setStudent(st) {
+    this.student = st || null;
     const el = this.$('who'); if (el) el.textContent = st ? `${st.fullName} · ${st.mssv}${st.email ? ' · ' + st.email : ''}` : '';
   }
 
@@ -140,6 +141,7 @@ class KhtdView {
     this.photos = JSON.parse(JSON.stringify(a._photos || {}));
     this.meta = Object.assign({ pasteChars: 0, pasteCount: 0, keys: 0 }, a._meta || {});
     this.extra = extra || {};
+    this.curWs = ws;
     const ex = this.extra.exam;
     if (ws.schema.exam && ex) {   // phiếu luyện thi: giới thiệu → chọn số mẫu, bấm giờ → thẻ từng mẫu
       const s = this._specSection(ws.schema);
@@ -274,31 +276,79 @@ class KhtdView {
   renderResult(sub, att) {
     const box = this.$('ws-result'); if (!box) return;
     if (!sub || sub.Status === 'DRAFT') { box.classList.add('hidden'); return; }
-    // Trang của môn đặt window.KHTD_NHAN_CHAM (vd dkv/online.html) → nhãn điểm tạm tính theo môn, bỏ câu nhắc tới AI trong nhận xét.
-    const nhan = window.KHTD_NHAN_CHAM || '';
-    const ai = nhan && sub.ai ? this._locAi(sub.ai) : sub.ai;
+    // Mọi nội dung gửi sinh viên chỉ gọi là "hệ thống chấm điểm" — không ghi AI / Gemini / trí tuệ nhân tạo.
+    const nhan = 'hệ thống chấm điểm, giảng viên chưa chốt điểm';
+    const ai = sub.ai ? this._locAi(sub.ai) : null;
     const multi = att && (att.allowed !== 1 || att.extra > 0 || (att.attempts || []).length > 1);
+    let h = '';
     if (ai && ai.exam) {   // phiếu luyện thi
-      let x = `<p class="text-sm">Lần luyện ${this._esc(sub.AttemptNo)} — nộp lúc <b>${this._esc(sub.SubmittedAt || '')}</b>.</p>` + this.examResultHtml(ai);
-      if (sub.FinalScore != null) x += `<p class="mt-2 text-sm">Giảng viên xác nhận: <b>${this._esc(sub.FinalScore)}/10</b>${sub.FinalNote ? ' — ' + this._esc(sub.FinalNote) : ''}</p>`;
-      if (att && att.canRetake) x += '<p class="mt-3 text-sm font-semibold text-blue-800">Bấm “Luyện lần mới” ở cuối trang để luyện tiếp (chọn lại số mẫu, đồng hồ chạy lại).</p>';
-      box.innerHTML = x; box.classList.remove('hidden'); return;
+      h = this.examResultHtml(ai);
+      if (sub.FinalScore != null) h += `<p class="mt-2 text-sm">Giảng viên xác nhận: <b>${this._esc(sub.FinalScore)}/10</b>${sub.FinalNote ? ' — ' + this._esc(sub.FinalNote) : ''}</p>`;
+    } else {
+      if (sub.FinalScore != null) h += `<p class="mt-1 text-lg">Điểm chính thức${multi ? ' lần này' : ''} (giảng viên đã duyệt): <b>${this._esc(sub.FinalScore)}/10</b></p>${sub.FinalNote ? `<p class="text-sm">Nhận xét của giảng viên: ${this._esc(sub.FinalNote)}</p>` : ''}`;
+      else if (ai) h += `<p class="mt-1 text-lg">Điểm tạm tính${multi ? ' lần này' : ''} (${nhan}): <b>${this._esc(ai.total)}/10</b></p>`;
+      else h += '<p class="mt-1 text-sm text-slate-600">Hệ thống chấm điểm chưa có kết quả — đang chờ giảng viên chấm.</p>';
+      if (multi && att.score != null) h += `<p class="text-sm">Điểm phiếu đang được tính: <b>${this._esc(att.score)}/10</b> (lần ${this._esc(att.countedNo)}, ${att.policy === 'LAST' ? 'lần cuối' : 'cao nhất'}).</p>`;
+      if (ai) h += `<p class="mt-2 text-sm font-semibold">Chi tiết theo tiêu chí:</p><ul class="mt-1 list-disc pl-5 text-sm">${ai.criteria.map((c) => `<li><b>${this._esc(c.name)}</b>: ${this._esc(c.score)}/${this._esc(c.max)}${c.comment ? ' — ' + this._esc(c.comment) : ''}</li>`).join('')}</ul>${ai.feedback ? `<p class="mt-2 text-sm italic">Nhận xét chung: ${this._esc(ai.feedback)}</p>` : ''}`;
+      if (ai) h += this.fixesHtml(ai.sua_bai);
+      if (this.extra && this.extra.forecast) h += `<div class="no-print">${this.forecastHtml(this.extra.forecast)}</div>`;
+      if (ai && sub.FinalScore != null) h += this._doiChieu(ai);
     }
-    let h = `<p class="text-sm">${multi ? `Lần ${this._esc(sub.AttemptNo)} — đ` : 'Đ'}ã nộp lúc <b>${this._esc(sub.SubmittedAt || '')}</b>.</p>`;
-    if (sub.FinalScore != null) h += `<p class="mt-1 text-lg">Điểm chính thức${multi ? ' lần này' : ''}: <b>${this._esc(sub.FinalScore)}/10</b></p>${sub.FinalNote ? `<p class="text-sm">Nhận xét GV: ${this._esc(sub.FinalNote)}</p>` : ''}`;
-    else if (ai) h += `<p class="mt-1 text-lg">Điểm tạm tính${multi ? ' lần này' : ''} ${nhan ? ` (${this._esc(nhan)})` : ' (AI, GV sẽ duyệt)'}: <b>${this._esc(ai.total)}/10</b></p>`;
-    else h += '<p class="mt-1 text-sm text-slate-600">Đang chờ giảng viên chấm.</p>';
-    if (multi && att.score != null) h += `<p class="text-sm">Điểm phiếu đang được tính: <b>${this._esc(att.score)}/10</b> (lần ${this._esc(att.countedNo)}, ${att.policy === 'LAST' ? 'lần cuối' : 'cao nhất'}).</p>`;
-    if (ai) h += `<ul class="mt-2 list-disc pl-5 text-sm">${ai.criteria.map((c) => `<li><b>${this._esc(c.name)}</b>: ${this._esc(c.score)}/${this._esc(c.max)}${c.comment ? ' — ' + this._esc(c.comment) : ''}</li>`).join('')}</ul>${ai.feedback ? `<p class="mt-2 text-sm italic">${this._esc(ai.feedback)}</p>` : ''}`;
-    if (ai) h += this.fixesHtml(ai.sua_bai);
-    if (this.extra && this.extra.forecast) h += this.forecastHtml(this.extra.forecast);
-    if (ai && sub.FinalScore != null) h += this._doiChieu(ai);
-    if (att && att.canRetake) h += `<p class="mt-3 text-sm font-semibold text-blue-800">Muốn cải thiện điểm? Bấm “Làm lại” ở cuối trang${att.remaining != null ? ` (còn ${this._esc(att.remaining)} lượt)` : ''}.</p>`;
-    else if (att && att.allowed === 1 && !att.extra) h += '<p class="mt-3 text-xs text-slate-500">Bấm nhầm “Nộp phiếu”? Báo giảng viên để được cấp thêm một lượt làm lại.</p>';
-    box.innerHTML = h; box.classList.remove('hidden');
+    let tail = '';
+    if (att && att.canRetake) tail = ai && ai.exam
+      ? '<p class="no-print mt-3 text-sm font-semibold text-blue-800">Bấm “Luyện lần mới” ở cuối trang để luyện tiếp (chọn lại số mẫu, đồng hồ chạy lại).</p>'
+      : `<p class="no-print mt-3 text-sm font-semibold text-blue-800">Muốn cải thiện điểm? Bấm “Làm lại” ở cuối trang${att.remaining != null ? ` (còn ${this._esc(att.remaining)} lượt)` : ''}.</p>`;
+    else if (att && att.allowed === 1 && !att.extra) tail = '<p class="no-print mt-3 text-xs text-slate-500">Bấm nhầm “Nộp phiếu”? Báo giảng viên để được cấp thêm một lượt làm lại.</p>';
+    box.innerHTML = this._baoDiemHtml(sub, ai, h) + tail;
+    box.classList.remove('hidden');
   }
 
-  /** Bản sao kết quả chấm đã bỏ các câu nhắc tới AI/chatbot (trang môn khai báo KHTD_NHAN_CHAM). */
+  /* Phiếu báo điểm: khung có logo Trường, thông tin sinh viên và lần nộp — SV lưu PDF (In → Lưu thành PDF) hoặc chụp màn hình. */
+  _baoDiemHtml(sub, ai, inner) {
+    this._ensurePrintCss();
+    const ws = this.curWs || {}; const mon = (ws.schema && ws.schema.mon) || {};
+    const h1 = document.querySelector('header h1');
+    const hp = mon.ten ? `${mon.ten}${mon.ma ? ' (' + mon.ma + ')' : ''}` : (h1 ? h1.textContent.replace(/^Phiếu[^—–-]*[—–-]\s*/, '') : '');
+    const st = this.student || {};
+    const chot = sub.FinalScore != null;
+    const tieuDe = chot ? 'PHIẾU BÁO ĐIỂM CHÍNH THỨC' : (ai && ai.exam ? 'PHIẾU BÁO KẾT QUẢ LUYỆN THI' : 'PHIẾU BÁO ĐIỂM TẠM TÍNH');
+    const row = (k, v) => v ? `<div><span class="text-slate-500">${k}:</span> <b>${this._esc(v)}</b></div>` : '';
+    const ghiChu = chot
+      ? 'Điểm đã được giảng viên duyệt và chốt.'
+      : (ai ? 'Điểm do hệ thống chấm điểm chấm theo rubric của phiếu; giảng viên chưa chốt điểm. Điểm chính thức được gửi qua email sau khi giảng viên duyệt bài.'
+            : 'Bài đã được ghi nhận; điểm sẽ có sau khi giảng viên chấm và gửi qua email.');
+    return `<div id="bao-diem" class="rounded-lg bg-white p-4 text-slate-900 shadow-sm ring-1 ring-green-200">
+      <div class="flex items-center gap-3 border-b border-slate-200 pb-3">
+        <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM" class="h-12 w-auto max-w-[120px] object-contain"/>
+        <div class="min-w-0 text-xs leading-snug"><div class="font-semibold">TRƯỜNG ĐẠI HỌC KHOA HỌC TỰ NHIÊN, ĐHQG-HCM</div><div>Khoa Địa chất</div></div>
+      </div>
+      <h3 class="mt-3 text-center text-base font-bold tracking-wide text-green-800">${tieuDe}</h3>
+      <div class="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+        ${row('Sinh viên', st.fullName)}${row('MSSV', st.mssv)}
+        ${row('Học phần', hp)}${row('Phiếu', ws.no != null ? `Số ${ws.no}${ws.title ? ' – ' + ws.title : ''}` : '')}
+        ${row('Lần nộp', sub.AttemptNo != null ? String(sub.AttemptNo) : '')}${row('Thời điểm nộp', sub.SubmittedAt || '')}
+        ${row('Mã bài nộp', sub.SubmissionID || '')}
+      </div>
+      <div class="mt-3 border-t border-slate-200 pt-2">${inner}</div>
+      <p class="mt-3 border-t border-slate-200 pt-2 text-xs text-slate-600">${ghiChu} Phiếu xuất từ diemdanhsv.com lúc ${this._esc(new Date().toLocaleString('vi-VN'))}.</p>
+    </div>
+    <div class="no-print mt-3 flex flex-wrap items-center gap-2">
+      <button type="button" onclick="window.print()" class="rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800">Lưu PDF / In phiếu báo điểm</button>
+      <span class="text-xs text-slate-600">Hoặc chụp màn hình phiếu này để lưu lại. Trên điện thoại: bấm nút, chọn “Lưu dưới dạng PDF”.</span>
+    </div>`;
+  }
+
+  /* Khi in chỉ in phiếu báo điểm (ẩn phần còn lại của trang). */
+  _ensurePrintCss() {
+    if (document.getElementById('bao-diem-print')) return;
+    const css = document.createElement('style'); css.id = 'bao-diem-print';
+    css.textContent = '@media print{@page{size:A4;margin:14mm}body *{visibility:hidden!important}#bao-diem,#bao-diem *{visibility:visible!important}' +
+      '#bao-diem{position:absolute;left:0;top:0;width:100%;box-shadow:none!important;--tw-ring-shadow:0 0 #0000!important}.no-print{display:none!important}' +
+      'details{display:block}details>*{display:block}}';
+    document.head.appendChild(css);
+  }
+
+  /** Bản sao kết quả chấm đã bỏ các câu nhắc tới AI/chatbot — áp dụng cho mọi nội dung hiển thị cho sinh viên. */
   _locAi(ai) {
     const re = /(^|[^\p{L}])(AI|A\.I\.|[Cc]hatbot|[Cc]hat ?GPT|Gemini|LLM|[Tt]rí tuệ nhân tạo|[Tt]rợ lý ảo|[Mm]ô hình ngôn ngữ)(?![\p{L}])/u;   // phân biệt hoa thường: không bắt chữ “ai” tiếng Việt
     const loc = (t) => { const x = String(t == null ? '' : t); if (!re.test(x)) return x; return x.split(/(?<=[.!?;])\s+/u).filter((p) => !re.test(p)).join(' ').trim(); };
@@ -383,7 +433,7 @@ class KhtdView {
         ? `<button data-grant="${this._esc(s.SubmissionID)}" class="ml-1 rounded border border-blue-600 px-2 py-0.5 text-xs text-blue-700 hover:bg-blue-50" title="Cấp thêm 1 lượt làm lại cho sinh viên này (vd bấm nhầm nộp)">Cho làm lại</button>` : '';
       return `<tr class="border-b hover:bg-slate-50${s.IsLatest ? '' : ' text-slate-500'}">
       <td class="px-2 py-1">${this._esc(s.No)}</td><td class="px-2 py-1 whitespace-nowrap">${lan}</td><td class="px-2 py-1">${this._esc(s.MSSV)}</td><td class="px-2 py-1">${this._esc(s.FullName)}</td>
-      <td class="px-2 py-1 text-xs">${this._esc(s.Status)}</td><td class="px-2 py-1 text-right">${s.AiScore != null ? this._esc(s.AiScore) : (s.AiError ? `<span class="cursor-help text-xs text-red-600" title="${this._esc(s.AiError)}">lỗi AI</span>` : '')}</td>
+      <td class="px-2 py-1 text-xs">${this._esc(s.Status)}</td><td class="px-2 py-1 text-right">${s.AiScore != null ? this._esc(s.AiScore) : (s.AiError ? `<span class="cursor-help text-xs text-red-600" title="${this._esc(s.AiError)}">lỗi chấm</span>` : '')}</td>
       <td class="px-2 py-1 text-right font-semibold">${s.FinalScore == null ? '' : this._esc(s.FinalScore)}</td><td class="px-2 py-1 text-xs">${s.EmailSentAt ? '✓' : ''}</td>
       <td class="px-2 py-1 whitespace-nowrap"><button data-sub="${this._esc(s.SubmissionID)}" class="rounded border px-2 py-0.5 text-xs hover:bg-slate-100">Xem / chấm</button>${grant}</td></tr>`;
     }).join('')
@@ -404,8 +454,8 @@ class KhtdView {
       if (s.type === 'self') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><p class="text-sm">${s.items.map((it, i) => `${this._esc(it)}: <b>${['Chưa', 'Tạm được', 'Tự tin'][(a[s.id] || [])[i]] || '—'}</b>`).join(' · ')}</p>`;
       return '';
     }).join('');
-    const aiErrH = (!ai && row.aiError) ? `<div class="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm"><b>AI chưa chấm được:</b> ${this._esc(row.aiError)} — bấm “Chấm lại bằng AI” sau khi khắc phục, hoặc chấm tay bên dưới.</div>` : '';
-    const aiH = ai ? `<div class="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm"><b>AI đề xuất: ${this._esc(ai.total)}/10</b> (${this._esc(ai.model)})<ul class="mt-1 list-disc pl-5">${ai.criteria.map((c) => `<li>${this._esc(c.name)}: ${this._esc(c.score)}/${this._esc(c.max)} — ${this._esc(c.comment)}</li>`).join('')}</ul><p class="mt-1 italic">${this._esc(ai.feedback)}</p>${(ai.flags || []).length ? `<p class="mt-1 text-red-700">Cờ: ${this._esc(ai.flags.join('; '))}</p>` : ''}${ai.exam && ai.exam.note ? `<p class="mt-1 text-xs text-slate-600">${this._esc(ai.exam.note)}</p>` : ''}${this.fixesHtml(ai.sua_bai, 'Cần sửa (đã gửi sinh viên)')}${(ai.phan_bien || []).length ? `<div class="mt-2 rounded border border-purple-200 bg-purple-50 p-2 text-xs"><b>Phản biện đáp án / rubric (chỉ GV xem):</b><ul class="list-disc pl-5">${ai.phan_bien.map((x) => `<li>${this._esc(x)}</li>`).join('')}</ul></div>` : ''}${this._doiChieu(ai)}</div>` : '<p class="mt-3 text-sm text-slate-500">Chưa có chấm AI (chưa cấu hình Gemini hoặc lỗi gọi API).</p>';
+    const aiErrH = (!ai && row.aiError) ? `<div class="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm"><b>Hệ thống chấm điểm chưa chấm được:</b> ${this._esc(row.aiError)} — bấm “Chấm lại bằng hệ thống” sau khi khắc phục, hoặc chấm tay bên dưới.</div>` : '';
+    const aiH = ai ? `<div class="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm"><b>Hệ thống chấm điểm đề xuất: ${this._esc(ai.total)}/10</b><ul class="mt-1 list-disc pl-5">${ai.criteria.map((c) => `<li>${this._esc(c.name)}: ${this._esc(c.score)}/${this._esc(c.max)} — ${this._esc(c.comment)}</li>`).join('')}</ul><p class="mt-1 italic">${this._esc(ai.feedback)}</p>${(ai.flags || []).length ? `<p class="mt-1 text-red-700">Cờ: ${this._esc(ai.flags.join('; '))}</p>` : ''}${ai.exam && ai.exam.note ? `<p class="mt-1 text-xs text-slate-600">${this._esc(ai.exam.note)}</p>` : ''}${this.fixesHtml(ai.sua_bai, 'Cần sửa (sinh viên đã thấy trên phiếu báo điểm)')}${(ai.phan_bien || []).length ? `<div class="mt-2 rounded border border-purple-200 bg-purple-50 p-2 text-xs"><b>Phản biện đáp án / rubric (chỉ GV xem):</b><ul class="list-disc pl-5">${ai.phan_bien.map((x) => `<li>${this._esc(x)}</li>`).join('')}</ul></div>` : ''}${this._doiChieu(ai)}</div>` : '<p class="mt-3 text-sm text-slate-500">Chưa có điểm của hệ thống chấm điểm (chưa cấu hình hoặc lỗi kết nối).</p>';
     const att = row.attempt || null;
     const multi = att && (att.allowed !== 1 || att.extra > 0 || (att.attempts || []).length > 1);
     const nav = multi ? `<div class="mt-2 flex flex-wrap items-center gap-1 text-xs"><span class="text-slate-500">Các lần (${att.allowed == null ? 'không giới hạn' : 'tối đa ' + this._esc(att.allowed)}, tính ${att.policy === 'LAST' ? 'lần cuối' : 'cao nhất'}):</span>` +
@@ -416,7 +466,7 @@ class KhtdView {
       <form id="grade-form" class="mt-4 grid gap-2 rounded-lg border p-3 sm:grid-cols-[120px_1fr_auto]">
         <label class="text-sm">Điểm chính thức<input id="grade-score" type="number" min="0" max="10" step="0.25" value="${row.FinalScore != null ? this._esc(row.FinalScore) : (ai ? this._esc(ai.total) : '')}" class="mt-1 w-full rounded border px-2 py-1" required/></label>
         <label class="text-sm">Nhận xét của GV (kèm vào email)<textarea id="grade-note" rows="2" class="mt-1 w-full rounded border px-2 py-1">${this._esc(row.FinalNote || '')}</textarea></label>
-        <div class="flex flex-col justify-end gap-1 text-sm"><label title="Thư kèm phiếu đánh giá điểm PDF"><input id="grade-mail" type="checkbox" checked ${row.Email ? '' : 'disabled'}/> Gửi email + PDF</label><button class="rounded bg-blue-700 px-3 py-1.5 text-white hover:bg-blue-800">Duyệt điểm</button><button type="button" id="btn-regrade" class="rounded border px-3 py-1 text-xs hover:bg-slate-50">Chấm lại bằng AI</button></div>
+        <div class="flex flex-col justify-end gap-1 text-sm"><label title="Thư kèm phiếu đánh giá điểm PDF"><input id="grade-mail" type="checkbox" checked ${row.Email ? '' : 'disabled'}/> Gửi email + PDF</label><button class="rounded bg-blue-700 px-3 py-1.5 text-white hover:bg-blue-800">Duyệt điểm</button><button type="button" id="btn-regrade" class="rounded border px-3 py-1 text-xs hover:bg-slate-50">Chấm lại bằng hệ thống</button></div>
       </form>`;
     box.dataset.sub = row.SubmissionID;
     this.hydratePhotos(box);
@@ -444,8 +494,8 @@ class KhtdView {
       tile('Sinh viên đã làm bài', `${w.studentsSubmitted}/${w.enrolled}`, `${w.studentsDraftOnly} đang nháp · ${w.studentsNotStarted} chưa mở`, 'bg-green-50 border-green-200'),
       tile('Tổng bài nộp', sb.total, sb.total !== w.studentsSubmitted ? 'tính cả các lần làm lại' : '', 'bg-blue-50 border-blue-200'),
       tile('GV đã chấm', sb.final, '', 'bg-green-50 border-green-200'),
-      tile('Chưa chấm – chỉ có AI chấm', sb.aiOnly, '', 'bg-amber-50 border-amber-200'),
-      tile('Chưa có điểm nào', sb.ungraded, sb.aiError ? `${sb.aiError} bài AI lỗi` : '', sb.ungraded ? 'bg-red-50 border-red-200' : 'bg-slate-50'),
+      tile('Chưa duyệt – mới có điểm hệ thống', sb.aiOnly, '', 'bg-amber-50 border-amber-200'),
+      tile('Chưa có điểm nào', sb.ungraded, sb.aiError ? `${sb.aiError} bài hệ thống chưa chấm được` : '', sb.ungraded ? 'bg-red-50 border-red-200' : 'bg-slate-50'),
       tile('Nguy cơ dùng AI', w.aiRisk.length, w.aiRisk.length ? `${high} cao · ${w.aiRisk.length - high} trung bình` : 'không có bài đáng ngờ', w.aiRisk.length ? 'bg-pink-50 border-pink-200' : 'bg-slate-50'),
     ].join('');
     const maxB = Math.max(1, ...Object.values(sc.buckets));
@@ -472,7 +522,7 @@ class KhtdView {
       <div class="mt-3 grid gap-4 lg:grid-cols-2">
         <div><h4 class="text-sm font-bold">Bài đặc biệt</h4>${special}</div>
         <div><h4 class="text-sm font-bold">Nguy cơ dùng trí tuệ nhân tạo</h4>${risk}
-          <p class="mt-1 text-xs text-slate-500">Ước lượng tự động (tỉ lệ nội dung dán, tốc độ viết, văn phong chatbot, ước lượng của Gemini khi chấm). Chỉ để giảng viên xem lại bài — không phải kết luận.</p></div>
+          <p class="mt-1 text-xs text-slate-500">Ước lượng tự động (tỉ lệ nội dung dán, tốc độ viết, văn phong chatbot, ước lượng của hệ thống chấm điểm). Chỉ để giảng viên xem lại bài — không phải kết luận.</p></div>
       </div>${missing}`;
   }
 }

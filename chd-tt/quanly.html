@@ -9,8 +9,8 @@
 <link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png?v=20261014-logo">
 <meta name="theme-color" content="#0b4f9e">
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css?v=20261023-dkv10">
-<script src="../js/ui/logo-fallback.js?v=20261023-dkv10"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261024-baodiem">
+<script src="../js/ui/logo-fallback.js?v=20261024-baodiem"></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 <header class="brand-bar text-white">
@@ -34,8 +34,8 @@
       <button id="btn-seed" class="rounded border border-blue-700 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-50">Tạo / bổ sung phiếu CHĐ (6 phiếu + 5 mốc chuyên đề)</button>
       <button id="btn-reload" class="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Tải lại</button>
       <button id="btn-export" class="rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-900">Xuất CSV điểm phiếu</button>
-      <button id="btn-aitest" class="rounded border border-amber-600 px-3 py-1.5 text-sm text-amber-700 hover:bg-amber-50">Kiểm tra Gemini</button>
-      <p class="basis-full text-xs text-slate-500">Quy trình: chọn lớp → mở mã vào lớp ngay tại đây (hoặc ở Bảng điều khiển giảng viên) → sinh viên vào <code>chd-tt/online.html</code> bằng MSSV + mã → nộp → trợ lý AI chấm và gửi email tạm → giảng viên duyệt điểm tại đây (có thể gửi email chính thức). Mỗi phiếu chọn được <b>số lần nộp</b> (1 lần, nhiều lần, không giới hạn) và <b>điểm tính</b> (cao nhất / lần cuối); sinh viên bấm nhầm nộp thì bấm <b>Cho làm lại</b> ở dòng bài nộp.</p>
+      <button id="btn-aitest" class="rounded border border-amber-600 px-3 py-1.5 text-sm text-amber-700 hover:bg-amber-50">Kiểm tra hệ thống chấm điểm</button>
+      <p class="basis-full text-xs text-slate-500">Quy trình: chọn lớp → mở mã vào lớp ngay tại đây (hoặc ở Bảng điều khiển giảng viên) → sinh viên vào <code>chd-tt/online.html</code> bằng MSSV + mã → nộp → hệ thống chấm điểm chấm tạm, sinh viên xem và lưu phiếu báo điểm trên trang (không gửi email) → giảng viên duyệt điểm tại đây; email kèm PDF chỉ gửi khi duyệt (ô “Gửi email + PDF”). Mỗi phiếu chọn được <b>số lần nộp</b> (1 lần, nhiều lần, không giới hạn) và <b>điểm tính</b> (cao nhất / lần cuối); sinh viên bấm nhầm nộp thì bấm <b>Cho làm lại</b> ở dòng bài nộp.</p>
     </div>
     <!-- MÃ VÀO LỚP — cùng một mã với điểm danh; chiếu lên máy chiếu -->
     <div id="code-box" class="hidden mt-4 rounded-2xl border-2 border-blue-200 bg-blue-50 p-6 text-center">
@@ -56,7 +56,7 @@
     <div id="lec-stats" class="rounded-2xl border bg-white p-4 shadow-sm"><p class="text-sm text-slate-500">Chọn lớp để xem thống kê.</p></div>
     <h2 class="mt-5 mb-2 font-bold">Bài nộp</h2>
     <div class="table-wrap overflow-x-auto rounded-xl border bg-white">
-      <table class="w-full text-sm"><thead class="bg-slate-100"><tr><th class="px-2 py-1 text-left">Phiếu</th><th class="px-2 py-1 text-left" title="Lần làm / số lần tối đa; ★ = lần được tính điểm">Lần</th><th class="px-2 py-1 text-left">MSSV</th><th class="px-2 py-1 text-left">Họ tên</th><th class="px-2 py-1 text-left">Trạng thái</th><th class="px-2 py-1 text-right">AI</th><th class="px-2 py-1 text-right">Chính thức</th><th class="px-2 py-1">Email</th><th class="px-2 py-1"></th></tr></thead>
+      <table class="w-full text-sm"><thead class="bg-slate-100"><tr><th class="px-2 py-1 text-left">Phiếu</th><th class="px-2 py-1 text-left" title="Lần làm / số lần tối đa; ★ = lần được tính điểm">Lần</th><th class="px-2 py-1 text-left">MSSV</th><th class="px-2 py-1 text-left">Họ tên</th><th class="px-2 py-1 text-left">Trạng thái</th><th class="px-2 py-1 text-right" title="Điểm tạm tính của hệ thống chấm điểm">Hệ thống</th><th class="px-2 py-1 text-right">Chính thức</th><th class="px-2 py-1">Email</th><th class="px-2 py-1"></th></tr></thead>
       <tbody id="lec-subs"></tbody></table>
     </div>
     <pre id="ai-test" class="hidden mt-4 overflow-x-auto rounded-xl border bg-slate-900 p-4 text-xs text-slate-100"></pre>
@@ -64,11 +64,11 @@
   </div>
 </main>
 <script>window.KHTD_BO = 'chd'; window.KHTD_CLASS_FILTER = 'GEO10404|GEO20202|C(ơ|o) h(ọ|o)c (đ|d)(ấ|a)t|CHĐ|CHD';</script>
-<script src="../js/config/config.js?v=20261023-dkv10"></script>
-<script src="../js/services/APIService.js?v=20261023-dkv10"></script>
-<script src="../js/views/KhtdView.js?v=20261023-dkv10"></script>
-<script src="../js/views/KhtdExamView.js?v=20261023-dkv10"></script>
-<script src="../js/controllers/KhtdController.js?v=20261023-dkv10"></script>
+<script src="../js/config/config.js?v=20261024-baodiem"></script>
+<script src="../js/services/APIService.js?v=20261024-baodiem"></script>
+<script src="../js/views/KhtdView.js?v=20261024-baodiem"></script>
+<script src="../js/views/KhtdExamView.js?v=20261024-baodiem"></script>
+<script src="../js/controllers/KhtdController.js?v=20261024-baodiem"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     new KhtdController(new APIService(CONFIG.API_URL), new KhtdView(), 'lecturer').init();
