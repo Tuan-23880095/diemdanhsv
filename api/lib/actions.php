@@ -83,6 +83,14 @@ const KNOWN_ACTIONS = [
     'archivePreview'         => 'GET',
     'archiveList'            => 'GET',
     'archiveReset'           => 'POST',
+    // Phòng tương tác trang trình chiếu dkv/ (api/lib/liveroom.php, docs/04 mục 36).
+    // roomPoll dùng POST vì mang hostKey (bí mật không đi qua GET/URL).
+    'roomOpen'               => 'POST',
+    'roomInfo'               => 'GET',
+    'roomSubmit'             => 'POST',
+    'roomPoll'               => 'POST',
+    'roomSetLesson'          => 'POST',
+    'roomClose'              => 'POST',
 ];
 
 /** Điều hướng theo $action, gọi thẳng api_ok()/api_fail() (hai hàm này tự exit). */
@@ -205,6 +213,12 @@ function api_dispatch(string $action, string $method, array $params): void
         case 'archivePreview':         action_archive_preview($params);           return;
         case 'archiveList':            action_archive_list($params);              return;
         case 'archiveReset':           action_archive_reset($params);             return;
+        case 'roomOpen':               action_room_open($params);                 return;
+        case 'roomInfo':               action_room_info($params);                 return;
+        case 'roomSubmit':             action_room_submit($params);               return;
+        case 'roomPoll':               action_room_poll($params);                 return;
+        case 'roomSetLesson':          action_room_set_lesson($params);           return;
+        case 'roomClose':              action_room_close($params);                return;
     }
 }
 

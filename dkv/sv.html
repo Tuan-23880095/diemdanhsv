@@ -192,6 +192,35 @@ textarea:focus, input[type=text]:focus { outline: 2px solid var(--luc-non); }
 }
 .feed-item b { color: var(--luc); }
 
+/* Thẻ vào phòng tương tác */
+.join-card { border-left: 5px solid var(--luc); }
+.join-card h3 { margin: 0 0 4px; font: 700 18px var(--serif); color: var(--luc); }
+.join-card .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.join-card label { display: block; font-size: 13px; font-weight: 600; color: var(--mute); margin-bottom: 4px; }
+.join-card input { margin-bottom: 10px; }
+#jCode { text-transform: uppercase; letter-spacing: 4px; font-weight: 700; font-size: 20px; text-align: center; }
+.join-on { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.join-on .code { font: 700 22px var(--sans); letter-spacing: 3px; color: var(--luc); }
+.join-on .who { flex: 1; min-width: 160px; font-size: 14px; color: var(--mute); line-height: 1.35; }
+.join-on .who b { color: var(--muc); }
+.link-btn { background: none; border: 1.5px solid var(--line); border-radius: 10px; padding: 6px 12px; font: 600 13.5px var(--sans); color: var(--lam); cursor: pointer; }
+.note { font-size: 13.5px; color: var(--mute); margin: 6px 0 0; }
+.err { color: var(--son); font-size: 14px; margin: 6px 0 0; }
+.opt-btn:disabled { cursor: default; opacity: 1; }
+.opt-btn.chosen { border-color: var(--lam); }
+.q-msg { font-size: 13.5px; margin-top: 8px; color: var(--mute); }
+.btn:disabled { opacity: .6; cursor: wait; }
+#svToast {
+  position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%) translateY(20px);
+  background: rgba(16,33,43,.94); color: #fff; padding: 12px 18px; border-radius: 12px; font-size: 15px; max-width: calc(100vw - 32px);
+  box-shadow: 0 8px 25px rgba(0,0,0,.25); opacity: 0; pointer-events: none; transition: all .25s; z-index: 100; text-align: center;
+}
+#svToast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+#svToast.bad { background: var(--son); }
+select:disabled { opacity: .75; }
+/* Điện thoại: tiêu đề xuống 2–3 dòng nên thanh tab không dính dưới tiêu đề (tránh bị che) */
+@media (max-width: 520px) { nav.tabs { position: static; } }
+
 @media print {
   .dqt-logo-o { display: none !important; }
 }
@@ -228,11 +257,32 @@ textarea:focus, input[type=text]:focus { outline: 2px solid var(--luc-non); }
 
 <main class="wrap">
 
+  <!-- Vào phòng tương tác của giảng viên (mã đang chiếu trên màn hình lớp) -->
+  <div class="card join-card" id="joinCard">
+    <div id="joinForm">
+      <h3>Vào phòng tương tác</h3>
+      <p class="note" style="margin:0 0 12px">Nhập mã phòng giảng viên đang chiếu trên màn hình (hoặc quét QR), kèm MSSV và họ tên để câu trả lời tới đúng lớp của bạn.</p>
+      <label for="jCode">Mã phòng</label>
+      <input type="text" id="jCode" maxlength="5" autocomplete="off" autocapitalize="characters" inputmode="text" placeholder="VD: K7M3X">
+      <div class="row">
+        <div><label for="jMssv">MSSV</label><input type="text" id="jMssv" maxlength="15" autocomplete="off" inputmode="numeric" placeholder="VD: 23880095"></div>
+        <div><label for="jName">Họ tên</label><input type="text" id="jName" maxlength="80" autocomplete="name" placeholder="Nguyễn Văn A"></div>
+      </div>
+      <button type="button" class="btn pri" id="jBtn" onclick="joinRoom()">Vào phòng</button>
+      <p class="err" id="jErr"></p>
+    </div>
+    <div id="joinOn" class="join-on" style="display:none">
+      <div><div style="font-size:12px;color:var(--mute)">Phòng</div><div class="code" id="jOnCode"></div></div>
+      <div class="who" id="jOnWho"></div>
+      <button type="button" class="link-btn" onclick="leaveRoom()">Đổi</button>
+    </div>
+  </div>
+
   <!-- 1. TAB QUIZ TRẮC NGHIỆM -->
   <div id="tab-quiz" class="panel on">
     <div class="card">
       <h2 id="quizLessonTitle">Câu hỏi kiểm tra nhanh</h2>
-      <p style="color:var(--mute);margin:0 0 16px">Chọn đáp án của bạn ngay sau khi giảng viên chiếu câu hỏi:</p>
+      <p style="color:var(--mute);margin:0 0 16px">Chọn đáp án của bạn khi giảng viên chiếu câu hỏi. Mỗi câu chỉ chọn <b>một lần</b>.</p>
       <div id="quizList">
         <!-- Render danh sách câu hỏi theo bài -->
       </div>
@@ -249,7 +299,7 @@ textarea:focus, input[type=text]:focus { outline: 2px solid var(--luc-non); }
       <label style="display:block;font-weight:700;margin-bottom:6px">Ghi kết quả / ý kiến thảo luận của nhóm bạn:</label>
       <input type="text" id="grpName" placeholder="Tên nhóm (ví dụ: Nhóm 3 - Bàn 2)">
       <textarea id="grpAnswer" rows="4" placeholder="Nhập tóm tắt 3-5 ý nhóm đã thống nhất..."></textarea>
-      <button type="button" class="btn pri" onclick="submitGroupWork()">Gửi kết quả lên màn hình lớp</button>
+      <button type="button" class="btn pri" id="grpBtn" onclick="submitGroupWork()">Gửi kết quả lên màn hình lớp</button>
       
       <div id="groupFeedback" style="margin-top:16px">
         <!-- Danh sách ý kiến các nhóm -->
@@ -263,7 +313,8 @@ textarea:focus, input[type=text]:focus { outline: 2px solid var(--luc-non); }
       <h2>Hỏi đáp với Giảng viên (Q&amp;A)</h2>
       <p style="color:var(--mute);margin:0 0 14px">Thắc mắc hoặc vấn đề bạn chưa hiểu rõ trong bài giảng:</p>
       <textarea id="qaText" rows="3" placeholder="Nhập câu hỏi ngắn gọn..."></textarea>
-      <button type="button" class="btn sec" onclick="submitQuestion()">Gửi câu hỏi ẩn danh</button>
+      <button type="button" class="btn sec" id="qaBtn" onclick="submitQuestion()">Gửi câu hỏi</button>
+      <p class="note">Màn hình lớp chỉ hiện nội dung câu hỏi, không hiện tên bạn.</p>
       
       <div id="qaList" style="margin-top:16px"></div>
     </div>
@@ -271,154 +322,9 @@ textarea:focus, input[type=text]:focus { outline: 2px solid var(--luc-non); }
 
 </main>
 
+<div id="svToast" role="status" aria-live="polite"></div>
+
 <script src="slidesData.js"></script>
-<script>
-var currentIdx = 0;
-var lessons = window.SLIDES_DATA || [];
-
-function init() {
-  var sel = document.getElementById('svLessonSelect');
-  sel.innerHTML = lessons.map(function(l, i) {
-    return '<option value="' + i + '">Mục ' + l.code + ' - ' + l.title + '</option>';
-  }).join('');
-
-  // Check URL query ?lesson=4-1
-  var params = new URLSearchParams(window.location.search);
-  var code = params.get('lesson');
-  if (code) {
-    var f = lessons.findIndex(l => l.code === code);
-    if (f >= 0) { currentIdx = f; sel.value = f; }
-  }
-  renderCurrentLesson();
-  loadSavedSubmissions();
-}
-
-function switchLesson(val) {
-  currentIdx = parseInt(val, 10);
-  renderCurrentLesson();
-}
-
-function renderCurrentLesson() {
-  var cur = lessons[currentIdx];
-  if (!cur) return;
-  document.getElementById('quizLessonTitle').innerText = 'Mục ' + cur.code + ' · ' + cur.title;
-
-  // Lấy các câu hỏi quiz trong bài
-  var qSlides = cur.slides.filter(s => s.type === 'quiz');
-  var quizContainer = document.getElementById('quizList');
-  if (qSlides.length === 0 || !qSlides[0].qs) {
-    quizContainer.innerHTML = '<p style="color:var(--mute)">Bài giảng này không có câu hỏi trắc nghiệm nhanh.</p>';
-  } else {
-    var allQs = qSlides.flatMap(s => s.qs);
-    quizContainer.innerHTML = allQs.map(function(q, qIdx) {
-      var optsHtml = q.o.map(function(opt, oIdx) {
-        var letter = 'ABCD'[oIdx];
-        var isCorrect = (letter === q.a);
-        return '<button type="button" class="opt-btn" onclick="checkSvAnswer(this, ' + isCorrect + ', ' + qIdx + ')">' +
-          '<span class="num-b">' + letter + '</span>' +
-          '<span>' + opt + '</span>' +
-        '</button>';
-      }).join('');
-
-      return '<div class="q-card">' +
-        '<div class="q-title">Câu ' + (qIdx + 1) + '. ' + q.q + '</div>' +
-        '<div class="opts">' + optsHtml + '</div>' +
-      '</div>';
-    }).join('');
-  }
-
-  // Lấy hoạt động thảo luận nhóm (act)
-  var actSlides = cur.slides.filter(s => s.type === 'act');
-  var actBox = document.getElementById('actContent');
-  if (actSlides.length > 0) {
-    var a = actSlides[0];
-    actBox.innerHTML = '<h3 style="color:var(--luc);margin:0 0 6px">' + (a.title || 'Hoạt động thảo luận') + ' (' + (a.time || '10 phút') + ')</h3>' +
-      (a.sub ? '<p style="margin:0 0 8px;font-weight:600">' + a.sub + '</p>' : '') +
-      '<ul style="margin:0;padding-left:20px;font-size:15px">' +
-        (a.bullets || []).map(b => '<li>' + b + '</li>').join('') +
-      '</ul>';
-  } else {
-    actBox.innerHTML = '<p style="color:var(--mute);margin:0">Bài này tập trung vào bài tập cá nhân và thực hành mẫu vật.</p>';
-  }
-}
-
-function checkSvAnswer(btn, isCorrect, qIdx) {
-  var parent = btn.closest('.opts');
-  parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('correct', 'wrong'));
-  if (isCorrect) {
-    btn.classList.add('correct');
-    broadcastLive('quiz', { qIdx: qIdx, choice: btn.querySelector('.num-b').innerText, correct: true });
-  } else {
-    btn.classList.add('wrong');
-    broadcastLive('quiz', { qIdx: qIdx, choice: btn.querySelector('.num-b').innerText, correct: false });
-  }
-}
-
-function openTab(tabId, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('on'));
-  document.getElementById(tabId).classList.add('on');
-  btn.classList.add('on');
-}
-
-function submitGroupWork() {
-  var grp = document.getElementById('grpName').value.trim() || 'Một nhóm học viên';
-  var ans = document.getElementById('grpAnswer').value.trim();
-  if (!ans) { alert('Vui lòng nhập ý kiến thảo luận của nhóm!'); return; }
-  
-  var item = { group: grp, answer: ans, time: new Date().toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'}) };
-  saveAndRender('groupWorks', item, 'groupFeedback');
-  document.getElementById('grpAnswer').value = '';
-  broadcastLive('group', item);
-  alert('Đã gửi ý kiến nhóm thành công!');
-}
-
-function submitQuestion() {
-  var q = document.getElementById('qaText').value.trim();
-  if (!q) { alert('Vui lòng nhập câu hỏi!'); return; }
-  
-  var item = { q: q, time: new Date().toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'}) };
-  saveAndRender('qaListLocal', item, 'qaList');
-  document.getElementById('qaText').value = '';
-  broadcastLive('qa', item);
-  alert('Đã gửi câu hỏi lên bảng diễn giả!');
-}
-
-function broadcastLive(type, data) {
-  try {
-    // Phát qua BroadcastChannel để màn hình slide nhận ngay lập tức
-    var ch = new BroadcastChannel('dkv_live_session');
-    ch.postMessage({ type: type, lesson: lessons[currentIdx].code, data: data });
-  } catch(e) {}
-}
-
-function saveAndRender(storageKey, item, targetId) {
-  var list = JSON.parse(localStorage.getItem(storageKey) || '[]');
-  list.unshift(item);
-  localStorage.setItem(storageKey, JSON.stringify(list));
-  renderItems(list, targetId);
-}
-
-function loadSavedSubmissions() {
-  var g = JSON.parse(localStorage.getItem('groupWorks') || '[]');
-  renderItems(g, 'groupFeedback');
-  var q = JSON.parse(localStorage.getItem('qaListLocal') || '[]');
-  renderItems(q, 'qaList');
-}
-
-function renderItems(list, targetId) {
-  var el = document.getElementById(targetId);
-  if (!el) return;
-  el.innerHTML = list.slice(0, 5).map(function(it) {
-    if (it.group) {
-      return '<div class="feed-item"><b>' + it.group + ' (' + it.time + '):</b> ' + it.answer + '</div>';
-    } else {
-      return '<div class="feed-item"><b>Ẩn danh (' + it.time + '):</b> ' + it.q + '</div>';
-    }
-  }).join('');
-}
-
-document.addEventListener('DOMContentLoaded', init);
-</script>
+<script src="sv-live.js?v=20261025-phong"></script>
 </body>
 </html>

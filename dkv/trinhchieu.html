@@ -46,7 +46,7 @@
     
     <button type="button" data-k="overview" title="Mục lục bài (O)">Mục lục</button>
     <button type="button" data-k="full" title="Toàn màn hình (F)">Toàn màn hình</button>
-    <a href="sv.html" target="_blank" rel="noopener" style="background:var(--luc);color:#fff;border-radius:8px;padding:7px 12px;text-decoration:none;font-weight:600;font-size:14px" title="Mở trang tương tác sinh viên">Trang Sinh viên</a>
+    <a href="sv.html" target="_blank" rel="noopener" style="background:var(--luc);color:#fff;border-radius:8px;padding:7px 12px;text-decoration:none;font-weight:600;font-size:14px" title="Mở trang tương tác sinh viên (kèm mã phòng khi đã mở phòng)">Trang Sinh viên</a>
     <button type="button" class="print-btn" onclick="window.print()" title="In Slide ra PDF (Ctrl+P)">In PDF</button>
   </nav>
 
@@ -69,7 +69,11 @@
   <!-- Dữ liệu bài giảng tải trực tiếp dưới dạng JS (hỗ trợ cả file:// offline và https:// online không bị lỗi CORS) -->
   <script src="slidesData.js"></script>
 
+  <!-- Phòng tương tác qua máy chủ: mã phòng + QR cho điện thoại sinh viên (docs/04-API-PHP.md mục 36) -->
+  <script src="assets/qrcode-generator-1.4.4.js"></script>
+  <script src="live-room.js?v=20261025-phong"></script>
+
   <!-- JavaScript xử lý -->
-  <script src="deck-engine.js?v=20261023-mobile"></script>
+  <script src="deck-engine.js?v=20261025-phong"></script>
 </body>
 </html>

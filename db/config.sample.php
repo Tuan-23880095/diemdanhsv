@@ -51,7 +51,11 @@ return [
             'gradecode_ver_ip' => ['limit' => 50, 'window_sec' => 900],  // nhập mã xem điểm SAI / IP
             'khtd_login_ip'    => ['limit' => 30, 'window_sec' => 600],  // đăng nhập phiếu online SAI / IP (GĐ11)
             'khtd_submit_ip'   => ['limit' => 30, 'window_sec' => 600],  // nộp phiếu / IP (GĐ11)
+            // Phòng tương tác trang trình chiếu (docs/04 mục 36) — bỏ trống dùng mặc định trong api/lib/ratelimit.php:
+            // 'live_submit_ip' => ['limit' => 3000, 'window_sec' => 600],  // gửi câu trả lời / IP (3 lớp × 50 SV chung Wi-Fi)
         ],
+        // Phòng tương tác trang trình chiếu dkv/ hết hạn sau bao nhiêu giờ (1–12, mặc định 4).
+        'live_room_hours'      => 4,
         'gps_accuracy_limit_m' => 150,
         'default_radius_m'     => 100,
         // Stub mail (GĐ3): true = ghi cả thân email (có mã xem điểm) vào error_log.
