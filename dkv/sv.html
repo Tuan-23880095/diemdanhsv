@@ -331,12 +331,15 @@ function renderCurrentLesson() {
   var actSlides = cur.slides.filter(s => s.type === 'act');
   var actBox = document.getElementById('actContent');
   if (actSlides.length > 0) {
-    var a = actSlides[0];
-    actBox.innerHTML = '<h3 style="color:var(--luc);margin:0 0 6px">' + (a.title || 'Hoạt động thảo luận') + ' (' + (a.time || '10 phút') + ')</h3>' +
-      (a.sub ? '<p style="margin:0 0 8px;font-weight:600">' + a.sub + '</p>' : '') +
-      '<ul style="margin:0;padding-left:20px;font-size:15px">' +
-        (a.bullets || []).map(b => '<li>' + b + '</li>').join('') +
-      '</ul>';
+    actBox.innerHTML = actSlides.map(function(a, aIdx) {
+      return '<div style="' + (aIdx > 0 ? 'margin-top:16px;padding-top:16px;border-top:1px dashed var(--line);' : '') + '">' +
+        '<h3 style="color:var(--luc);margin:0 0 6px">' + (actSlides.length > 1 ? 'Hoạt động ' + (aIdx + 1) + ': ' : '') + (a.title || 'Hoạt động thảo luận') + ' (' + (a.time || '10 phút') + ')</h3>' +
+        (a.sub ? '<p style="margin:0 0 8px;font-weight:600">' + a.sub + '</p>' : '') +
+        '<ul style="margin:0;padding-left:20px;font-size:15px">' +
+          (a.bullets || []).map(b => '<li>' + b + '</li>').join('') +
+        '</ul>' +
+      '</div>';
+    }).join('');
   } else {
     actBox.innerHTML = '<p style="color:var(--mute);margin:0">Bài này tập trung vào bài tập cá nhân và thực hành mẫu vật.</p>';
   }
