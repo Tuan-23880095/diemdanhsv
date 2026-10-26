@@ -166,6 +166,44 @@
       </div>
     </div>
 
+    <!-- KHỐI PHÂN TÍCH THỜI GIAN LÀM BÀI & NHỊP ĐỘ THI CỬ -->
+    <div class="bg-white rounded-2xl p-6 sm:p-8 border border-bac shadow-md card-shadow space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div class="flex items-center gap-2 text-lam font-bold text-sm">
+          <i class="fas fa-stopwatch text-base text-son"></i> <span>Phân Tích Nhịp Độ & Thời Gian Hoàn Thành Bài Thi</span>
+        </div>
+        <span id="time-pace-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-lam">
+          Đang tính toán nhịp độ
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-giay p-4 rounded-xl border border-bac text-center">
+          <span class="text-xs text-gray-500 block">Thời gian thực tế làm bài</span>
+          <span class="text-xl font-bold font-mono text-lam block mt-1" id="time-actual">00:00</span>
+          <span class="text-[11px] text-gray-500" id="time-avg-q">TB: 0s / câu</span>
+        </div>
+        <div class="bg-giay p-4 rounded-xl border border-bac text-center">
+          <span class="text-xs text-gray-500 block">Thời gian chuẩn khuyến nghị</span>
+          <span class="text-xl font-bold font-mono text-gray-700 block mt-1" id="time-recommended">45 phút</span>
+          <span class="text-[11px] text-gray-500">Khung chuẩn Bộ GD&ĐT</span>
+        </div>
+        <div class="bg-giay p-4 rounded-xl border border-bac text-center">
+          <span class="text-xs text-gray-500 block">Chênh lệch nhịp độ</span>
+          <span class="text-xl font-bold font-mono block mt-1" id="time-diff">0 phút</span>
+          <span class="text-[11px]" id="time-diff-status">Đúng tiến độ</span>
+        </div>
+      </div>
+
+      <!-- Lời khuyên chiến thuật quản lý thời gian -->
+      <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 text-xs sm:text-sm text-gray-800 leading-relaxed">
+        <b class="text-amber-900 block mb-1 flex items-center gap-1.5">
+          <i class="fas fa-lightbulb text-amber-500"></i> Chiến thuật phân bổ thời gian của Thầy Tuấn:
+        </b>
+        <span id="time-advice">Đang tải lời khuyên...</span>
+      </div>
+    </div>
+
     <!-- CHI TIẾT TỪNG CÂU HỎI VÀ LỜI GIẢI -->
     <div class="space-y-4">
       <h3 class="text-lg font-bold title-serif text-lam flex items-center gap-2">
@@ -222,6 +260,36 @@
 
         const causesList = document.getElementById('ai-root-causes');
         causesList.innerHTML = ai.root_causes.map(c => `<li>${esc(c)}</li>`).join('');
+
+        // Cập nhật phân tích thời gian làm bài
+        const t = ai.time_analysis;
+        if (t) {
+          document.getElementById('time-actual').innerText = t.actual_formatted || '00:00';
+          document.getElementById('time-avg-q').innerText = `TB: ${t.avg_seconds_per_question}s / câu`;
+          document.getElementById('time-recommended').innerText = `${t.recommended_minutes} phút`;
+          
+          const diffEl = document.getElementById('time-diff');
+          const diffStatusEl = document.getElementById('time-diff-status');
+          const badgeEl = document.getElementById('time-pace-badge');
+
+          if (t.is_overtime) {
+            diffEl.innerText = `+${t.diff_minutes} phút`;
+            diffEl.className = 'text-xl font-bold font-mono text-son block mt-1';
+            diffStatusEl.innerText = 'Vượt quá giờ chuẩn';
+            diffStatusEl.className = 'text-[11px] text-son font-semibold';
+            badgeEl.innerText = '⏳ Nhịp độ cẩn trọng (vượt giờ)';
+            badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900';
+          } else {
+            diffEl.innerText = `-${t.diff_minutes} phút`;
+            diffEl.className = 'text-xl font-bold font-mono text-luc block mt-1';
+            diffStatusEl.innerText = 'Hoàn thành sớm';
+            diffStatusEl.className = 'text-[11px] text-luc font-semibold';
+            badgeEl.innerText = '⚡ Tiến độ chuẩn xác';
+            badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-luc';
+          }
+
+          document.getElementById('time-advice').innerText = t.time_strategy_advice || '';
+        }
       }
 
       const totalLeft = (data.free_trials_left || 0) + (data.paid_trials_left || 0);

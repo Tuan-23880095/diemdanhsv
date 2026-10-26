@@ -73,10 +73,13 @@
         </div>
       </div>
 
-      <!-- ĐỒNG HỒ ĐẾM NGƯỢC -->
-      <div class="flex items-center gap-2 bg-red-50 border border-red-200 px-3.5 py-1.5 rounded-xl shadow-inner">
-        <i class="fas fa-stopwatch text-son animate-pulse"></i>
-        <span class="font-mono font-bold text-base sm:text-lg text-son" id="timer-display">00:00</span>
+      <!-- ĐỒNG HỒ ĐO THỜI GIAN LÀM BÀI (KHÔNG DỪNG ÉP BUỘC MÀ PHÂN TÍCH NHỊP ĐỘ) -->
+      <div class="flex items-center gap-2 bg-slate-50 border border-bac px-3.5 py-1.5 rounded-xl shadow-inner" id="timer-box">
+        <i class="fas fa-stopwatch text-lam" id="timer-icon"></i>
+        <div class="text-right">
+          <span class="font-mono font-bold text-base sm:text-lg text-lam block leading-none" id="timer-display">00:00</span>
+          <span class="text-[9px] text-gray-500 block" id="timer-status">Chuẩn: 45 phút</span>
+        </div>
       </div>
     </div>
 
@@ -181,38 +184,79 @@
       }
     }
 
+    let targetStandardSeconds = 45 * 60;
+
     function renderExam() {
       document.getElementById('loading-box').classList.add('hidden');
       document.getElementById('quiz-form').classList.remove('hidden');
       document.getElementById('exam-title').innerText = examData.title;
 
       const listEl = document.getElementById('questions-list');
-      listEl.innerHTML = examData.questions.map((q, idx) => `
-        <div class="bg-white rounded-2xl p-5 border border-bac shadow-sm space-y-4" id="q-card-${idx}">
-          <div class="flex items-start gap-3">
-            <span class="w-8 h-8 rounded-full bg-slate-100 text-lam font-bold text-xs flex items-center justify-center flex-none border border-bac">
-              ${idx + 1}
-            </span>
-            <div class="font-medium text-sm sm:text-base text-muc leading-relaxed pt-1">
-              ${esc(q.q)}
+      listEl.innerHTML = examData.questions.map((q, idx) => {
+        const qType = q.type || 'choice'; // 'choice', 'true_false', 'short'
+        
+        let bodyHtml = '';
+        if (qType === 'choice') {
+          bodyHtml = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              ${q.opts.map((opt, oIdx) => `
+                <label class="opt-label relative block cursor-pointer">
+                  <input type="radio" name="q_${idx}" value="${oIdx}" onchange="selectOption(${idx}, ${oIdx})" class="opt-input peer sr-only">
+                  <div class="opt-box border border-bac rounded-xl p-3 flex items-center gap-3 transition">
+                    <span class="opt-circle w-6 h-6 rounded-full border border-gray-400 text-gray-500 font-bold text-xs flex items-center justify-center flex-none">
+                      ${['A', 'B', 'C', 'D'][oIdx]}
+                    </span>
+                    <span class="text-xs sm:text-sm text-gray-800">${esc(opt)}</span>
+                  </div>
+                </label>
+              `).join('')}
             </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            ${q.opts.map((opt, oIdx) => `
-              <label class="opt-label relative block cursor-pointer">
-                <input type="radio" name="q_${idx}" value="${oIdx}" onchange="selectOption(${idx}, ${oIdx})" class="opt-input peer sr-only">
-                <div class="opt-box border border-bac rounded-xl p-3 flex items-center gap-3 transition">
-                  <span class="opt-circle w-6 h-6 rounded-full border border-gray-400 text-gray-500 font-bold text-xs flex items-center justify-center flex-none">
-                    ${['A', 'B', 'C', 'D'][oIdx]}
-                  </span>
-                  <span class="text-xs sm:text-sm text-gray-800">${esc(opt)}</span>
+          `;
+        } else if (qType === 'true_false') {
+          bodyHtml = `
+            <div class="space-y-2 pt-2">
+              ${q.items.map((subItem, sIdx) => `
+                <div class="flex items-center justify-between gap-4 p-2.5 rounded-xl border border-bac bg-giay text-xs sm:text-sm">
+                  <span class="text-gray-800"><b>${['a', 'b', 'c', 'd'][sIdx]})</b> ${esc(subItem)}</span>
+                  <div class="flex items-center gap-2 flex-none">
+                    <label class="flex items-center gap-1 cursor-pointer">
+                      <input type="radio" name="q_${idx}_${sIdx}" value="1" onchange="selectTFOption(${idx}, ${sIdx}, 1)" class="text-luc focus:ring-luc">
+                      <span class="text-xs font-bold text-luc">Đúng</span>
+                    </label>
+                    <label class="flex items-center gap-1 cursor-pointer">
+                      <input type="radio" name="q_${idx}_${sIdx}" value="0" onchange="selectTFOption(${idx}, ${sIdx}, 0)" class="text-son focus:ring-son">
+                      <span class="text-xs font-bold text-son">Sai</span>
+                    </label>
+                  </div>
                 </div>
-              </label>
-            `).join('')}
+              `).join('')}
+            </div>
+          `;
+        } else if (qType === 'short') {
+          bodyHtml = `
+            <div class="pt-2">
+              <label class="block text-xs font-bold text-gray-600 mb-1">Điền đáp số tự tính toán (số hoặc phân số):</label>
+              <input type="text" placeholder="Ví dụ: 15 hoặc -3.5 hoặc 7/4" oninput="selectShortAnswer(${idx}, this.value)" class="w-full sm:w-72 px-3 py-2 border border-bac rounded-xl text-sm focus:outline-none focus:border-luc bg-giay">
+            </div>
+          `;
+        }
+
+        const sectionBadge = q.section ? `<span class="text-[10px] uppercase font-bold text-luc bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded ml-2">${esc(q.section)}</span>` : '';
+
+        return `
+          <div class="bg-white rounded-2xl p-5 border border-bac shadow-sm space-y-4" id="q-card-${idx}">
+            <div class="flex items-start gap-3">
+              <span class="w-8 h-8 rounded-full bg-slate-100 text-lam font-bold text-xs flex items-center justify-center flex-none border border-bac">
+                ${idx + 1}
+              </span>
+              <div class="font-medium text-sm sm:text-base text-muc leading-relaxed pt-1">
+                ${esc(q.q)} ${sectionBadge}
+              </div>
+            </div>
+            ${bodyHtml}
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       // Render lại MathJax
       if (window.MathJax && window.MathJax.typesetPromise) {
@@ -228,11 +272,24 @@
       updateProgress();
     }
 
+    function selectTFOption(qIdx, sIdx, val) {
+      if (!userAnswers[qIdx] || typeof userAnswers[qIdx] !== 'object') {
+        userAnswers[qIdx] = {};
+      }
+      userAnswers[qIdx][sIdx] = val;
+      updateProgress();
+    }
+
+    function selectShortAnswer(qIdx, val) {
+      userAnswers[qIdx] = val.trim();
+      updateProgress();
+    }
+
     function updateProgress() {
       const answeredCount = Object.keys(userAnswers).length;
       const total = examData.questions.length;
       const pct = Math.round((answeredCount / total) * 100);
-      document.getElementById('progress-text').innerText = `Đã chọn: ${answeredCount}/${total} câu`;
+      document.getElementById('progress-text').innerText = `Đã làm: ${answeredCount}/${total} câu`;
       document.getElementById('progress-bar').style.width = pct + '%';
 
       const badge = document.getElementById('stage-badge');
@@ -248,29 +305,39 @@
       }
     }
 
-    function startTimer(seconds) {
-      timeRemainingSeconds = seconds;
+    // TÍNH GIỜ THEO NHỊP ĐỘ: KHÔNG DỪNG BÀI KHI HẾT GIỜ, MÀ ĐO THỜI GIAN THỰC TẾ ĐỂ PHÂN TÍCH CHO HỌC SINH
+    function startTimer(standardSeconds) {
+      targetStandardSeconds = standardSeconds;
       durationSeconds = 0;
       updateTimerDisplay();
 
       timerInterval = setInterval(() => {
-        timeRemainingSeconds--;
         durationSeconds++;
         updateTimerDisplay();
-
-        if (timeRemainingSeconds <= 0) {
-          clearInterval(timerInterval);
-          alert('Đã hết thời gian làm bài! Hệ thống đang tự động nộp bài...');
-          submitExam(null);
-        }
       }, 1000);
     }
 
     function updateTimerDisplay() {
-      const m = Math.floor(timeRemainingSeconds / 60);
-      const s = timeRemainingSeconds % 60;
-      document.getElementById('timer-display').innerText = 
-        `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      const m = Math.floor(durationSeconds / 60);
+      const s = durationSeconds % 60;
+      const displayStr = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      document.getElementById('timer-display').innerText = displayStr;
+
+      const stdMin = Math.round(targetStandardSeconds / 60);
+      const timerBox = document.getElementById('timer-box');
+      const timerStatus = document.getElementById('timer-status');
+      const timerIcon = document.getElementById('timer-icon');
+
+      if (durationSeconds <= targetStandardSeconds) {
+        timerStatus.innerText = `Khuyến nghị: ${stdMin} phút`;
+        timerStatus.className = 'text-[9px] text-gray-500 block';
+        timerIcon.className = 'fas fa-stopwatch text-lam';
+      } else {
+        const overMin = Math.ceil((durationSeconds - targetStandardSeconds) / 60);
+        timerStatus.innerText = `+${overMin}p (vượt giờ chuẩn - Thầy vẫn chấm)`;
+        timerStatus.className = 'text-[9px] text-amber-600 font-semibold block';
+        timerIcon.className = 'fas fa-clock text-amber-500 animate-pulse';
+      }
     }
 
     async function submitExam(e) {
