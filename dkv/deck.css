@@ -35,21 +35,21 @@ html, body {
 #stage {
   position: fixed;
   inset: 0;
-  display: grid;
-  place-items: center;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background: #E5E9E4;
 }
 
 #scaler {
   width: 1600px;
   height: 900px;
-  /* Đặt tâm slide đúng tâm màn hình rồi mới thu nhỏ (deck-engine.js autoScale).
-     Trước đây dùng grid place-items:center: khi màn hình hẹp hơn 1600px (điện thoại),
-     ô lưới bị kéo rộng theo slide nên slide trôi ra ngoài màn hình. */
   position: absolute;
   left: 50%;
   top: 50%;
   transform-origin: center center;
   transform: translate(-50%, -50%);
+  will-change: transform;
 }
 
 .slide {

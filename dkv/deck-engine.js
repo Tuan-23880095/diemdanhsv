@@ -54,8 +54,13 @@
     var scaler = document.getElementById('scaler');
     if (!scaler) return;
     var w = 1600, h = 900;
-    var scale = Math.min(window.innerWidth / w, window.innerHeight / h);
-    scaler.style.transform = 'scale(' + scale + ')';
+    // Chừa chỗ cho thanh điều khiển trên màn hình hẹp (điện thoại) để không che slide.
+    var ctrl = document.getElementById('ctrl');
+    var reserve = (window.innerWidth <= 900 && ctrl) ? ctrl.offsetHeight + 16 : 0;
+    var availH = Math.max(window.innerHeight - reserve, 100);
+    var scale = Math.min(window.innerWidth / w, availH / h);
+    var dy = -reserve / 2;
+    scaler.style.transform = 'translate(-50%, calc(-50% + ' + dy + 'px)) scale(' + scale + ')';
   }
 
   function buildLessonSelector() {
