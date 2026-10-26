@@ -15,7 +15,7 @@
  *
  * Cấu hình thêm trong ../private/config.php:
  *   'gemini' => ['api_key' => '...', 'model' => 'gemini-2.0-flash'],
- *   'app' => ['rate_limits' => ['khtd_login_ip' => ['limit'=>30,'window_sec'=>600]]] (tuỳ chọn)
+ *   'app' => ['rate_limits' => ['khtd_login_ip' => ['limit'=>60,'window_sec'=>600]]] (tuỳ chọn)
  */
 
 require_once __DIR__ . '/khtd_kb.php';

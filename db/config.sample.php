@@ -46,11 +46,18 @@ return [
         'rate_limits' => [
             'login_ip'         => ['limit' => 20, 'window_sec' => 900],  // login SAI / IP
             'login_user'       => ['limit' => 10, 'window_sec' => 900],  // login SAI / tên đăng nhập
-            'checkin_ip'       => ['limit' => 60, 'window_sec' => 600],  // mã điểm danh SAI / IP
+            // Các bucket *_ip dưới tính chung cho MỌI SV của trường: cả trường ra Internet
+            // bằng cùng một IP Wi-Fi, nên số được đặt cho 2–3 lớp × 50 SV học song song.
+            // Đừng hạ về số cũ (60/30/30/600) — lớp thứ hai sẽ bị chặn oan.
+            'checkin_ip'       => ['limit' => 120, 'window_sec' => 600],  // mã điểm danh SAI / IP (trước 60)
             'gradecode_req_ip' => ['limit' => 30, 'window_sec' => 900],  // xin mã xem điểm (mọi lượt) / IP
             'gradecode_ver_ip' => ['limit' => 50, 'window_sec' => 900],  // nhập mã xem điểm SAI / IP
-            'khtd_login_ip'    => ['limit' => 30, 'window_sec' => 600],  // đăng nhập phiếu online SAI / IP (GĐ11)
-            'khtd_submit_ip'   => ['limit' => 30, 'window_sec' => 600],  // nộp phiếu / IP (GĐ11)
+            'khtd_login_ip'    => ['limit' => 60, 'window_sec' => 600],  // đăng nhập phiếu online SAI / IP (GĐ11; trước 30)
+            'khtd_submit_ip'   => ['limit' => 800, 'window_sec' => 600], // nộp phiếu / IP (GĐ11; trước 30 rồi 400)
+            'khtd_submit_student' => ['limit' => 8, 'window_sec' => 600], // nộp phiếu / SINH VIÊN — KHÔNG nới
+            'khtd_upload_ip'   => ['limit' => 2000, 'window_sec' => 600], // tải ảnh mẫu / IP (GĐ11e; trước 600)
+            'tvts_submit_ip'   => ['limit' => 150, 'window_sec' => 600],  // TVTS02 nộp bài / IP (trước 60)
+            'tvts1_save_ip'    => ['limit' => 600, 'window_sec' => 600],  // TVTS01 lưu Bước 1 / IP (trước 300)
         ],
         'gps_accuracy_limit_m' => 150,
         'default_radius_m'     => 100,
