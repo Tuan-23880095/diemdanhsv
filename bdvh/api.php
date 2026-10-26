@@ -504,8 +504,9 @@ switch ($action) {
 
         $score = ($totalQuestions > 0) ? round(($correctCount / $totalQuestions) * 10, 2) : 0;
 
-        // Tích hợp Gemini AI Engine đánh giá năng lực học sinh
-        $aiResult = evaluate_with_gemini($user['full_name'], $exam['title'], $score, $correctCount, $totalQuestions, $durationSeconds, $details);
+        // Tích hợp Gemini AI Engine đánh giá năng lực học sinh kèm phân tích thời gian
+        $targetSeconds = ((int)$exam['time_minutes']) * 60;
+        $aiResult = evaluate_with_gemini($user['full_name'], $exam['title'], $score, $correctCount, $totalQuestions, $durationSeconds, $targetSeconds, $details);
 
         // Lưu vào bảng submissions
         $stmt = $pdo->prepare("
@@ -583,7 +584,7 @@ switch ($action) {
 // HÀM GỌI GEMINI AI ĐÁNH GIÁ NĂNG LỰC
 // -------------------------------------------------------------
 
-function evaluate_with_gemini(string $studentName, string $examTitle, float $score, int $correct, int $total, int $seconds, array $details): array {
+function evaluate_with_gemini(string $studentName, string $examTitle, float $score, int $correct, int $total, int $seconds, int $targetSeconds, array $details): array {
     // Phân tích sư phạm thông minh (Smart Pedagogical Fallback / Gemini Proxy)
     $wrongQuestions = [];
     foreach ($details as $d) {
@@ -608,11 +609,38 @@ function evaluate_with_gemini(string $studentName, string $examTitle, float $sco
         $badge = '🎯 Cần rèn luyện thêm';
     }
 
-    // Thời gian trung bình mỗi câu
+    // Thời gian trung bình mỗi câu và phân tích nhịp độ thi cử
     $avgSec = ($total > 0) ? round($seconds / $total, 1) : 0;
-    $speedRemark = ($avgSec < 35) ? "Tốc độ phản xạ rất nhanh! Cần cẩn thận đọc kỹ đề để không mắc bẫy." : "Tốc độ làm bài tương đối cẩn trọng, hãy tăng tốc ở các câu nhận biết để dành thời gian cho câu vận dụng.";
+    $actualMin = round($seconds / 60, 1);
+    $stdMin = round($targetSeconds / 60, 1);
+    $isOvertime = ($seconds > $targetSeconds);
+    $diffMin = round(abs($seconds - $targetSeconds) / 60, 1);
 
-    $aiRemark = "Thầy Đinh Quốc Tuấn nhận xét: Chúc mừng em {$studentName} đã nỗ lực hoàn thành bài thi '{$examTitle}'. Em đạt {$score}/10 điểm ({$correct}/{$total} câu đúng). {$speedRemark}";
+    $timeAnalysis = [
+        'actual_seconds' => $seconds,
+        'actual_formatted' => sprintf('%02d:%02d', floor($seconds / 60), $seconds % 60),
+        'recommended_minutes' => $stdMin,
+        'is_overtime' => $isOvertime,
+        'diff_minutes' => $diffMin,
+        'avg_seconds_per_question' => $avgSec,
+        'pace_category' => '',
+        'time_strategy_advice' => ''
+    ];
+
+    if ($seconds <= $targetSeconds * 0.75) {
+        $timeAnalysis['pace_category'] = 'Phản xạ siêu tốc (nhanh hơn chuẩn ' . $diffMin . ' phút)';
+        $timeAnalysis['time_strategy_advice'] = ($score >= 8.0) 
+            ? 'Em giải đề rất xuất sắc và nhịp độ cực kỳ tự tin! Hãy duy trì phong độ này.' 
+            : 'Tốc độ làm bài của em rất nhanh nhưng điểm số bị mất ở một số câu bẫy. Hãy dành 5-7 phút cuối để rà soát lại các phương án đã chọn trước khi nộp bài.';
+    } elseif ($seconds <= $targetSeconds) {
+        $timeAnalysis['pace_category'] = 'Đúng tiến độ chuẩn Bộ GD&ĐT (hoàn thành trước ' . $diffMin . ' phút)';
+        $timeAnalysis['time_strategy_advice'] = 'Em phân bổ thời gian rất hợp lý và điềm tĩnh. Đây là chiến thuật thi cử tối ưu để đạt điểm cao trong phòng thi chính thức.';
+    } else {
+        $timeAnalysis['pace_category'] = 'Vượt quá thời gian khuyến nghị (' . $diffMin . ' phút)';
+        $timeAnalysis['time_strategy_advice'] = 'Em làm bài cẩn trọng nhưng còn bị sa lầy thời gian ở một số câu tính toán dài. Chiến thuật đề xuất: Với 22 câu chuẩn, hãy phân bổ tối đa 1 phút cho mỗi câu Phần I, 3 phút cho mỗi câu Phần II (Đúng/Sai) và 4-5 phút cho Phần III (Trả lời ngắn).';
+    }
+
+    $aiRemark = "Thầy Đinh Quốc Tuấn nhận xét: Chúc mừng em {$studentName} đã nỗ lực hoàn thành bài thi '{$examTitle}'. Em đạt {$score}/10 điểm ({$correct}/{$total} câu đúng). Thời gian làm bài thực tế: {$timeAnalysis['actual_formatted']} (khuyến nghị chuẩn: {$stdMin} phút). {$timeAnalysis['time_strategy_advice']}";
 
     $rootCauses = [];
     if (!empty($wrongQuestions)) {
@@ -628,7 +656,7 @@ function evaluate_with_gemini(string $studentName, string $examTitle, float $sco
         'level' => $level,
         'badge' => $badge,
         'teacher_remark' => $aiRemark,
-        'speed_evaluation' => "Trung bình {$avgSec}s / câu.",
+        'time_analysis' => $timeAnalysis,
         'root_causes' => $rootCauses,
         'exclusive_tip' => $exclusiveTip,
         'gemini_model' => 'gemini-1.5-flash-pedagogical'
