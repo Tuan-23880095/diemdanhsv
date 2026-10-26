@@ -376,3 +376,45 @@ CREATE TABLE IF NOT EXISTS class_archives (
   UNIQUE KEY uq_archive_class (ClassID),
   KEY idx_archive_course (CourseCode)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Phòng tương tác trực tiếp của trang trình chiếu bài giảng (dkv/trinhchieu.html ↔ dkv/sv.html),
+-- docs/04-API-PHP.md mục 36; code api/lib/liveroom.php. CSDL đã có dùng
+-- db/migrations/010-live-rooms.sql. Mỗi phòng có mã 5 ký tự riêng; câu trả lời luôn lọc
+-- theo RoomID nên các lớp học song song không lẫn dữ liệu. Phòng quá 14 ngày tự xoá.
+CREATE TABLE IF NOT EXISTS live_rooms (
+  RoomID      VARCHAR(40)  NOT NULL,                 -- LRM_xxxxxxxxxxxx
+  Code        CHAR(5)      NOT NULL,                 -- mã phòng sinh viên nhập / quét QR
+  HostKeyHash CHAR(64)     NOT NULL,                 -- sha256(khoá trang trình chiếu)
+  LessonCode  VARCHAR(20)  NOT NULL,                 -- mã bài giảng, vd 4-1
+  ClassID     VARCHAR(40)  NULL,                     -- gắn qua mã điểm danh (tuỳ chọn)
+  SessionID   VARCHAR(40)  NULL,
+  Label       VARCHAR(120) NULL,                     -- tên lớp hiển thị
+  Status      ENUM('OPEN','CLOSED') NOT NULL DEFAULT 'OPEN',
+  CreatedIp   VARCHAR(45)  NULL,
+  CreatedAt   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ExpiresAt   DATETIME     NOT NULL,
+  ClosedAt    DATETIME     NULL,
+  PRIMARY KEY (RoomID),
+  KEY idx_live_code (Code, Status),
+  KEY idx_live_created (CreatedAt)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS live_responses (
+  ResponseID  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  RoomID      VARCHAR(40)  NOT NULL,
+  Kind        ENUM('quiz','group','qa') NOT NULL,
+  LessonCode  VARCHAR(20)  NOT NULL,
+  MSSV        VARCHAR(15)  NOT NULL,
+  StudentName VARCHAR(80)  NOT NULL,
+  InRoster    TINYINT(1)   NULL,                     -- 1/0 khi phòng gắn lớp; NULL khi không gắn
+  QIndex      SMALLINT     NULL,                     -- quiz: số thứ tự câu (từ 0)
+  Choice      CHAR(1)      NULL,                     -- quiz: A/B/C/D
+  GroupName   VARCHAR(80)  NULL,                     -- bài nhóm
+  Body        TEXT         NULL,                     -- nội dung nhóm / câu hỏi
+  ClientIp    VARCHAR(45)  NULL,
+  CreatedAt   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (ResponseID),
+  UNIQUE KEY uq_live_quiz (RoomID, LessonCode, QIndex, MSSV),
+  KEY idx_live_room (RoomID, ResponseID),
+  CONSTRAINT fk_live_room FOREIGN KEY (RoomID) REFERENCES live_rooms(RoomID) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

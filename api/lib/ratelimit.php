@@ -53,6 +53,12 @@ const RATE_LIMIT_DEFAULTS = [
     'tvts_submit_ip'   => [150, 600], // TVTS02: nộp bài phân tích / 10 phút / IP — 2–3 lớp ~45–50 HS song song chung Wi-Fi trường (một IP) (trước là 60); vẫn chặn bấm liên tục tốn hạn mức Gemini
     'tvts_get_ip'      => [120, 600], // TVTS02: tra cứu kết quả bằng mã SAI / 10 phút / IP — chặn dò mã
     'tvts1_save_ip'    => [600, 600], // TVTS01: lưu/cập nhật kết quả Bước 1 / 10 phút / IP — 2–3 lớp song song chung Wi-Fi trường (một IP), mỗi em có thể sửa vài lần (trước là 300)
+    // Phòng tương tác trang trình chiếu (api/lib/liveroom.php, docs/04 mục 36). Tính cho 3 lớp × 50 SV chung một Wi-Fi.
+    'live_submit_ip'      => [3000, 600], // gửi câu trả lời / 10 phút / IP: 150 SV × ~20 lượt (quiz + nhóm + hỏi đáp)
+    'live_submit_student' => [60, 600],   // gửi / 10 phút / (mã phòng, MSSV) — một máy không dội được cả phòng
+    'live_code_ip'        => [120, 600],  // mã phòng / khoá trình chiếu SAI / 10 phút / IP — chặn dò mã 5 ký tự
+    'live_poll_ip'        => [1500, 600], // trang trình chiếu hỏi định kỳ / 10 phút / IP: 4 giây/lần = 150 lượt/phòng → đủ ~10 phòng chung IP
+    'live_open_ip'        => [30, 3600],  // mở phòng (mọi lượt) / giờ / IP
 ];
 
 /** Độ dài tối đa của ClientKey — khớp VARCHAR(64) trong db/schema.sql. */
