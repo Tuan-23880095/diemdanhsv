@@ -42,7 +42,6 @@
       loadLesson(state.currentLessonIndex);
 
       window.addEventListener('resize', autoScale);
-      window.addEventListener('orientationchange', function () { setTimeout(autoScale, 200); });
       autoScale();
 
       setupKeyboard();
@@ -234,8 +233,9 @@
   }
 
   function renderFigSlide(sl) {
-    var imgPath = 'assets/' + sl.fig + '.svg';
-    var fallbackPng = 'assets/' + sl.fig + '.png';
+    var hasExt = /\.(jpg|jpeg|png|svg|webp)$/i.test(sl.fig);
+    var imgPath = hasExt ? 'assets/' + sl.fig : 'assets/' + sl.fig + '.svg';
+    var fallbackPng = hasExt ? 'assets/' + sl.fig : 'assets/' + sl.fig + '.png';
     return '<p class="s-kicker">Sơ đồ &amp; Bản đồ tư duy</p>' +
       '<h2 class="s-title">' + esc(sl.title) + '</h2>' +
       (sl.sub ? '<p class="s-sub">' + esc(sl.sub) + '</p>' : '') +
@@ -246,8 +246,9 @@
   }
 
   function renderFigBulSlide(sl) {
-    var imgPath = 'assets/' + sl.fig + '.svg';
-    var fallbackPng = 'assets/' + sl.fig + '.png';
+    var hasExt = /\.(jpg|jpeg|png|svg|webp)$/i.test(sl.fig);
+    var imgPath = hasExt ? 'assets/' + sl.fig : 'assets/' + sl.fig + '.svg';
+    var fallbackPng = hasExt ? 'assets/' + sl.fig : 'assets/' + sl.fig + '.png';
     var bulletsHtml = (sl.bullets || []).map(function(b) {
       var isObj = typeof b === 'object';
       var text = isObj ? b.t : b;
@@ -528,18 +529,6 @@
           break;
       }
     });
-
-    // Vuốt trái/phải trên điện thoại để chuyển slide
-    var stageEl = document.getElementById('stage'), tx = null, ty = null;
-    if (stageEl) {
-      stageEl.addEventListener('touchstart', function (e) { if (e.touches.length === 1) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; } }, { passive: true });
-      stageEl.addEventListener('touchend', function (e) {
-        if (tx === null) return;
-        var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
-        tx = ty = null;
-        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { if (dx < 0) nextSlide(); else prevSlide(); }
-      }, { passive: true });
-    }
 
     document.querySelectorAll('[data-k="next"]').forEach(b => b.onclick = nextSlide);
     document.querySelectorAll('[data-k="prev"]').forEach(b => b.onclick = prevSlide);

@@ -1316,244 +1316,879 @@ window.SLIDES_DATA = [
     "title": "Vật liệu mẹ; ảnh hưởng của đá mẹ đến khoáng vật và tính chất đất",
     "slides": [
       {
-        "type": "title"
+        "type": "title",
+        "notes": "Khởi động (10 phút): Cho SV xem ảnh đất đỏ bazan Buôn Ma Thuột và đất xám trên granit Đông Nam Bộ. Đặt câu hỏi: Vì sao cùng chế độ nhiệt đới gió mùa mà tính chất hai loại đất lại khác nhau một trời một vực?"
       },
       {
         "type": "obj",
         "items": [
           {
             "b": "B1 Nhớ",
-            "t": "Phân biệt đá mẹ, vật liệu mẹ, đất; kể tên các kiểu vật liệu mẹ"
+            "t": "Phân biệt rành mạch khái niệm đá mẹ, vật liệu mẹ, đất; nhận diện 7 kiểu vật liệu mẹ tại chỗ và vận chuyển (CHP1)"
           },
           {
             "b": "B2 Hiểu",
-            "t": "Giải thích con đường đá mẹ ảnh hưởng đến đất"
+            "t": "Giải thích 4 con đường đá mẹ chi phối cơ giới, khoáng vật sét, hóa học dinh dưỡng và hình thái phẫu diện đất (CHP1)"
           },
           {
             "b": "B3 Vận dụng",
-            "t": "Suy luận đá mẹ từ bằng chứng quan sát"
+            "t": "Vận dụng 6 dấu hiệu nhận biết để suy luận nguồn gốc đá mẹ/vật liệu mẹ từ mẫu đất và phẫu diện thực tế (CHP2)"
           },
           {
             "b": "B4 Phân tích",
-            "t": "So sánh đất trên các đá mẹ khác nhau; hàm ý sử dụng"
+            "t": "So sánh đất hình thành trên bazan và granit; nhận diện gián đoạn thạch học và đề xuất giải pháp sử dụng đất (CHP3)"
           }
         ]
       },
       {
         "type": "fig",
-        "title": "Bản đồ tư duy Chương 5",
-        "fig": "H5-0_mindmap_chuong5"
-      },
-      {
-        "type": "figbul",
-        "title": "Đá mẹ ≠ vật liệu mẹ ≠ đất",
-        "fig": "H5-1_chuoi_da_me_dat",
-        "bullets": [
-          "Đá mẹ: đá gốc cứng bên dưới",
-          "Vật liệu mẹ: vật chất lúc quá trình tạo đất bắt đầu",
-          "Đất: đã có tầng, hữu cơ, sinh vật",
-          "ĐBSCL: đất trên trầm tích, không phản ánh đá gốc",
-          "Buôn Ma Thuột: đất trên tàn tích bazan"
-        ],
-        "cite": "Theo Jenny (1941); Birkeland (1999)"
-      },
-      {
-        "type": "fig",
-        "title": "Các kiểu vật liệu mẹ trong cảnh quan",
-        "fig": "H5-2_cac_loai_vat_lieu_me",
-        "cite": "Tàn tích (e), sườn tích (d), lũ tích (p), bồi tích (a), hồ (l), biển (m), đầm lầy (b), gió (v) – ký hiệu theo Trần Nghi (2012), dẫn theo Đinh Quốc Tuấn (2025)",
-        "notes": "Nhấn mạnh gián đoạn thạch học (lithologic discontinuity)."
+        "title": "Bản đồ tư duy Chương 5: Đá, khoáng vật, vật liệu mẹ và đất",
+        "fig": "H5-0_mindmap_chuong5",
+        "cite": "Sơ đồ hệ thống do ThS. Đinh Quốc Tuấn biên soạn (2026), tổng hợp theo Jenny (1941) và Birkeland (1999)",
+        "notes": "Giới thiệu tổng quan cấu trúc Chương 5 gồm 2 trụ cột: Mục 5.1 (Vật liệu mẹ & Đá mẹ) và Mục 5.2 (Khoáng vật sét & Catena địa hình)."
       },
       {
         "type": "cards",
-        "title": "Bốn con đường đá mẹ ảnh hưởng đến đất",
+        "title": "Bộ ba khái niệm cốt lõi: Đá mẹ ≠ Vật liệu mẹ ≠ Đất",
+        "sub": "Phân định ranh giới khoa học theo Jenny (1941) và Birkeland (1999)",
         "cards": [
           {
-            "h": "Cơ giới",
+            "h": "Đá mẹ (Bedrock)",
             "t": [
-              "Thạch anh → cát",
-              "Đá bazơ → sét"
+              "Khối đá gốc cứng nằm sâu bên dưới",
+              "Nguồn cung cấp vật chất vô cơ ban đầu",
+              "Ví dụ: bazan Đắk Lắk, granit Đèo Cả, đá vôi Ninh Bình, phiến sét"
             ]
           },
           {
-            "h": "Khoáng vật",
+            "h": "Vật liệu mẹ (Parent Material)",
             "t": [
-              "Sét thứ sinh",
-              "Oxit Fe, Al"
+              "Trạng thái vật chất tại thời điểm quá trình tạo đất bắt đầu tác động",
+              "Có thể là tàn tích phong hóa tại chỗ hoặc vật liệu bồi lắng từ nơi khác",
+              "Ví dụ: phù sa cổ, bồi tích sông, sườn tích, tro núi lửa"
             ]
           },
           {
-            "h": "Hóa học",
+            "h": "Đất (Soil)",
             "t": [
-              "Ca, Mg, P (bazơ)",
-              "K (granit)",
-              "Ni, Cr (siêu mafic)"
-            ]
-          },
-          {
-            "h": "Màu – chua – dày",
-            "t": [
-              "Giàu sắt → đỏ",
-              "Đá vôi → trung tính",
-              "Goldich → dày/mỏng"
+              "Lớp vật liệu tơi xốp trên cùng đã được biến đổi sâu sắc",
+              "Đặc trưng bởi sự hình thành tầng phát sinh (horizon)",
+              "Chứa mùn hữu cơ, vi sinh vật, có độ phì nuôi dưỡng thực vật"
             ]
           }
         ],
-        "size": 14
+        "cite": "Birkeland, P. W. (1999). Soils and geomorphology (3rd ed.). Oxford University Press."
       },
       {
         "type": "figbul",
-        "title": "Thành phần cơ giới theo đá mẹ",
-        "fig": "H5-3_thanh_phan_co_gioi",
+        "title": "Chuỗi phát sinh: Đá mẹ → Vỏ phong hóa → Vật liệu mẹ → Đất",
+        "fig": "H5-1_chuoi_da_me_dat",
         "bullets": [
-          "Granit, sa thạch: nhiều cát",
-          "Bazan: sét cao, ít cát",
-          "Đá vôi: tàn dư sét không tan",
+          "Đá mẹ trải qua phong hóa vật lý và hóa học tạo nên vỏ phong hóa (saprolite)",
+          "Vật liệu mẹ tàn tích: phát triển liên tục trực tiếp từ đá mẹ bên dưới",
+          "Vật liệu mẹ vận chuyển: trải qua bóc mòn, vận chuyển và lắng đọng",
+          "Đất được hình thành khi có sự tham gia của sinh vật, khí hậu và thời gian",
           {
-            "t": "Giá trị minh họa định tính",
+            "t": "Quy tắc bắt buộc: Phải xác định đất hình thành trên vật liệu tại chỗ hay vận chuyển trước khi đọc bản đồ địa chất",
             "b": true
           }
         ],
-        "cite": "Tổng hợp theo Birkeland (1999); Brady & Weil (2017)"
+        "cite": "Hình vẽ bản quyền ThS. Đinh Quốc Tuấn (2026); tham khảo Jenny (1941), Schaetzl & Anderson (2005)"
+      },
+      {
+        "type": "figbul",
+        "title": "Vật liệu mẹ tại chỗ: Phẫu diện đất đỏ Feralit trên đá bazan",
+        "sub": "Trường hợp điển hình tại Buôn Ma Thuột – Tây Nguyên",
+        "fig": "basalt_soil.jpg",
+        "figLeft": true,
+        "bullets": [
+          "Bazan là đá macma phun trào giàu khoáng vật mafic (olivin, pyroxen, plagioclas Ca)",
+          "Phong hóa triệt để trong điều kiện nhiệt đới ẩm thoát nước tốt",
+          "Tầng đất dày (thường 2 – 5 m), màu nâu đỏ đậm do giàu hematit và goethit",
+          "Tỷ lệ hạt sét cao (50 – 70%), cấu trúc đoàn lạp tơi xốp, thoát nước cực tốt",
+          "Giữ nguyên mối liên hệ phát sinh trực tiếp với đá gốc bazan bên dưới"
+        ],
+        "cite": "Ảnh phẫu diện Oxisol / Ferralsol trên đá bazan: USDA-NRCS. Public domain."
+      },
+      {
+        "type": "figbul",
+        "title": "Vật liệu mẹ vận chuyển: Phù sa bồi tích sông và đồng bằng",
+        "sub": "Trường hợp Đồng bằng sông Cửu Long và Đồng bằng sông Hồng",
+        "fig": "alluvium_river.jpg",
+        "bullets": [
+          "Ở ĐBSCL, đá gốc nằm sâu hàng trăm mét dưới lớp trầm tích Đệ tứ",
+          "Đất hình thành trên bồi tích phù sa sông (a), biển (m) và đầm lầy (b)",
+          "Tính chất đất hoàn toàn do chế độ bồi tụ, thủy văn và trầm tích chi phối",
+          "Không phản ánh thành phần khoáng vật của đá gốc nằm ngay dưới đáy tầng Đệ tứ",
+          {
+            "t": "Sai lầm phổ biến: Dùng bản đồ địa chất đá gốc để suy diễn tính chất đất phù sa",
+            "b": true
+          }
+        ],
+        "cite": "Ảnh phẫu diện đất bồi tích sông: Rodney Burton / geograph.org.uk (CC BY-SA 2.0)."
       },
       {
         "type": "table",
-        "title": "Bazan và granit – cùng khí hậu, khác đất",
-        "colW": [
-          2.6,
-          4.85,
-          4.85
-        ],
-        "size": 14,
+        "title": "Bảng phân loại các kiểu vật liệu mẹ chính trong tự nhiên",
+        "sub": "Ký hiệu nguồn gốc theo quy chuẩn bản đồ địa chất Đệ tứ Việt Nam",
         "head": [
-          "Tiêu chí",
-          "Bazan (Xuân Lộc, Tây Nguyên)",
-          "Granit (Đông Nam Bộ, Nam Trung Bộ)"
+          "Nhóm nguồn gốc",
+          "Ký hiệu",
+          "Cơ chế hình thành chính",
+          "Dấu hiệu nhận biết",
+          "Ví dụ thực tế tại VN"
         ],
         "rows": [
           [
-            "Khoáng vật đá",
-            "Plagioclas Ca, pyroxen, olivin, magnetit",
-            "Thạch anh, K-feldspar, plagioclas Na, biotit"
+            "Tàn tích (Eluvium)",
+            "e",
+            "Phong hóa tại chỗ đá gốc, không di chuyển",
+            "Chuyển tiếp dần xuống saprolite, mảnh đá sắc cạnh",
+            "Đất đỏ bazan Đắk Lắk, Gia Lai"
           ],
           [
-            "Cơ giới đất",
-            "Sét – sét pha, ít cát",
-            "Cát pha – thịt nhẹ, nhiều sạn thạch anh"
+            "Sườn tích (Colluvium)",
+            "d / ed",
+            "Trọng lực: trượt lở, rơi lăn, dòng mảnh vụn",
+            "Mảnh vụn hỗn tạp kích thước, sắc cạnh, ranh giới rõ",
+            "Chân sườn núi đá vôi, sườn dốc granit"
           ],
           [
-            "Sét / oxit",
-            "Kaolinit, gibbsit, goethit, hematit",
-            "Kaolinit, ít goethit"
+            "Bồi tích (Alluvium)",
+            "a / p",
+            "Dòng chảy tạm thời (lũ tích), dòng sông (phù sa)",
+            "Chọn lọc hạt tốt, phân lớp, hạt tròn mòn cạnh",
+            "Đồng bằng sông Hồng, sông Cửu Long"
           ],
           [
-            "Hóa học",
-            "Chua, cố định P mạnh, giàu Fe",
-            "Chua, nghèo Ca, Mg, P"
+            "Biển - đầm lầy",
+            "m / b",
+            "Lắng đọng nước tĩnh hoặc chu kỳ triều, kỵ khí",
+            "Cấp hạt sét mịn, chứa vỏ sò, hữu cơ, pyrit (FeS₂)",
+            "Đất phèn Đồng Tháp Mười, Tứ giác Long Xuyên"
           ],
           [
-            "Sử dụng",
-            "Cà phê, cao su, hồ tiêu",
-            "Rừng, cây chịu hạn; dễ xói, sạt"
+            "Phong thành (Aeolian)",
+            "v",
+            "Gió vận chuyển cát và bụi mịn",
+            "Cát chọn lọc rất cao, hạt tròn mòn, tạo cồn cát",
+            "Cồn cát ven biển Quảng Bình, Bình Thuận"
+          ],
+          [
+            "Núi lửa (Pyroclastic)",
+            "–",
+            "Phun nổ mang tro, tuf bụi núi lửa",
+            "Hạt thủy tinh núi lửa, cấu trúc bọt xốp, rất nhẹ",
+            "Vùng bazan trẻ Pleiku, đảo Lý Sơn"
+          ],
+          [
+            "Hữu cơ (Organic)",
+            "–",
+            "Tích lũy xác thực vật trong điều kiện ngập úng",
+            "Màu đen, hàm lượng than bùn cao, nhẹ xốp",
+            "Rừng than bùn U Minh (Cà Mau, Kiên Giang)"
           ]
         ],
-        "cite": "Bảng 5.2 – Giáo trình"
+        "col_widths": [
+          2.2,
+          1.0,
+          3.2,
+          3.2,
+          2.533
+        ],
+        "cite": "Bảng 5.1 – Giáo trình Đá và khoáng vật (Đinh Quốc Tuấn, 2026), tổng hợp theo Birkeland (1999) và Schaetzl & Anderson (2005)"
+      },
+      {
+        "type": "fig",
+        "title": "Sơ đồ bố trí các kiểu vật liệu mẹ trong cảnh quan địa hình",
+        "fig": "H5-2_cac_loai_vat_lieu_me",
+        "cite": "Sơ đồ do ThS. Đinh Quốc Tuấn thiết kế; phỏng theo mô hình địa mạo của Birkeland (1999) và Schaetzl & Anderson (2005)",
+        "notes": "Phân tích mối tương quan không gian: Đỉnh và đồi thoải là tàn tích (e); sườn dốc là sườn tích (d); thung lũng và đồng bằng là phù sa bồi tích (a) và đầm lầy (b); bờ biển là cồn cát gió (v)."
+      },
+      {
+        "type": "figbul",
+        "title": "Vật liệu mẹ phong thành: Cồn cát ven biển duyên hải miền Trung",
+        "sub": "Đặc trưng bồi tụ do gió tại Bình Thuận, Ninh Thuận, Quảng Bình",
+        "fig": "sand_dune.jpg",
+        "bullets": [
+          "Vật liệu mẹ phong thành (ký hiệu v): do gió vận chuyển và tích tụ cát khô",
+          "Đặc trưng thạch học: 95 – 99% hạt thạch anh đơn khoáng, chọn lọc kích thước cực cao",
+          "Hạt cát tròn mòn bề mặt do va chạm liên tục trong không khí",
+          "Đất cồn cát (Arenosols): thấm nước cực nhanh, nghèo kiệt chất dinh dưỡng và sét",
+          {
+            "t": "Thách thức sinh thái: Nạn cát bay cát chảy, khô hạn sa mạc hóa cục bộ",
+            "b": true
+          }
+        ],
+        "cite": "Ảnh cồn cát ven biển: Egorova Svetlana / Wikimedia Commons (CC BY-SA 4.0)."
+      },
+      {
+        "type": "figbul",
+        "title": "Vật liệu mẹ sườn tích và tàn tích trên khối đá granit",
+        "sub": "Hiện tượng phong hóa bóc vỏ và tảng lăn granit Đèo Cả – Nam Trung Bộ",
+        "fig": "granite_weathering.jpg",
+        "figLeft": true,
+        "bullets": [
+          "Granit là đá xâm nhập axit giàu thạch anh, K-feldspar và plagioclas Na",
+          "Phong hóa tạo thành tảng lăn (tors / corestones) nằm xen giữa saprolite",
+          "Trên sườn dốc: trọng lực làm rơi lăn tạo nên sườn tích hỗn tạp nhiều cỡ hạt",
+          "Đất phong hóa từ granit: cát pha, nhiều sạn thạch anh sắc cạnh, rất dễ bị xói mòn",
+          "Thường gặp nguy cơ trượt lở đất và lũ bùn đá khi có mưa bão lớn"
+        ],
+        "cite": "Ảnh tảng lăn granit: Sabine Baring-Gould / Book of Dartmoor / Wikimedia Commons. Public domain."
+      },
+      {
+        "type": "cards",
+        "title": "Hiện tượng Gián đoạn thạch học (Lithologic Discontinuity)",
+        "sub": "Cạm bẫy phương pháp luận lớn nhất khi khảo sát phẫu diện thổ nhưỡng",
+        "cards": [
+          {
+            "h": "Bản chất hiện tượng",
+            "t": [
+              "Sự tiếp xúc giữa hai lớp vật liệu mẹ khác nguồn gốc trong một phẫu diện",
+              "Ví dụ: Lớp sườn tích mỏng phủ lên vỏ tàn tích cổ bên dưới",
+              "Ví dụ: Phù sa sông trẻ bồi phủ lên tầng phù sa cổ hoặc trầm tích biển"
+            ]
+          },
+          {
+            "h": "Dấu hiệu nhận biết",
+            "t": [
+              "Thay đổi đột ngột thành phần cấp hạt (đang cát chuyển ngay sang sét)",
+              "Tầng cuội sỏi nằm lơ lửng giữa phẫu diện (ranh giới bào mòn cổ)",
+              "Độ tròn cạnh thay đổi: hạt sắc cạnh nằm trên hạt tròn cạnh",
+              "Thành phần khoáng vật khác biệt hoàn toàn giữa hai tầng kế tiếp"
+            ]
+          },
+          {
+            "h": "Cảnh báo học thuật",
+            "t": [
+              "Không được nhầm lẫn gián đoạn thạch học với quá trình tạo tầng đất!",
+              "Nếu nhầm, nhà nghiên cứu sẽ suy luận sai rằng sét tích tụ do rửa trôi thẳng đứng",
+              "Quy chuẩn quốc tế (USDA): Đánh số La Mã trước tên tầng (ví dụ: A - B - 2C - 2Cr)"
+            ]
+          }
+        ],
+        "cite": "Schaetzl, R., & Anderson, S. (2005). Soils: Genesis and geomorphology. Cambridge University Press."
+      },
+      {
+        "type": "cards",
+        "title": "Bốn con đường đá mẹ chi phối tính chất đất",
+        "sub": "Đá mẹ tác động gián tiếp thông qua vỏ phong hóa",
+        "cards": [
+          {
+            "h": "1. Thành phần cơ giới",
+            "t": [
+              "Đá giàu thạch anh (granit, sa thạch) → đất nhiều cát, sạn, đất nhẹ",
+              "Đá không thạch anh (bazan, gabro) → đất giàu sét mịn, đất nặng"
+            ]
+          },
+          {
+            "h": "2. Khoáng vật sét",
+            "t": [
+              "Thành phần khoáng vật nguyên sinh định hướng loại sét thứ sinh tạo thành",
+              "Đá giàu Ca, Mg tạo smectit; đá giàu K, Al tạo illite và kaolinite"
+            ]
+          },
+          {
+            "h": "3. Dinh dưỡng khoáng",
+            "t": [
+              "Đá bazơ cung cấp Ca, Mg, P dồi dào; đá axit giàu K, Si nhưng nghèo bazơ",
+              "Đá siêu mafic giàu Ni, Cr độc tố; đá vôi giàu canxi trung hòa độ chua"
+            ]
+          },
+          {
+            "h": "4. Màu, độ chua & tầng dày",
+            "t": [
+              "Đá giàu Fe tạo đất màu đỏ (hematit); đá nghèo Fe tạo đất xám vàng",
+              "Đá dễ phong hóa (chuỗi Goldich) tạo tầng đất rất dày"
+            ]
+          }
+        ],
+        "cite": "Jenny, H. (1941). Factors of soil formation; Brady, N. C., & Weil, R. R. (2017). The nature and properties of soils."
+      },
+      {
+        "type": "figbul",
+        "title": "Con đường 1: Thành phần cơ giới đất theo loại đá mẹ",
+        "fig": "H5-3_thanh_phan_co_gioi",
+        "bullets": [
+          "Thạch anh (SiO₂) là khoáng vật cực kỳ bền vững, không bị phong hóa hóa học",
+          "Granit chứa 25 – 35% thạch anh: toàn bộ thạch anh tồn tại dưới dạng hạt cát và sạn",
+          "Bazan không chứa thạch anh tự do: toàn bộ silicat bị thủy phân chuyển thành sét mịn",
+          "Đá vôi (calcit CaCO₃) bị hòa tan gần như hoàn toàn: đất là lượng sét tàn dư không tan",
+          {
+            "t": "Hệ quả ứng dụng: Chỉ cần dùng tay cảm nhận cấp hạt cát có thể đoán được đá mẹ",
+            "b": true
+          }
+        ],
+        "cite": "Biểu đồ định tính do ThS. Đinh Quốc Tuấn biên soạn; tham khảo Birkeland (1999) và Brady & Weil (2017)"
+      },
+      {
+        "type": "table",
+        "title": "So sánh hai thái cực địa chất: Đất trên Bazan vs Đất trên Granit",
+        "sub": "Hai loại đá mẹ phổ biến nhất tạo nên đất đồi núi Việt Nam (cùng khí hậu nhiệt đới ẩm)",
+        "head": [
+          "Tiêu chí so sánh",
+          "Đất trên Bazan (Xuân Lộc, Buôn Ma Thuột)",
+          "Đất trên Granit (Bình Thuận, Đông Nam Bộ)"
+        ],
+        "rows": [
+          [
+            "Khoáng vật đá gốc",
+            "Plagioclas Ca, pyroxen, olivin, magnetit (không thạch anh)",
+            "Thạch anh (25-35%), K-feldspar, plagioclas Na, biotit"
+          ],
+          [
+            "Cấp hạt cơ giới đất",
+            "Sét – sét pha (50-70% sét), hạt cát thạch anh hầu như không có",
+            "Cát pha – thịt nhẹ, nhiều sạn thạch anh sắc cạnh (2-5 mm)"
+          ],
+          [
+            "Khoáng vật sét & oxit",
+            "Kaolinite, gibbsite, hematit (đỏ đậm), goethit",
+            "Kaolinite, ít goethit (màu vàng nhạt đến xám nhạt)"
+          ],
+          [
+            "Đặc tính hóa học",
+            "Chua (pH 4.0-5.0), cố định lân cực mạnh do giàu oxit sắt nhôm",
+            "Chua, dung tích hấp phụ CEC rất thấp, nghèo kiệt Ca, Mg, P"
+          ],
+          [
+            "Cấu trúc vật lý",
+            "Cấu trúc đoàn lạp dạng hạt cực tốt, xốp, thấm nước nhanh",
+            "Cấu trúc hạt đơn, rời rạc, dễ bị nén dẽ, đóng váng bề mặt"
+          ],
+          [
+            "Định hướng sử dụng",
+            "Cây công nghiệp giá trị cao: cà phê, cao su, hồ tiêu, sầu riêng",
+            "Rừng phòng hộ, cây chịu hạn (điều, keo lá tràm); dễ bị xói lở"
+          ]
+        ],
+        "col_widths": [
+          2.3,
+          4.9,
+          4.933
+        ],
+        "cite": "Bảng 5.2 – Giáo trình Đá và khoáng vật (Đinh Quốc Tuấn, 2026)"
+      },
+      {
+        "type": "figbul",
+        "title": "Đất hình thành trên đá vôi karst và đất trên đá siêu mafic",
+        "sub": "Hai trường hợp đá mẹ đặc biệt có tính phân hóa sinh thái cao",
+        "fig": "limestone_karst.jpg",
+        "bullets": [
+          "Đá vôi karst (Ninh Bình, Hà Giang): Calcit hòa tan gần như 100% để lại đất tàn dư (Terra Rossa)",
+          "Đất đá vôi: Tầng đất thường mỏng, không liên tục, nằm lọt trong hốc đá, giàu Ca, trung tính",
+          "Rủi ro đất đá vôi: Mất nước nhanh do hang ngầm karst, khô hạn gay gắt trong mùa khô",
+          "Đá siêu mafic (serpentinit, peridotit): Tỷ lệ Ca/Mg cực thấp, giải phóng nhiều kim loại nặng (Ni, Cr)",
+          "Tạo nên 'Đất serpentin' độc hại với đa số cây trồng thông thường, chỉ có thực vật đặc hữu sống được"
+        ],
+        "cite": "Ảnh cảnh quan karst đá vôi và đất tàn tích: Joan Gené / Wikimedia Commons (CC0)."
+      },
+      {
+        "type": "cards",
+        "title": "Hộp 5.1: Khi nào ảnh hưởng của đá mẹ mờ dần?",
+        "sub": "Quy luật hội tụ nhiệt đới ẩm theo thời gian địa chất (Birkeland, 1999)",
+        "cards": [
+          {
+            "h": "Đất trẻ & Vùng khô lạnh",
+            "t": [
+              "Ảnh hưởng của đá mẹ chiếm ưu thế tuyệt đối",
+              "Khoáng vật nguyên sinh chưa kịp phân hủy",
+              "Độ phì đất phụ thuộc trực tiếp vào hàm lượng khoáng của đá gốc"
+            ]
+          },
+          {
+            "h": "Đất già & Vùng nhiệt đới ẩm",
+            "t": [
+              "Phong hóa hóa học diễn ra triệt để qua hàng trăm ngàn năm",
+              "Mọi loại đá silicat đều hội tụ về một tổ hợp tàn dư giống nhau: Kaolinite + Oxit Fe, Al + Thạch anh",
+              "Ảnh hưởng của đá mẹ bị lu mờ trước tác động của Khí hậu và Thời gian"
+            ]
+          },
+          {
+            "h": "Dấu ấn còn lại",
+            "t": [
+              "Ở đất già nhiệt đới, dấu ấn đá mẹ chủ yếu chỉ còn lại ở:",
+              "(1) Thành phần cơ giới (lượng hạt cát thạch anh)",
+              "(2) Hàm lượng và màu sắc của oxit sắt (hematit/goethit)"
+            ]
+          }
+        ],
+        "cite": "Birkeland (1999); Schaetzl & Anderson (2005); Giáo trình Đá và khoáng vật (Đinh Quốc Tuấn, 2026)"
       },
       {
         "type": "steps",
-        "title": "Suy luận đá mẹ từ bằng chứng",
+        "title": "Kỹ năng thực hành: 6 bằng chứng suy luận nguồn gốc đá mẹ",
+        "sub": "Phương pháp luận điều tra thực địa không cần phòng thí nghiệm phức tạp",
         "steps": [
           {
-            "h": "Hạt tàn dư",
-            "t": "Thạch anh, muscovit, magnetit (nam châm)"
+            "h": "1. Hạt tàn dư",
+            "t": "Thạch anh (trong, không vết nứt) → đá axit; muscovit (vảy óng ánh) → granit; magnetit (nam châm hút) → đá bazơ"
           },
           {
-            "h": "Màu – sắt",
-            "t": "Đỏ đậm → giàu Fe"
+            "h": "2. Màu sắc & Sắt",
+            "t": "Nâu đỏ đậm, vết vạch đỏ trên gạch mộc → giàu hematit (nghi đá bazan/mafic); vàng xám nhạt → ít sắt (granit, sa thạch)"
           },
           {
-            "h": "Cấp hạt",
-            "t": "Vo viên, se sợi, xoa ướt"
+            "h": "3. Cảm giác cấp hạt",
+            "t": "Vo viên, se sợi, xoa ướt giữa hai ngón tay: nhám ráp, sạn thạch anh → đá axit; dẻo mịn, dính nhớt → bazan, phiến sét"
           },
           {
-            "h": "HCl loãng",
-            "t": "Sủi bọt → cacbonat (GV thực hiện)"
+            "h": "4. Phản ứng acid HCl",
+            "t": "Nhỏ giọt HCl 10%: sủi bọt khí CO₂ mạnh → đất có chứa cacbonat (đá mẹ đá vôi, trầm tích chứa vỏ sò, caliche)"
           },
           {
-            "h": "Hình dạng hạt",
-            "t": "Sắc cạnh: tại chỗ; tròn: vận chuyển"
+            "h": "5. Hình dạng hạt",
+            "t": "Mảnh khoáng sắc cạnh, kích thước không đồng đều → tàn tích tại chỗ hoặc sườn tích; hạt tròn cạnh mòn → phù sa sông biển"
           },
           {
-            "h": "Cấu trúc sót",
-            "t": "Mạch, phân phiến → tại chỗ"
+            "h": "6. Cấu trúc đá sót",
+            "t": "Quan sát trong tầng saprolite thấy mạch thạch anh sót, mặt phân phiến, thế nằm đá gốc → bằng chứng thép của tàn tích"
           }
         ],
-        "foot": "Kết luận cần ≥ 2 bằng chứng độc lập + mức độ chắc chắn (Ví dụ 5.1)"
+        "cite": "Quy trình thực địa Bộ môn Thạch học và Khoáng sản – Khoa Địa chất, ĐH KHTN (ThS. Đinh Quốc Tuấn biên soạn)"
+      },
+      {
+        "type": "cards",
+        "title": "Kỹ năng thực địa: Nhận diện phản ứng hóa học & Thử nghiệm nhanh",
+        "sub": "Phản ứng HCl loãng và thử nghiệm từ tính magnetit bằng nam châm đất hiếm",
+        "cards": [
+          {
+            "h": "Thử nghiệm Acid HCl 10%",
+            "t": [
+              "Hóa chất: Dung dịch HCl loãng nồng độ 10%",
+              "Hiện tượng: Sủi bọt khí CO₂ (CaCO₃ + 2HCl → CaCl₂ + CO₂↑ + H₂O)",
+              "Chẩn đoán: Khẳng định vật liệu mẹ là đá vôi, vỏ sò biển hoặc tầng tích tụ cacbonat thứ sinh",
+              "Lưu ý an toàn: Giảng viên trực tiếp thao tác mẫu biểu diễn cho sinh viên quan sát"
+            ]
+          },
+          {
+            "h": "Thử nghiệm Nam châm đất hiếm",
+            "t": [
+              "Dụng cụ: Nam châm Neodymium bọc trong túi nilon mỏng",
+              "Thao tác: Rà nam châm trên bề mặt mẫu đất khô nghiền vụn",
+              "Hiện tượng: Các hạt đen nhánh bị hút dính vào đầu nam châm",
+              "Chẩn đoán: Khoáng vật magnetit (Fe₃O₄) / ilmenit đặc trưng cho đá mẹ macma mafic (bazan) hoặc sa khoáng ven biển"
+            ]
+          },
+          {
+            "h": "Xác định nhanh cơ giới",
+            "t": [
+              "Thử vê bi và se sợi đất ẩm trên lòng bàn tay:",
+              "- Không vê được viên bi → Cát rời",
+              "- Vê được viên bi nhưng không uốn cong thành vòng tròn → Thịt pha cát / thịt pha sét",
+              "- Se được sợi dài và uốn cong thành vòng tròn kín không nứt → Đất sét nặng (đá mẹ bazan/phiến sét)"
+            ]
+          }
+        ],
+        "cite": "Sổ tay thực địa Địa chất & Thổ nhưỡng học (Khoa Địa chất, ĐH KHTN, ĐHQG-HCM, 2026)"
+      },
+      {
+        "type": "cards",
+        "title": "Nghiên cứu trường hợp Ví dụ 5.1: Ghép cặp Đá mẹ – Mẫu đất thực tế",
+        "sub": "Bài toán giải mã nguồn gốc mẫu vật thực địa (Bloom B3 – Vận dụng)",
+        "cards": [
+          {
+            "h": "Dữ liệu quan sát Mẫu Đất",
+            "t": [
+              "Mẫu đất X: Màu nâu đỏ sẫm, chất đất rất mịn, dính khi ướt nhưng tơi xốp thành hạt nhỏ khi khô; hoàn toàn không có hạt thạch anh; có hạt khoáng đen bị nam châm hút mạnh",
+              "Mẫu đất Y: Màu vàng xám nhạt, nhiều hạt thạch anh thô sắc cạnh (2 – 5 mm), có nhiều vảy mica óng ánh ánh bạc"
+            ]
+          },
+          {
+            "h": "Dữ liệu quan sát Mẫu Đá",
+            "t": [
+              "Mẫu đá A: Đá macma màu đen sẫm, vi tinh thể đặc xít, có một số lỗ khí bọt nhỏ phân bố rải rác",
+              "Mẫu đá B: Đá macma sáng màu, kiến trúc hiển tinh hạt thô gồm thạch anh trong suốt, feldspar màu hồng nhạt và mica đen/trắng"
+            ]
+          },
+          {
+            "h": "Lập luận & Kết luận",
+            "t": [
+              "Mẫu X không có thạch anh + giàu oxit sắt + magnetit → Ghép cặp X – A (Đá mẹ Bazan)",
+              "Mẫu Y giàu thạch anh thô sắc cạnh + vảy mica → Ghép cặp Y – B (Đá mẹ Granit)",
+              "Mức độ tin cậy: Rất cao (≥ 3 bằng chứng thạch học độc lập chứng minh)"
+            ]
+          }
+        ],
+        "cite": "Ví dụ 5.1 – Giáo trình Đá và khoáng vật (Đinh Quốc Tuấn, 2026)"
       },
       {
         "type": "act",
-        "title": "Trò chơi ghép cặp đá mẹ – đất",
-        "sub": "PHT-5.1 câu 3",
-        "time": "5'",
+        "title": "Hoạt động tương tác lớp học: Ghép cặp & Suy luận Đá mẹ",
+        "sub": "Sinh viên thảo luận theo cặp Think – Pair – Share và gửi kết quả qua điện thoại",
+        "time": "12'",
         "bullets": [
-          "3 mẫu đá (bazan, granit, đá vôi) và 3 mẫu đất",
-          "Nhóm ghép cặp nhanh, ghi 2 bằng chứng/cặp",
-          "Nhóm nhanh và đúng nhất được cộng điểm tham gia (ĐG1.6)",
-          "Lưu ý: có thể là vật liệu vận chuyển!"
+          "Bước 1 (Think - 3'): Mỗi sinh viên quan sát 3 khay mẫu đất thực tế để trên bàn",
+          "Bước 2 (Pair - 5'): Thảo luận theo cặp đôi, vận dụng 6 bằng chứng suy luận để xác định loại đá mẹ dự đoán",
+          "Bước 3 (Share - 4'): Quét mã QR trên màn hình hoặc truy cập trang sv.html, chọn Mục 5.1 và gửi kết quả lập luận",
+          "Giảng viên mở trang tổng hợp câu trả lời thời gian thực và nhận xét trực tiếp tại chỗ"
+        ],
+        "note_box": [
+          "Tiêu chí đánh giá năng lực:",
+          "Chỉ ra được ít nhất 2 bằng chứng thạch học khách quan",
+          "Phân biệt rõ vật liệu mẹ là tàn tích hay trầm tích vận chuyển",
+          "Giải thích được nguyên nhân tạo nên màu sắc và độ tơi xốp của mẫu"
         ]
       },
       {
         "type": "quiz",
+        "title": "Trắc nghiệm tương tác qua điện thoại – Chặng 1: Vật liệu mẹ",
         "qs": [
           {
-            "q": "Vật liệu mẹ đất ĐBSCL chủ yếu là:",
+            "bloom": "Bloom 1 - Nhớ",
+            "q": "Đất hình thành trên vùng đồng bằng châu thổ sông Cửu Long có nguồn gốc vật liệu mẹ chủ yếu là:",
             "o": [
-              "tàn tích đá gốc",
-              "trầm tích sông, biển, đầm lầy",
-              "tro núi lửa",
-              "hoàng thổ"
+              "Tàn tích phong hóa tại chỗ của đá granit",
+              "Phù sa bồi tích sông (a) và biển đầm lầy (m, b)",
+              "Sườn tích do trọng lực lăn trượt (d)",
+              "Phong thành do gió thổi từ cồn cát (v)"
             ],
-            "a": "B"
+            "a": "B",
+            "exp": "Đá gốc ở ĐBSCL bị chôn vùi hàng trăm mét dưới lớp bồi tích Đệ tứ, đất hình thành trên phù sa sông và biển."
           },
           {
-            "q": "Đất đỏ đậm, sét cao, hạt từ tính, không thạch anh → đá mẹ:",
+            "bloom": "Bloom 2 - Hiểu",
+            "q": "Nguyên nhân chính khiến đất phong hóa từ đá bazan có thành phần cơ giới nặng (giàu sét) và hầu như không chứa hạt cát thạch anh là:",
             "o": [
-              "granit",
-              "sa thạch",
-              "bazan",
-              "quarzit"
+              "Bazan bị xói mòn rửa trôi hết thạch anh",
+              "Đá bazan vốn dĩ không chứa khoáng vật thạch anh tự do",
+              "Khí hậu Tây Nguyên quá nóng làm thạch anh bay hơi",
+              "Vi sinh vật trong đất bazan đã tiêu hóa thạch anh"
             ],
-            "a": "C"
+            "a": "B",
+            "exp": "Bazan là đá mafic thành phần chủ yếu là plagioclas Ca, pyroxen, olivin; không có thạch anh tự do nên phong hóa triệt để thành sét."
           },
           {
-            "q": "Vật liệu di chuyển trên sườn do trọng lực:",
+            "bloom": "Bloom 3 - Vận dụng",
+            "q": "Khi quan sát một phẫu diện đất thấy tầng trên cùng là sét mịn, bên dưới đột ngột xuất hiện một lớp sỏi cuội tròn cạnh dày 30 cm, hiện tượng này được gọi là:",
             "o": [
-              "tàn tích",
-              "sườn tích",
-              "bồi tích",
-              "phong thành"
+              "Tầng tích tụ sét Argillic",
+              "Gián đoạn thạch học (Lithologic discontinuity)",
+              "Phong hóa hình cầu tàn dư",
+              "Quá trình feralit hóa triệt để"
             ],
-            "a": "B"
+            "a": "B",
+            "exp": "Sự thay đổi đột ngột về cấp hạt và sự có mặt của cuội tròn cạnh lơ lửng chứng minh hai lớp vật liệu mẹ khác nguồn gốc tiếp xúc nhau."
           }
         ]
       },
       {
+        "type": "cards",
+        "title": "Ý nghĩa địa chất đối với quy hoạch và quản lý sử dụng đất đai",
+        "sub": "Chuyển hóa tri thức khoa học địa chất thành giá trị kinh tế – xã hội bền vững",
+        "cards": [
+          {
+            "h": "Dự báo nhanh tính chất đất",
+            "t": [
+              "Tại các khu vực vùng sâu vùng xa chưa có dữ liệu thổ nhưỡng chi tiết:",
+              "Dựa vào bản đồ địa chất và bản đồ thạch học để dự đoán cấp hạt, độ dày tầng đất, độ chua và trữ lượng dinh dưỡng tiềm năng"
+            ]
+          },
+          {
+            "h": "Nhận diện & Kiểm soát rủi ro",
+            "t": [
+              "Rủi ro đất phèn tiềm tàng: Trầm tích ven biển chứa pyrit (FeS₂) – tuyệt đối không đào đắp lộ tầng sinh phèn",
+              "Rủi ro sạt lở: Vỏ phong hóa granit sườn dốc dễ trượt phẳng khi mưa lớn",
+              "Rủi ro mất nước: Đất mỏng trên karst đá vôi dễ nứt nẻ và tụt mực nước ngầm"
+            ]
+          },
+          {
+            "h": "Tối ưu hóa nông nghiệp",
+            "t": [
+              "Đất bazan: Chuyên canh cây công nghiệp dài ngày (cà phê, sầu riêng); cần bón phân lân và vôi khử chua định kỳ",
+              "Đất phù sa: Chuyên canh lúa nước, rau màu ngắn ngày; cần kiểm soát đê bao lũ",
+              "Đất granit: Ưu tiên giữ rừng phòng hộ đầu nguồn và cây lâm nghiệp chịu hạn"
+            ]
+          }
+        ],
+        "cite": "Mục 5.1.6 – Giáo trình Đá và khoáng vật (ThS. Đinh Quốc Tuấn, 2026)"
+      },
+      {
         "type": "sum",
+        "title": "Tổng kết mục 5.1: Vật liệu mẹ & Ảnh hưởng của đá mẹ",
         "points": [
-          "Đá mẹ – vật liệu mẹ – đất là ba khái niệm khác nhau",
-          "Vật liệu mẹ tại chỗ hoặc vận chuyển",
-          "Đá mẹ ảnh hưởng đất qua vỏ phong hóa",
-          "Ảnh hưởng mờ dần ở đất già nhiệt đới",
-          "Suy luận luôn cần kiểm chứng bằng phẫu diện"
+          "Phân biệt rành mạch: Đá mẹ (đá cứng) ≠ Vật liệu mẹ (trạng thái lúc tạo đất) ≠ Đất (tầng phát sinh + hữu cơ)",
+          "Vật liệu mẹ gồm 2 nhóm lớn: Tại chỗ (tàn tích e) và Vận chuyển (sườn tích d, phù sa a, biển m, gió v, núi lửa, than bùn)",
+          "Đá mẹ ảnh hưởng đến đất gián tiếp qua vỏ phong hóa theo 4 con đường: cơ giới, khoáng vật, hóa học và hình thái",
+          "Bazan tạo đất sét đỏ giàu sắt, phì tiềm năng cao; Granit tạo đất cát pha chua, nghèo dinh dưỡng, dễ xói mòn",
+          "Dấu ấn đá mẹ mờ dần ở đất già nhiệt đới ẩm do quá trình hội tụ phong hóa; cẩn trọng với gián đoạn thạch học"
         ],
         "refs": [
-          "Jenny (1941). Factors of soil formation.",
-          "Birkeland (1999).",
-          "Schaetzl & Anderson (2005).",
-          "Brady & Weil (2017).",
-          "Giáo trình mục 5.1."
+          "Jenny, H. (1941). Factors of soil formation. McGraw-Hill.",
+          "Birkeland, P. W. (1999). Soils and geomorphology (3rd ed.). Oxford University Press.",
+          "Schaetzl, R., & Anderson, S. (2005). Soils: Genesis and geomorphology. Cambridge University Press.",
+          "Đinh Quốc Tuấn (2026). Giáo trình Đá và khoáng vật, Mục 5.1, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM."
         ],
-        "next": "Tiếp theo: 5.2 Khoáng vật sét; đá mẹ – địa hình – phong hóa – đất"
+        "next": "Tiếp theo: Mục 5.2 – Khoáng vật sét; quan hệ đá mẹ – địa hình – phong hóa – đất (Mô hình Catena)"
+      },
+      {
+        "type": "cards",
+        "title": "Đất trên các loại đá trầm tích: Phiến sét vs Sa thạch",
+        "sub": "Sự phân hóa tính chất thổ nhưỡng bắt nguồn từ tướng trầm tích nguyên thủy",
+        "cards": [
+          {
+            "h": "Phiến sét & Bột kết",
+            "t": [
+              "Thành phần: Hạt mịn, sét, mica, thạch anh vi tinh thể",
+              "Đất hình thành: Cấp hạt thịt nặng đến sét, khả năng giữ nước tốt",
+              "Khoáng vật sét: Illite, kaolinite, đôi khi có smectit",
+              "Độ phì: Khá, giàu kali; nhược điểm: Dễ bị trượt sạt dọc theo mặt phân phiến của đá"
+            ]
+          },
+          {
+            "h": "Sa thạch thạch anh",
+            "t": [
+              "Thành phần: Cát thạch anh xi măng gắn kết (silic, sét hoặc sắt)",
+              "Đất hình thành: Cát pha – cát thô, hạt thô chiếm ưu thế tuyệt đối",
+              "Khoáng vật sét: Rất ít sét thứ sinh",
+              "Độ phì: Rất nghèo dinh dưỡng, chua gắt, thấm nước nhanh, dễ hạn hán"
+            ]
+          },
+          {
+            "h": "Hàm ý quy hoạch",
+            "t": [
+              "Phiến sét: Phù hợp phát triển rừng kinh tế, cây ăn trái; cần lưu ý taluy đường giao thông",
+              "Sa thạch: Ưu tiên rừng phòng hộ đầu nguồn, chống sa mạc hóa; hạn chế khai thác thảm phủ thực vật"
+            ]
+          }
+        ],
+        "cite": "Bảng 5.2 – Giáo trình Đá và khoáng vật (Đinh Quốc Tuấn, 2026)"
+      },
+      {
+        "type": "cards",
+        "title": "Trường hợp Đất xám bạc màu trên Phù sa cổ (Đông Nam Bộ)",
+        "sub": "Mối quan hệ mật thiết giữa địa chất Đệ tứ và tính chất thổ nhưỡng cạn kiệt",
+        "cards": [
+          {
+            "h": "Nguồn gốc địa chất",
+            "t": [
+              "Hình thành trên trầm tích phù sa cổ Pleistocen (thềm bậc II, bậc III)",
+              "Khu vực phân bố: Củ Chi, Bình Dương, Tây Ninh, Bình Phước",
+              "Vật liệu mẹ đã trải qua chu kỳ phong hóa cổ và rửa trôi hàng vạn năm"
+            ]
+          },
+          {
+            "h": "Đặc tính thổ nhưỡng",
+            "t": [
+              "Thành phần cơ giới nhẹ: Cát pha, thịt nhẹ; tầng mặt bị rửa trôi sét triệt để",
+              "Hàm lượng mùn và dinh dưỡng cực thấp, chua mạnh (pH 4.0 – 4.5)",
+              "Tầng đất dưới chặt bí, dung tích hấp phụ CEC < 5 cmol(+)/kg"
+            ]
+          },
+          {
+            "h": "Giải pháp cải tạo",
+            "t": [
+              "Tăng cường bón phân hữu cơ sinh học để tái tạo cấu trúc đoàn lạp",
+              "Bón vôi định kỳ khử chua và bổ sung Ca, Mg",
+              "Áp dụng biện pháp che phủ đất giữ ẩm bằng tàn dư cây trồng"
+            ]
+          }
+        ],
+        "cite": "Lê Thái Bạt & cs. (2000). Đất Việt Nam; Đinh Quốc Tuấn (2026)"
+      },
+      {
+        "type": "cards",
+        "title": "Cơ chế Cố định lân (Phosphorus Fixation) trong đất đỏ Bazan",
+        "sub": "Nghịch lý địa hóa: Đất giàu dinh dưỡng tiềm năng nhưng cây trồng vẫn thiếu lân",
+        "cards": [
+          {
+            "h": "Bản chất địa hóa",
+            "t": [
+              "Đất bazan phong hóa giàu sesquioxit: Hematit (Fe₂O₃), Goethit (FeOOH), Gibbsit (Al(OH)₃)",
+              "Các oxit này mang điện tích dương phụ thuộc pH trong môi trường đất chua",
+              "Anion phosphat (H₂PO₄⁻, HPO₄²⁻) bị hấp phụ hóa học cực mạnh lên bề mặt oxit Fe, Al tạo hợp chất không tan"
+            ]
+          },
+          {
+            "h": "Hậu quả thực tiễn",
+            "t": [
+              "Hiệu suất sử dụng phân lân của cây trồng thường chỉ đạt 10 – 20%",
+              "Lượng phân lân bón vào nhanh chóng bị 'cố định' chặt vào hạt đất",
+              "Cây cà phê, hồ tiêu biểu hiện triệu chứng thiếu lân dù hàm lượng lân tổng số trong đất khá cao"
+            ]
+          },
+          {
+            "h": "Biện pháp kỹ thuật",
+            "t": [
+              "Bón lân nung chảy (chứa canxi và magie) thay vì supe lân chua",
+              "Bón phân hữu cơ để acid hữu cơ phong tỏa các vị trí hấp phụ của sắt nhôm",
+              "Bón vôi nâng pH đất lên khoảng 5.5 – 6.5 để giảm lượng điện tích dương của oxit"
+            ]
+          }
+        ],
+        "cite": "Brady, N. C., & Weil, R. R. (2017). The nature and properties of soils (15th ed.). Pearson."
+      },
+      {
+        "type": "table",
+        "title": "Bảng ma trận chẩn đoán nhanh đá mẹ từ dấu hiệu thực địa",
+        "sub": "Công cụ thực địa đắc lực cho chuyên gia khảo sát địa chất và quản lý đất đai",
+        "head": [
+          "Dấu hiệu quan sát chính",
+          "Thành phần cơ giới",
+          "Màu sắc & Phản ứng",
+          "Đá mẹ dự đoán",
+          "Mức độ tin cậy"
+        ],
+        "rows": [
+          [
+            "Hạt thạch anh thô sắc cạnh (2-5mm) + vảy mica trắng",
+            "Cát pha – thịt nhẹ, nhiều sạn",
+            "Vàng nhạt, xám; không sủi bọt HCl",
+            "Đá Granit / Granodiorit",
+            "Rất cao"
+          ],
+          [
+            "Hoàn toàn không có thạch anh, hạt mịn, có hạt đen từ tính",
+            "Sét – sét pha (dính khi ướt)",
+            "Đỏ nâu đậm; không sủi bọt HCl",
+            "Đá Bazan / Gabro",
+            "Rất cao"
+          ],
+          [
+            "Sỏi cuội tròn cạnh, chọn lọc cao, có phân lớp mỏng",
+            "Thay đổi theo tầng bồi tụ",
+            "Xám nâu, phù sa; sủi bọt nhẹ nếu có vỏ sò",
+            "Bồi tích phù sa sông/biển (a, m)",
+            "Rất cao"
+          ],
+          [
+            "Đất màu đỏ gạch (Terra Rossa) lọt trong khe nứt khối đá",
+            "Sét tàn dư mịn, dẻo",
+            "Đỏ nâu; nhỏ HCl vào đá gốc sủi bọt mạnh",
+            "Đá vôi Calcit / Dolomit",
+            "Tuyệt đối"
+          ],
+          [
+            "Hạt cát thạch anh tròn cạnh bóng, chọn lọc 99%",
+            "Cát rời rạc, không vê viên được",
+            "Trắng, vàng rơm; thấm nước tức thì",
+            "Vật liệu phong thành cồn cát (v)",
+            "Rất cao"
+          ],
+          [
+            "Xác thực vật màu đen ngập nước, bốc mùi bùn than",
+            "Hữu cơ nhẹ xốp",
+            "Đen nhánh, than bùn cháy được khi khô",
+            "Trầm tích hữu cơ đầm lầy (b)",
+            "Tuyệt đối"
+          ]
+        ],
+        "col_widths": [
+          3.3,
+          2.3,
+          2.8,
+          2.2,
+          1.533
+        ],
+        "cite": "Ma trận thực hành chẩn đoán – Khoa Địa chất, ĐH KHTN (ThS. Đinh Quốc Tuấn tổng hợp, 2026)"
+      },
+      {
+        "type": "act",
+        "title": "Hoạt động đóng vai: Tham vấn Quy hoạch Sử dụng đất nông nghiệp",
+        "sub": "Bài tập tình huống thực tế tích hợp đa kỹ năng (Bloom B4 – Phân tích & Đánh giá)",
+        "time": "15'",
+        "bullets": [
+          "Tình huống: Một doanh nghiệp nông nghiệp dự định đầu tư 500 ha trồng sầu riêng xuất khẩu tại vùng đồi tiếp giáp giữa Đắk Nông và Bình Phước.",
+          "Dữ liệu khảo sát: Khu vực A có đá mẹ là bazan bọt trẻ; Khu vực B có đá mẹ là granit và sa thạch phong hóa.",
+          "Nhiệm vụ các nhóm (4 SV/nhóm): Đóng vai chuyên gia địa chất thổ nhưỡng, hãy lập bảng so sánh và khuyến nghị doanh nghiệp nên chọn khu vực nào?",
+          "Nộp bài: Nhóm trưởng quét mã QR hoặc mở trang sv.html nộp bản tóm tắt 3 khuyến nghị cốt lõi."
+        ],
+        "note_box": [
+          "Nội dung cần làm rõ:",
+          "1. Khả năng cung cấp nước và tầng dày đất",
+          "2. Rủi ro rửa trôi, xói mòn và sạt lở",
+          "3. Chi phí phân bón (đặc biệt là phân lân và vôi)"
+        ]
+      },
+      {
+        "type": "quiz",
+        "title": "Trắc nghiệm tương tác qua điện thoại – Chặng 2: Ứng dụng thực tiễn",
+        "qs": [
+          {
+            "bloom": "Bloom 4 - Phân tích",
+            "q": "Một mẫu đất lấy tại Bình Thuận có màu vàng xám, cấp hạt cát pha, tỷ lệ hạt thạch anh sắc cạnh chiếm 40%, không sủi bọt với HCl. Kết luận khoa học chính xác nhất là:",
+            "o": [
+              "Đất hình thành từ đá vôi bị rửa trôi",
+              "Đất hình thành trên vỏ tàn tích của đá granit",
+              "Đất phù sa bồi tích sông trẻ",
+              "Đất đỏ bazan bị thoái hóa mất màu"
+            ],
+            "a": "B",
+            "exp": "Thạch anh sắc cạnh 40% + hạt thô + màu vàng xám chứng minh nguồn gốc từ đá magma axit (granit) phong hóa tại chỗ."
+          },
+          {
+            "bloom": "Bloom 3 - Vận dụng",
+            "q": "Biện pháp kỹ thuật nào sau đây là hiệu quả nhất để hạn chế hiện tượng cố định lân trong đất đỏ bazan Tây Nguyên?",
+            "o": [
+              "Tưới nước liên tục làm ngập úng đất",
+              "Bón vôi khử chua kết hợp bón phân hữu cơ sinh học",
+              "Bón phân đạm urê liều lượng cao",
+              "Cày xới phơi ải đất thật khô"
+            ],
+            "a": "B",
+            "exp": "Bón vôi nâng pH làm giảm điện tích dương của oxit sắt nhôm, phân hữu cơ giải phóng acid chelat hóa cạnh tranh vị trí gắn với sắt nhôm."
+          },
+          {
+            "bloom": "Bloom 2 - Hiểu",
+            "q": "Tại sao ở vùng khí hậu nhiệt đới ẩm Việt Nam, ảnh hưởng của đá mẹ đến thành phần hóa học của đất có xu hướng mờ dần theo thời gian?",
+            "o": [
+              "Vì các khoáng vật đều biến thành thạch anh",
+              "Vì phong hóa hóa học rửa trôi triệt để các cation kiềm và kiềm thổ, để lại tàn dư giống nhau",
+              "Vì thực vật hút hết toàn bộ khoáng chất trong đá",
+              "Vì mưa axit làm tan chảy mọi loại đá gốc"
+            ],
+            "a": "B",
+            "exp": "Quá trình feralit hóa triệt để bửa trôi Ca, Mg, K, Na và tích tụ oxit sắt nhôm cùng kaolinite, tạo nên sự hội tụ thạch học."
+          }
+        ]
+      },
+      {
+        "type": "cards",
+        "title": "Sơ đồ chu trình vật chất: Từ Đá gốc → Vỏ phong hóa → Đất đai",
+        "sub": "Cái nhìn hệ thống địa quyển – sinh quyển phục vụ phát triển bền vững",
+        "cards": [
+          {
+            "h": "Giai đoạn 1: Khởi nguồn",
+            "t": [
+              "Đá magma, trầm tích, biến chất nằm sâu trong thạch quyển",
+              "Nâng kiến tạo và bóc mòn đưa đá lên bề mặt tiếp xúc khí quyển và thủy quyển"
+            ]
+          },
+          {
+            "h": "Giai đoạn 2: Chuyển hóa",
+            "t": [
+              "Phong hóa phá hủy liên kết tinh thể đá gốc",
+              "Khoáng vật nguyên sinh bị thủy phân, oxy hóa sinh ra khoáng vật sét thứ sinh và ion hòa tan"
+            ]
+          },
+          {
+            "h": "Giai đoạn 3: Tích hợp sinh học",
+            "t": [
+              "Thực vật tiên phong, vi sinh vật và mùn hữu cơ xâm nhập",
+              "Tạo dựng các tầng phát sinh (A, B, C) hình thành thể tự nhiên Đất – nền tảng sự sống"
+            ]
+          }
+        ],
+        "cite": "Khung tiếp cận Trái đất hệ thống – Earth System Science (Đinh Quốc Tuấn, 2026)"
+      },
+      {
+        "type": "sum",
+        "title": "Chỉ dẫn ôn tập & Tự học Mục 5.1 dành cho Sinh viên",
+        "points": [
+          "Nắm vững 3 thuật ngữ cốt lõi: Đá mẹ (Bedrock), Vật liệu mẹ (Parent Material), Đất (Soil)",
+          "Ghi nhớ bảng phân loại 7 kiểu vật liệu mẹ và ký hiệu bản đồ địa chất Đệ tứ (e, d, a, p, m, b, v)",
+          "Thuộc lòng bảng so sánh đối sánh giữa đất Bazan (đỏ sét) và đất Granit (vàng cát)",
+          "Thực hành thành thạo 6 kỹ năng nhận biết và suy luận đá mẹ từ mẫu vật thực tế",
+          "Hoàn thành phiếu học tập PHT-5.1 trên hệ thống trực tuyến diemdanhsv.com trước buổi học kế tiếp"
+        ],
+        "refs": [
+          "Jenny, H. (1941). Factors of soil formation. McGraw-Hill.",
+          "Birkeland, P. W. (1999). Soils and geomorphology. Oxford Univ Press.",
+          "Brady, N. C., & Weil, R. R. (2017). The nature and properties of soils. Pearson.",
+          "Đinh Quốc Tuấn (2026). Giáo trình C4–C5–6.3, Trường ĐH KHTN, ĐHQG-HCM."
+        ],
+        "next": "Chuyển sang: Mục 5.2 – Khoáng vật sét; quan hệ đá mẹ – địa hình – phong hóa – đất (Tiết 2 & 3)"
       }
     ]
   },
@@ -1563,253 +2198,896 @@ window.SLIDES_DATA = [
     "title": "Khoáng vật sét; quan hệ đá mẹ – địa hình – phong hóa – đất",
     "slides": [
       {
-        "type": "title"
+        "type": "title",
+        "notes": "Khởi động (10 phút): Cho SV xem ảnh hiện tượng nứt nẻ sâu hoắm của đất mùa khô (Vertisol) và ảnh sản phẩm gốm sứ trắng mịn (Kaolin). Hỏi: Điều gì ở cấp độ nguyên tử quyết định một loại sét nứt toác nhà cửa, còn một loại sét lại nung thành đồ sứ quý?"
       },
       {
         "type": "obj",
         "items": [
           {
             "b": "B1 Nhớ",
-            "t": "Mô tả cấu trúc lá tứ diện, bát diện; kiểu 1:1, 2:1, 2:1:1"
+            "t": "Mô tả cấu trúc tinh thể cơ bản của khoáng vật sét: lá tứ diện SiO₄, lá bát diện AlO₆, các kiểu lớp 1:1, 2:1, 2:1:1 (CHP1)"
           },
           {
             "b": "B2 Hiểu",
-            "t": "Liên hệ cấu trúc sét với CEC, trương nở, độ dẻo, độ phì"
+            "t": "Giải thích mối liên hệ mật thiết giữa cấu trúc lớp với dung tích hấp phụ CEC, tính trương nở – co ngót và độ dẻo (CHP1)"
           },
           {
             "b": "B3 Vận dụng",
-            "t": "Dùng phương trình Jenny và catena giải thích đất theo địa hình"
+            "t": "Vận dụng mô hình Catena của Milne và phương trình Jenny giải thích sự phân dị đất dọc theo sườn dốc địa hình (CHP3)"
           },
           {
             "b": "B4 Phân tích",
-            "t": "Phân tích lát cắt đá mẹ – địa hình – phong hóa – đất"
+            "t": "Thực hiện thành thạo quy trình 7 bước đọc lát cắt cảnh quan để tích hợp đá mẹ – địa hình – phong hóa – đất vào quy hoạch (CHP3)"
           }
         ]
       },
       {
+        "type": "cards",
+        "title": "'Sét' là gì? Phân biệt cấp hạt sét và khoáng vật sét",
+        "sub": "Làm rõ hai khái niệm khoa học thường bị nhầm lẫn trong thực tế",
+        "cards": [
+          {
+            "h": "Cấp hạt sét (Clay size)",
+            "t": [
+              "Thuật ngữ chỉ kích thước vật lý của hạt khoáng",
+              "Khoa học đất (USDA, FAO): Hạt có đường kính < 2 µm (0.002 mm)",
+              "Trầm tích học (Wentworth): Hạt có đường kính < 1/256 mm (≈ 4 µm)",
+              "Cấp hạt sét có thể chứa cả thạch anh siêu mịn, oxit sắt nhôm, canxit..."
+            ]
+          },
+          {
+            "h": "Khoáng vật sét (Clay minerals)",
+            "t": [
+              "Thuật ngữ chỉ nhóm khoáng vật silicat lớp (phyllosilicate) ngậm nước",
+              "Có cấu trúc mạng tinh thể lớp đặc thù và có tính dẻo khi nhào với nước",
+              "Chủ yếu là sản phẩm thứ sinh sinh ra từ quá trình phong hóa hóa học",
+              "Đại diện tiêu biểu: Kaolinite, Illite, Smectite, Chlorite"
+            ]
+          },
+          {
+            "h": "Cốt lõi bài học",
+            "t": [
+              "Đa số khoáng vật sét nằm trong cấp hạt sét",
+              "Khoáng vật sét quyết định 80 – 90% các tính chất hóa – lý bề mặt của đất",
+              "Khoáng vật sét chính là 'bộ não điều hành hóa học' của tầng đất mặt"
+            ]
+          }
+        ],
+        "cite": "Klein, C., & Philpotts, A. (2017). Earth materials; Brady & Weil (2017)"
+      },
+      {
+        "type": "cards",
+        "title": "Vì sao khoáng vật sét là 'Bộ não hóa học' của đất?",
+        "sub": "Ba đặc tính vượt trội chi phối toàn bộ dinh dưỡng và cấu trúc đất",
+        "cards": [
+          {
+            "h": "1. Diện tích bề mặt cực lớn",
+            "t": [
+              "Hạt sét siêu nhỏ mịn tạo diện tích bề mặt riêng khổng lồ",
+              "Kaolinite: 10 – 30 m²/gram",
+              "Smectite: 600 – 800 m²/gram (chỉ 1 thìa cà phê sét smectite có diện tích bề mặt bằng cả sân bóng đá!)"
+            ]
+          },
+          {
+            "h": "2. Bề mặt tích điện âm",
+            "t": [
+              "Bề mặt tinh thể sét luôn mang điện tích âm thường trực hoặc phụ thuộc pH",
+              "Hút và giữ chặt các cation dinh dưỡng hòa tan (Ca²⁺, Mg²⁺, K⁺, NH₄⁺) khỏi bị nước mưa rửa trôi trôi xuống biển"
+            ]
+          },
+          {
+            "h": "3. Tương tác mạnh với nước",
+            "t": [
+              "Phân tử nước bị hút mạnh vào bề mặt và xen giữa các lớp mạng tinh thể",
+              "Quyết định độ dẻo khi ướt, sức chịu tải công trình, khả năng giữ nước cho rễ cây"
+            ]
+          }
+        ],
+        "cite": "Brady, N. C., & Weil, R. R. (2017). The nature and properties of soils (15th ed.). Pearson."
+      },
+      {
+        "type": "cards",
+        "title": "Hai 'Viên gạch' cơ bản xây dựng nên mạng tinh thể sét",
+        "sub": "Kiến trúc tinh thể học phyllosilicate (Silicat lớp)",
+        "cards": [
+          {
+            "h": "Lá tứ diện (Tetrahedral sheet)",
+            "t": [
+              "Đơn vị cấu trúc: Tứ diện [SiO₄]⁴⁻",
+              "Ion Si⁴⁺ nằm ở tâm, liên kết với 4 ion oxy O²⁻ ở 4 đỉnh",
+              "Các tứ diện nối với nhau qua 3 đỉnh oxy đáy tạo thành mạng lưới lục giác phẳng vô tận",
+              "Có thể xảy ra thay thế đồng hình: Al³⁺ thay thế một phần cho Si⁴⁺ ở tâm tứ diện"
+            ]
+          },
+          {
+            "h": "Lá bát diện (Octahedral sheet)",
+            "t": [
+              "Đơn vị cấu trúc: Bát diện 6 đỉnh tạo bởi O²⁻ và nhóm hydroxyl OH⁻",
+              "Tâm bát diện là cation hóa trị ba Al³⁺ (lá dạng Gibbsit – Dioctahedral)",
+              "Hoặc tâm là cation hóa trị hai Mg²⁺ / Fe²⁺ (lá dạng Brucit – Trioctahedral)",
+              "Có thể xảy ra thay thế đồng hình: Mg²⁺ hoặc Fe²⁺ thay thế Al³⁺ tạo điện tích âm"
+            ]
+          },
+          {
+            "h": "Cách ghép lớp",
+            "t": [
+              "Sự kết hợp giữa lá tứ diện (T) và lá bát diện (O) theo các tỷ lệ khác nhau tạo ra 3 nhóm cấu trúc lớn:",
+              "• Kiểu 1:1 (T – O)",
+              "• Kiểu 2:1 (T – O – T)",
+              "• Kiểu 2:1:1 (T – O – T – Brucit)"
+            ]
+          }
+        ],
+        "cite": "Klein, C., & Philpotts, A. (2017). Earth materials (2nd ed.). Cambridge University Press."
+      },
+      {
         "type": "fig",
-        "title": "Cấu trúc lớp của khoáng vật sét",
+        "title": "Sơ đồ kiến trúc không gian các kiểu lớp khoáng vật sét",
         "fig": "H5-4_cau_truc_set",
-        "cite": "Hình tác giả vẽ; số liệu theo Scott & Pain (2009); Klein & Philpotts (2017)",
-        "notes": "Dùng mô hình giấy màu: vàng – tứ diện, xanh – bát diện."
+        "cite": "Sơ đồ tinh thể học do ThS. Đinh Quốc Tuấn thiết kế; tham khảo Klein & Philpotts (2017)",
+        "notes": "Chỉ rõ khoảng cách cơ bản d(001): Kaolinite d = 0.72 nm (cố định); Illite d = 1.0 nm (cố định bởi K+); Smectite d = 1.0 - 1.8 nm (co giãn linh hoạt khi ngậm nước)."
+      },
+      {
+        "type": "cards",
+        "title": "Nhóm cấu trúc 1:1: Khoáng vật Kaolinite (Al₂Si₂O₅(OH)₄)",
+        "sub": "Đặc trưng liên kết hydro bền vững và tính trơ ổn định",
+        "cards": [
+          {
+            "h": "Cấu trúc tinh thể",
+            "t": [
+              "Gồm 1 lá tứ diện ghép với 1 lá bát diện (T – O)",
+              "Khoảng cách cơ bản đáy: d(001) ≈ 0.72 nm (7.2 Å)",
+              "Liên kết giữa các phiến lớp: Liên kết hydro cực mạnh giữa nhóm OH của lá bát diện và oxy của lá tứ diện lớp kề bên",
+              "Nước và cation hoàn toàn không thể thâm nhập vào khoảng giữa hai phiến lớp"
+            ]
+          },
+          {
+            "h": "Tính chất lý – hóa",
+            "t": [
+              "Hoàn toàn không trương nở khi ướt và không co ngót nứt nẻ khi khô",
+              "Dung tích hấp phụ cation CEC rất thấp: 3 – 15 cmol(+)/kg",
+              "Điện tích chủ yếu phụ thuộc vào pH môi trường (ở mép rìa tinh thể)",
+              "Chịu lửa tốt, màu trắng tinh khiết khi không lẫn tạp chất sắt"
+            ]
+          },
+          {
+            "h": "Phân bố & Ứng dụng",
+            "t": [
+              "Khoáng vật sét thống trị trong các loại đất Feralit nhiệt đới ẩm Việt Nam",
+              "Nguyên liệu quý số 1 trong công nghiệp gốm sứ cao cấp, giấy men, mỹ phẩm"
+            ]
+          }
+        ],
+        "cite": "Giáo trình Đá và khoáng vật (Đinh Quốc Tuấn, 2026); Brady & Weil (2017)"
       },
       {
         "type": "figbul",
-        "title": "CEC – \"bộ não hóa học\" của đất",
-        "fig": "H5-5_CEC",
-        "bullets": [
-          "Điện tích thường trực: thay thế đồng hình (smectit, vermiculit)",
-          "Điện tích phụ thuộc pH: kaolinit, oxit",
-          "Đất giàu kaolinit phụ thuộc chất hữu cơ",
-          "Oxit Fe, Al có thể hút phosphat → cố định lân"
-        ],
-        "cite": "Khoảng CEC theo Scott & Pain (2009, Bảng 5.3)"
-      },
-      {
-        "type": "table",
-        "title": "So sánh các nhóm khoáng vật sét",
-        "colW": [
-          2.4,
-          2,
-          2,
-          2,
-          2,
-          1.9
-        ],
-        "size": 13,
-        "head": [
-          "Tính chất",
-          "Kaolinit 1:1",
-          "Illit 2:1",
-          "Smectit 2:1",
-          "Vermiculit",
-          "Chlorit 2:1:1"
-        ],
-        "rows": [
-          [
-            "Liên kết lớp",
-            "Hydro, mạnh",
-            "K⁺, mạnh",
-            "Cation + nước, yếu",
-            "Trung bình",
-            "Lá hydroxit"
-          ],
-          [
-            "Trương nở",
-            "Không",
-            "Rất ít",
-            "Mạnh",
-            "Hạn chế",
-            "Không"
-          ],
-          [
-            "CEC (cmol/kg)",
-            "3–12",
-            "10–40",
-            "80–150",
-            "100–150",
-            "10–40"
-          ],
-          [
-            "Ứng dụng",
-            "Gốm sứ",
-            "Gạch ngói",
-            "Bentonit, chống thấm",
-            "–",
-            "–"
-          ]
-        ],
-        "cite": "Bảng 5.3 – Giáo trình; CEC theo Scott & Pain (2009, Bảng 5.3)"
-      },
-      {
-        "type": "figbul",
-        "title": "Khí hậu – đá mẹ – khoáng vật sét",
-        "fig": "H5-8_set_luong_mua",
-        "bullets": [
-          "Mưa ít: smectit chiếm ưu thế",
-          "Mưa trung bình – cao: kaolinit",
-          "Mưa rất lớn: gibbsit, oxit",
-          "Phù hợp sơ đồ Pedro (1968)"
-        ],
-        "cite": "Vẽ lại định tính; ý tưởng theo Barshad (1966)"
-      },
-      {
-        "type": "figbul",
-        "title": "Phương trình trạng thái đất (Jenny, 1941)",
-        "fig": "H5-7_Jenny",
+        "title": "Hình thái tinh thể Kaolinite dưới kính hiển vi điện tử quét (SEM)",
+        "sub": "Bằng chứng thị giác về cấu trúc phiến lớp lục giác hoàn hảo",
+        "fig": "kaolinite_sem.jpg",
         "figLeft": true,
         "bullets": [
-          "S = f (cl, o, r, p, t, …)",
-          "Giữ các yếu tố khác, thay đổi một yếu tố",
-          "Lithosequence – toposequence – climosequence – chronosequence",
+          "Ảnh chụp SEM phóng đại hàng vạn lần tinh thể Kaolinite từ mỏ cao lanh tự nhiên",
+          "Mỗi tinh thể là các bản mỏng hình lục giác đều đặn xếp chồng khít lên nhau như xấp sách",
+          "Kích thước hạt: khoảng 0.2 – 2 µm",
+          "Các phiến lớp dính chặt vào nhau nhờ liên kết hydro liên lớp bền vững",
           {
-            "t": "Chương 5 tập trung vào p và r",
+            "t": "Minh chứng trực quan giải thích vì sao kaolinite bền vững, không trương nở và có độ dẻo vừa phải",
             "b": true
           }
-        ]
+        ],
+        "cite": "Ảnh kính hiển vi điện tử quét SEM: S. Bartsch-Winkler / U.S. Geological Survey (USGS). Public domain."
       },
       {
-        "type": "fig",
-        "title": "Catena: đất thay đổi theo địa hình",
-        "fig": "H5-6_catena",
-        "cite": "Khái niệm theo Milne (1935); hình tác giả vẽ",
-        "notes": "Phân tích 4 cơ chế: phân phối lại nước, vật liệu, chất hòa tan, vi khí hậu."
+        "type": "cards",
+        "title": "Nhóm cấu trúc 2:1 không trương nở: Khoáng vật Illite",
+        "sub": "Mica ngậm nước – Cầu nối chuyển tiếp giữa muscovit và sét",
+        "cards": [
+          {
+            "h": "Cấu trúc tinh thể",
+            "t": [
+              "Kiểu lớp 2:1 (T – O – T): Một lá bát diện kẹp giữa hai lá tứ diện",
+              "Mức độ thay thế đồng hình rất cao: Al³⁺ thay thế khoảng 20% Si⁴⁺ trong lá tứ diện",
+              "Tạo điện tích âm rất lớn trên bề mặt lá tứ diện",
+              "Khoảng cách cơ bản d(001) ≈ 1.0 nm (10 Å)"
+            ]
+          },
+          {
+            "h": "Vai trò 'chốt khóa' của K⁺",
+            "t": [
+              "Ion kali K⁺ có bán kính ion vừa khít tuyệt đối với hốc lục giác của lá tứ diện",
+              "Lực tĩnh điện cực mạnh 'khóa chặt' hai phiến kề nhau lại với nhau",
+              "Nước không thể lọt vào giữa lớp → Illite hầu như KHÔNG trương nở"
+            ]
+          },
+          {
+            "h": "Hàm ý thổ nhưỡng",
+            "t": [
+              "CEC trung bình: 10 – 40 cmol(+)/kg",
+              "Là kho khoáng dự trữ kali quan trọng cho cây trồng",
+              "Phổ biến trong đất phù sa sông và đất phong hóa từ đá phiến sét, đá mica"
+            ]
+          }
+        ],
+        "cite": "Klein, C., & Philpotts, A. (2017). Earth materials; Đinh Quốc Tuấn (2026)"
+      },
+      {
+        "type": "cards",
+        "title": "Nhóm cấu trúc 2:1 trương nở mạnh: Khoáng vật Smectite",
+        "sub": "Đại diện tiêu biểu: Montmorillonite – Thủ phạm gây biến dạng nền móng",
+        "cards": [
+          {
+            "h": "Cấu trúc mạng linh động",
+            "t": [
+              "Kiểu 2:1 (T – O – T) với sự thay thế đồng hình chủ yếu xảy ra trong lá bát diện (Mg²⁺ thay Al³⁺)",
+              "Mật độ điện tích lớp ở mức trung bình, cách xa bề mặt tứ diện",
+              "Khoảng giữa các lớp chứa các cation hydrat hóa yếu (Ca²⁺, Na⁺, Mg²⁺) và nhiều lớp phân tử nước",
+              "Khoảng cách d(001) biến thiên linh hoạt từ 1.0 nm (khô) đến > 1.8 nm (khi no nước)"
+            ]
+          },
+          {
+            "h": "Tính chất đặc biệt",
+            "t": [
+              "Trương nở cực mạnh khi gặp nước (tăng thể tích 1.5 – 2 lần)",
+              "Co ngót nứt nẻ sâu hoắm khi khô hạn",
+              "Dung tích hấp phụ CEC rất cao: 80 – 150 cmol(+)/kg",
+              "Diện tích bề mặt riêng khổng lồ: 600 – 800 m²/gram"
+            ]
+          },
+          {
+            "h": "Môi trường hình thành",
+            "t": [
+              "Hình thành ở nơi thoát nước kém, kiềm nhẹ đến trung tính, giàu Si và Mg (vùng trũng, đầm lầy, đất bazan trũng)"
+            ]
+          }
+        ],
+        "cite": "Brady & Weil (2017); Holtz & Kovacs (1981); Đinh Quốc Tuấn (2026)"
+      },
+      {
+        "type": "cards",
+        "title": "Các nhóm sét khác: Vermiculite (2:1) và Chlorite (2:1:1)",
+        "sub": "Hai thành viên quan trọng trong hệ thống silicat lớp thổ nhưỡng",
+        "cards": [
+          {
+            "h": "Vermiculite (Kiểu 2:1)",
+            "t": [
+              "Cấu trúc: Lớp 2:1 có điện tích âm rất cao do thay thế Al³⁺ cho Si⁴⁺",
+              "Khoảng giữa lớp chứa ion Mg²⁺ ngậm nước liên kết chặt chẽ hơn smectite",
+              "Trương nở ở mức độ hạn chế (d ≈ 1.4 nm)",
+              "Dung tích CEC vô địch trong khoáng vật: 100 – 200 cmol(+)/kg",
+              "Sản phẩm phong hóa sớm từ biotite và chlorite"
+            ]
+          },
+          {
+            "h": "Chlorite (Kiểu 2:1:1)",
+            "t": [
+              "Cấu trúc: Lớp 2:1 chuẩn cộng thêm một lá hydroxit dạng Brucit [Mg,Fe,Al(OH)₆] xen kẽ",
+              "Khoảng cách d(001) ≈ 1.4 nm, hoàn toàn cố định",
+              "Hoàn toàn không trương nở",
+              "CEC thấp: 10 – 40 cmol(+)/kg",
+              "Phổ biến trong đá biến chất mức độ thấp (phiến lục) và đất trầm tích lạnh"
+            ]
+          },
+          {
+            "h": "Ý nghĩa so sánh",
+            "t": [
+              "Sự biến đổi liên tục: Biotite → Vermiculite → Smectite → Kaolinite",
+              "Phản ánh mức độ rửa trôi silicat và bazơ tăng dần theo thời gian phong hóa"
+            ]
+          }
+        ],
+        "cite": "Klein & Philpotts (2017); Birkeland (1999)"
       },
       {
         "type": "table",
-        "title": "Vị trí catena và hàm ý sử dụng đất",
-        "colW": [
-          1.8,
-          2.6,
-          2.4,
-          2,
-          3.5
-        ],
-        "size": 13,
+        "title": "Bảng tổng hợp so sánh toàn diện 5 nhóm khoáng vật sét chính",
+        "sub": "Bảng đối chiếu chuẩn mực học thuật quốc tế (Klein & Philpotts, 2017; Brady & Weil, 2017)",
         "head": [
-          "Vị trí",
-          "Quá trình trội",
-          "Đất",
-          "Sét",
-          "Sử dụng / rủi ro"
+          "Tính chất lý hóa",
+          "Kaolinite (1:1)",
+          "Illite (2:1)",
+          "Smectite (2:1)",
+          "Vermiculite (2:1)",
+          "Chlorite (2:1:1)"
         ],
         "rows": [
           [
-            "Đỉnh đồi",
-            "Rửa trôi thẳng đứng",
-            "Dày, đỏ vàng, chua",
-            "Kaolinit, oxit",
-            "Xây dựng thuận lợi; khô hạn"
+            "Khoảng cách d(001)",
+            "0.72 nm (cố định)",
+            "1.00 nm (cố định)",
+            "1.00 – 1.80 nm (linh động)",
+            "1.40 – 1.50 nm (hạn chế)",
+            "1.40 nm (cố định)"
           ],
           [
-            "Sườn dốc",
-            "Xói mòn, trượt",
-            "Mỏng, sạn sỏi",
-            "Kaolinit",
-            "Rừng phòng hộ; sạt lở"
+            "Liên kết liên lớp",
+            "Hydro (rất mạnh)",
+            "Cation K⁺ (mạnh)",
+            "Cation + H₂O (rất yếu)",
+            "Cation + H₂O (trung bình)",
+            "Lá hydroxit kim loại"
           ],
           [
-            "Chân sườn",
-            "Tích tụ sườn tích",
-            "Dày, ẩm",
-            "Kaolinit ± smectit",
-            "Vườn cây; lũ bùn đá"
+            "Tính trương nở",
+            "Hoàn toàn không",
+            "Rất ít / Không",
+            "Rất mạnh (ngậm nước)",
+            "Hạn chế",
+            "Hoàn toàn không"
           ],
           [
-            "Thung lũng",
-            "Ngập, khử",
-            "Glây, sét",
-            "Smectit",
-            "Lúa nước; nền yếu, ngập"
+            "Diện tích BM (m²/g)",
+            "10 – 30",
+            "50 – 100",
+            "600 – 800",
+            "600 – 800",
+            "70 – 150"
+          ],
+          [
+            "CEC (cmol(+)/kg)",
+            "3 – 15",
+            "10 – 40",
+            "80 – 150",
+            "100 – 200",
+            "10 – 40"
+          ],
+          [
+            "Độ dẻo khi ướt",
+            "Thấp",
+            "Trung bình",
+            "Rất cao (dính nhớt)",
+            "Trung bình",
+            "Thấp đến trung bình"
+          ],
+          [
+            "Ứng dụng thực tế",
+            "Gốm sứ, giấy men",
+            "Gạch ngói xây dựng",
+            "Bentonit, chống thấm",
+            "Chất độn giữ ẩm",
+            "Khoáng vật chỉ thị"
+          ],
+          [
+            "Mức độ ở Việt Nam",
+            "Thống trị đất feralit",
+            "Phù sa sông, phiến sét",
+            "Vùng trũng, bazan trũng",
+            "Hiếm, đất trẻ",
+            "Phiến lục, đá biến chất"
           ]
         ],
-        "cite": "Bảng 5.4 – Giáo trình"
+        "col_widths": [
+          2.133,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        "cite": "Bảng 5.3 – Giáo trình Đá và khoáng vật (Đinh Quốc Tuấn, 2026)"
+      },
+      {
+        "type": "cards",
+        "title": "Bản chất nguồn gốc điện tích của khoáng vật sét",
+        "sub": "Hai cơ chế phát sinh điện tích âm trên bề mặt keo đất",
+        "cards": [
+          {
+            "h": "1. Điện tích thường trực (Permanent charge)",
+            "t": [
+              "Nguyên nhân: Sự thay thế đồng hình (Isomorphous substitution) trong mạng tinh thể",
+              "Cation hóa trị thấp thay cho cation hóa trị cao (Al³⁺ thay Si⁴⁺; Mg²⁺ thay Al³⁺)",
+              "Không phụ thuộc vào độ pH của dung dịch đất",
+              "Chiếm 90 – 95% tổng điện tích ở Smectite và Vermiculite",
+              "Là nguồn điện tích bền vững bảo đảm dung tích hấp phụ dinh dưỡng"
+            ]
+          },
+          {
+            "h": "2. Điện tích phụ thuộc pH (pH-dependent charge)",
+            "t": [
+              "Nguyên nhân: Sự phân ly hoặc kết hợp proton H⁺ của nhóm hydroxyl (-OH) ở mép rìa tinh thể và bề mặt oxit",
+              "Khi pH kiềm (> 7): Nhóm -OH nhả H⁺ tạo -O⁻ → Tích điện âm mạnh",
+              "Khi pH rất chua (< 4.5): Nhóm -OH nhận H⁺ tạo -OH₂⁺ → Tích điện dương hút anion phosphat",
+              "Chiếm ưu thế tuyệt đối ở Kaolinite, Gibbsit, Goethit và mùn hữu cơ"
+            ]
+          },
+          {
+            "h": "Hàm ý nông học",
+            "t": [
+              "Đất nhiệt đới Việt Nam giàu Kaolinite và oxit Fe-Al có CEC phụ thuộc pH",
+              "Khi bón vôi nâng pH từ 4.5 lên 6.0, lượng điện tích âm tăng vọt → Đất giữ phân bón tốt hơn gấp 2 – 3 lần!"
+            ]
+          }
+        ],
+        "cite": "Brady, N. C., & Weil, R. R. (2017). The nature and properties of soils (15th ed.)."
+      },
+      {
+        "type": "figbul",
+        "title": "Dung tích trao đổi cation (CEC) – Thước đo giữ phân bón của đất",
+        "fig": "H5-5_CEC",
+        "bullets": [
+          "CEC (Cation Exchange Capacity): Tổng lượng cation trao đổi mà 100g đất có thể giữ được, đơn vị cmol(+)/kg",
+          "Sét smectite giữ được Ca²⁺, Mg²⁺, K⁺ gấp 10 lần sét kaolinite",
+          "Chất hữu cơ (mùn): Có CEC cao nhất (150 – 300 cmol(+)/kg)",
+          {
+            "t": "Quy tắc sống còn: Đất đỏ bazan và đất granit Việt Nam giàu kaolinite có CEC thấp, phải duy trì tầng mùn hữu cơ để giữ phân bón",
+            "b": true
+          },
+          "Nếu mất mùn hữu cơ do xói mòn, phân bón vô cơ bón vào sẽ bị nước mưa rửa trôi 70 – 80%"
+        ],
+        "cite": "Sơ đồ CEC do ThS. Đinh Quốc Tuấn biên soạn; tham khảo Brady & Weil (2017)"
+      },
+      {
+        "type": "cards",
+        "title": "Hiện tượng Trương nở – Co ngót và Nhóm đất Vertisols",
+        "sub": "Hệ quả cơ học công trình và nông nghiệp của sét Smectite",
+        "cards": [
+          {
+            "h": "Cơ chế trương – co",
+            "t": [
+              "Khi gặp nước: Các phân tử nước phân cực chèn lách vào giữa các phiến lớp 2:1 của smectite",
+              "Lực hydrat hóa đẩy các phiến dãn cách từ 1.0 nm lên đến 1.8 nm → Đất trương nở phồng rộp",
+              "Khi mùa khô đến: Nước bốc hơi thoát ra ngoài, các phiến ép sát lại → Đất co ngót thể tích mạnh mẽ"
+            ]
+          },
+          {
+            "h": "Tác động công trình",
+            "t": [
+              "Áp lực trương nở có thể đạt hàng trăm kPa, xé toạc móng nhà cấp 4, làm biến dạng mặt đường nhựa",
+              "Kênh mương bê tông bị đẩy nứt toác, lún nghiêng móng trụ điện",
+              "Giải pháp: Cần thay thế lớp đất mặt bằng cát đệm hoặc cọc sâu xuyên qua tầng sét trương nở"
+            ]
+          },
+          {
+            "h": "Nhóm đất Vertisols",
+            "t": [
+              "Đất đen giàu sét trương nở (tỷ lệ sét > 30% chủ yếu là smectite)",
+              "Đặc trưng bởi vết nứt sâu > 50 cm và các mặt trượt nghiêng (slickensides)",
+              "Cực kỳ khó làm đất: 'Ướt dính như keo, khô cứng như đá'"
+            ]
+          }
+        ],
+        "cite": "Holtz, R. D., & Kovacs, W. D. (1981). An introduction to geotechnical engineering; FAO (2014) WRB."
+      },
+      {
+        "type": "figbul",
+        "title": "Hiện tượng đất nứt nẻ sâu mùa khô ở nhóm đất sét Vertisol",
+        "sub": "Minh chứng thực tế về tính chất co ngót của khoáng vật Smectite",
+        "fig": "vertisol_cracking.jpg",
+        "bullets": [
+          "Ảnh chụp thực địa mặt đất thuộc nhóm Vertisols trong mùa khô hạn kéo dài",
+          "Mạng lưới khe nứt đa giác sâu từ 50 cm đến hơn 1 mét, bề rộng khe nứt 2 – 10 cm",
+          "Các hạt bụi đất và tàn dư thực vật trên bề mặt rơi xuống đáy khe nứt",
+          "Khi mùa mưa tới, đất ngậm nước nở bung ra, tự nhào trộn từ dưới lên (hiện tượng tự cày xới – pedoturbation)",
+          {
+            "t": "Bộ rễ cây trồng bị xé đứt trong mùa khô, gây chết héo cục bộ",
+            "b": true
+          }
+        ],
+        "cite": "Ảnh đất Vertisols nứt nẻ mùa khô: USDA-NRCS / Wikimedia Commons. Public domain."
+      },
+      {
+        "type": "figbul",
+        "title": "Ứng dụng Bentonit trong kỹ thuật khoan cọc nhồi và chống thấm",
+        "sub": "Biến nhược điểm trương nở thành ưu điểm công nghệ vượt trội",
+        "fig": "bentonite_clay.jpg",
+        "figLeft": true,
+        "bullets": [
+          "Bentonit là loại đá sét tự nhiên có thành phần chủ yếu là Montmorillonite (Smectite)",
+          "Dung dịch khoan địa chất: Bentonit trộn nước tạo huyền phù xúc biến (thixotropy), giữ ổn định thành vách vách hố khoan không bị sập lở",
+          "Màng chống thấm địa kỹ thuật (GCL): Lớp bentonit kẹp giữa vải địa kỹ thuật, khi gặp nước nở phồng tạo màng ngăn nước tuyệt đối cho bãi rác và đập đất",
+          "Khu vực khai thác bentonit nổi tiếng ở Việt Nam: Bình Thuận, Lâm Đồng, Di Linh",
+          {
+            "t": "Bài học: Một tính chất cơ học (trương nở) vừa là rủi ro móng nhưng vừa là tài nguyên công nghiệp quý",
+            "b": true
+          }
+        ],
+        "cite": "Ảnh khai thác bentonit: Agne27 / Wikimedia Commons (CC BY-SA 3.0)."
+      },
+      {
+        "type": "cards",
+        "title": "Ứng dụng Kaolin trong Công nghiệp Gốm sứ & Vật liệu chịu lửa",
+        "sub": "Đặc tính công nghệ của sét 1:1 từ các mỏ sét Bình Dương, Phú Thọ",
+        "cards": [
+          {
+            "h": "Công nghiệp Gốm sứ",
+            "t": [
+              "Kaolin sạch (hàm lượng Fe₂O₃ < 0.5%): Nguyên liệu chính sản xuất sứ vệ sinh, sứ mỹ nghệ cao cấp (gốm sứ Bình Dương, Bát Tràng)",
+              "Đặc tính: Độ trắng cao khi nung, độ co ngót đồng đều, chịu nhiệt tốt > 1.700 °C"
+            ]
+          },
+          {
+            "h": "Sản xuất Gạch ngói",
+            "t": [
+              "Sét tạp giàu Illite và hydroxit sắt (FeOOH): Dùng sản xuất gạch nung xây dựng, ngói lợp nhà",
+              "Màu đỏ tươi đặc trưng của gạch nung chính là do sắt Fe³⁺ chuyển hóa thành tinh thể hematit ở 900 – 1.000 °C"
+            ]
+          },
+          {
+            "h": "Sỏi nhẹ Keramzit",
+            "t": [
+              "Đá sét có tính nở phồng khi nung nhanh ở 1.100 – 1.200 °C",
+              "Sinh bọt khí tạo cấu trúc tổ ong xốp nhẹ bên trong, dùng làm bê tông siêu nhẹ cho các công trình nhà cao tầng"
+            ]
+          }
+        ],
+        "cite": "Bài giảng Khoáng vật sét và ứng dụng địa chất (ThS. Đinh Quốc Tuấn, 2026)"
+      },
+      {
+        "type": "figbul",
+        "title": "Phương pháp định danh khoáng vật sét bằng Nhiễu xạ tia X (XRD)",
+        "sub": "Tiêu chuẩn vàng trong phân tích cấu trúc tinh thể học địa chất",
+        "fig": "xrd_diffractometer.jpg",
+        "bullets": [
+          "Do kích thước tinh thể sét cực nhỏ (< 2 µm), kính hiển vi quang học thông thường không thể nhận diện được",
+          "Phương pháp XRD (X-ray Diffraction): Bắn chùm tia X vào mẫu sét định hướng, đo góc nhiễu xạ 2θ theo định luật Bragg: nλ = 2d·sinθ",
+          "Quy trình chẩn đoán 3 bước bắt buộc:",
+          "1. Mẫu tự nhiên: Đọc khoảng cách d(001)",
+          "2. Xử lý Glycol hóa: Nếu đỉnh 1.4 nm dịch chuyển lên 1.7 nm → Khẳng định là Smectite!",
+          "3. Nung nhiệt 550 °C: Nếu đỉnh 0.72 nm biến mất hoàn toàn → Khẳng định là Kaolinite!"
+        ],
+        "cite": "Ảnh máy đo nhiễu xạ tia X Rigaku SmartLab: Prof. David J. Watkin (Oxford University) / CC BY-SA 4.0."
+      },
+      {
+        "type": "figbul",
+        "title": "Điều kiện địa hóa hình thành sét: Quy luật Barshad & Pedro",
+        "fig": "H5-8_set_luong_mua",
+        "figLeft": true,
+        "bullets": [
+          "Khí hậu khô hạn, lượng mưa thấp (< 500 mm/năm) hoặc thoát nước kém: Cation Ca, Mg và Si tích tụ lại → Thuận lợi hình thành Smectite (quá trình Bisialit hóa)",
+          "Khí hậu ẩm, lượng mưa trung bình – cao (1.500 – 2.500 mm/năm), thoát nước tốt: Rửa trôi hết bazơ, mất một phần Si → Thống trị bởi Kaolinite (quá trình Monosialit hóa)",
+          "Mưa cực lớn (> 3.000 mm/năm), rửa trôi triệt để Si: Chỉ còn lại oxit sắt và Gibbsit Al(OH)₃ → Quá trình Alit hóa (Laterit / Bauxit)",
+          {
+            "t": "Quy luật vàng: Loại sét phản ánh cường độ dòng nước thấm rửa trôi qua phẫu diện",
+            "b": true
+          }
+        ],
+        "cite": "Đồ thị tái lập theo Barshad (1966) và Pedro (1968); ThS. Đinh Quốc Tuấn biên soạn"
+      },
+      {
+        "type": "figbul",
+        "title": "Phương trình trạng thái đất của Hans Jenny (1941)",
+        "fig": "H5-7_Jenny",
+        "bullets": [
+          "Hans Jenny (1941) đề xuất phương trình trạng thái kinh điển: S = f (cl, o, r, p, t, …)",
+          "cl (climate): Khí hậu (nhiệt độ, lượng mưa)",
+          "o (organisms): Sinh quyển (thực vật, động vật, vi sinh)",
+          "r (relief / topography): Địa hình (độ dốc, hướng sườn, độ cao)",
+          "p (parent material): Vật liệu mẹ (khoáng vật, hóa học)",
+          "t (time): Thời gian phát sinh đất",
+          {
+            "t": "Chương 5 đi sâu vào phân tích sự tương tác giữa 2 biến số: Vật liệu mẹ (p) và Địa hình (r)",
+            "b": true
+          }
+        ],
+        "cite": "Jenny, H. (1941). Factors of soil formation. McGraw-Hill; Sơ đồ bản quyền ThS. Đinh Quốc Tuấn"
+      },
+      {
+        "type": "cards",
+        "title": "Các chuỗi tự nhiên theo phương pháp luận Hans Jenny",
+        "sub": "Kỹ thuật cố định các biến số để cô lập một biến số cần nghiên cứu",
+        "cards": [
+          {
+            "h": "Lithosequence (Chuỗi đá mẹ)",
+            "t": [
+              "Khí hậu, sinh vật, địa hình, thời gian như nhau",
+              "Chỉ có ĐÁ MẸ thay đổi",
+              "Ví dụ: So sánh đất trên bazan vs đất trên granit tại cùng một tiểu vùng Đông Nam Bộ"
+            ]
+          },
+          {
+            "h": "Toposequence (Chuỗi địa hình)",
+            "t": [
+              "Cùng đá mẹ, cùng khí hậu, cùng thời gian",
+              "Chỉ có VỊ TRÍ ĐỊA HÌNH / ĐỘ DỐC thay đổi",
+              "Đây chính là cơ sở khoa học nền tảng của Mô hình Catena (Milne, 1935)"
+            ]
+          },
+          {
+            "h": "Chronosequence (Chuỗi thời gian)",
+            "t": [
+              "Cùng đá mẹ, cùng địa hình và khí hậu",
+              "Chỉ có THỜI GIAN phát sinh thay đổi",
+              "Ví dụ: Các bậc thềm phù sa sông từ Đệ tứ trẻ (Holocen) đến phù sa cổ (Pleistocen)"
+            ]
+          }
+        ],
+        "cite": "Jenny, H. (1941); Schaetzl & Anderson (2005); Đinh Quốc Tuấn (2026)"
+      },
+      {
+        "type": "fig",
+        "title": "Khái niệm Catena (Geoffrey Milne, 1935): Đất thay đổi theo sườn dốc",
+        "fig": "H5-6_catena",
+        "cite": "Khái niệm kinh điển của Geoffrey Milne (1935); Sơ đồ đồ họa bản quyền ThS. Đinh Quốc Tuấn (2026)",
+        "notes": "Nhấn mạnh: Từ đỉnh đồi xuống thung lũng, trên CÙNG MỘT KHỐI ĐÁ GỐC, tính chất đất biến đổi theo quy luật liên tục tạo nên một chuỗi dây chuyền (Catena trong tiếng La-tinh nghĩa là 'dây xích')."
+      },
+      {
+        "type": "cards",
+        "title": "Bốn cơ chế động lực chi phối sự hình thành Catena",
+        "sub": "Động lực học mặt sườn địa mạo trong điều kiện trọng lực và nước chảy",
+        "cards": [
+          {
+            "h": "1. Phân phối lại Nước",
+            "t": [
+              "Đỉnh đồi: Nước mưa thấm thẳng đứng, rửa trôi mạnh, khô hạn trong mùa cạn",
+              "Sườn dốc: Nước chảy tràn bề mặt, vận tốc dòng chảy cao",
+              "Thung lũng: Nước ngầm tụ lại, đất ngập úng, yếm khí quanh năm"
+            ]
+          },
+          {
+            "h": "2. Phân phối lại Vật liệu rắn",
+            "t": [
+              "Sườn dốc bị bóc mòn liên tục → Tầng đất mỏng, lộ mảnh đá gốc",
+              "Chân sườn tích tụ nón sườn tích dày cộm",
+              "Thung lũng đón nhận các hạt mịn nhất (sét và phù sa) lắng đọng"
+            ]
+          },
+          {
+            "h": "3. Phân phối lại Chất hòa tan",
+            "t": [
+              "Ion Ca²⁺, Mg²⁺, K⁺, H₄SiO₄ bị rửa trôi từ đỉnh và sườn dốc trôi dạt xuống thung lũng",
+              "Tại thung lũng: Nồng độ Si và Mg cao trong môi trường kiềm kích thích tổng hợp Smectite!"
+            ]
+          },
+          {
+            "h": "4. Vi khí hậu sườn",
+            "t": [
+              "Sườn đón nắng/đón gió bốc hơi nhanh, sườn khuất ẩm ướt râm mát"
+            ]
+          }
+        ],
+        "cite": "Milne, G. (1935). Some suggested units of classification and mapping. Soil Research; Schaetzl & Anderson (2005)"
+      },
+      {
+        "type": "table",
+        "title": "Bảng phân tích chi tiết các vị trí trong một Catena điển hình",
+        "sub": "Đặc trưng thổ nhưỡng, khoáng vật sét và hàm ý sử dụng đất (Bảng 5.4 Giáo trình)",
+        "head": [
+          "Vị trí Catena",
+          "Quá trình trội",
+          "Đặc điểm đất",
+          "Khoáng vật sét",
+          "Thuận lợi / Tiềm năng",
+          "Rủi ro / Giới hạn"
+        ],
+        "rows": [
+          [
+            "Đỉnh đồi thoải (Crest / Summit)",
+            "Thấm thẳng đứng, rửa trôi mạnh",
+            "Tầng đất dày, đỏ vàng, rất chua, tơi xốp",
+            "Kaolinite, Oxit Fe, Al (Gibbsit)",
+            "Thoát nước cực tốt, nền móng ổn định",
+            "Khô hạn mùa cạn, nghèo kiệt bazơ"
+          ],
+          [
+            "Sườn dốc (Shoulder / Backslope)",
+            "Rửa trôi bề mặt, bóc mòn, trượt",
+            "Tầng đất mỏng, nhiều sỏi sạn, lộ đá gốc",
+            "Kaolinite",
+            "Rừng phòng hộ, cây bản địa",
+            "Xói mòn nghiêm trọng, nguy cơ sạt lở"
+          ],
+          [
+            "Chân sườn (Footslope)",
+            "Tích tụ nón sườn tích, dòng ngầm",
+            "Tầng đất rất dày, giàu ẩm, cát pha thịt",
+            "Kaolinite + ít Smectite",
+            "Canh tác vườn cây ăn trái, nhà vườn",
+            "Nguy cơ lũ bùn đá, vùi lấp sườn tích"
+          ],
+          [
+            "Thung lũng trũng (Toeslope / Valley)",
+            "Ngập nước, yếm khí, tích tụ hòa tan",
+            "Đất glây màu xám xanh, giàu sét, tích mùn",
+            "Smectite, Illite",
+            "Trồng lúa nước, thủy sản, đầm sen",
+            "Ngập úng kéo dài, nền đất yếu biến dạng"
+          ]
+        ],
+        "col_widths": [
+          1.8,
+          2.3,
+          2.6,
+          2.0,
+          2.0,
+          1.433
+        ],
+        "cite": "Bảng 5.4 – Giáo trình Đá và khoáng vật (Đinh Quốc Tuấn, 2026)"
+      },
+      {
+        "type": "figbul",
+        "title": "Hình thái Catena thực địa: Phân dị độ ẩm và sinh thái sườn dốc",
+        "sub": "Mối tương quan giữa vị trí vi địa hình và độ ẩm hữu hiệu của đất",
+        "fig": "catena_slope.jpg",
+        "bullets": [
+          "Ảnh mô hình lát cắt sườn dốc Catena từ đỉnh (xeric / mesic) xuống chân sườn (hygric / subhydric)",
+          "Độ ẩm hữu hiệu của đất tăng dần đều đặn từ trên đỉnh xuống chân thung lũng",
+          "Màu sắc đất chuyển từ đỏ tươi/nâu đỏ (oxy hóa giàu hematit) trên đỉnh sang màu xám đốm gỉ ở sườn dưới, và màu xám chì/xám xanh (khử sắt Fe²⁺) ở thung lũng ngập nước",
+          {
+            "t": "Quy luật: Nhìn màu sắc phẫu diện đoán ngay được chế độ thủy văn và vị trí Catena",
+            "b": true
+          }
+        ],
+        "cite": "Ảnh đồ họa Catena sườn địa hình: Del Meidinger / Wikimedia Commons (CC BY-SA 4.0)."
+      },
+      {
+        "type": "cards",
+        "title": "So sánh Catena trên đồi Granit vs Catena trên cao nguyên Bazan",
+        "sub": "Cách địa hình biến đổi cùng một khối đá mẹ ở hai cảnh quan Việt Nam",
+        "cards": [
+          {
+            "h": "Catena trên đá Granit (Nam Trung Bộ)",
+            "t": [
+              "Đỉnh đồi: Saprolite dày, đất đỏ vàng pha cát, chua",
+              "Sườn dốc: Rất dốc (> 25°), trơ trụi tảng lăn granit, đất mỏng dính, nguy cơ lũ quét sạt lở cao",
+              "Chân sườn: Nón sườn tích dày, cát pha thô sắc cạnh",
+              "Thung lũng: Suối cát, đất glây ngập nước cục bộ"
+            ]
+          },
+          {
+            "h": "Catena trên đá Bazan (Tây Nguyên)",
+            "t": [
+              "Đỉnh đồi bát úp & Sườn thoải: Đất đỏ bazan (Rhodic Ferralsols) dày 2 – 5 m, cực kỳ tơi xốp",
+              "Sườn dốc thoải: Đất nâu vàng loang lổ, xuất hiện tầng kết von sắt (laterite pisolites)",
+              "Hợp thủy & Bàu trũng (Thung lũng): Nước ngầm tích tụ Si và Mg tạo nên đất đen giàu Smectite (Vertisols), nứt nẻ mùa khô"
+            ]
+          },
+          {
+            "h": "Bài học then chốt",
+            "t": [
+              "Cùng trên một cao nguyên bazan, chỉ cần thay đổi vị trí từ đỉnh xuống trũng, đất đã chuyển từ Kaolinite sang Smectite!"
+            ]
+          }
+        ],
+        "cite": "Đinh Quốc Tuấn (2026). Giáo trình C4–C5–6.3; Nguyễn Viết Phổ & cs. (2000)"
+      },
+      {
+        "type": "steps",
+        "title": "Quy trình chuẩn 7 bước: Đọc và phân tích lát cắt cảnh quan",
+        "sub": "Kỹ năng thực hành cốt lõi của Chương 5 tích hợp địa chất và thổ nhưỡng",
+        "steps": [
+          {
+            "h": "Bước 1: Đá mẹ",
+            "t": "Xác định loại đá mẹ và ranh giới địa chất trên bản đồ và vết lộ thực địa (Bazan, Granit, Sa thạch, Đá vôi)"
+          },
+          {
+            "h": "Bước 2: Địa hình",
+            "t": "Xác định vị trí trên sườn dốc (đỉnh, sườn dốc, chân sườn, thung lũng), độ dốc (độ/%), hướng phơi sườn"
+          },
+          {
+            "h": "Bước 3: Phong hóa",
+            "t": "Dự đoán chiều sâu vỏ phong hóa saprolite và tổ hợp khoáng vật thứ sinh chủ đạo (Alit, Monosialit hay Bisialit)"
+          },
+          {
+            "h": "Bước 4: Vật liệu mẹ",
+            "t": "Phân định vật liệu mẹ tại mỗi vị trí là tàn tích tại chỗ (e) hay vật liệu vận chuyển (d, a, m, v, b)"
+          },
+          {
+            "h": "Bước 5: Tính chất đất",
+            "t": "Dự đoán độ dày tầng đất, thành phần cơ giới, khả năng thoát nước, pH và dung tích hấp phụ CEC"
+          },
+          {
+            "h": "Bước 6: Quy hoạch",
+            "t": "Đề xuất định hướng sử dụng đất tối ưu; chỉ rõ thuận lợi kinh tế và nhận diện rủi ro thiên tai tiềm ẩn"
+          },
+          {
+            "h": "Bước 7: Kiểm chứng",
+            "t": "Nêu rõ các giới hạn cần kiểm chứng thực địa bằng đào phẫu diện đất, lấy mẫu phân tích XRD và hóa sinh"
+          }
+        ],
+        "cite": "Quy trình thực địa chuẩn hóa – Bộ môn Thạch học và Khoáng sản, Khoa Địa chất, ĐH KHTN (Đinh Quốc Tuấn, 2026)"
+      },
+      {
+        "type": "cards",
+        "title": "Nghiên cứu trường hợp Ví dụ 5.2: Phân tích Lát cắt Cảnh quan thực tế",
+        "sub": "Bài toán tích hợp đa biến số: Granit – Bazan – Thung lũng suối (Phiếu PHT-5.2)",
+        "cards": [
+          {
+            "h": "Dữ liệu hiện trường",
+            "t": [
+              "Lát cắt dài 2.0 km tại vùng chuyển tiếp cao nguyên – đồi núi",
+              "Độ cao: Từ đỉnh granit cao 320 m qua sườn dốc 25° xuống dải phủ bazan thoải (3 – 5°), kết thúc tại thung lũng suối hẹp",
+              "Khí hậu: Nhiệt đới gió mùa, nhiệt độ 26 °C, lượng mưa 2.000 mm/năm, mùa khô kéo dài 5 tháng"
+            ]
+          },
+          {
+            "h": "Kết quả phân tích 4 vị trí",
+            "t": [
+              "1. Đỉnh granit: Saprolite dày, cát pha, chua, CEC thấp → Trồng rừng gỗ bản địa hoặc keo lai chịu hạn",
+              "2. Sườn granit dốc 25°: Đất mỏng, trơ sỏi sạn, tảng lăn → Giữ rừng phòng hộ nghiêm ngặt, cấm san ủi mở đường",
+              "3. Dải bazan thoải: Đất đỏ bazan sét mịn, tầng dày > 3m, tơi xốp → Vùng vàng trồng cà phê, sầu riêng, hồ tiêu",
+              "4. Thung lũng suối: Bồi tích hỗn tạp, đất glây ngập nước → Trồng lúa nước hoặc hoa màu ngắn ngày mùa khô"
+            ]
+          },
+          {
+            "h": "Kết luận & Giới hạn",
+            "t": [
+              "Đá mẹ quyết định khác biệt vĩ mô giữa đất granit và đất bazan",
+              "Địa hình quyết định sự phân dị vi mô giữa đỉnh – sườn – thung lũng trên cùng loại đá mẹ",
+              "Bắt buộc kiểm chứng mẫu đất bằng phân tích CEC và XRD trước khi cấp phép đầu tư dự án"
+            ]
+          }
+        ],
+        "cite": "Ví dụ 5.2 – Giáo trình Đá và khoáng vật (ThS. Đinh Quốc Tuấn, 2026)"
       },
       {
         "type": "act",
-        "title": "Phân tích lát cắt granit – bazan – thung lũng",
-        "sub": "Ví dụ 5.2 – PHT-5.2",
+        "title": "Hoạt động nhóm: Thiết lập Bảng Catena & Quy hoạch Sử dụng đất",
+        "sub": "Sinh viên thực hành nhóm 4 người – Nộp kết quả tương tác qua điện thoại tại sv.html",
         "time": "15'",
         "bullets": [
-          "Theo 7 bước: đá mẹ → địa hình → phong hóa → vật liệu mẹ → đất → sử dụng → giới hạn",
-          "Nhóm điền bảng catena cho 4 vị trí",
-          "Chỉ ra khác biệt do ĐÁ MẸ và khác biệt do ĐỊA HÌNH",
-          "Đề xuất dữ liệu cần kiểm chứng"
+          "Bước 1 (5'): Các nhóm nhận sơ đồ địa hình lát cắt một sườn đồi thực tế trên phiếu học tập PHT-5.2",
+          "Bước 2 (6'): Thảo luận nhóm, áp dụng Quy trình 7 bước để điền thông tin vào 4 cột: Vị trí sườn - Đá mẹ - Khoáng vật sét dự đoán - Đề xuất quy hoạch",
+          "Bước 3 (4'): Nhóm trưởng mở điện thoại truy cập sv.html, chọn Mục 5.2, nộp đề xuất giải quyết mâu thuẫn sử dụng đất tại vị trí sườn dốc và thung lũng",
+          "Giảng viên công chiếu màn hình tổng hợp ý kiến, phản biện chéo giữa 2 nhóm có quan điểm trái chiều"
+        ],
+        "note_box": [
+          "Tiêu chí chấm điểm năng lực:",
+          "1. Xác định đúng loại khoáng vật sét chủ đạo theo vị trí sườn",
+          "2. Đề xuất quy hoạch phù hợp với đặc tính cơ học và rủi ro trượt sạt",
+          "3. Lập luận khoa học dựa trên phương trình Jenny và mô hình Catena"
         ]
       },
       {
         "type": "quiz",
+        "title": "Trắc nghiệm tương tác qua điện thoại – Chặng 3: Khoáng vật sét & Catena",
         "qs": [
           {
-            "q": "Khoáng vật sét trương nở mạnh nhất:",
+            "bloom": "Bloom 1 - Nhớ",
+            "q": "Khoáng vật sét nào sau đây có cấu trúc tinh thể kiểu lớp 1:1 và liên kết giữa các phiến lớp là liên kết hydro bền vững?",
             "o": [
-              "kaolinit",
-              "illit",
-              "smectit",
-              "chlorit"
+              "Smectite (Montmorillonite)",
+              "Illite",
+              "Kaolinite",
+              "Vermiculite"
             ],
-            "a": "C"
+            "a": "C",
+            "exp": "Kaolinite là khoáng vật sét kiểu 1:1 điển hình, liên kết hydro chặt chẽ ngăn cản nước đi vào khoảng giữa lớp."
           },
           {
-            "q": "Illit không trương nở chủ yếu vì:",
+            "bloom": "Bloom 2 - Hiểu",
+            "q": "Tại sao khoáng vật Illite có cấu trúc kiểu 2:1 nhưng lại hầu như không có tính trương nở khi gặp nước như Smectite?",
             "o": [
-              "không có lá bát diện",
-              "K⁺ liên kết chặt các lớp",
-              "hạt lớn",
-              "nhiều sắt"
+              "Vì Illite không có lá bát diện AlO₆",
+              "Vì ion K⁺ có kích thước vừa khít hốc lục giác chốt chặt hai lớp tứ diện lại với nhau",
+              "Vì Illite chỉ hình thành ở môi trường sa mạc không có nước",
+              "Vì Illite có chứa nhiều nguyên tố phóng xạ"
             ],
-            "a": "B"
+            "a": "B",
+            "exp": "Cation K⁺ nằm khít trong hốc lục giác của lá tứ diện tạo lực liên kết tĩnh điện cực mạnh khóa chặt hai phiến lớp kề nhau."
           },
           {
-            "q": "Khái niệm catena do ai đề xuất?",
+            "bloom": "Bloom 4 - Phân tích",
+            "q": "Trong một Catena sườn đồi bazan ở Tây Nguyên, loại khoáng vật sét nào có xu hướng hình thành và tích tụ ở các vùng bàu trũng thấp thoát nước kém?",
             "o": [
-              "Jenny",
-              "Milne",
-              "Goldich",
-              "Pedro"
+              "Kaolinite và Gibbsit",
+              "Smectite (Montmorillonite)",
+              "Thạch anh tàn dư",
+              "Oxit sắt Hematit"
             ],
-            "a": "B"
+            "a": "B",
+            "exp": "Tại vùng trũng thoát nước kém, Si và các bazơ Ca, Mg bị rửa trôi từ đỉnh dồn về tụ lại, tạo điều kiện kiềm nhẹ kích thích hình thành Smectite."
           }
         ]
       },
       {
         "type": "sum",
+        "title": "Tổng kết mục 5.2 & Khung liên kết toàn diện Chương 5",
         "points": [
-          "Sét 1:1, 2:1, 2:1:1 – cấu trúc quyết định tính chất",
-          "Kaolinit CEC thấp; smectit CEC cao, trương nở",
-          "Loại sét phụ thuộc đá mẹ + mức rửa trôi",
-          "Jenny: S = f(cl, o, r, p, t); catena theo địa hình",
-          "Đọc lát cắt cảnh quan theo 7 bước"
+          "Cấu trúc mạng tinh thể quyết định tính chất: 1:1 (Kaolinite - trơ, không trương, CEC thấp); 2:1 (Smectite - trương nở mạnh, CEC cao, nứt nẻ; Illite - K chốt khóa)",
+          "Loại khoáng vật sét phản ánh môi trường địa hóa phong hóa: Rửa trôi mạnh → Kaolinite + Oxit Fe-Al; Thoát nước kém, tích tụ bazơ → Smectite",
+          "Phương trình Hans Jenny S = f (cl, o, r, p, t) là kim chỉ nam phân tích các chuỗi tự nhiên trong cảnh quan",
+          "Mô hình Catena (Milne, 1935): Trên cùng một đá mẹ, địa hình sườn dốc chi phối phân phối lại nước, vật liệu và chất tan tạo nên sự phân dị thổ nhưỡng",
+          "Thực hành thành thạo Quy trình 7 bước đọc lát cắt cảnh quan để làm chủ mối liên kết: Đá mẹ → Vỏ phong hóa → Khoáng vật sét → Đất → Quy hoạch phát triển bền vững"
         ],
         "refs": [
-          "Jenny (1941).",
-          "Milne (1935). Soil Research 4.",
-          "Barshad (1966).",
-          "Brady & Weil (2017).",
-          "Holtz & Kovacs (1981).",
-          "Giáo trình mục 5.2."
+          "Jenny, H. (1941). Factors of soil formation. McGraw-Hill.",
+          "Milne, G. (1935). Some suggested units of classification and mapping. Soil Research 4, 183–198.",
+          "Barshad, I. (1966). The effect of a variation in precipitation on the nature of clay minerals. Clays & Clay Minerals.",
+          "Klein, C., & Philpotts, A. (2017). Earth materials (2nd ed.). Cambridge University Press.",
+          "Đinh Quốc Tuấn (2026). Giáo trình Đá và khoáng vật, Chương 5, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM."
         ],
-        "next": "Tiếp theo: Mục 6.3 – Lớp dữ liệu địa chất trong đánh giá, quy hoạch đất"
+        "next": "Chuyển tiếp sang Chương 6: Mục 6.3 – Ứng dụng lớp dữ liệu địa chất trong đánh giá và quy hoạch sử dụng đất (GIS & Chồng lớp)"
       }
     ]
   },

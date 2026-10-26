@@ -41,18 +41,18 @@ const RATE_LIMIT_MESSAGE = 'Thao tác quá nhiều lần. Vui lòng đợi vài 
 
 /** bucket => [số lượt tối đa, độ dài cửa sổ (giây)] */
 const RATE_LIMIT_DEFAULTS = [
-    'khtd_login_ip'    => [30, 600],  // GĐ11: đăng nhập phiếu online SAI / 10 phút / IP
-    'khtd_submit_ip'   => [400, 600], // GĐ11: nộp phiếu / 10 phút / IP — cả lớp dùng chung Wi-Fi trường (trước là 30: SV thứ 31 bị chặn)
+    'khtd_login_ip'    => [60, 600],  // GĐ11: đăng nhập phiếu online SAI / 10 phút / IP — 2–3 lớp song song chung Wi-Fi trường (một IP) (trước là 30)
+    'khtd_submit_ip'   => [800, 600], // GĐ11: nộp phiếu / 10 phút / IP — 2–3 lớp × 50 SV song song chung Wi-Fi trường (một IP); trước là 400 (đủ 1 lớp), trước nữa 30
     'khtd_submit_student' => [8, 600], // nộp phiếu / 10 phút / SINH VIÊN — chặn bấm liên tục tốn hạn mức Gemini
-    'khtd_upload_ip'   => [600, 600], // GĐ11e: tải ảnh mẫu / 10 phút / IP (lớp 40 SV × 8 mẫu × 2 ảnh trên Wi-Fi chung)
+    'khtd_upload_ip'   => [2000, 600], // GĐ11e: tải ảnh mẫu / 10 phút / IP — phiếu Đá & Khoáng vật 10 mẫu × 1–3 ảnh: 1 lớp 40 SV đã 400–1200 ảnh; 2–3 lớp song song chung Wi-Fi trường (một IP) cần ~2000 (trước là 600)
     'login_ip'         => [20, 900],  // 20 lần login SAI / 15 phút / IP
     'login_user'       => [10, 900],  // 10 lần login SAI / 15 phút / tên đăng nhập (chặn dò phân tán)
-    'checkin_ip'       => [60, 600],  // 60 mã SAI / 10 phút / IP — lớp 100 em trên WiFi chung vẫn dư
+    'checkin_ip'       => [120, 600], // 120 mã SAI / 10 phút / IP — 2–3 lớp × 50 SV điểm danh song song chung Wi-Fi trường (một IP) (trước là 60)
     'gradecode_req_ip' => [30, 900],  // 30 lần xin mã (mọi lượt) / 15 phút / IP
     'gradecode_ver_ip' => [50, 900],  // 50 lần nhập mã SAI / 15 phút / IP (đã có 5 lần/SV)
-    'tvts_submit_ip'   => [60, 600],  // TVTS02: nộp bài phân tích / 10 phút / IP — cả lớp ~45 HS chung Wi-Fi trường; chặn bấm liên tục tốn hạn mức Gemini
+    'tvts_submit_ip'   => [150, 600], // TVTS02: nộp bài phân tích / 10 phút / IP — 2–3 lớp ~45–50 HS song song chung Wi-Fi trường (một IP) (trước là 60); vẫn chặn bấm liên tục tốn hạn mức Gemini
     'tvts_get_ip'      => [120, 600], // TVTS02: tra cứu kết quả bằng mã SAI / 10 phút / IP — chặn dò mã
-    'tvts1_save_ip'    => [300, 600], // TVTS01: lưu/cập nhật kết quả Bước 1 / 10 phút / IP — cả lớp chung Wi-Fi, mỗi em có thể sửa vài lần
+    'tvts1_save_ip'    => [600, 600], // TVTS01: lưu/cập nhật kết quả Bước 1 / 10 phút / IP — 2–3 lớp song song chung Wi-Fi trường (một IP), mỗi em có thể sửa vài lần (trước là 300)
     // Phòng tương tác trang trình chiếu (api/lib/liveroom.php, docs/04 mục 36). Tính cho 3 lớp × 50 SV chung một Wi-Fi.
     'live_submit_ip'      => [3000, 600], // gửi câu trả lời / 10 phút / IP: 150 SV × ~20 lượt (quiz + nhóm + hỏi đáp)
     'live_submit_student' => [60, 600],   // gửi / 10 phút / (mã phòng, MSSV) — một máy không dội được cả phòng
