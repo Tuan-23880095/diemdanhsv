@@ -28,7 +28,8 @@
         state.lessons = await resp.json();
       }
       
-      // Lắng nghe phản hồi trực tiếp từ điện thoại sinh viên (BroadcastChannel)
+      // Phòng tương tác: nhận câu trả lời từ điện thoại sinh viên qua máy chủ (live-room.js),
+      // dự phòng BroadcastChannel khi chạy file://
       setupLiveListener();
       
       // Đọc URL hash hoặc query ?lesson=4-1#1
@@ -74,6 +75,12 @@
     });
   }
 
+  // Cho live-room.js biết bài đang chiếu (lọc câu trả lời, tính đáp án đúng).
+  window.DKV_DECK = {
+    lesson: function () { return state.lessons[state.currentLessonIndex] || null; },
+    lessons: function () { return state.lessons; }
+  };
+
   function loadLesson(idx) {
     state.currentLessonIndex = idx;
     var lesson = state.lessons[idx];
@@ -90,6 +97,7 @@
     }
     renderSlide();
     updateOverviewModal();
+    try { document.dispatchEvent(new CustomEvent('dkv:lesson', { detail: { code: lesson.code } })); } catch (e) {}
   }
 
   function renderSlide() {
@@ -425,7 +433,17 @@
   }
 
   // --- Nhận tín hiệu tương tác thời gian thực từ trang SV ---
+  // Có live-room.js (phòng tương tác qua máy chủ, docs/04 mục 36) → giao cho nó: câu trả lời từ
+  // điện thoại sinh viên đi qua api/index.php theo mã phòng; BroadcastChannel chỉ còn là dự phòng
+  // khi chạy file:// hoặc chưa mở phòng. Thiếu live-room.js → giữ đúng hành vi cũ dưới đây.
   function setupLiveListener() {
+    if (window.DKV_LIVE && typeof window.DKV_LIVE.init === 'function') {
+      try { window.DKV_LIVE.init(); return; } catch (err) { console.error('Phòng tương tác lỗi:', err); }
+    }
+    setupBroadcastListener();
+  }
+
+  function setupBroadcastListener() {
     try {
       var ch = new BroadcastChannel('dkv_live_session');
       ch.onmessage = function(e) {

@@ -742,7 +742,7 @@ chữ thường; **không chứa dữ liệu sinh viên**.
 |---|---|---|---|
 | `login_ip` | `login` | lần **sai** / IP | 20 lần / 15 phút |
 | `login_user` | `login` | lần **sai** / tên đăng nhập (chặn dò phân tán từ nhiều IP vào một tài khoản) | 10 lần / 15 phút |
-| `checkin_ip` | `checkin` | mã **sai hoặc không mở** / IP (sai định dạng cũng tính) | 60 lần / 10 phút |
+| `checkin_ip` | `checkin` | mã **sai hoặc không mở** / IP (sai định dạng cũng tính) | 120 lần / 10 phút (2–3 lớp song song chung Wi-Fi) |
 | `gradecode_req_ip` | `requestGradeCode` | **mọi** lượt / IP — mỗi lượt hợp lệ là một email | 30 lần / 15 phút |
 | `gradecode_ver_ip` | `verifyGradeCode` | lần **sai** / IP (MSSV không có, mã hết hạn, mã sai, bị khoá) | 50 lần / 15 phút |
 
@@ -1088,7 +1088,7 @@ Mục đích: sinh viên làm 6 phiếu học tập thực tập Khoa học Trá
 
 **CSDL** — migration `006-khtd-worksheets.sql`: `auth_tokens.Kind` thêm `KHTD`; bảng `khtd_worksheets` (SchemaJSON: sections/rubric/answer_hints), `khtd_submissions` (AnswersJSON, AiScore/AiJSON, FinalScore, EmailSentAt). Chạy `php tools/migrate.php`.
 
-**Cấu hình** `../private/config.php`: mục `gemini` (`api_key`, `model` mặc định `gemini-2.0-flash`); rate limit `khtd_login_ip`, `khtd_submit_ip` (mặc định 30/10 phút). Không có key → bài nộp ở trạng thái SUBMITTED, GV chấm tay.
+**Cấu hình** `../private/config.php`: mục `gemini` (`api_key`, `model` mặc định `gemini-2.0-flash`); rate limit `khtd_login_ip` (mặc định 60/10 phút), `khtd_submit_ip` (mặc định 800/10 phút) — tính chung mọi lớp trên Wi-Fi trường. Không có key → bài nộp ở trạng thái SUBMITTED, GV chấm tay.
 
 **Đăng nhập SV**: `khtdLogin` POST {mssv, code} — `code` là mã 4 ký tự của phiên điểm danh đang OPEN (bảng `attendance_keys`), SV phải ghi danh lớp đó (`identify_student`). Cấp token Kind KHTD hạn 3 giờ. Token GRADE (mã qua email, mục 10) cũng được chấp nhận ở mọi action SV.
 
@@ -1166,7 +1166,7 @@ Thay đổi ở action cũ: `khtdSaveDraft`/`khtdSubmit` làm trên lần mới 
 
 **Giao diện**: `khtd/online.html` — hộp xác nhận nộp riêng (đếm ô trống, nói rõ “chỉ nộp một lần” / “lần cuối” / “còn k lượt”, nút mặc định là *Quay lại làm tiếp*), khung các lần làm, nút **Làm lại**. `khtd/quanly.html` — mỗi thẻ phiếu có ô *Số lần nộp* và *Điểm tính*; bảng bài nộp có cột *Lần* (★ = lần được tính) và nút **Cho làm lại**. `?v=20261014-lamlai`.
 
-**Lưu ý vận hành**: mỗi lần nộp gọi Gemini một lần — phiếu “không giới hạn” tốn hạn mức AI hơn; rate limit `khtd_submit_ip` (30/10 phút/IP) tính chung cả lớp nếu dùng chung Wi-Fi. Kiểm thử: `php tools/smoke_khtd_attempts.php --config=<CSDL thử>` (38 ca).
+**Lưu ý vận hành**: mỗi lần nộp gọi Gemini một lần — phiếu “không giới hạn” tốn hạn mức AI hơn; rate limit `khtd_submit_ip` (800/10 phút/IP, đủ 2–3 lớp × 50 SV song song) tính chung mọi lớp dùng chung Wi-Fi trường. Kiểm thử: `php tools/smoke_khtd_attempts.php --config=<CSDL thử>` (38 ca).
 
 ## 30. GĐ11e — Ảnh chụp mẫu vật trong bảng mô tả (14/10/2026)
 
@@ -1180,7 +1180,7 @@ Mục đích: mỗi mẫu (một hàng) của bảng mô tả có ô **Ảnh m�
 
 | Action | Method | Ai | Tham số | Ghi chú |
 |---|---|---|---|---|
-| khtdUploadPhoto | POST | SV | token, worksheetId, sectionId, row, image (data URL) | Chỉ khi phiếu mở và lần làm hiện tại chưa nộp; JPG/PNG/WebP ≤ 4 MB; ≤ 80 ảnh/SV/phiếu; rate limit `khtd_upload_ip` 600/10 phút. Trả `photoId`. |
+| khtdUploadPhoto | POST | SV | token, worksheetId, sectionId, row, image (data URL) | Chỉ khi phiếu mở và lần làm hiện tại chưa nộp; JPG/PNG/WebP ≤ 4 MB; ≤ 80 ảnh/SV/phiếu; rate limit `khtd_upload_ip` 2000/10 phút (2–3 lớp song song chung Wi-Fi; phiếu Đá & Khoáng vật 10 mẫu × 1–3 ảnh). Trả `photoId`. |
 
 **Xem ảnh**: `khtd/anh.php?id=PHO_…` với header `X-Token` (trang dùng fetch → blob, token không nằm trong URL ảnh). Được xem: SV chủ ảnh (token KHTD/GRADE) hoặc GV/Admin có quyền lớp; còn lại 403.
 
@@ -1224,7 +1224,7 @@ Mục đích: hết học kỳ, giảng viên tải toàn bộ dữ liệu của
 
 **So sánh qua các năm** `archiveList` (GET): các lớp RESET mà GV đứng tên (Admin: tất cả). `pages/luu-tru.html` mục "So sánh qua các năm": theo môn — mỗi học kỳ một dòng (SV, có mặt TB, tổng kết TB, TB từng phiếu + % ≥ 8), bảng % đạt từng tiêu chí rubric + % "Tự tin"; lớp đang chọn (chưa lưu trữ) hiện nền vàng để so với các năm trước; tải CSV.
 
-**Khác**: giới hạn nộp phiếu đổi thành `khtd_submit_ip` 400/10 phút (cả lớp chung Wi-Fi) + `khtd_submit_student` 8/10 phút/SV. Kiểm thử: `tools/smoke_archive.php` (28 ca). Link "Lưu trữ" ở `pages/lecturer.html` và `khtd/quanly.html`.
+**Khác**: giới hạn nộp phiếu đổi thành `khtd_submit_ip` 400/10 phút (cả lớp chung Wi-Fi; từ 24/10/2026 nâng 800 cho 2–3 lớp song song) + `khtd_submit_student` 8/10 phút/SV. Kiểm thử: `tools/smoke_archive.php` (28 ca). Link "Lưu trữ" ở `pages/lecturer.html` và `khtd/quanly.html`.
 
 ## 33. GĐ11g — Phiếu luyện thi cuối khóa, dự báo điểm thi, điểm cộng & thái độ (14/10/2026) — `api/lib/khtd_exam.php`, `api/lib/khtd_kb.php`
 
@@ -1285,3 +1285,34 @@ Mục đích: học phần Đá và khoáng vật LEC10001 có trang riêng (tab
 **Vận hành**: Quản trị → tạo lớp LEC10001 (tên học phần có "Đá và khoáng vật"), nhập danh sách → `dkv/quanly.html` chọn lớp → "Tạo / bổ sung phiếu Đ&KV" → mở mã vào lớp như KHTD. Kiểm thử: `php tools/smoke_dkv.php --config=<CSDL thử>` (30 ca; bật `app.mail_stub_log_body` để kiểm thân email); `smoke_chd` 33/33, `smoke_khtd_attempts` 67/67, `smoke_khtd_exam` 67/67 vẫn đạt.
 
 **Cập nhật 23/10/2026 — chấm theo từng mẫu.** Phiếu khoáng vật (tuần 1–2) có **10 mẫu**, phiếu đá (tuần 3–5) có **5 mẫu**. Mẫu do giảng viên chọn trong **bảng đối chiếu** của học phần (`reference`: khoáng vật theo danh sách thực hành Bài 2–5 và bảng mô tả 14 khoáng vật; mỗi nhóm đá 9 loại). Rubric chấm riêng từng mẫu: tiêu chí `m1…m10` (0,8 điểm/mẫu khoáng vật) hoặc `m1…m5` (1,6 điểm/mẫu đá), cộng vận dụng 1,5 và trình bày 0,5. Quy tắc chấm (`cham.quy_tac_bang`): với mỗi hàng, lấy tên sinh viên đã gọi, đối chiếu từng ô mô tả với lý thuyết của chính tên đó (bảng đối chiếu, nếu không có thì lý thuyết chuẩn), độ cứng lệch ≤ 0,5 bậc Mohs là đúng, ô mâu thuẫn với tên là sai; tên nhất quán với mô tả chiếm khoảng 1/4 điểm mẫu. `khtdSeedWorksheets` với `bo = 'dkv'`: phiếu đã tạo nhưng **chưa có bài làm nào** được cập nhật nội dung theo `dkv_phieu.json` mới (trả `updated`), phiếu đã có bài làm giữ nguyên. `?v=20261023-dkv10`. `tools/smoke_dkv.php` 34 ca.
+
+## 36. Phòng tương tác trang trình chiếu `dkv/` (25/10/2026) — `api/lib/liveroom.php`, `db/migrations/010-live-rooms.sql`
+
+**Vấn đề.** `dkv/sv.html` gửi câu trả lời qua `BroadcastChannel('dkv_live_session')` + `localStorage` → chỉ đi giữa các tab trên **cùng một trình duyệt**; điện thoại sinh viên không bao giờ tới máy chiếu. Trường có nhiều lớp học song song cùng giờ nên câu trả lời của lớp A và lớp B không được lẫn.
+
+**Thiết kế.** Mỗi lần giảng viên bấm **Mở phòng tương tác** trên `dkv/trinhchieu.html`, máy chủ cấp một **mã phòng 5 ký tự** (bảng chữ `app.code_alphabet`, khác độ dài mã điểm danh 4 ký tự để không nhập lẫn), không trùng phòng đang mở (sinh mã trong `GET_LOCK('live_room_open')`), gắn mã bài giảng, hết hạn sau `app.live_room_hours` giờ (mặc định 4, kẹp 1–12). Kèm **hostKey** 128 bit chỉ trang trình chiếu giữ (CSDL lưu SHA-256): ai có mã phòng thì **gửi** được, chỉ ai có hostKey mới **đọc** được. Mọi truy vấn đọc lọc theo `RoomID` tra từ (mã, hostKey) → hai lớp không thể lẫn. Không cần đăng nhập (máy chiếu phòng học thường không có phiên giảng viên).
+
+Tuỳ chọn **mã điểm danh đang OPEN** (`attendance_keys`) khi mở phòng → phòng gắn `ClassID`/`SessionID`, nhãn "Lớp <ClassCode> · buổi <n>", và mỗi câu trả lời có cờ `InRoster` (MSSV có trong danh sách lớp hay không — chỉ đánh dấu, không chặn).
+
+**Bảng** (`010-live-rooms.sql`, đã gộp vào `db/schema.sql`): `live_rooms` (RoomID, Code, HostKeyHash, LessonCode, ClassID, SessionID, Label, Status, CreatedIp, CreatedAt, ExpiresAt, ClosedAt) và `live_responses` (ResponseID tự tăng làm mốc `since`, RoomID → `ON DELETE CASCADE`, Kind `quiz|group|qa`, LessonCode, MSSV, StudentName, InRoster, QIndex, Choice, GroupName, Body, ClientIp, CreatedAt). `UNIQUE (RoomID, LessonCode, QIndex, MSSV)`: mỗi sinh viên **một** đáp án cho mỗi câu quiz trong một phòng (đáp án đầu được giữ). Phòng quá 14 ngày tự xoá (kèm câu trả lời) khi có người mở phòng mới, không cần cron.
+
+**6 action mới** (cùng phong bì):
+
+| Action | Method | Tham số | Trả về |
+|---|---|---|---|
+| `roomOpen` | POST | `lessonCode`, `attendanceCode?` | `{code, hostKey, lessonCode, label, linked, status, expiresAt}` |
+| `roomInfo` | GET | `code` | thông tin công khai của phòng đang mở |
+| `roomSubmit` | POST | `code, kind, lessonCode, mssv, name` + quiz `qIdx, choice` / nhóm `group, text` / hỏi đáp `text` | `{duplicate, id?}` |
+| `roomPoll` | POST (mang hostKey, không qua URL) | `code, hostKey, since` | `{room, items[], last, more}` — tối đa 300 bản ghi/lượt, `more` = còn trang |
+| `roomSetLesson` | POST | `code, hostKey, lessonCode` | phòng sau khi đổi bài |
+| `roomClose` | POST | `code, hostKey` | `{closed:true}` |
+
+**Giới hạn tần suất** (`RATE_LIMIT_DEFAULTS`, ghi đè được ở `app.rate_limits`) — tính cho 3 lớp × 50 sinh viên chung một Wi-Fi: `live_submit_ip` 3000/10 phút (mọi lượt gửi), `live_submit_student` 60/10 phút theo (mã phòng, MSSV), `live_code_ip` 120/10 phút (chỉ đếm mã phòng/hostKey **sai** — chặn dò mã), `live_poll_ip` 1500/10 phút (trang trình chiếu hỏi 4 giây/lần ≈ 150 lượt/phòng → ~10 phòng chung IP), `live_open_ip` 30/giờ.
+
+**Giao diện.**
+- `dkv/live-room.js` (trang trình chiếu, nạp trước `deck-engine.js`): nút **Mở phòng tương tác** trên thanh điều khiển → bảng bên phải có mã phòng, QR (`dkv/assets/qrcode-generator-1.4.4.js`, chạy cả khi offline) trỏ `sv.html?phong=MÃ`, nút **Phóng to** cho cả lớp quét, 3 thẻ Trắc nghiệm (biểu đồ A–D, % đúng tính theo đáp án trong `slidesData.js`, không tin cờ đúng/sai do máy sinh viên gửi) / Nhóm / Hỏi đáp (hiển thị ẩn danh), **Tải CSV** (đủ MSSV, họ tên), **Đóng phòng**. Hỏi máy chủ mỗi 4 giây, chậm dần tới 15 giây khi mất mạng. F5 vẫn nối lại phòng (mã + hostKey giữ trong `localStorage` của máy chiếu). Đổi bài trên trang trình chiếu → `roomSetLesson`, trang sinh viên tự chuyển theo.
+- `deck-engine.js`: `setupLiveListener()` giao cho `DKV_LIVE.init()`; thiếu `live-room.js` thì giữ nguyên listener BroadcastChannel cũ. Thêm `window.DKV_DECK` và sự kiện `dkv:lesson`.
+- `dkv/sv.html` + `dkv/sv-live.js`: thẻ **Vào phòng tương tác** (mã phòng, MSSV, họ tên — nhớ trong máy), khoá bài theo phòng, mỗi câu quiz chọn một lần rồi mới hiện đúng/sai, thông báo gọn thay `alert()`. Màn hình lớp không hiện tên người hỏi.
+- **Dự phòng:** mở bằng `file://` → không gọi máy chủ, vẫn phát/nhận `BroadcastChannel` như cũ (trang trình chiếu bấm "Bật nhận câu trả lời ngoại tuyến"). Khi đã có phòng máy chủ, trang trình chiếu bỏ qua BroadcastChannel để không đếm trùng.
+
+**Vận hành.** Chạy migration 010 một lần (phpMyAdmin → SQL, hoặc `php tools/migrate.php --yes`). Kiểm thử: `php tools/smoke_liveroom.php --config=<CSDL thử>` (35 ca: hai phòng song song không lẫn, quiz trùng, khoá sai, tải 3 phòng × 50 SV × 7 lượt chung một IP, phân trang `more`, đổi bài, đóng, quá hạn). `?v=20261025-phong`.
