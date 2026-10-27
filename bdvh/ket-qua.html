@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Phiếu Báo Điểm & Đánh Giá Năng Lực AI · HCMUS</title>
+  <title>Phiếu Báo Điểm & Đánh Giá Năng Lực Tư Duy · HCMUS</title>
   
   <link rel="icon" type="image/svg+xml" href="assets/logo-sen.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,13 +35,22 @@
     }
   </script>
 
-  <script>
+    <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        inlineMath: [['$', '$'], ['\(', '\)']],
+        displayMath: [['$$', '$$'], ['\[', '\]']],
+        processEscapes: true
       },
-      startup: { typeset: false }
+      startup: {
+        typeset: true,
+        ready: () => {
+          MathJax.startup.defaultReady();
+          if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise().catch(e => console.warn(e));
+          }
+        }
+      }
     };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -104,7 +113,7 @@
         </div>
       </div>
       <h2 class="text-lg font-bold uppercase text-gray-900 mt-4">PHIẾU ĐÁNH GIÁ NĂNG LỰC TƯ DUY & KẾT QUẢ BÀI LÀM</h2>
-      <p class="text-xs text-gray-500 italic">Hệ thống khảo thí thông minh hỗ trợ bởi Trợ lý Gemini AI - ThS. Đinh Quốc Tuấn</p>
+      <p class="text-xs text-gray-500 italic">Hệ thống khảo thí thông minh hỗ trợ bởi Trợ lý Hệ Thống Khảo Thí - ThS. Đinh Quốc Tuấn</p>
     </div>
 
     <!-- KHỐI TỔNG KẾT ĐIỂM SỐ -->
@@ -133,10 +142,30 @@
       </div>
     </div>
 
-    <!-- KHỐI ĐÁNH GIÁ SƯ PHẠM CỦA GEMINI AI -->
-    <div class="bg-white rounded-2xl p-6 sm:p-8 border-l-4 border-luc border-y border-r border-bac shadow-md card-shadow space-y-4">
+    <!-- KHỐI ĐÁNH GIÁ SƯ PHẠM CỦA GEMINI AI (CÓ CHẾ ĐỘ MỞ KHÓA HOẶC LÀM MỜ NẾU HẾT LƯỢT AI) -->
+    <div id="ai-block-container" class="relative bg-white rounded-2xl p-6 sm:p-8 border-l-4 border-luc border-y border-r border-bac shadow-md card-shadow space-y-4 overflow-hidden">
+      
+      <!-- Overlay khi chưa mở khóa AI nhận xét -->
+      <div id="ai-locked-overlay" class="hidden absolute inset-0 bg-white/85 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center p-6 text-center space-y-3">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 text-luc flex items-center justify-center text-xl shadow">
+          <i class="fas fa-lock text-son"></i>
+        </div>
+        <h3 class="text-base sm:text-lg font-bold text-lam title-serif">Mở Khóa Nhận Xét Phân Tích Tư Duy Từ Hệ Thống Khảo Thí</h3>
+        <p class="text-xs text-gray-700 max-w-lg leading-relaxed">
+          🌱 Em vẫn xem điểm số, số câu đúng/sai và phân tích thời gian <b>hoàn toàn miễn phí</b>. Để mở khóa phần chỉ ra chính xác lỗ hổng tư duy và mẹo giải nhanh từ Thầy Đinh Quốc Tuấn, em hãy ủng hộ Thầy một ly trà đá (5.000đ) qua MoMo để bù chi phí tài nguyên máy chủ hệ thống nhé!
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
+          <a href="index.html" class="bg-gradient-to-r from-son to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition shadow flex items-center gap-2">
+            <i class="fas fa-heart"></i> Ủng Hộ MoMo (5.000đ) Mở Khóa Phân Tích Chuyên Sâu
+          </a>
+          <a href="mailto:dqtuanhcmus@gmail.com?subject=Xin%20Mien%20Phi%20Nhan%20Xet%20AI%20Cho%20Hoc%20Sinh%20Kho%20Khan" class="text-xs text-lam hover:underline font-semibold block sm:inline">
+            <i class="fas fa-envelope"></i> Học sinh khó khăn? Bấm để Thầy hỗ trợ miễn phí
+          </a>
+        </div>
+      </div>
+
       <div class="flex items-center gap-2 text-luc font-bold text-sm">
-        <i class="fas fa-brain text-base"></i> <span>Phân Tích Sư Phạm & Nhận Xét Tư Duy Từ Thầy Đinh Quốc Tuấn (Gemini AI)</span>
+        <i class="fas fa-brain text-base"></i> <span>Phân Tích Sư Phạm & Nhận Xét Tư Duy Từ Thầy Đinh Quốc Tuấn (Hệ Thống Khảo Thí)</span>
       </div>
 
       <!-- Lời nhận xét giáo viên -->
@@ -210,7 +239,32 @@
         <i class="fas fa-list-check"></i> Chi Tiết Đáp Án & Hướng Dẫn Giải
       </h3>
       
-      <div id="answers-breakdown" class="space-y-4">
+      
+    <!-- KHUNG NHẬP MÃ LỚP MỞ KHÓA TOÀN BỘ LỜI GIẢI CHI TIẾT -->
+    <div id="unlock-class-banner" class="bg-gradient-to-r from-amber-50 via-emerald-50 to-amber-50 rounded-2xl p-5 border-2 border-amber-300 shadow-md flex flex-col md:flex-row items-center justify-between gap-4 no-print">
+      <div class="flex items-center gap-3 text-left w-full md:w-auto">
+        <div class="w-12 h-12 rounded-2xl bg-amber-400 text-white flex items-center justify-center text-xl font-bold flex-none shadow">
+          <i class="fas fa-key"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-amber-200 text-amber-900 text-[10px] font-black uppercase tracking-wider">Học Sinh Của Thầy Tuấn / GV Bộ Môn</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          </div>
+          <h4 class="font-bold text-muc text-base title-serif mt-0.5">Nhập Mã Lớp 4 Ký Tự Để Mở Khóa Toàn Bộ Lời Giải Chi Tiết</h4>
+          <p class="text-xs text-gray-600 mt-0.5">Học sinh trong lớp chỉ cần nhập mã điểm danh Thầy chiếu trên bảng để xem đầy đủ hướng dẫn giải và công thức toán.</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-none">
+        <input type="text" id="bannerClassCodeInput" maxlength="6" placeholder="Mã 4 ký tự" class="px-3.5 py-2.5 border-2 border-amber-400 rounded-xl text-center uppercase font-mono font-black text-sm w-32 outline-none focus:ring-2 focus:ring-amber-500 bg-white shadow-inner">
+        <button onclick="submitBannerClassCode()" class="px-4 py-2.5 bg-luc hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-1.5 flex-none">
+          <i class="fas fa-unlock-alt"></i> Mở Khóa Ngay
+        </button>
+      </div>
+    </div>
+
+    <div id="answers-breakdown" class="space-y-4">
         <!-- Render danh sách câu trả lời đúng sai -->
       </div>
     </div>
@@ -252,6 +306,14 @@
         `Đúng: ${data.correct_count}/${data.total_questions} câu · Thời gian làm: ${data.duration_seconds}s`;
 
       const ai = data.ai_evaluation;
+      const overlayEl = document.getElementById('ai-locked-overlay');
+
+      if (ai && ai.locked) {
+        if (overlayEl) overlayEl.classList.remove('hidden');
+      } else {
+        if (overlayEl) overlayEl.classList.add('hidden');
+      }
+
       if (ai) {
         document.getElementById('res-level').innerText = ai.level;
         document.getElementById('res-badge').innerText = ai.badge;
@@ -318,7 +380,28 @@
             <div class="text-xs space-y-1.5 pl-10">
               <p><b>Lựa chọn của em:</b> <span class="${isRight ? 'text-luc font-bold' : 'text-son font-bold'}">${d.chosen >= 0 ? ['A', 'B', 'C', 'D'][d.chosen] + '. ' + esc(d.opts[d.chosen]) : 'Chưa chọn'}</span></p>
               ${!isRight ? `<p><b>Đáp án đúng:</b> <span class="text-luc font-bold">${['A', 'B', 'C', 'D'][d.correct_ans]}. ${esc(d.opts[d.correct_ans])}</span></p>` : ''}
-              ${d.explanation ? `<div class="bg-slate-50 p-3 rounded-xl border border-bac text-gray-600 mt-2"><b>Hướng dẫn giải:</b> ${esc(d.explanation)}</div>` : ''}
+              ${d.explanation ? `
+${d.is_explanation_locked ? `
+                <div class="bg-amber-50/80 p-3.5 rounded-xl border border-amber-200 text-gray-700 mt-3 text-xs flex items-center justify-between gap-3 shadow-sm">
+                  <div class="flex items-center gap-2">
+                    <i class="fas fa-lock text-amber-600 text-sm"></i>
+                    <span><b>Hướng dẫn giải chi tiết & mẹo giải nhanh:</b> Đang bị khóa đối với tài khoản khách/hết lượt.</span>
+                  </div>
+                  <button onclick="promptClassCode()" class="px-3 py-1.5 bg-luc text-white rounded-lg font-bold text-[11px] hover:bg-emerald-800 transition flex-none shadow-sm">
+                    🔑 Mở Khóa Ngay
+                  </button>
+                </div>
+              ` : (d.explanation ? `
+                <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-200/80 text-slate-800 mt-3 text-xs leading-relaxed shadow-sm">
+                  <div class="font-bold text-luc uppercase tracking-wider text-[11px] mb-2 flex items-center gap-1.5 border-b border-emerald-200/60 pb-1.5">
+                    <i class="fas fa-graduation-cap text-sm"></i> Hướng Dẫn Giải Chi Tiết Chuẩn Sư Phạm:
+                  </div>
+                  <div class="explanation-content space-y-1.5">
+                    ${d.explanation}
+                  </div>
+                </div>
+              ` : '')}
+            ` : ''}
             </div>
           </div>
         `;
@@ -332,7 +415,68 @@
 
     function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+    
+    async function promptClassCode() {
+      const code = prompt("Nhập Mã Lớp (4 ký tự) do Thầy Đinh Quốc Tuấn hoặc Thầy/Cô bộ môn cung cấp:");
+      if (!code) return;
+      try {
+        const res = await fetch('api.php?action=verify_class_code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code.trim() })
+        });
+        const data = await res.json();
+        alert(data.message || data.status);
+        if (data.status === 'success') {
+          location.reload();
+        }
+      } catch (e) {
+        alert("Lỗi xác thực: " + e.message);
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', init);
   </script>
+
+  <!-- MODAL NHẬP MÃ LỚP 4 KÝ TỰ TRÊN KẾT QUẢ -->
+  <div id="modal-class-result" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-bac space-y-4 animate-scaleIn text-left">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg font-bold">
+            <i class="fas fa-key"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-muc title-serif">Mở Khóa Lời Giải Chi Tiết</h3>
+            <p class="text-xs text-gray-500">Dành cho học sinh lớp Thầy Tuấn & GV bộ môn</p>
+          </div>
+        </div>
+        <button onclick="closeResultClassModal()" class="text-gray-400 hover:text-muc text-lg">✕</button>
+      </div>
+
+      <p class="text-xs text-gray-600 leading-relaxed">
+        Nhập mã 4 ký tự chiếu trên bảng hoặc do Thầy cung cấp để <b>mở khóa ngay toàn bộ bài giải từng bước</b>:
+      </p>
+
+      <div class="space-y-3 pt-1">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Mã Lớp 4 ký tự:</label>
+          <input type="text" id="modalClassCodeInput" maxlength="6" placeholder="VD: 7K8B" class="w-full px-4 py-3 border-2 border-amber-400 bg-amber-50/40 rounded-xl text-center text-2xl font-black uppercase tracking-widest text-slate-800 outline-none focus:border-amber-600 font-mono">
+        </div>
+
+        <button onclick="submitModalClassCode()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+          <i class="fas fa-unlock"></i> Xác Nhận Mở Khóa Lời Giải
+        </button>
+      </div>
+
+      <div class="border-t border-bac pt-3 text-center">
+        <p class="text-[11px] text-gray-500 mb-2">Em không có mã lớp?</p>
+        <button onclick="openBonusFromKetQua()" class="text-xs text-luc font-bold hover:underline">
+          <i class="fas fa-heart text-son"></i> Ủng hộ Thầy 5.000đ qua Ngân Hàng / MoMo để mở khóa
+        </button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
