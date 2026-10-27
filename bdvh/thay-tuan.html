@@ -285,12 +285,13 @@
               <th class="py-2.5 px-3 text-center">Điểm số</th>
               <th class="py-2.5 px-3 text-center">Câu đúng</th>
               <th class="py-2.5 px-3 text-center">Thời gian</th>
-              <th class="py-2.5 px-3 text-right">Lúc nộp</th>
+              <th class="py-2.5 px-3 text-center">Lúc nộp</th>
+              <th class="py-2.5 px-3 text-right">Chi tiết bài làm</th>
             </tr>
           </thead>
           <tbody id="submissionTableBody" class="divide-y divide-bac">
             <tr>
-              <td colspan="6" class="text-center py-6 text-gray-400 italic">Đang tải nhật ký nộp bài...</td>
+              <td colspan="7" class="text-center py-6 text-gray-400 italic">Đang tải nhật ký nộp bài...</td>
             </tr>
           </tbody>
         </table>
@@ -557,20 +558,28 @@
             const sec = s.duration_seconds % 60;
             return `
               <tr class="hover:bg-slate-50 transition">
-                <td class="py-2.5 px-3 font-semibold text-muc">${s.full_name || 'Học sinh'}</td>
-                <td class="py-2.5 px-3 text-gray-700">${s.exam_title || 'Bài thi'}</td>
+                <td class="py-2.5 px-3 font-semibold text-muc">${esc(s.full_name || 'Học sinh')}</td>
+                <td class="py-2.5 px-3 text-gray-700">${esc(s.exam_title || 'Bài thi')}</td>
                 <td class="py-2.5 px-3 text-center font-bold ${s.score >= 8 ? 'text-luc' : (s.score >= 5 ? 'text-amber-600' : 'text-son')}">${s.score}/10</td>
-                <td class="py-2.5 px-3 text-center">${s.correct_count}/${s.total_questions}</td>
+                <td class="py-2.5 px-3 text-center font-semibold">${s.correct_count}/${s.total_questions}</td>
                 <td class="py-2.5 px-3 text-center text-gray-500">${min}p ${sec}s</td>
-                <td class="py-2.5 px-3 text-right text-gray-400 text-[11px]">${s.created_at || ''}</td>
+                <td class="py-2.5 px-3 text-center text-gray-400 text-[11px]">${s.created_at || ''}</td>
+                <td class="py-2.5 px-3 text-right whitespace-nowrap">
+                  <button onclick="openSubmissionDetailModal(${s.submission_id})" class="px-3 py-1.5 bg-luc hover:bg-emerald-800 text-white rounded-xl font-bold transition inline-flex items-center gap-1.5 text-xs shadow-sm cursor-pointer">
+                    <i class="fas fa-file-signature"></i> Xem bài làm
+                  </button>
+                  <a href="ket-qua.html?sub_id=${s.submission_id}" target="_blank" title="Mở phiếu báo điểm in A4" class="ml-1.5 p-1.5 px-2.5 bg-slate-100 hover:bg-slate-200 text-gray-600 rounded-xl text-xs font-semibold inline-flex items-center transition cursor-pointer">
+                    <i class="fas fa-external-link-alt"></i>
+                  </a>
+                </td>
               </tr>
             `;
           }).join('');
         } else {
-          tb.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-gray-400 italic">Chưa có lượt nộp bài nào.</td></tr>`;
+          tb.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-400 italic">Chưa có lượt nộp bài nào.</td></tr>`;
         }
       } catch (e) {
-        tb.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-red-400">Lỗi nạp nhật ký: ${e.message}</td></tr>`;
+        tb.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-red-400">Lỗi nạp nhật ký: ${e.message}</td></tr>`;
       }
     }
 
@@ -624,6 +633,223 @@
     }, 15000);
 
     document.addEventListener('DOMContentLoaded', checkAuth);
+  </script>
+  <!-- MODAL XEM CHI TIẾT BÀI LÀM HỌC SINH (DÀNH CHO GIẢNG VIÊN) -->
+  <div id="modalSubmissionDetail" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-6">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-bac animate-scaleIn overflow-hidden">
+      <!-- HEADER MODAL -->
+      <div class="px-6 py-4 bg-slate-50 border-b border-bac flex items-center justify-between flex-none">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-luc flex items-center justify-center text-lg font-bold">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <div>
+            <h3 id="detailModalStudentName" class="font-bold text-base sm:text-lg text-muc title-serif">Chi Tiết Bài Làm</h3>
+            <p id="detailModalExamTitle" class="text-xs text-gray-500">Đang nạp dữ liệu bài thi...</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <a id="detailModalExternalLink" href="#" target="_blank" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-gray-700 text-xs font-bold rounded-xl transition flex items-center gap-1">
+            <i class="fas fa-external-link-alt"></i> Mở Phiếu In A4
+          </a>
+          <button onclick="closeSubmissionDetailModal()" class="w-8 h-8 rounded-xl bg-slate-200 hover:bg-slate-300 text-gray-600 flex items-center justify-center text-sm font-bold transition">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- BODY MODAL (SCROLLABLE) -->
+      <div id="detailModalBody" class="p-6 overflow-y-auto space-y-6 flex-1 text-xs sm:text-sm">
+        <div class="text-center py-12 text-gray-400">
+          <i class="fas fa-spinner fa-spin text-2xl text-luc mb-2"></i>
+          <p>Đang tải chi tiết câu hỏi và bài làm của học sinh...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    function closeSubmissionDetailModal() {
+      document.getElementById('modalSubmissionDetail').classList.add('hidden');
+    }
+
+    async function openSubmissionDetailModal(subId) {
+      const modal = document.getElementById('modalSubmissionDetail');
+      const body = document.getElementById('detailModalBody');
+      const nameEl = document.getElementById('detailModalStudentName');
+      const titleEl = document.getElementById('detailModalExamTitle');
+      const extLink = document.getElementById('detailModalExternalLink');
+
+      nameEl.innerText = "Đang tải bài làm...";
+      titleEl.innerText = "Mã lượt nộp #" + subId;
+      extLink.href = `ket-qua.html?sub_id=${subId}`;
+      body.innerHTML = `
+        <div class="text-center py-16 text-gray-400 space-y-2">
+          <i class="fas fa-spinner fa-spin text-3xl text-luc"></i>
+          <p class="font-medium text-gray-600">Đang tải từng câu hỏi và phương án học sinh đã chọn...</p>
+        </div>
+      `;
+      modal.classList.remove('hidden');
+
+      try {
+        const res = await fetch(`api.php?action=get_submission&sub_id=${subId}`);
+        const data = await res.json();
+        if (data.status !== 'success' || !data.submission) {
+          body.innerHTML = `<div class="p-6 bg-red-50 text-son rounded-2xl border border-red-200 font-bold text-center">Không tìm thấy chi tiết bài làm (${data.message || 'Lỗi'})</div>`;
+          return;
+        }
+
+        const s = data.submission;
+        nameEl.innerText = `${s.student_name} (${s.student_phone || 'Khách'})`;
+        titleEl.innerText = `${s.exam_title} · Nộp lúc: ${s.created_at}`;
+
+        const min = Math.floor(s.duration_seconds / 60);
+        const sec = s.duration_seconds % 60;
+
+        let remarkHtml = '';
+        if (s.ai_evaluation && s.ai_evaluation.teacher_remark) {
+          remarkHtml = `
+            <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1.5">
+              <div class="font-bold text-luc text-xs uppercase tracking-wider flex items-center gap-2">
+                <i class="fas fa-comment-dots"></i> Nhận Xét Sư Phạm:
+              </div>
+              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">${esc(s.ai_evaluation.teacher_remark)}</p>
+            </div>
+          `;
+        }
+
+        // Render từng câu hỏi
+        const questionsHtml = (s.details || []).map((d, idx) => {
+          let answerDisplay = '';
+          const isCorrect = d.is_correct;
+
+          if (d.type === 'choice') {
+            answerDisplay = `
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+                ${(d.opts || []).map((opt, oIdx) => {
+                  const isUserChosen = (parseInt(d.chosen) === oIdx);
+                  const isCorrectAns = (parseInt(d.correct_ans) === oIdx);
+                  let optStyle = 'border-bac bg-white text-gray-700';
+                  let icon = `<span class="w-5 h-5 rounded-full border border-gray-300 text-gray-500 font-bold text-[10px] flex items-center justify-center flex-none">${['A','B','C','D'][oIdx]}</span>`;
+
+                  if (isCorrectAns) {
+                    optStyle = 'border-emerald-400 bg-emerald-50/70 text-emerald-950 font-bold';
+                    icon = `<span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold text-[10px] flex items-center justify-center flex-none">✓</span>`;
+                  } else if (isUserChosen && !isCorrect) {
+                    optStyle = 'border-red-400 bg-red-50 text-red-950 font-bold';
+                    icon = `<span class="w-5 h-5 rounded-full bg-red-600 text-white font-bold text-[10px] flex items-center justify-center flex-none">✗</span>`;
+                  }
+
+                  return `
+                    <div class="p-2.5 rounded-xl border ${optStyle} flex items-center gap-2 text-xs">
+                      ${icon}
+                      <span class="flex-1">${esc(opt)}</span>
+                      ${isUserChosen ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-900 text-white font-bold">HS chọn</span>' : ''}
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            `;
+          } else if (d.type === 'true_false') {
+            answerDisplay = `
+              <div class="space-y-1.5 pt-2">
+                ${(d.items || []).map((subItem, sIdx) => {
+                  const userVal = d.chosen && d.chosen[sIdx] !== undefined ? d.chosen[sIdx] : -1;
+                  const correctVal = d.correct_ans && d.correct_ans[sIdx] !== undefined ? d.correct_ans[sIdx] : -1;
+                  const itemCorrect = (parseInt(userVal) === parseInt(correctVal));
+                  return `
+                    <div class="p-2 rounded-xl border border-bac bg-slate-50 flex items-center justify-between text-xs">
+                      <span><b>${['a','b','c','d'][sIdx]})</b> ${esc(subItem)}</span>
+                      <div class="flex items-center gap-2">
+                        <span class="text-gray-500">HS chọn: <b>${userVal == 1 ? 'Đúng' : (userVal == 0 ? 'Sai' : 'Chưa chọn')}</b></span>
+                        <span class="${itemCorrect ? 'text-luc font-bold' : 'text-son font-bold'}">${itemCorrect ? '✓ Đúng' : `✗ Sai (Đáp án: ${correctVal == 1 ? 'Đúng' : 'Sai'})`}</span>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            `;
+          } else if (d.type === 'short') {
+            answerDisplay = `
+              <div class="p-3 bg-slate-50 rounded-xl border border-bac mt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <div>HS điền: <b class="${isCorrect ? 'text-luc font-bold' : 'text-son font-bold'}">${esc(d.chosen || '(bỏ trống)')}</b></div>
+                <div>Đáp án chuẩn của Thầy: <b class="text-luc font-bold">${esc(d.correct_ans)}</b></div>
+              </div>
+            `;
+          }
+
+          let expHtml = '';
+          if (d.explanation) {
+            expHtml = `
+              <div class="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200/80 text-xs text-slate-800 leading-relaxed space-y-1 mt-2">
+                <div class="font-bold text-luc text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                  <i class="fas fa-lightbulb"></i> Hướng Dẫn Giải Chi Tiết Của Thầy Tuấn:
+                </div>
+                <div>${d.explanation}</div>
+              </div>
+            `;
+          }
+
+          return `
+            <div class="p-4 rounded-2xl border ${isCorrect ? 'border-emerald-200 bg-white' : 'border-red-200 bg-red-50/20'} space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div class="font-bold text-muc text-sm flex items-start gap-2">
+                  <span class="w-6 h-6 rounded-full ${isCorrect ? 'bg-emerald-100 text-luc' : 'bg-red-100 text-son'} flex items-center justify-center text-xs flex-none">
+                    ${idx + 1}
+                  </span>
+                  <span>${esc(d.q)}</span>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isCorrect ? 'bg-emerald-100 text-luc' : 'bg-red-100 text-son'} flex-none">
+                  ${isCorrect ? '✓ Đúng' : '✗ Sai'}
+                </span>
+              </div>
+              ${answerDisplay}
+              ${expHtml}
+            </div>
+          `;
+        }).join('');
+
+        body.innerHTML = `
+          <!-- TỔNG KẾT ĐIỂM -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            <div class="p-3 bg-slate-50 rounded-2xl border border-bac">
+              <div class="text-[10px] uppercase font-bold text-gray-500">Điểm Số</div>
+              <div class="text-2xl font-black ${s.score >= 8 ? 'text-luc' : (s.score >= 5 ? 'text-amber-600' : 'text-son')}">${s.score}/10</div>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-2xl border border-bac">
+              <div class="text-[10px] uppercase font-bold text-gray-500">Số Câu Đúng</div>
+              <div class="text-2xl font-black text-muc">${s.correct_count}/${s.total_questions}</div>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-2xl border border-bac">
+              <div class="text-[10px] uppercase font-bold text-gray-500">Thời Gian Làm</div>
+              <div class="text-2xl font-black text-lam">${min}p ${sec}s</div>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-2xl border border-bac">
+              <div class="text-[10px] uppercase font-bold text-gray-500">Lúc Nộp Bài</div>
+              <div class="text-xs font-bold text-gray-700 pt-2 line-clamp-1">${s.created_at || ''}</div>
+            </div>
+          </div>
+
+          ${remarkHtml}
+
+          <!-- DANH SÁCH CHI TIẾT CÂU HỎI -->
+          <div class="space-y-4">
+            <h4 class="font-bold text-sm text-muc title-serif flex items-center gap-2 border-b border-bac pb-2">
+              <i class="fas fa-list-ol text-luc"></i> Chi Tiết Từng Câu Hỏi & Lựa Chọn Của Học Sinh:
+            </h4>
+            ${questionsHtml}
+          </div>
+        `;
+
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise();
+        }
+      } catch (err) {
+        body.innerHTML = `<div class="p-6 bg-red-50 text-son rounded-2xl font-bold text-center">Lỗi tải bài: ${err.message}</div>`;
+      }
+    }
   </script>
 </body>
 </html>

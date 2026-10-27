@@ -288,16 +288,35 @@
   </footer>
 
   <script>
-    function init() {
-      const stored = sessionStorage.getItem('last_submission');
-      if (!stored) {
-        alert('Không tìm thấy kết quả làm bài gần nhất!');
-        window.location.href = 'index.html';
-        return;
+    async function init() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const subId = urlParams.get('sub_id');
+
+      if (subId && subId !== '0') {
+        try {
+          const res = await fetch(`api.php?action=get_submission&sub_id=${subId}`);
+          const d = await res.json();
+          if (d.status === 'success' && d.submission) {
+            renderResults(d.submission);
+            return;
+          }
+        } catch (e) {
+          console.warn("Lỗi tải bài làm từ máy chủ:", e);
+        }
       }
 
-      const data = JSON.parse(stored);
-      renderResults(data);
+      // Dự phòng từ bộ nhớ phiên (sessionStorage)
+      const stored = sessionStorage.getItem('last_submission');
+      if (stored) {
+        try {
+          const data = JSON.parse(stored);
+          renderResults(data);
+          return;
+        } catch (e) {}
+      }
+
+      alert('Không tìm thấy thông tin bài làm!');
+      window.location.href = 'index.html';
     }
 
     function renderResults(data) {

@@ -1017,6 +1017,96 @@ switch ($action) {
         ]);
         break;
 
+    // 6b. Lấy chi tiết bài làm đã nộp (dành cho Giảng Viên & Học Sinh xem lại chi tiết)
+    case 'get_submission':
+        $subId = (int)($_GET['sub_id'] ?? $inputData['sub_id'] ?? 0);
+        if ($subId <= 0) {
+            json_out(['status' => 'error', 'message' => 'Thiếu mã bài nộp (sub_id).'], 400);
+        }
+
+        $stmt = $pdo->prepare("
+            SELECT s.*, u.full_name as student_name, u.phone as student_phone, u.role as student_role,
+                   e.title as exam_title, e.questions_json, e.subject, e.grade, e.time_minutes
+            FROM bdvh_submissions s
+            LEFT JOIN bdvh_users u ON s.user_id = u.user_id
+            LEFT JOIN bdvh_exams e ON s.exam_id = e.exam_id
+            WHERE s.sub_id = ?
+        ");
+        $stmt->execute([$subId]);
+        $row = $stmt->fetch();
+        if (!$row) {
+            json_out(['status' => 'error', 'message' => 'Không tìm thấy bài nộp tương ứng.'], 404);
+        }
+
+        $questions = json_decode($row['questions_json'] ?? '[]', true) ?: [];
+        $answersGiven = json_decode($row['answers_given'] ?? '[]', true) ?: [];
+        $aiEval = json_decode($row['ai_evaluation'] ?? '{}', true) ?: [];
+
+        // Nếu là Giảng viên (session bdvh_teacher_auth) -> Luôn mở khóa 100% lời giải chi tiết
+        $isTeacher = !empty($_SESSION['bdvh_teacher_auth']);
+        $hasAccess = $isTeacher || !empty($_SESSION['bdvh_has_ai_access']) || ((int)$row['is_free_trial'] === 1);
+
+        $details = [];
+        foreach ($questions as $idx => $q) {
+            $chosen = $answersGiven[$idx] ?? -1;
+            $isCorrect = false;
+            $qType = $q['type'] ?? 'choice';
+
+            if ($qType === 'choice') {
+                $isCorrect = ((int)$chosen === (int)$q['ans']);
+            } elseif ($qType === 'true_false') {
+                $allMatch = true;
+                if (is_array($chosen)) {
+                    foreach ($q['ans'] as $sIdx => $trueVal) {
+                        if (!isset($chosen[$sIdx]) || (int)$chosen[$sIdx] !== (int)$trueVal) {
+                            $allMatch = false;
+                            break;
+                        }
+                    }
+                } else {
+                    $allMatch = false;
+                }
+                $isCorrect = $allMatch;
+            } elseif ($qType === 'short') {
+                $strChosen = mb_strtolower(trim((string)$chosen));
+                $strAns = mb_strtolower(trim((string)$q['ans']));
+                $isCorrect = ($strChosen === $strAns);
+            }
+
+            $details[] = [
+                'idx' => $idx,
+                'q' => $q['q'],
+                'type' => $qType,
+                'opts' => $q['opts'] ?? [],
+                'items' => $q['items'] ?? [],
+                'chosen' => $chosen,
+                'correct_ans' => $q['ans'],
+                'is_correct' => $isCorrect,
+                'explanation' => $hasAccess ? ($q['exp'] ?? '') : '',
+                'is_explanation_locked' => !$hasAccess
+            ];
+        }
+
+        json_out([
+            'status' => 'success',
+            'submission' => [
+                'sub_id' => (int)$row['sub_id'],
+                'submission_id' => (int)$row['sub_id'],
+                'user_id' => (int)$row['user_id'],
+                'student_name' => $row['student_name'] ?: 'Học sinh',
+                'student_phone' => $row['student_phone'] ?: '',
+                'exam_title' => $row['exam_title'] ?: 'Bài thi',
+                'score' => (float)$row['score'],
+                'duration_seconds' => (int)$row['duration_seconds'],
+                'correct_count' => (int)$row['correct_count'],
+                'total_questions' => (int)$row['total_questions'],
+                'created_at' => $row['created_at'],
+                'ai_evaluation' => $aiEval,
+                'details' => $details
+            ]
+        ]);
+        break;
+
     // 7. Yêu cầu nạp MoMo bonus / Nâng cấp
     case 'request_bonus':
         if (!isset($_SESSION['bdvh_user_id'])) {
