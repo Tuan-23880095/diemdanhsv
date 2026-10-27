@@ -70,6 +70,11 @@
 
       <!-- Khung thông tin tài khoản / Đăng nhập -->
       <div id="auth-box" class="flex items-center gap-3">
+
+        <button onclick="openClassModal()" class="bg-amber-500 hover:bg-amber-600 text-white px-3.5 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-sm">
+          <i class="fas fa-key"></i> <span>Mã Lớp Học (4 ký tự)</span>
+        </button>
+
         <button onclick="openModal('modal-guest')" class="bg-luc hover:bg-emerald-800 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-sm">
           <i class="fas fa-user-plus"></i> <span>Tạo Tài Khoản Khách</span>
         </button>
@@ -82,13 +87,13 @@
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
       <div class="max-w-2xl space-y-4">
         <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-emerald-200 border border-white/20">
-          <i class="fas fa-robot text-emerald-400"></i> Trợ lý Khảo thí Thông minh tích hợp Gemini AI
+          <i class="fas fa-robot text-emerald-400"></i> Hệ Thống Khảo Thí & Phân Tích Năng Lực Tư Duy
         </div>
         <h2 class="text-3xl md:text-4xl font-bold title-serif leading-tight">
           Hệ Thống Luyện Thi & Đánh Giá Năng Lực Trực Tuyến
         </h2>
         <p class="text-white/80 text-sm md:text-base leading-relaxed">
-          Kho đề thi trắc nghiệm bấm giờ từ <b>Lớp 6 đến Lớp 12</b> và bộ đề thi thử <b>Đánh Giá Năng Lực ĐHQG-HCM</b>. Sau mỗi bài nộp, Gemini AI sẽ phân tích ngay lỗ hổng tư duy và gợi ý mẹo giải nhanh từ Thầy Đinh Quốc Tuấn.
+          Kho đề thi trắc nghiệm bấm giờ từ <b>Lớp 6 đến Lớp 12</b> và bộ đề thi thử <b>Đánh Giá Năng Lực ĐHQG-HCM</b>. Sau mỗi bài nộp, Hệ thống sẽ phân tích ngay lỗ hổng tư duy và gợi ý phương pháp giải tối ưu từ Thầy Đinh Quốc Tuấn.
         </p>
         <div class="flex flex-wrap gap-4 pt-2">
           <div class="flex items-center gap-2 text-xs bg-white/15 px-3 py-1.5 rounded-lg border border-white/10">
@@ -115,11 +120,11 @@
             <span class="font-bold text-luc text-sm">Miễn phí 100%</span>
           </div>
           <div class="bg-giay p-3 rounded-xl border border-bac flex justify-between items-center">
-            <span class="text-xs text-gray-600 font-medium">Lượt nhận xét AI:</span>
+            <span class="text-xs text-gray-600 font-medium">Lượt phân tích chuyên sâu:</span>
             <span id="free-count" class="font-bold text-lam text-base">2 lượt</span>
           </div>
           <button onclick="openBonusModal(5000)" class="w-full bg-gradient-to-r from-son to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow">
-            <i class="fas fa-heart"></i> Ủng hộ Thầy 5.000đ (+5 lượt AI)
+            <i class="fas fa-heart"></i> Ủng hộ Thầy 5.000đ (+5 lượt phân tích chuyên sâu)
           </button>
           <p class="text-[10px] text-gray-500 text-center italic">
             Học sinh khó khăn có thể gửi email về <a href="mailto:dqtuanhcmus@gmail.com" class="text-luc underline">dqtuanhcmus@gmail.com</a> để Thầy hỗ trợ miễn phí.
@@ -166,7 +171,7 @@
         <button onclick="closeModal('modal-guest')" class="text-gray-400 hover:text-gray-700 text-xl"><i class="fas fa-times"></i></button>
       </div>
       <p class="text-xs text-gray-600 mb-4">
-        Mỗi học sinh/khách được cấp ngay <b>2 lượt làm bài thi tính giờ hoàn toàn miễn phí</b> có Gemini AI nhận xét bài làm!
+        Mỗi học sinh/khách được cấp ngay <b>2 lượt làm bài thi tính giờ hoàn toàn miễn phí</b> có Hệ Thống phân tích tư duy bài làm!
       </p>
       <form onsubmit="handleGuestLogin(event)" class="space-y-4">
         <div>
@@ -209,7 +214,7 @@
       
       <div class="space-y-4 text-xs text-gray-700 leading-relaxed">
         <p class="bg-emerald-50 text-luc p-3 rounded-xl border border-emerald-200">
-          🌱 <i>"Mỗi lượt chấm bài chi tiết và phân tích tư duy đều tiêu tốn chi phí điện toán máy chủ AI của Thầy. Em hãy ủng hộ Thầy một ly trà đá (5.000đ) để cùng Thầy duy trì nền tảng và mở thêm các lượt rèn luyện tiếp theo nhé!"</i>
+          🌱 <i>"Mỗi lượt chấm bài chi tiết và phân tích tư duy đều tiêu tốn chi phí điện toán tài nguyên máy chủ hệ thống của Thầy. Em hãy ủng hộ Thầy một ly trà đá (5.000đ) để cùng Thầy duy trì nền tảng và mở thêm các lượt rèn luyện tiếp theo nhé!"</i>
         </p>
 
         <!-- Lựa chọn gói bonus -->
@@ -259,7 +264,7 @@
         <p class="text-white/60">Chịu trách nhiệm học thuật: ThS. Đinh Quốc Tuấn · Email: <a href="mailto:dqtuanhcmus@gmail.com" class="text-emerald-400 hover:underline">dqtuanhcmus@gmail.com</a></p>
       </div>
       <div class="flex items-center gap-4">
-        <span class="text-white/40">Nền tảng tích hợp Gemini AI</span>
+        <span class="text-white/40">Nền tảng tích hợp Hệ Thống Phân Tích Tư Duy</span>
         <div class="dqt-logo-o w-8 h-8">
           <img src="assets/logo-sen.svg" alt="Logo Sen" class="w-full h-full">
         </div>
@@ -340,7 +345,7 @@
                 <p class="text-xs text-gray-600 line-clamp-2 mb-4 leading-relaxed">${esc(ex.description || 'Đề rèn luyện phản xạ tính toán và tư duy.')}</p>
               </div>
               <div class="pt-3 border-t border-bac flex justify-between items-center">
-                <span class="text-xs text-gray-500 font-medium"><i class="fas fa-brain text-luc"></i> Gemini AI chấm</span>
+                <span class="text-xs text-gray-500 font-medium"><i class="fas fa-brain text-luc"></i> Hệ Thống Khảo Thí chấm</span>
                 <button onclick="startExam(${ex.exam_id})" class="bg-lam hover:bg-blue-900 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
                   <span>Vào thi ngay</span> <i class="fas fa-arrow-right"></i>
                 </button>
@@ -431,5 +436,75 @@
 
     document.addEventListener('DOMContentLoaded', init);
   </script>
+
+  <!-- MODAL NHẬP MÃ LỚP 4 KÝ TỰ -->
+  <div id="modal-class" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-bac space-y-5 animate-scaleIn">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg font-bold">
+            <i class="fas fa-key"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg text-muc title-serif">Mã Lớp Học 4 Ký Tự</h3>
+            <p class="text-xs text-gray-500">Dành riêng cho học sinh của Thầy Tuấn & GV Đối Tác</p>
+          </div>
+        </div>
+        <button onclick="closeClassModal()" class="text-gray-400 hover:text-muc text-lg">✕</button>
+      </div>
+
+      <p class="text-xs text-gray-600 leading-relaxed">
+        Nhập mã 4 ký tự do Thầy Tuấn hoặc Thầy/Cô phụ trách lớp chiếu trên bảng hoặc cung cấp để <b>mở khóa học tập & nhận xét Hệ Thống Khảo Thí không giới hạn</b>:
+      </p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Họ và tên của em:</label>
+          <input type="text" id="classStudentName" placeholder="Ví dụ: Nguyễn Văn An" class="w-full px-3.5 py-2 border border-bac rounded-xl text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Mã 4 ký tự:</label>
+          <input type="text" id="classCodeInput" maxlength="6" placeholder="VD: 7K8B" class="w-full px-4 py-3 border-2 border-amber-400 bg-amber-50/40 rounded-xl text-center text-2xl font-black uppercase tracking-widest text-slate-800 outline-none focus:border-amber-600 font-mono">
+        </div>
+
+        <button onclick="submitClassCode()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-sm rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+          <i class="fas fa-unlock"></i> Xác Nhận Vào Lớp
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    function openClassModal() {
+      document.getElementById('modal-class').classList.remove('hidden');
+      setTimeout(() => document.getElementById('classCodeInput').focus(), 100);
+    }
+    function closeClassModal() {
+      document.getElementById('modal-class').classList.add('hidden');
+    }
+    async function submitClassCode() {
+      const code = document.getElementById('classCodeInput').value.trim();
+      const name = document.getElementById('classStudentName').value.trim();
+      if (!code) return alert("Vui lòng nhập mã lớp.");
+      try {
+        const res = await fetch('api.php?action=verify_class_code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, student_name: name })
+        });
+        const data = await res.json();
+        alert(data.message || data.status);
+        if (data.status === 'success') {
+          closeClassModal();
+          location.reload();
+        }
+      } catch (e) {
+        alert("Lỗi: " + e.message);
+      }
+    }
+  </script>
+
 </body>
 </html>

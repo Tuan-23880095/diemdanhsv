@@ -110,10 +110,10 @@
       <!-- NÚT NỘP BÀI -->
       <div class="pt-6 border-t border-bac flex flex-col sm:flex-row justify-between items-center gap-4">
         <p class="text-xs text-gray-500 italic">
-          <i class="fas fa-info-circle text-luc"></i> Sau khi nộp bài, Gemini AI sẽ tự động phân tích ma trận điểm và chỉ ra lỗi sai.
+          <i class="fas fa-info-circle text-luc"></i> Sau khi nộp bài, Hệ thống sẽ tự động tổng hợp ma trận điểm, phân tích tốc độ và chỉ ra lỗ hổng kiến thức.
         </p>
         <button type="submit" id="btn-submit" class="w-full sm:w-auto bg-luc hover:bg-emerald-800 text-white font-bold py-3.5 px-8 rounded-xl text-sm transition shadow-lg flex items-center justify-center gap-2">
-          <i class="fas fa-paper-plane"></i> <span>Nộp Bài & Nhận Đánh Giá AI</span>
+          <i class="fas fa-paper-plane"></i> <span>Nộp Bài & Xem Phân Tích Chuyên Sâu</span>
         </button>
       </div>
     </form>
@@ -127,7 +127,7 @@
       </div>
       <h3 class="font-bold text-lg text-lam title-serif mb-2">Đã Hết 2 Lượt Thi Miễn Phí!</h3>
       <p class="text-xs text-gray-600 leading-relaxed mb-6">
-        Em đã dùng hết 2 lượt làm bài miễn phí của tài khoản khách. Hãy ủng hộ Thầy một ly trà đá (5.000đ) để mở thêm 5 lượt thi thử tính giờ và nhận phân tích độc quyền từ Gemini AI nhé!
+        Em đã dùng hết 2 lượt làm bài miễn phí của tài khoản khách. Hãy ủng hộ Thầy một ly trà đá (5.000đ) để mở thêm 5 lượt thi thử tính giờ và nhận phân tích sư phạm chuyên sâu từ Hệ Thống nhé!
       </p>
       <div class="space-y-2">
         <a href="index.html" class="block w-full bg-luc text-white font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-800 transition">
@@ -148,6 +148,10 @@
     let timeRemainingSeconds = 0;
     let durationSeconds = 0;
     const userAnswers = {};
+    let isExamStarted = false;
+    let currentStudentName = sessionStorage.getItem('bdvh_student_name') || '';
+    let currentClassCode = sessionStorage.getItem('bdvh_class_code') || '';
+    let isUnlocked = sessionStorage.getItem('bdvh_unlocked') === '1';
 
     async function init() {
       if (!examId) {
@@ -252,8 +256,20 @@
         window.MathJax.typesetPromise();
       }
 
-      startTimer(examData.time_minutes * 60);
       updateProgress();
+
+      // Kiểm tra trạng thái học sinh & mã lớp
+      if (isUnlocked && currentStudentName) {
+        updateCandidateHeader(currentStudentName, currentClassCode, true);
+        if (!isExamStarted) {
+          isExamStarted = true;
+          startTimer(examData.time_minutes * 60);
+        }
+      } else {
+        updateCandidateHeader(currentStudentName || 'Chưa định danh', '', false);
+        // Hiển thị khung inbox nhập mã lớp & họ tên trước khi bắt đầu làm bài
+        openThiClassModal(true);
+      }
     }
 
     function selectOption(qIdx, optIdx) {
@@ -335,7 +351,7 @@
 
       const btn = document.getElementById('btn-submit');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Đang nộp bài & Gemini AI chấm...</span>';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Đang nộp bài & Hệ Thống Khảo Thí chấm...</span>';
 
       try {
         const res = await fetch('api.php', {
@@ -344,6 +360,8 @@
           body: JSON.stringify({
             action: 'submit_exam',
             exam_id: examId,
+            student_name: currentStudentName,
+            class_code: currentClassCode,
             answers: userAnswers,
             duration_seconds: durationSeconds
           })
@@ -369,5 +387,150 @@
 
     document.addEventListener('DOMContentLoaded', init);
   </script>
+
+  <!-- MODAL NHẬP MÃ LỚP TRƯỚC KHI BẮT ĐẦU LÀM BÀI -->
+  <div id="modal-class-thi" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-bac space-y-5 animate-scaleIn text-left">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-luc flex items-center justify-center text-xl font-bold shadow-sm">
+            <i class="fas fa-unlock-alt"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-luc bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Phòng Thi Trực Tuyến</span>
+            <h3 class="font-bold text-lg text-muc title-serif mt-0.5">Xác Thực & Mở Khóa Lời Giải</h3>
+          </div>
+        </div>
+        <button id="btn-close-class-modal" onclick="closeThiClassModal()" class="text-gray-400 hover:text-muc text-lg hidden">✕</button>
+      </div>
+
+      <p class="text-xs text-gray-600 leading-relaxed">
+        Nhập <b>Họ tên</b> và <b>Mã lớp 4 ký tự</b> của Thầy Đinh Quốc Tuấn (chiếu trên bảng) để mở khóa trọn bộ <b>Lời giải chi tiết</b> và nhận xét tư duy chuyên sâu sau khi nộp bài.
+      </p>
+
+      <div class="space-y-3 pt-1">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Họ và tên thí sinh <span class="text-son">*</span>:</label>
+          <input type="text" id="candidateNameInput" required placeholder="Ví dụ: Nguyễn Minh Triết" class="w-full px-3.5 py-2.5 border border-bac rounded-xl text-sm focus:outline-none focus:border-luc focus:ring-1 focus:ring-luc">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Mã lớp / Mã mở khóa (4 ký tự):</label>
+          <div class="relative">
+            <input type="text" id="thiClassCodeInput" maxlength="8" placeholder="MÃ 4 KÝ TỰ (VD: ABCD)" class="w-full px-4 py-3 border-2 border-amber-400 bg-amber-50/40 rounded-xl text-center text-xl font-black uppercase tracking-widest text-slate-800 outline-none font-mono">
+            <span class="absolute right-3 top-3 text-xs text-amber-600 font-bold"><i class="fas fa-qrcode"></i></span>
+          </div>
+          <p class="text-[11px] text-gray-400 mt-1">Mã chiếu trực tiếp trên máy chiếu tại <code class="text-luc font-bold">bdvh.diemdanhsv.com/thay-tuan.html</code></p>
+        </div>
+
+        <button onclick="submitThiClassCode()" class="w-full py-3 bg-luc hover:bg-emerald-800 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+          <i class="fas fa-key"></i> <span>Xác Nhận & Bắt Đầu Làm Bài</span>
+        </button>
+
+        <div class="text-center pt-2 border-t border-slate-100">
+          <button type="button" onclick="startFreeTrialWithoutCode()" class="text-xs text-gray-500 hover:text-lam underline font-medium cursor-pointer">
+            Em chưa có mã lớp (Làm bài tự do)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function updateCandidateHeader(name, code, unlocked) {
+      const el = document.getElementById('candidate-name');
+      if (!el) return;
+      if (unlocked) {
+        el.innerHTML = `Thí sinh: <b class="text-muc">${esc(name)}</b> · <span class="text-luc font-bold"><i class="fas fa-check-circle"></i> Đã mở khóa lời giải (${esc(code)})</span> <button onclick="openThiClassModal(false)" class="text-[10px] text-gray-400 hover:text-luc ml-1 underline cursor-pointer">Đổi</button>`;
+      } else {
+        el.innerHTML = `Thí sinh: <b class="text-muc">${esc(name || 'Chưa định danh')}</b> · <button onclick="openThiClassModal(false)" class="text-[10px] text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-full font-bold ml-1 transition cursor-pointer"><i class="fas fa-key"></i> Nhập mã mở khóa</button>`;
+      }
+    }
+
+    function openThiClassModal(isStarting = false) {
+      const m = document.getElementById('modal-class-thi');
+      const btnClose = document.getElementById('btn-close-class-modal');
+      if (isStarting) {
+        btnClose.classList.add('hidden');
+      } else {
+        btnClose.classList.remove('hidden');
+      }
+      document.getElementById('candidateNameInput').value = currentStudentName;
+      document.getElementById('thiClassCodeInput').value = currentClassCode;
+      m.classList.remove('hidden');
+      setTimeout(() => {
+        if (!currentStudentName) {
+          document.getElementById('candidateNameInput').focus();
+        } else {
+          document.getElementById('thiClassCodeInput').focus();
+        }
+      }, 100);
+    }
+
+    function closeThiClassModal() {
+      document.getElementById('modal-class-thi').classList.add('hidden');
+    }
+
+    async function submitThiClassCode() {
+      const name = document.getElementById('candidateNameInput').value.trim();
+      const code = document.getElementById('thiClassCodeInput').value.trim().toUpperCase();
+      if (!name) {
+        alert("Vui lòng điền Họ và tên thí sinh để Thầy ghi nhận điểm số.");
+        document.getElementById('candidateNameInput').focus();
+        return;
+      }
+      if (!code) {
+        alert("Vui lòng nhập Mã lớp 4 ký tự của Thầy để mở khóa lời giải, hoặc bấm 'Em chưa có mã lớp' ở bên dưới.");
+        document.getElementById('thiClassCodeInput').focus();
+        return;
+      }
+
+      try {
+        const res = await fetch('api.php?action=verify_class_code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code, student_name: name })
+        });
+        const d = await res.json();
+        if (d.status === 'success') {
+          currentStudentName = name;
+          currentClassCode = code;
+          isUnlocked = true;
+          sessionStorage.setItem('bdvh_student_name', name);
+          sessionStorage.setItem('bdvh_class_code', code);
+          sessionStorage.setItem('bdvh_unlocked', '1');
+          updateCandidateHeader(name, code, true);
+          closeThiClassModal();
+          if (!isExamStarted && examData) {
+            isExamStarted = true;
+            startTimer(examData.time_minutes * 60);
+          }
+          alert(d.message || "Xác thực mã lớp thành công! Đã mở khóa trọn bộ lời giải chi tiết.");
+        } else {
+          alert(d.message || "Mã lớp không hợp lệ hoặc đã hết hạn.");
+        }
+      } catch (e) {
+        alert("Lỗi kết nối khi kiểm tra mã lớp: " + e.message);
+      }
+    }
+
+    function startFreeTrialWithoutCode() {
+      const name = document.getElementById('candidateNameInput').value.trim();
+      if (!name) {
+        alert("Vui lòng điền Họ và tên thí sinh để Thầy ghi nhận điểm số.");
+        document.getElementById('candidateNameInput').focus();
+        return;
+      }
+      currentStudentName = name;
+      sessionStorage.setItem('bdvh_student_name', name);
+      updateCandidateHeader(name, '', false);
+      closeThiClassModal();
+      if (!isExamStarted && examData) {
+        isExamStarted = true;
+        startTimer(examData.time_minutes * 60);
+      }
+    }
+  </script>
+
 </body>
 </html>

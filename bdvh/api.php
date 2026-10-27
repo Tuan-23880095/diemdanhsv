@@ -8,7 +8,7 @@ declare(strict_types=1);
  * Tính năng chính:
  * 1. Đăng ký & Đăng nhập tài khoản Khách (Guest Account) nhanh chóng.
  * 2. Kiểm soát giới hạn: Mỗi tài khoản khách được làm bài MIỄN PHÍ 2 LẦN.
- * 3. Tích hợp Gemini AI Engine đánh giá năng lực tư duy, bắt lỗi sai và gợi ý mẹo giải nhanh.
+ * 3. Tích hợp Hệ Thống Phân Tích Khảo Thí Chuyên Sâu đánh giá năng lực tư duy, bắt lỗi sai và gợi ý mẹo giải nhanh.
  * 4. Hệ thống Paywall & MoMo Bonus 5.000đ / Liên hệ nâng cấp email dqtuanhcmus@gmail.com.
  */
 
@@ -52,202 +52,232 @@ if (!$pdo) {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 }
 
+$dbDriver = $pdo ? $pdo->getAttribute(PDO::ATTR_DRIVER_NAME) : 'sqlite';
+$nowSql = ($dbDriver === 'sqlite') ? "datetime('now','localtime')" : "NOW()";
+
 // Khởi tạo bảng tự động nếu chưa có
 function ensure_bdvh_tables(PDO $db): void {
+    global $nowSql;
     $driver = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
     if ($driver === 'sqlite') {
-        $db->exec("
-            CREATE TABLE IF NOT EXISTS bdvh_users (
-                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE NOT NULL,
-                full_name TEXT NOT NULL,
-                phone TEXT,
-                email TEXT,
-                password_hash TEXT,
-                grade TEXT DEFAULT 'L10',
-                role TEXT DEFAULT 'GUEST',
-                free_trials_left INTEGER DEFAULT 2,
-                paid_trials_left INTEGER DEFAULT 0,
-                bonus_accumulated INTEGER DEFAULT 0,
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-                last_login TEXT
-            );
-            CREATE TABLE IF NOT EXISTS bdvh_exams (
-                exam_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                exam_code TEXT UNIQUE NOT NULL,
-                grade TEXT NOT NULL,
-                subject TEXT NOT NULL,
-                title TEXT NOT NULL,
-                description TEXT,
-                time_minutes INTEGER DEFAULT 45,
-                questions_json TEXT NOT NULL,
-                competency_matrix TEXT,
-                status TEXT DEFAULT 'ACTIVE',
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP
-            );
-            CREATE TABLE IF NOT EXISTS bdvh_submissions (
-                sub_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                exam_id INTEGER NOT NULL,
-                score REAL NOT NULL,
-                duration_seconds INTEGER NOT NULL,
-                answers_given TEXT NOT NULL,
-                correct_count INTEGER DEFAULT 0,
-                total_questions INTEGER DEFAULT 0,
-                ai_evaluation TEXT,
-                is_free_trial INTEGER DEFAULT 1,
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP
-            );
-            CREATE TABLE IF NOT EXISTS bdvh_transactions (
-                trans_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                amount INTEGER NOT NULL,
-                trials_added INTEGER NOT NULL,
-                payment_method TEXT DEFAULT 'MOMO',
-                trans_code TEXT,
-                memo TEXT,
-                status TEXT DEFAULT 'PENDING',
-                created_at TEXT DEFAULT CURRENT_TIMESTAMP
-            );
-        ");
-        
-        // Seed nếu rỗng
-        $st = $db->query("SELECT COUNT(*) as c FROM bdvh_exams");
-        if ((int)$st->fetch()['c'] === 0) {
-            seed_default_exams($db);
+        try {
+            $db->exec("
+                CREATE TABLE IF NOT EXISTS bdvh_users (
+                    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT UNIQUE NOT NULL,
+                    full_name TEXT NOT NULL,
+                    phone TEXT,
+                    email TEXT,
+                    password_hash TEXT,
+                    grade TEXT DEFAULT 'L10',
+                    role TEXT DEFAULT 'GUEST',
+                    free_trials_left INTEGER DEFAULT 2,
+                    paid_trials_left INTEGER DEFAULT 0,
+                    bonus_accumulated INTEGER DEFAULT 0,
+                    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                    last_login TEXT
+                );
+                CREATE TABLE IF NOT EXISTS bdvh_exams (
+                    exam_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    exam_code TEXT UNIQUE NOT NULL,
+                    grade TEXT NOT NULL,
+                    subject TEXT NOT NULL,
+                    title TEXT NOT NULL,
+                    description TEXT,
+                    time_minutes INTEGER DEFAULT 45,
+                    questions_json TEXT NOT NULL,
+                    competency_matrix TEXT,
+                    status TEXT DEFAULT 'ACTIVE',
+                    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                );
+                CREATE TABLE IF NOT EXISTS bdvh_submissions (
+                    sub_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    exam_id INTEGER NOT NULL,
+                    score REAL NOT NULL,
+                    duration_seconds INTEGER NOT NULL,
+                    answers_given TEXT NOT NULL,
+                    correct_count INTEGER DEFAULT 0,
+                    total_questions INTEGER DEFAULT 0,
+                    ai_evaluation TEXT,
+                    is_free_trial INTEGER DEFAULT 1,
+                    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                );
+                CREATE TABLE IF NOT EXISTS bdvh_settings (
+                    setting_key TEXT PRIMARY KEY,
+                    setting_value TEXT
+                );
+                CREATE TABLE IF NOT EXISTS bdvh_teachers (
+                    teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    email TEXT UNIQUE NOT NULL,
+                    full_name TEXT NOT NULL,
+                    phone TEXT,
+                    school_name TEXT,
+                    class_name TEXT,
+                    class_code TEXT UNIQUE,
+                    is_active INTEGER DEFAULT 1,
+                    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                );
+                CREATE TABLE IF NOT EXISTS bdvh_class_codes (
+                    code_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    code TEXT UNIQUE NOT NULL,
+                    teacher_id INTEGER DEFAULT 1,
+                    label TEXT DEFAULT 'Lớp Thầy Đinh Quốc Tuấn',
+                    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                    expires_at TEXT,
+                    is_active INTEGER DEFAULT 1,
+                    used_count INTEGER DEFAULT 0
+                );
+                CREATE TABLE IF NOT EXISTS bdvh_transactions (
+                    trans_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    amount INTEGER NOT NULL,
+                    trials_added INTEGER NOT NULL,
+                    payment_method TEXT DEFAULT 'MOMO',
+                    trans_code TEXT,
+                    memo TEXT,
+                    status TEXT DEFAULT 'PENDING',
+                    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                );
+            ");
+            $st = $db->query("SELECT COUNT(*) as c FROM bdvh_exams");
+            if ((int)$st->fetch()['c'] === 0) {
+                seed_default_exams($db);
+            }
+        } catch (Throwable $e) {
+            error_log("Lỗi khởi tạo bảng SQLite: " . $e->getMessage());
         }
     } else {
         // MySQL MariaDB trên Hostinger
-        $db->exec("
-            CREATE TABLE IF NOT EXISTS bdvh_users (
-                user_id INT AUTO_INCREMENT PRIMARY KEY,
-                username VARCHAR(60) NOT NULL UNIQUE,
-                full_name VARCHAR(120) NOT NULL,
-                phone VARCHAR(20) NULL,
-                email VARCHAR(160) NULL,
-                password_hash VARCHAR(255) NULL,
-                grade VARCHAR(20) NOT NULL DEFAULT 'L10',
-                role ENUM('GUEST', 'MEMBER', 'VIP', 'ADMIN') NOT NULL DEFAULT 'GUEST',
-                free_trials_left INT NOT NULL DEFAULT 2,
-                paid_trials_left INT NOT NULL DEFAULT 0,
-                bonus_accumulated INT NOT NULL DEFAULT 0,
-                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                last_login DATETIME NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        try {
+            $db->exec("
+                CREATE TABLE IF NOT EXISTS bdvh_users (
+                    user_id INT AUTO_INCREMENT PRIMARY KEY,
+                    username VARCHAR(60) NOT NULL UNIQUE,
+                    full_name VARCHAR(120) NOT NULL,
+                    phone VARCHAR(20) NULL,
+                    email VARCHAR(160) NULL,
+                    password_hash VARCHAR(255) NULL,
+                    grade VARCHAR(20) NOT NULL DEFAULT 'L10',
+                    role VARCHAR(50) NOT NULL DEFAULT 'GUEST',
+                    free_trials_left INT NOT NULL DEFAULT 2,
+                    paid_trials_left INT NOT NULL DEFAULT 0,
+                    bonus_accumulated INT NOT NULL DEFAULT 0,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    last_login DATETIME NULL
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-            CREATE TABLE IF NOT EXISTS bdvh_exams (
-                exam_id INT AUTO_INCREMENT PRIMARY KEY,
-                exam_code VARCHAR(50) NOT NULL UNIQUE,
-                grade VARCHAR(20) NOT NULL,
-                subject VARCHAR(40) NOT NULL,
-                title VARCHAR(255) NOT NULL,
-                description TEXT NULL,
-                time_minutes INT NOT NULL DEFAULT 45,
-                questions_json LONGTEXT NOT NULL,
-                competency_matrix LONGTEXT NULL,
-                status ENUM('ACTIVE', 'DRAFT') NOT NULL DEFAULT 'ACTIVE',
-                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                CREATE TABLE IF NOT EXISTS bdvh_exams (
+                    exam_id INT AUTO_INCREMENT PRIMARY KEY,
+                    exam_code VARCHAR(50) NOT NULL UNIQUE,
+                    grade VARCHAR(20) NOT NULL,
+                    subject VARCHAR(40) NOT NULL,
+                    title VARCHAR(255) NOT NULL,
+                    description TEXT NULL,
+                    time_minutes INT NOT NULL DEFAULT 45,
+                    questions_json LONGTEXT NOT NULL,
+                    competency_matrix LONGTEXT NULL,
+                    status ENUM('ACTIVE', 'DRAFT') NOT NULL DEFAULT 'ACTIVE',
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-            CREATE TABLE IF NOT EXISTS bdvh_submissions (
-                sub_id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
-                exam_id INT NOT NULL,
-                score DECIMAL(4,2) NOT NULL,
-                duration_seconds INT NOT NULL,
-                answers_given LONGTEXT NOT NULL,
-                correct_count INT NOT NULL DEFAULT 0,
-                total_questions INT NOT NULL DEFAULT 0,
-                ai_evaluation LONGTEXT NULL,
-                is_free_trial TINYINT(1) NOT NULL DEFAULT 1,
-                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                CREATE TABLE IF NOT EXISTS bdvh_submissions (
+                    sub_id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id INT NOT NULL,
+                    exam_id INT NOT NULL,
+                    score DECIMAL(4,2) NOT NULL,
+                    duration_seconds INT NOT NULL,
+                    answers_given LONGTEXT NOT NULL,
+                    correct_count INT NOT NULL DEFAULT 0,
+                    total_questions INT NOT NULL DEFAULT 0,
+                    ai_evaluation LONGTEXT NULL,
+                    is_free_trial TINYINT(1) NOT NULL DEFAULT 1,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-            CREATE TABLE IF NOT EXISTS bdvh_transactions (
-                trans_id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
-                amount INT NOT NULL,
-                trials_added INT NOT NULL,
-                payment_method VARCHAR(30) NOT NULL DEFAULT 'MOMO',
-                trans_code VARCHAR(100) NULL,
-                memo VARCHAR(120) NULL,
-                status ENUM('PENDING', 'SUCCESS', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
-                created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-        ");
-        $st = $db->query("SELECT COUNT(*) as c FROM bdvh_exams");
-        if ((int)$st->fetch()['c'] === 0) {
-            seed_default_exams($db);
+                CREATE TABLE IF NOT EXISTS bdvh_settings (
+                    setting_key VARCHAR(190) PRIMARY KEY,
+                    setting_value LONGTEXT
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+                CREATE TABLE IF NOT EXISTS bdvh_teachers (
+                    teacher_id INT AUTO_INCREMENT PRIMARY KEY,
+                    email VARCHAR(190) UNIQUE NOT NULL,
+                    full_name VARCHAR(190) NOT NULL,
+                    phone VARCHAR(30),
+                    school_name VARCHAR(190),
+                    class_name VARCHAR(100),
+                    class_code VARCHAR(50) UNIQUE,
+                    is_active TINYINT(1) DEFAULT 1,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+                CREATE TABLE IF NOT EXISTS bdvh_class_codes (
+                    code_id INT AUTO_INCREMENT PRIMARY KEY,
+                    code VARCHAR(50) UNIQUE NOT NULL,
+                    teacher_id INT DEFAULT 1,
+                    label VARCHAR(255) DEFAULT 'Lớp Thầy Đinh Quốc Tuấn',
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    expires_at DATETIME NULL,
+                    is_active TINYINT(1) DEFAULT 1,
+                    used_count INT DEFAULT 0
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+                CREATE TABLE IF NOT EXISTS bdvh_transactions (
+                    trans_id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id INT NOT NULL,
+                    amount INT NOT NULL,
+                    trials_added INT NOT NULL,
+                    payment_method VARCHAR(30) NOT NULL DEFAULT 'MOMO',
+                    trans_code VARCHAR(100) NULL,
+                    memo VARCHAR(120) NULL,
+                    status ENUM('PENDING', 'SUCCESS', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+            ");
+            try {
+                $db->exec("ALTER TABLE bdvh_users MODIFY COLUMN role VARCHAR(50) NOT NULL DEFAULT 'GUEST'");
+            } catch (Throwable $e) {}
+
+            $st = $db->query("SELECT COUNT(*) as c FROM bdvh_exams");
+            if ((int)$st->fetch()['c'] === 0) {
+                seed_default_exams($db);
+            }
+        } catch (Throwable $e) {
+            error_log("Lỗi khởi tạo bảng MySQL bdvh: " . $e->getMessage());
         }
     }
 }
 
 function seed_default_exams(PDO $db): void {
-    $exams = [
-        [
-            'TOAN06_01', 'L06', 'TOAN',
-            'Đấu Trường Toán 6: Lũy thừa và Thứ tự phép tính',
-            'Đề rèn luyện phản xạ tính toán nhanh, củng cố quy tắc nhân chia lũy thừa và ngoặc số học.',
-            20,
-            json_encode([
-                ["q" => "Kết quả của phép tính $2^3 \\cdot 2^2$ bằng bao nhiêu?", "opts" => ['$2^5 = 32$', '$2^6 = 64$', '$4^5$', '$4^6$'], "ans" => 0, "exp" => "Quy tắc nhân lũy thừa cùng cơ số: $a^m \\cdot a^n = a^{m+n} \\Rightarrow 2^3 \\cdot 2^2 = 2^5 = 32$."],
-                ["q" => "Giá trị của biểu thức $15 + 5 \\cdot 2^2$ là:", "opts" => ["40", "35", "80", "25"], "ans" => 1, "exp" => "Lũy thừa trước: $2^2 = 4$. Nhân: $5 \\cdot 4 = 20$. Cộng: $15 + 20 = 35$."],
-                ["q" => "Tìm $x$ biết $3^x = 27$?", "opts" => ['$x=2$', '$x=3$', '$x=4$', '$x=9$'], "ans" => 1, "exp" => "Vì $27 = 3^3$ nên $3^x = 3^3 \\Rightarrow x = 3$."],
-                ["q" => "Số nào sau đây chia hết cho cả 2 và 5?", "opts" => ["124", "235", "450", "502"], "ans" => 2, "exp" => "Số có chữ số tận cùng là 0 thì chia hết cho cả 2 và 5."],
-                ["q" => "Thứ tự thực hiện đúng các dấu ngoặc trong biểu thức là:", "opts" => ["( ) $\\rightarrow$ [ ] $\\rightarrow$ { }", "{ } $\\rightarrow$ [ ] $\\rightarrow$ ( )", "[ ] $\\rightarrow$ ( ) $\\rightarrow$ { }", "( ) $\\rightarrow$ { } $\\rightarrow$ [ ]"], "ans" => 0, "exp" => "Thực hiện ngoặc tròn ( ) trước, sau đó ngoặc vuông [ ], sau cùng là ngoặc nhọn { }."]
-            ], JSON_UNESCAPED_UNICODE)
-        ],
-        [
-            'TOAN07_01', 'L07', 'TOAN',
-            'Đấu Trường Toán 7: Tập hợp số hữu tỉ & Lũy thừa',
-            'Kiểm tra định nghĩa số hữu tỉ, quy tắc cộng trừ nhân chia và giá trị tuyệt đối.',
-            25,
-            json_encode([
-                ["q" => "Khẳng định nào sau đây là ĐÚNG về số hữu tỉ?", "opts" => ["Mọi số nguyên đều là số hữu tỉ", "Số hữu tỉ chỉ gồm phân số dương", "Số 0 không phải là số hữu tỉ", "$\\pi$ là một số hữu tỉ"], "ans" => 0, "exp" => "Mọi số nguyên $a$ đều viết được thành $a/1$ nên là số hữu tỉ."],
-                ["q" => "Kết quả của phép tính $(-\\frac{2}{3})^2$ là:", "opts" => ["$-\\frac{4}{9}$", "$\\frac{4}{9}$", "$-\\frac{4}{6}$", "$\\frac{4}{6}$"], "ans" => 1, "exp" => "Bình phương số âm ra số dương: $(-2/3)^2 = 4/9$."],
-                ["q" => "Giá trị của biểu thức $\\frac{1}{2} - \\frac{3}{4} + \\frac{5}{2}$ bằng:", "opts" => ["$\\frac{9}{4}$", "$\\frac{7}{4}$", "$\\frac{5}{4}$", "2"], "ans" => 0, "exp" => "Quy đồng mẫu 4: $(2 - 3 + 10)/4 = 9/4$."],
-                ["q" => "Nếu $|x| = 2,5$ thì giá trị của $x$ là:", "opts" => ["$x = 2,5$", "$x = -2,5$", "$x = 2,5$ hoặc $x = -2,5$", "$x = 5$"], "ans" => 2, "exp" => "Giá trị tuyệt đối bằng 2,5 thì $x$ nhận cả hai giá trị đối nhau $\\pm 2,5$."],
-                ["q" => "Cho $\\frac{x}{3} = \\frac{8}{12}$. Giá trị của $x$ là:", "opts" => ["1", "2", "3", "4"], "ans" => 1, "exp" => "$x = (3 \\cdot 8)/12 = 2$."]
-            ], JSON_UNESCAPED_UNICODE)
-        ],
-        [
-            'TOAN10_01', 'L10', 'TOAN',
-            'Toán 10: Mệnh đề, Tập hợp & Bất phương trình',
-            'Rèn luyện tư duy logic mệnh đề, các phép toán tập hợp và bất phương trình bậc nhất hai ẩn.',
-            30,
-            json_encode([
-                ["q" => "Mệnh đề phủ định của $P$: \"$\\forall x \\in \\mathbb{R}, x^2 > 0$\" là:", "opts" => ["$\\exists x \\in \\mathbb{R}, x^2 \\le 0$", "$\\exists x \\in \\mathbb{R}, x^2 < 0$", "$\\forall x \\in \\mathbb{R}, x^2 \\le 0$", "$\\exists x \\notin \\mathbb{R}, x^2 \\le 0$"], "ans" => 0, "exp" => "Phủ định của $\\forall$ là $\\exists$, phủ định của $>$ là $\\le$."],
-                ["q" => "Cho tập hợp $A = [-2; 3)$ và $B = (1; 5]$. Giao $A \\cap B$ là:", "opts" => ["$[-2; 5]$", "$(1; 3)$", "$[1; 3)$", "$(1; 3]$"], "ans" => 1, "exp" => "Giao của hai khoảng là $(1; 3)$."],
-                ["q" => "Điểm nào thuộc miền nghiệm của bất phương trình $2x - y + 1 > 0$?", "opts" => ["(0; 2)", "(1; 4)", "(2; 1)", "(-1; 0)"], "ans" => 2, "exp" => "Thay (2; 1): $2(2) - 1 + 1 = 4 > 0$ (Đúng)."],
-                ["q" => "Trong tam giác $ABC$, định lý Cosin phát biểu đúng là:", "opts" => ["$a^2 = b^2 + c^2 - 2bc \\cos A$", "$a^2 = b^2 + c^2 + 2bc \\cos A$", "$a^2 = b^2 + c^2 - 2bc \\sin A$", "$a^2 = b^2 + c^2 - bc \\cos A$"], "ans" => 0, "exp" => "Công thức chuẩn: $a^2 = b^2 + c^2 - 2bc \\cos A$."],
-                ["q" => "Vectơ có điểm đầu $A$ và điểm cuối $B$ ký hiệu là:", "opts" => ["$AB$", "$|\\vec{AB}|$", "$\\vec{AB}$", "$\\vec{BA}$"], "ans" => 2, "exp" => "Ký hiệu chuẩn là $\\vec{AB}$."]
-            ], JSON_UNESCAPED_UNICODE)
-        ],
-        [
-            'DGNL_2026_01', 'DGNL', 'DGNL_TONGHOP',
-            'ĐGNL ĐHQG-HCM: Tư duy Định lượng & Suy luận Logic (Đề số 01)',
-            'Đề luyện thi năng lực chuẩn cấu trúc Đại học Quốc gia TP.HCM: Giải toán ứng dụng, phân tích bảng số liệu, logic suy luận.',
-            35,
-            json_encode([
-                ["q" => "Một món hàng giảm giá 20%, sau đó giảm tiếp 10% trên giá đã giảm. Tổng phần trăm được giảm so với ban đầu là:", "opts" => ["28%", "30%", "72%", "32%"], "ans" => 0, "exp" => "Giá còn lại là $80% \\cdot 90% = 72%$. Mức giảm tổng cộng là $100% - 72% = 28%$."],
-                ["q" => "Nếu An đi xe đạp 12 km/h thì muộn 5 phút, đi 15 km/h thì sớm 5 phút. Quãng đường từ nhà An đến trường là:", "opts" => ["10 km", "12 km", "15 km", "8 km"], "ans" => 0, "exp" => "Hiệu thời gian $s/12 - s/15 = 10/60 = 1/6 \\Rightarrow s = 10$ km."],
-                ["q" => "Khảo sát 100 học sinh: 65 bạn thích Toán, 50 bạn thích Văn, 25 bạn thích cả hai. Số bạn không thích môn nào là:", "opts" => ["10 bạn", "15 bạn", "20 bạn", "5 bạn"], "ans" => 0, "exp" => "$100 - (65 + 50 - 25) = 10$ bạn."],
-                ["q" => "Cho mệnh đề: \"Nếu trời mưa thì đường trơn\". Mệnh đề tương đương là:", "opts" => ["Nếu đường không trơn thì trời không mưa", "Nếu trời không mưa thì đường không trơn", "Nếu đường trơn thì trời mưa", "Trời mưa và đường không trơn"], "ans" => 0, "exp" => "Mệnh đề phản đảo $\\neg B \\Rightarrow \\neg A$ có cùng giá trị logic."],
-                ["q" => "Một lớp có 25 nam và 15 nữ. Chọn ngẫu nhiên 2 học sinh. Xác suất chọn 1 nam và 1 nữ là:", "opts" => ["25/52", "1/2", "375/780", "25/40"], "ans" => 0, "exp" => "$P = (C_{25}^1 \\cdot C_{15}^1)/C_{40}^2 = 375/780 = 25/52$."]
-            ], JSON_UNESCAPED_UNICODE)
-        ]
-    ];
+    $jsonFile = __DIR__ . '/standard_exams.json';
+    if (!file_exists($jsonFile)) return;
+    $jsonText = file_get_contents($jsonFile);
+    $exams = json_decode($jsonText, true);
+    if (!is_array($exams)) return;
 
     $stmt = $db->prepare("
-        INSERT INTO bdvh_exams (exam_code, grade, subject, title, description, time_minutes, questions_json)
+        REPLACE INTO bdvh_exams (exam_code, grade, subject, title, description, time_minutes, questions_json)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     ");
     foreach ($exams as $ex) {
-        $stmt->execute($ex);
+        $stmt->execute([
+            $ex['exam_code'],
+            $ex['grade'],
+            $ex['subject'],
+            $ex['title'],
+            $ex['description'],
+            $ex['time_minutes'],
+            json_encode($ex['questions'], JSON_UNESCAPED_UNICODE)
+        ]);
     }
 }
 
-ensure_bdvh_tables($pdo);
+try {
+    ensure_bdvh_tables($pdo);
+} catch (Throwable $e) {
+    error_log("Lỗi ensure_bdvh_tables: " . $e->getMessage());
+}
 
 // Lấy tham số request
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
@@ -264,10 +294,362 @@ if ($rawInput) {
 }
 
 // -------------------------------------------------------------
+
+
+// Kiểm tra quyền Giảng viên quản trị
+function assert_teacher_auth(): void {
+    if (empty($_SESSION['bdvh_teacher_auth'])) {
+        json_out(['status' => 'error', 'message' => 'Yêu cầu đăng nhập mật khẩu giảng viên để thực hiện thao tác này.'], 401);
+    }
+}
+
+// Sinh mã 4 ký tự động theo ca thời gian (mặc định mỗi 30 phút đổi 1 lần)
+function get_rolling_class_code(int $offsetSlots = 0, string $secretSalt = 'DQTUAN_HCMUS_MATH_2026'): string {
+    $slotMinutes = 30; // 30 phút một mã
+    $currentSlot = (int)floor(time() / ($slotMinutes * 60)) + $offsetSlots;
+    $rawHash = hash_hmac('sha256', (string)$currentSlot, $secretSalt);
+    // 32 ký tự không gây nhầm lẫn (bỏ 0, O, 1, I)
+    $chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+    $code = '';
+    for ($i = 0; $i < 4; $i++) {
+        $idx = hexdec(substr($rawHash, $i * 4, 4)) % strlen($chars);
+        $code .= $chars[$idx];
+    }
+    return $code;
+}
+
+// Kiểm tra mã 4 ký tự: khớp mã rolling hoặc khớp mã giáo viên trong DB
+function verify_class_code_check(PDO $pdo, string $code): array {
+    $cleanCode = strtoupper(trim($code));
+    if (strlen($cleanCode) < 3 || strlen($cleanCode) > 8) {
+        return ['valid' => false, 'teacher' => null, 'label' => ''];
+    }
+
+    // 1. Kiểm tra Rolling Code của Thầy Đinh Quốc Tuấn (chấp nhận slot hiện tại và slot trước để tránh trễ)
+    for ($off = -1; $off <= 1; $off++) {
+        if (get_rolling_class_code($off) === $cleanCode) {
+            return [
+                'valid' => true,
+                'teacher' => 'ThS. Đinh Quốc Tuấn (HCMUS)',
+                'teacher_id' => 1,
+                'label' => 'Lớp Toán Thầy Đinh Quốc Tuấn',
+                'is_tuan' => true
+            ];
+        }
+    }
+
+    // 2. Kiểm tra trong bảng bdvh_class_codes hoặc bdvh_teachers
+    try {
+        $stmt = $pdo->prepare("
+            SELECT c.*, t.full_name as teacher_name, t.email as teacher_email, t.class_name 
+            FROM bdvh_class_codes c
+            LEFT JOIN bdvh_teachers t ON c.teacher_id = t.teacher_id
+            WHERE UPPER(c.code) = ? AND c.is_active = 1
+            LIMIT 1
+        ");
+        $stmt->execute([$cleanCode]);
+        $row = $stmt->fetch();
+        if ($row) {
+            // Tăng số lượt dùng
+            $pdo->prepare("UPDATE bdvh_class_codes SET used_count = used_count + 1 WHERE code_id = ?")->execute([$row['code_id']]);
+            return [
+                'valid' => true,
+                'teacher' => $row['teacher_name'] ?? 'Giáo viên đối tác',
+                'teacher_id' => (int)($row['teacher_id'] ?? 0),
+                'label' => $row['label'] ?? ($row['class_name'] ?? 'Lớp học đối tác'),
+                'is_tuan' => false
+            ];
+        }
+
+        // Kiểm tra mã gắn trực tiếp trên bảng bdvh_teachers
+        $stmt = $pdo->prepare("SELECT * FROM bdvh_teachers WHERE UPPER(class_code) = ? AND is_active = 1 LIMIT 1");
+        $stmt->execute([$cleanCode]);
+        $t = $stmt->fetch();
+        if ($t) {
+            return [
+                'valid' => true,
+                'teacher' => $t['full_name'],
+                'teacher_id' => (int)$t['teacher_id'],
+                'label' => $t['class_name'] . ' (' . $t['school_name'] . ')',
+                'is_tuan' => false
+            ];
+        }
+    } catch (Throwable $e) {}
+
+    return ['valid' => false, 'teacher' => null, 'label' => ''];
+}
+
 // ROUTER CÁC CHỨC NĂNG
 // -------------------------------------------------------------
 
 switch ($action) {
+
+    // --- BẢO MẬT XÁC THỰC GIẢNG VIÊN (THẦY TUẤN) ---
+
+    case 'check_teacher_auth':
+        $isLogged = !empty($_SESSION['bdvh_teacher_auth']);
+        json_out(['status' => 'success', 'logged_in' => $isLogged]);
+        break;
+
+    case 'teacher_login':
+        $pass = (string)($inputData['password'] ?? $_POST['password'] ?? '');
+        if ($pass === '') {
+            json_out(['status' => 'error', 'message' => 'Vui lòng nhập mật khẩu quản trị.'], 400);
+        }
+
+        // Lấy hash mật khẩu từ DB (nếu chưa có thì mật khẩu khởi tạo mặc định là Tuan@2026)
+        $defaultInitialPass = 'Tuan@2026';
+        $storedHash = '';
+        try {
+            $st = $pdo->prepare("SELECT setting_value FROM bdvh_settings WHERE setting_key = 'teacher_password_hash' LIMIT 1");
+            $st->execute();
+            $row = $st->fetch();
+            if ($row) {
+                $storedHash = $row['setting_value'];
+            }
+        } catch (Throwable $e) {}
+
+        $isValid = false;
+        if ($storedHash !== '') {
+            $isValid = password_verify($pass, $storedHash);
+        } else {
+            // Lần đầu khởi tạo: so sánh với mật khẩu mặc định
+            if ($pass === $defaultInitialPass) {
+                $isValid = true;
+                // Tự động băm lưu vào DB
+                $newHash = password_hash($pass, PASSWORD_DEFAULT);
+                $pdo->prepare("REPLACE INTO bdvh_settings (setting_key, setting_value) VALUES ('teacher_password_hash', ?)")->execute([$newHash]);
+            }
+        }
+
+        if ($isValid) {
+            $_SESSION['bdvh_teacher_auth'] = true;
+            $_SESSION['bdvh_teacher_time'] = time();
+            json_out(['status' => 'success', 'message' => 'Đăng nhập Giảng Viên thành công!']);
+        } else {
+            json_out(['status' => 'error', 'message' => 'Mật khẩu quản trị không chính xác.'], 401);
+        }
+        break;
+
+    case 'teacher_logout':
+        unset($_SESSION['bdvh_teacher_auth']);
+        unset($_SESSION['bdvh_teacher_time']);
+        json_out(['status' => 'success', 'message' => 'Đã đăng xuất an toàn.']);
+        break;
+
+    case 'change_teacher_password':
+        assert_teacher_auth();
+        $oldPass = (string)($inputData['old_password'] ?? '');
+        $newPass = (string)($inputData['new_password'] ?? '');
+
+        if (strlen($newPass) < 6) {
+            json_out(['status' => 'error', 'message' => 'Mật khẩu mới phải có ít nhất 6 ký tự.'], 400);
+        }
+
+        // Kiểm tra mật khẩu cũ
+        $st = $pdo->query("SELECT setting_value FROM bdvh_settings WHERE setting_key = 'teacher_password_hash' LIMIT 1");
+        $stored = $st ? $st->fetch() : null;
+        if ($stored && !password_verify($oldPass, $stored['setting_value'])) {
+            json_out(['status' => 'error', 'message' => 'Mật khẩu cũ không đúng.'], 400);
+        }
+
+        $newHash = password_hash($newPass, PASSWORD_DEFAULT);
+        $pdo->prepare("REPLACE INTO bdvh_settings (setting_key, setting_value) VALUES ('teacher_password_hash', ?)")->execute([$newHash]);
+        json_out(['status' => 'success', 'message' => 'Đã đổi mật khẩu quản trị thành công!']);
+        break;
+
+
+    // --- TÍNH NĂNG MÃ LỚP 4 KÝ TỰ & QUẢN LÝ GIÁO VIÊN ---
+
+    // A. Học sinh nhập mã lớp 4 ký tự để mở khóa vô hạn
+    case 'verify_class_code':
+        $code = trim((string)($inputData['code'] ?? $_POST['code'] ?? ''));
+        $studentName = trim((string)($inputData['student_name'] ?? $_POST['student_name'] ?? ''));
+        $phone = trim((string)($inputData['phone'] ?? $_POST['phone'] ?? ''));
+
+        $check = verify_class_code_check($pdo, $code);
+        if (!$check['valid']) {
+            json_out([
+                'status' => 'error',
+                'message' => 'Mã lớp "' . htmlspecialchars($code) . '" không hợp lệ hoặc đã hết hạn. Hãy xin Thầy/Cô mã 4 ký tự mới nhất nhé!'
+            ], 400);
+        }
+
+        // Nếu hợp lệ: Cập nhật tài khoản học sinh
+        $userId = $_SESSION['bdvh_user_id'] ?? 0;
+        if ($studentName === '') {
+            $studentName = 'Học sinh (' . strtoupper($code) . ')';
+        }
+        if ($userId <= 0) {
+            // Tự tạo tài khoản cho học sinh
+            $uname = 'hs_' . substr(md5($studentName . microtime()), 0, 8);
+            try {
+                $stmt = $pdo->prepare("
+                    INSERT INTO bdvh_users (username, full_name, phone, role, free_trials_left, paid_trials_left, created_at, last_login)
+                    VALUES (?, ?, ?, 'CLASS_STUDENT', 9999, 9999, $nowSql, $nowSql)
+                ");
+                $stmt->execute([$uname, $studentName, $phone]);
+                $userId = (int)$pdo->lastInsertId();
+                $_SESSION['bdvh_user_id'] = $userId;
+            } catch (Throwable $e) {
+                error_log("Lỗi tạo user verify_class_code: " . $e->getMessage());
+            }
+        } else {
+            try {
+                $stmt = $pdo->prepare("UPDATE bdvh_users SET full_name = ?, role = 'CLASS_STUDENT', free_trials_left = 9999, paid_trials_left = 9999 WHERE user_id = ?");
+                $stmt->execute([$studentName, $userId]);
+            } catch (Throwable $e) {}
+        }
+
+        $_SESSION['bdvh_student_name'] = $studentName;
+        $_SESSION['bdvh_has_ai_access'] = true;
+        $_SESSION['bdvh_class_code'] = strtoupper($code);
+        $_SESSION['bdvh_class_label'] = $check['label'];
+        $_SESSION['bdvh_teacher_name'] = $check['teacher'];
+        $_SESSION['bdvh_teacher_id'] = $check['teacher_id'];
+        $_SESSION['bdvh_is_class_student'] = true;
+
+        json_out([
+            'status' => 'success',
+            'message' => '🎉 CHÚC MỪNG EM ĐÃ VÀO ' . mb_strtoupper($check['label']) . '! Toàn bộ đề thi và phân tích chuyên sâu từ Hệ Thống đã được MỞ KHÓA KHÔNG GIỚI HẠN.',
+            'class_info' => [
+                'teacher' => $check['teacher'],
+                'label' => $check['label'],
+                'code' => strtoupper($code)
+            ]
+        ]);
+        break;
+
+    // B. Dành cho Thầy Đinh Quốc Tuấn / Giáo viên lấy mã 4 ký tự hiện tại để chiếu lên bảng
+    case 'get_teacher_code':
+        assert_teacher_auth();
+        $slotMinutes = 30;
+        $now = time();
+        $secondsRemaining = ($slotMinutes * 60) - ($now % ($slotMinutes * 60));
+        $currentCode = get_rolling_class_code(0);
+        $prevCode = get_rolling_class_code(-1);
+
+        // Lấy thêm danh sách mã tùy chỉnh đang hoạt động
+        $customCodes = [];
+        try {
+            $stmt = $pdo->query("SELECT * FROM bdvh_class_codes WHERE is_active = 1 ORDER BY code_id DESC LIMIT 10");
+            $customCodes = $stmt->fetchAll();
+        } catch (Throwable $e) {}
+
+        json_out([
+            'status' => 'success',
+            'rolling_code' => $currentCode,
+            'prev_code' => $prevCode,
+            'seconds_remaining' => $secondsRemaining,
+            'slot_minutes' => $slotMinutes,
+            'custom_codes' => $customCodes
+        ]);
+        break;
+
+    // C. Thầy Tuấn / Giáo viên tạo mã lớp tĩnh mới (ví dụ: MATH, 2026, LAN6)
+    case 'create_custom_code':
+        assert_teacher_auth();
+        $code = strtoupper(trim((string)($inputData['code'] ?? $_POST['code'] ?? '')));
+        $label = trim((string)($inputData['label'] ?? $_POST['label'] ?? 'Lớp Toán'));
+        $teacherId = (int)($inputData['teacher_id'] ?? 1);
+        $hoursValid = (int)($inputData['hours_valid'] ?? 4);
+
+        if (strlen($code) < 3 || strlen($code) > 8) {
+            json_out(['status' => 'error', 'message' => 'Mã lớp nên từ 3 đến 6 ký tự.'], 400);
+        }
+
+        $expiresAt = date('Y-m-d H:i:s', time() + ($hoursValid * 3600));
+        try {
+            $stmt = $pdo->prepare("
+                REPLACE INTO bdvh_class_codes (code, teacher_id, label, expires_at, is_active, used_count)
+                VALUES (?, ?, ?, ?, 1, 0)
+            ");
+            $stmt->execute([$code, $teacherId, $label, $expiresAt]);
+            json_out([
+                'status' => 'success',
+                'message' => "Đã tạo mã lớp \"{$code}\" thành công! Có hiệu lực trong {$hoursValid} giờ.",
+                'code' => $code,
+                'expires_at' => $expiresAt
+            ]);
+        } catch (Throwable $e) {
+            json_out(['status' => 'error', 'message' => 'Không thể tạo mã: ' . $e->getMessage()], 500);
+        }
+        break;
+
+    // D. Bảng điều khiển Giáo viên: Xem kết quả học sinh lớp mình nộp bài
+    case 'teacher_dashboard':
+        assert_teacher_auth();
+        $teacherId = (int)($_GET['teacher_id'] ?? 1);
+        // Lấy danh sách bài nộp gần nhất của học sinh thuộc lớp này
+        $submissions = [];
+        try {
+            $stmt = $pdo->prepare("
+                SELECT s.sub_id as submission_id, s.user_id, s.score, s.duration_seconds, s.correct_count, s.total_questions, s.created_at,
+                       COALESCE(u.full_name, 'Học sinh') as full_name, u.phone, COALESCE(e.title, 'Bài thi') as exam_title
+                FROM bdvh_submissions s
+                LEFT JOIN bdvh_users u ON s.user_id = u.user_id
+                LEFT JOIN bdvh_exams e ON s.exam_id = e.exam_id
+                ORDER BY s.sub_id DESC LIMIT 50
+            ");
+            $stmt->execute();
+            $submissions = $stmt->fetchAll();
+        } catch (Throwable $e) {}
+
+        json_out([
+            'status' => 'success',
+            'submissions' => $submissions
+        ]);
+        break;
+
+    // E. Thầy Tuấn thêm Giáo viên đối tác mới (Thỏa thuận hợp tác)
+    case 'add_partner_teacher':
+        assert_teacher_auth();
+        $email = trim((string)($inputData['email'] ?? ''));
+        $name = trim((string)($inputData['full_name'] ?? ''));
+        $phone = trim((string)($inputData['phone'] ?? ''));
+        $school = trim((string)($inputData['school_name'] ?? ''));
+        $className = trim((string)($inputData['class_name'] ?? ''));
+        $customCode = strtoupper(trim((string)($inputData['class_code'] ?? '')));
+
+        if ($email === '' || $name === '') {
+            json_out(['status' => 'error', 'message' => 'Vui lòng nhập Email và Họ tên giáo viên.'], 400);
+        }
+
+        if ($customCode === '') {
+            $customCode = strtoupper(substr(md5($email . microtime()), 0, 4));
+        }
+
+        try {
+            $stmt = $pdo->prepare("
+                INSERT INTO bdvh_teachers (email, full_name, phone, school_name, class_name, class_code, is_active)
+                VALUES (?, ?, ?, ?, ?, ?, 1)
+            ");
+            $stmt->execute([$email, $name, $phone, $school, $className, $customCode]);
+            $newTId = (int)$pdo->lastInsertId();
+
+            // Tạo luôn mã lớp tương ứng
+            $stmt = $pdo->prepare("
+                INSERT INTO bdvh_class_codes (code, teacher_id, label, is_active)
+                VALUES (?, ?, ?, 1)
+            ");
+            $stmt->execute([$customCode, $newTId, "Lớp {$className} - Thầy/Cô {$name}"]);
+
+            json_out([
+                'status' => 'success',
+                'message' => "Đã tạo tài khoản đối tác cho Thầy/Cô {$name}! Mã lớp cung cấp cho học sinh là: {$customCode}",
+                'teacher' => [
+                    'teacher_id' => $newTId,
+                    'full_name' => $name,
+                    'email' => $email,
+                    'class_code' => $customCode,
+                    'class_name' => $className
+                ]
+            ]);
+        } catch (Throwable $e) {
+            json_out(['status' => 'error', 'message' => 'Lỗi: ' . $e->getMessage()], 500);
+        }
+        break;
+
     // 1. Kiểm tra trạng thái đăng nhập
     case 'check_auth':
         if (!isset($_SESSION['bdvh_user_id'])) {
@@ -317,7 +699,7 @@ switch ($action) {
             // Tạo tài khoản khách mới với 2 lượt miễn phí
             $stmt = $pdo->prepare("
                 INSERT INTO bdvh_users (username, full_name, phone, grade, role, free_trials_left, paid_trials_left, created_at, last_login)
-                VALUES (?, ?, ?, ?, 'GUEST', 2, 0, datetime('now','localtime'), datetime('now','localtime'))
+                VALUES (?, ?, ?, ?, 'GUEST', 2, 0, $nowSql, $nowSql)
             ");
             $stmt->execute([$username, $fullName, $phone, $grade]);
             $newId = (int)$pdo->lastInsertId();
@@ -420,7 +802,7 @@ switch ($action) {
         ]);
         break;
 
-    // 6. Nộp bài, chấm điểm và gọi Gemini AI phân tích tư duy (Chấm bài miễn phí, AI nhận xét cần bonus khi hết lượt)
+    // 6. Nộp bài, chấm điểm và gọi Hệ Thống Khảo Thí phân tích tư duy (Chấm bài miễn phí, AI nhận xét cần bonus khi hết lượt)
     case 'submit_exam':
         $examId = (int)($inputData['exam_id'] ?? 0);
         $userAnswers = $inputData['answers'] ?? []; // mảng đáp án
@@ -483,23 +865,46 @@ switch ($action) {
 
         $score = ($totalQuestions > 0) ? round(($correctCount / $totalQuestions) * 10, 2) : 0;
 
-        // Xử lý quyền xem nhận xét Gemini AI
+        // Xử lý thông tin học sinh & quyền xem nhận xét Hệ Thống Khảo Thí
         $userId = isset($_SESSION['bdvh_user_id']) ? (int)$_SESSION['bdvh_user_id'] : 0;
+        $incomingStudentName = trim((string)($inputData['student_name'] ?? $_SESSION['bdvh_student_name'] ?? ''));
+        $incomingClassCode = strtoupper(trim((string)($inputData['class_code'] ?? $_SESSION['bdvh_class_code'] ?? '')));
         $hasAiAccess = false;
         $freeLeft = 0;
         $paidLeft = 0;
-        $studentName = 'Học sinh';
+        $studentName = $incomingStudentName !== '' ? $incomingStudentName : 'Học sinh';
+
+        // Kiểm tra mã lớp gửi kèm hoặc session đã nhập mã lớp hợp lệ -> mở khóa full lời giải
+        if (!empty($incomingClassCode)) {
+            $codeCheck = verify_class_code_check($pdo, $incomingClassCode);
+            if ($codeCheck['valid']) {
+                $hasAiAccess = true;
+                $_SESSION['bdvh_is_class_student'] = true;
+                $_SESSION['bdvh_class_code'] = $incomingClassCode;
+                $_SESSION['bdvh_has_ai_access'] = true;
+            }
+        }
+        if (!empty($_SESSION['bdvh_is_class_student']) || !empty($_SESSION['bdvh_has_ai_access'])) {
+            $hasAiAccess = true;
+        }
 
         if ($userId > 0) {
             $stmt = $pdo->prepare("SELECT * FROM bdvh_users WHERE user_id = ?");
             $stmt->execute([$userId]);
             $user = $stmt->fetch();
             if ($user) {
-                $studentName = $user['full_name'];
+                if (!empty($incomingStudentName) && ($user['full_name'] === 'Học sinh' || strpos($user['full_name'], 'Học sinh (') === 0)) {
+                    $pdo->prepare("UPDATE bdvh_users SET full_name = ? WHERE user_id = ?")->execute([$incomingStudentName, $userId]);
+                    $studentName = $incomingStudentName;
+                } else {
+                    $studentName = $user['full_name'];
+                }
                 $freeLeft = (int)$user['free_trials_left'];
                 $paidLeft = (int)$user['paid_trials_left'];
 
-                if ($freeLeft > 0) {
+                if ($user['role'] === 'CLASS_STUDENT' || $hasAiAccess) {
+                    $hasAiAccess = true;
+                } elseif ($freeLeft > 0) {
                     $freeLeft--;
                     $hasAiAccess = true;
                     $stmt = $pdo->prepare("UPDATE bdvh_users SET free_trials_left = ? WHERE user_id = ?");
@@ -511,7 +916,36 @@ switch ($action) {
                     $stmt->execute([$paidLeft, $userId]);
                 }
             }
+        } else {
+            // Tự động tạo user cho học sinh để 100% bài làm đều được lưu và hiển thị trên bảng giảng viên
+            $studentDisplayName = !empty($incomingStudentName) ? $incomingStudentName : 'Học sinh vãng lai';
+            $uname = 'hs_' . substr(md5($studentDisplayName . microtime()), 0, 8);
+            $userRole = $hasAiAccess ? 'CLASS_STUDENT' : 'GUEST';
+            try {
+                $stmt = $pdo->prepare("
+                    INSERT INTO bdvh_users (username, full_name, phone, role, free_trials_left, paid_trials_left, created_at, last_login)
+                    VALUES (?, ?, '', ?, 9999, 9999, $nowSql, $nowSql)
+                ");
+                $stmt->execute([$uname, $studentDisplayName, $userRole]);
+                $userId = (int)$pdo->lastInsertId();
+                $_SESSION['bdvh_user_id'] = $userId;
+                $studentName = $studentDisplayName;
+            } catch (Throwable $e) {
+                error_log("Lỗi tự tạo user trong submit_exam: " . $e->getMessage());
+            }
         }
+
+        
+        // Khóa hướng dẫn giải chi tiết nếu chưa đăng nhập hoặc hết lượt miễn phí
+        foreach ($details as &$d) {
+            if (!$hasAiAccess) {
+                $d['explanation'] = '';
+                $d['is_explanation_locked'] = true;
+            } else {
+                $d['is_explanation_locked'] = false;
+            }
+        }
+        unset($d);
 
         $targetSeconds = ((int)$exam['time_minutes']) * 60;
         $aiResult = null;
@@ -534,35 +968,39 @@ switch ($action) {
                     'diff_minutes' => round(abs($durationSeconds - $targetSeconds) / 60, 1),
                     'avg_seconds_per_question' => $avgSec,
                     'pace_category' => ($durationSeconds <= $targetSeconds) ? 'Đúng tiến độ' : 'Cần tăng tốc',
-                    'time_strategy_advice' => 'Phân tích tư duy sâu và mẹo giải nhanh độc quyền đang được khóa. Hãy ủng hộ Thầy 5.000đ để mở khóa nhận xét AI nhé!'
+                    'time_strategy_advice' => 'Phân tích tư duy sâu và mẹo giải nhanh độc quyền đang được khóa. Hãy ủng hộ Thầy 5.000đ để mở khóa phân tích sư phạm chuyên sâu nhé!'
                 ],
                 'root_causes' => [
-                    "Tính năng chỉ ra chính xác lỗ hổng tư duy từng câu của Gemini AI yêu cầu mở khóa bonus.",
+                    "Tính năng chỉ ra chính xác lỗ hổng tư duy từng câu của Hệ Thống Khảo Thí yêu cầu mở khóa bonus.",
                     "Học sinh có hoàn cảnh khó khăn có thể gửi email về dqtuanhcmus@gmail.com để được Thầy mở miễn phí."
                 ],
                 'exclusive_tip' => "Mẹo giải nhanh của Thầy Tuấn đang được khóa. Ủng hộ 5.000đ để xem phân tích chi tiết."
             ];
         }
 
-        // Lưu vào submissions nếu có tài khoản
+        // Lưu vào submissions đảm bảo 100% hiển thị trên Bảng Điều Khiển Giảng Viên
         $submissionId = 0;
         if ($userId > 0) {
-            $stmt = $pdo->prepare("
-                INSERT INTO bdvh_submissions (user_id, exam_id, score, duration_seconds, answers_given, correct_count, total_questions, ai_evaluation, is_free_trial, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now','localtime'))
-            ");
-            $stmt->execute([
-                $userId,
-                $examId,
-                $score,
-                $durationSeconds,
-                json_encode($userAnswers),
-                $correctCount,
-                $totalQuestions,
-                json_encode($aiResult, JSON_UNESCAPED_UNICODE),
-                $hasAiAccess ? 1 : 0
-            ]);
-            $submissionId = (int)$pdo->lastInsertId();
+            try {
+                $stmt = $pdo->prepare("
+                    INSERT INTO bdvh_submissions (user_id, exam_id, score, duration_seconds, answers_given, correct_count, total_questions, ai_evaluation, is_free_trial, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, $nowSql)
+                ");
+                $stmt->execute([
+                    $userId,
+                    $examId,
+                    $score,
+                    $durationSeconds,
+                    json_encode($userAnswers),
+                    $correctCount,
+                    $totalQuestions,
+                    json_encode($aiResult, JSON_UNESCAPED_UNICODE),
+                    $hasAiAccess ? 1 : 0
+                ]);
+                $submissionId = (int)$pdo->lastInsertId();
+            } catch (Throwable $e) {
+                error_log("Lỗi lưu bdvh_submissions: " . $e->getMessage());
+            }
         }
 
         json_out([
@@ -582,7 +1020,7 @@ switch ($action) {
     // 7. Yêu cầu nạp MoMo bonus / Nâng cấp
     case 'request_bonus':
         if (!isset($_SESSION['bdvh_user_id'])) {
-            json_out(['status' => 'error', 'message' => 'Vui lòng đăng nhập.'], 401);
+            json_out(['status' => 'error', 'message' => 'Vui lòng đăng nhập hoặc nhập mã lớp.'], 401);
         }
         $userId = (int)$_SESSION['bdvh_user_id'];
         $stmt = $pdo->prepare("SELECT username, full_name FROM bdvh_users WHERE user_id = ?");
@@ -590,30 +1028,93 @@ switch ($action) {
         $user = $stmt->fetch();
 
         $amount = (int)($inputData['amount'] ?? 5000);
-        $memo = 'BDVH ' . $user['username'] . ' ' . ($amount / 1000) . 'K';
+        $cleanUname = preg_replace('/[^a-zA-Z0-9_]/', '', $user['username'] ?? 'hs');
+        $memo = 'BDVH ' . substr($cleanUname, 0, 15) . ' ' . ($amount / 1000) . 'K';
+
+        // Lấy cấu hình ngân hàng của Thầy Tuấn từ DB (hoặc mặc định)
+        $bankId = 'MB'; // Mặc định MB Bank hoặc VCB
+        $bankAccount = '0908123456';
+        $accountName = 'DINH QUOC TUAN';
+        $momoPhone = '0908123456';
+
+        try {
+            $stSet = $pdo->query("SELECT setting_key, setting_value FROM bdvh_settings");
+            if ($stSet) {
+                while ($r = $stSet->fetch()) {
+                    if ($r['setting_key'] === 'bank_id') $bankId = $r['setting_value'];
+                    if ($r['setting_key'] === 'bank_account') $bankAccount = $r['setting_value'];
+                    if ($r['setting_key'] === 'account_name') $accountName = $r['setting_value'];
+                    if ($r['setting_key'] === 'momo_phone') $momoPhone = $r['setting_value'];
+                }
+            }
+        } catch (Throwable $e) {}
 
         // Ghi transaction trạng thái PENDING
         $trialsToAdd = ($amount === 5000) ? 5 : (($amount === 10000) ? 12 : 30);
         $stmt = $pdo->prepare("
             INSERT INTO bdvh_transactions (user_id, amount, trials_added, payment_method, memo, status, created_at)
-            VALUES (?, ?, ?, 'MOMO', ?, 'PENDING', datetime('now','localtime'))
+            VALUES (?, ?, ?, 'VIETQR', ?, 'PENDING', $nowSql)
         ");
         $stmt->execute([$userId, $amount, $trialsToAdd, $memo]);
 
+        // Tạo link VietQR chuẩn Napas247 quét được trên TẤT CẢ các app ngân hàng
+        $encodedAccName = urlencode($accountName);
+        $encodedMemo = urlencode($memo);
+        $vietQrUrl = "https://img.vietqr.io/image/{$bankId}-{$bankAccount}-compact2.png?amount={$amount}&addInfo={$encodedMemo}&accountName={$encodedAccName}";
+
+        // Mã MoMo
+        $momoQrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" . urlencode("2|99|{$momoPhone}|{$accountName}||0|0|{$amount}|{$memo}|transfer_myqr");
+
         json_out([
             'status' => 'success',
-            'momo_info' => [
-                'recipient' => 'ThS. Đinh Quốc Tuấn',
-                'phone' => '0908.xxx.xxx',
+            'payment_info' => [
+                'recipient_name' => $accountName,
+                'bank_id' => $bankId,
+                'bank_account' => $bankAccount,
+                'momo_phone' => $momoPhone,
                 'amount' => $amount,
+                'amount_formatted' => number_format($amount, 0, ',', '.') . ' VNĐ',
                 'memo' => $memo,
                 'trials_added' => $trialsToAdd,
-                'qr_url' => 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode("2|99|0908xxxxxx|Đinh Quốc Tuấn||0|0|{$amount}|{$memo}|transfer_myqr"),
-                'email_contact' => 'dqtuanhcmus@gmail.com',
-                'support_note' => 'Sau khi chuyển khoản 1-2 phút, hệ thống tự động cộng lượt hoặc gửi email về dqtuanhcmus@gmail.com để được Thầy Tuấn hỗ trợ trực tiếp.'
+                'vietqr_url' => $vietQrUrl,
+                'momo_url' => $momoQrUrl,
+                'support_email' => 'dqtuanhcmus@gmail.com'
             ]
         ]);
         break;
+
+    // Cập nhật cấu hình tài khoản nhận tiền (Dành cho Thầy Tuấn)
+    case 'save_payment_settings':
+        assert_teacher_auth();
+        $bId = strtoupper(trim((string)($inputData['bank_id'] ?? '')));
+        $bAcc = trim((string)($inputData['bank_account'] ?? ''));
+        $accName = mb_strtoupper(trim((string)($inputData['account_name'] ?? 'DINH QUOC TUAN')));
+        $mPhone = trim((string)($inputData['momo_phone'] ?? ''));
+
+        if ($bId !== '' && $bAcc !== '') {
+            $st = $pdo->prepare("REPLACE INTO bdvh_settings (setting_key, setting_value) VALUES (?, ?)");
+            $st->execute(['bank_id', $bId]);
+            $st->execute(['bank_account', $bAcc]);
+            $st->execute(['account_name', $accName]);
+            $st->execute(['momo_phone', $mPhone]);
+            json_out(['status' => 'success', 'message' => 'Đã lưu cấu hình tài khoản ngân hàng thành công!']);
+        }
+        json_out(['status' => 'error', 'message' => 'Vui lòng điền đủ Tên ngân hàng và Số tài khoản.'], 400);
+        break;
+
+    case 'get_payment_settings':
+        $settings = ['bank_id' => 'MB', 'bank_account' => '', 'account_name' => 'DINH QUOC TUAN', 'momo_phone' => ''];
+        try {
+            $st = $pdo->query("SELECT setting_key, setting_value FROM bdvh_settings");
+            if ($st) {
+                while ($r = $st->fetch()) {
+                    $settings[$r['setting_key']] = $r['setting_value'];
+                }
+            }
+        } catch (Throwable $e) {}
+        json_out(['status' => 'success', 'settings' => $settings]);
+        break;
+
 
     default:
         json_out(['status' => 'error', 'message' => 'Hành động không hợp lệ: ' . htmlspecialchars($action)], 404);
