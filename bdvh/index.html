@@ -192,6 +192,17 @@
             <p class="text-xs text-gray-300 leading-relaxed">
               Trang phục vụ giảng dạy trực tiếp: hiển thị ngày, thứ, lớp đang dạy, slide HTML đề - đáp án xen kẽ và mã vào lớp chiếu lên bảng.
             </p>
+            <div class="flex items-center gap-2 pt-1 flex-wrap">
+              <a href="slide-toan7.html" target="_blank" class="inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-amber-300 text-[11px] font-bold px-2.5 py-1 rounded-lg transition border border-white/20">
+                <i class="fas fa-play-circle text-[10px]"></i> Slide Toán 7
+              </a>
+              <a href="slide-toan6.html" target="_blank" class="inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-emerald-300 text-[11px] font-bold px-2.5 py-1 rounded-lg transition border border-white/20">
+                <i class="fas fa-play-circle text-[10px]"></i> Slide Toán 6
+              </a>
+              <a href="slide-khtn6.html" target="_blank" class="inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-sky-300 text-[11px] font-bold px-2.5 py-1 rounded-lg transition border border-white/20">
+                <i class="fas fa-play-circle text-[10px]"></i> Slide KHTN 6
+              </a>
+            </div>
           </div>
         </div>
         <a href="giao-vien.html" class="w-full md:w-auto bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-bold px-6 py-3 rounded-2xl text-xs transition shadow-lg flex items-center justify-center gap-2 whitespace-nowrap flex-none">
@@ -435,37 +446,28 @@
         currentWeekFocus: 'Tuần 8: Bài 10 (Bội chung nhỏ nhất) & LUYỆN ĐỀ ÔN TẬP GIỮA HỌC KÌ I',
         chapters: [
           {
-            chapterId: 'c1',
+            chapterId: 'c6_1',
             chapterTitle: 'Chương I: Tập Hợp Các Số Tự Nhiên',
             lessons: [
-              { id: 'toan6-01', week: 1, title: 'Bài 1: Tập hợp và phần tử của tập hợp', examId: 1, theory: 'Khái niệm tập hợp, các phần tử $a \in A, b \notin A$. Cách cho tập hợp: Liệt kê hoặc nêu dấu hiệu đặc trưng.', exercise: 'Viết tập hợp các chữ cái trong từ "HOC TOAN", biểu diễn tập hợp số tự nhiên nhỏ hơn 10.' },
-              { id: 'toan6-02', week: 1, title: 'Bài 2: Tập hợp các số tự nhiên. Ghi số tự nhiên', examId: 1, theory: 'Tập hợp $\mathbb{N} = \{0, 1, 2, 3...\}$, tập hợp $\mathbb{N}^* = \{1, 2, 3...\}$. Chữ số La Mã và cấu tạo thập phân.', exercise: 'Đọc và viết các số La Mã: XIV, XXIX, XLV; biểu diễn số $\overline{ab} = 10a + b$.' },
-              { id: 'toan6-03', week: 2, title: 'Bài 3: Các phép tính trong tập hợp số tự nhiên', examId: 1, theory: 'Tính chất giao hoán, kết hợp, phân phối của phép nhân đối với phép cộng: $a(b + c) = ab + ac$.', exercise: 'Tính nhanh: $25 \times 37 + 25 \times 63$; phép chia có dư: $a = b \cdot q + r (0 \le r < b)$.' },
-              { id: 'toan6-04', week: 3, title: 'Bài 4: Lũy thừa với số mũ tự nhiên', examId: 1, theory: '$a^n = a \cdot a \dots a$ (n thừa số $a$). Nhân/chia hai lũy thừa cùng cơ số: $a^m \cdot a^n = a^{m+n}$; $a^m : a^n = a^{m-n}$.', exercise: 'Tính giá trị: $2^3 \cdot 2^2 = 2^5 = 32$; $3^4 : 3^2 = 9$. Tìm $x$ biết $3^x = 27$.' },
-              { id: 'toan6-05', week: 4, title: 'Bài 5: Thứ tự thực hiện các phép tính', examId: 1, theory: 'Ưu tiên: Lũy thừa $\rightarrow$ Nhân & Chia $\rightarrow$ Cộng & Trừ. Trong ngoặc: $( ) \rightarrow [ ] \rightarrow \{ \}$.', exercise: 'Tính: $15 + 5 \cdot 2^2 = 15 + 20 = 35$; $100 - [60 - (9 - 2)^2]$.' },
-              { id: 'toan6-06', week: 5, title: 'Bài 6: Chia hết và dấu hiệu chia hết cho 2, cho 5', examId: 1, theory: 'Tính chất chia hết của một tổng: $a \vdots m$ và $b \vdots m \Rightarrow (a+b) \vdots m$. Dấu hiệu chia hết cho 2 (tận cùng chẵn), cho 5 (tận cùng 0 hoặc 5).', exercise: 'Xét xem tổng $120 + 45$ có chia hết cho 5 không? Tìm chữ số $x$ để số $\overline{47x}$ chia hết cho 2.' },
-              { id: 'toan6-07', week: 5, title: 'Bài 7: Dấu hiệu chia hết cho 3, cho 9', examId: 1, theory: 'Số chia hết cho 9 khi tổng các chữ số chia hết cho 9. Số chia hết cho 3 khi tổng các chữ số chia hết cho 3.', exercise: 'Tìm chữ số $x$ để $\overline{1x5}$ chia hết cho 9; số nào chia hết cho cả 2, 3, 5, 9?' },
-              { id: 'toan6-08', week: 6, title: 'Bài 8: Số nguyên tố. Hợp số. Phân tích ra thừa số nguyên tố', examId: 1, theory: 'Số nguyên tố là số tự nhiên lớn hơn 1 chỉ có 2 ước là 1 và chính nó. Phân tích số ra tích các thừa số nguyên tố.', exercise: 'Các số 2, 3, 5, 7, 11 là số nguyên tố; phân tích số $120 = 2^3 \cdot 3 \cdot 5$.' },
-              { id: 'toan6-09', week: 7, title: 'Bài 9: Ước chung. Ước chung lớn nhất (ƯCLN)', examId: 1, theory: 'ƯCLN là số lớn nhất trong tập hợp các ước chung. Các bước tìm ƯCLN bằng cách phân tích ra thừa số nguyên tố (chọn thừa số chung với số mũ nhỏ nhất).', exercise: 'Tìm $\text{ƯCLN}(36, 84)$; bài toán thực tế chia đều 48 cây bút và 72 quyển vở vào các túi quà.' },
-              { id: 'toan6-10', week: 8, title: 'Bài 10: Bội chung. Bội chung nhỏ nhất (BCNN)', examId: 1, isCurrent: true, theory: 'BCNN là số nhỏ nhất khác 0 trong tập hợp các bội chung. Chọn thừa số chung và riêng với số mũ lớn nhất.', exercise: 'Tìm $\text{BCNN}(12, 18) = 36$; bài toán chu kỳ đèn tín hiệu hoặc xe buýt cùng rời bến sau bao nhiêu phút.' },
-              { id: 'toan6-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP & KIỂM TRA GIỮA HỌC KỲ I (TRỌNG TÂM TUẦN 8)', examId: 1, isExamFocus: true, isCurrent: true, theory: 'Tổng hợp toàn bộ kiến thức Số học (Lũy thừa, Chia hết, ƯCLN, BCNN) & Hình học trực quan (Hình vuông, Tam giác đều, Hình chữ nhật, Hình thoi).', exercise: 'Bộ 20 câu hỏi trắc nghiệm & tự luận tiêu chuẩn theo ma trận kiểm tra giữa kì của Bộ GD&ĐT.' }
+              { id: 'toan6-01', week: 1, title: 'Bài 1: Tập hợp và phần tử của tập hợp', examCode: 'TOAN06_01', theory: 'Khái niệm tập hợp, các phần tử $a \\in A, b \\notin A$. Cách cho tập hợp: Liệt kê hoặc nêu dấu hiệu đặc trưng.', exercise: 'Viết tập hợp các chữ cái trong từ "HOC TOAN", biểu diễn tập hợp số tự nhiên nhỏ hơn 10.' },
+              { id: 'toan6-02', week: 1, title: 'Bài 2: Tập hợp các số tự nhiên. Ghi số tự nhiên', examCode: 'TOAN06_01', theory: 'Tập hợp $\\mathbb{N} = \\{0, 1, 2, 3...\\}$, tập hợp $\\mathbb{N}^* = \\{1, 2, 3...\\}$. Chữ số La Mã và cấu tạo thập phân.', exercise: 'Đọc và viết các số La Mã: XIV, XXIX, XLV; biểu diễn số $\\overline{ab} = 10a + b$.' },
+              { id: 'toan6-03', week: 2, title: 'Bài 3: Các phép tính trong tập hợp số tự nhiên', examCode: 'TOAN06_01', theory: 'Tính chất giao hoán, kết hợp, phân phối của phép nhân đối với phép cộng: $a(b + c) = ab + ac$.', exercise: 'Tính nhanh: $25 \\times 37 + 25 \\times 63$; phép chia có dư: $a = b \\cdot q + r (0 \\le r < b)$.' },
+              { id: 'toan6-04', week: 3, title: 'Bài 4: Lũy thừa với số mũ tự nhiên', examCode: 'TOAN06_01', theory: '$a^n = a \\cdot a \\dots a$ (n thừa số $a$). Nhân/chia hai lũy thừa cùng cơ số: $a^m \\cdot a^n = a^{m+n}$; $a^m : a^n = a^{m-n}$.', exercise: 'Tính giá trị: $2^3 \\cdot 2^2 = 2^5 = 32$; $3^4 : 3^2 = 9$. Tìm $x$ biết $3^x = 27$.' },
+              { id: 'toan6-05', week: 4, title: 'Bài 5: Thứ tự thực hiện các phép tính', examCode: 'TOAN06_01', theory: 'Ưu tiên: Lũy thừa $\\rightarrow$ Nhân & Chia $\\rightarrow$ Cộng & Trừ. Trong ngoặc: $( ) \\rightarrow [ ] \\rightarrow \\{ \\}$.', exercise: 'Tính: $15 + 5 \\cdot 2^2 = 15 + 20 = 35$; $100 - [60 - (9 - 2)^2]$.' },
+              { id: 'toan6-06', week: 5, title: 'Bài 6: Chia hết và dấu hiệu chia hết cho 2, cho 5', examCode: 'TOAN06_01', theory: 'Tính chất chia hết của một tổng: $a \\vdots m$ và $b \\vdots m \\Rightarrow (a+b) \\vdots m$. Dấu hiệu chia hết cho 2 (tận cùng chẵn), cho 5 (tận cùng 0 hoặc 5).', exercise: 'Xét xem tổng $120 + 45$ có chia hết cho 5 không? Tìm chữ số $x$ để số $\\overline{47x}$ chia hết cho 2.' },
+              { id: 'toan6-07', week: 5, title: 'Bài 7: Dấu hiệu chia hết cho 3, cho 9', examCode: 'TOAN06_01', theory: 'Số chia hết cho 9 khi tổng các chữ số chia hết cho 9. Số chia hết cho 3 khi tổng các chữ số chia hết cho 3.', exercise: 'Tìm chữ số $x$ để $\\overline{1x5}$ chia hết cho 9; số nào chia hết cho cả 2, 3, 5, 9?' },
+              { id: 'toan6-08', week: 6, title: 'Bài 8: Số nguyên tố. Hợp số. Phân tích ra thừa số nguyên tố', examCode: 'TOAN06_01', theory: 'Số nguyên tố là số tự nhiên lớn hơn 1 chỉ có 2 ước là 1 và chính nó. Phân tích số ra tích các thừa số nguyên tố.', exercise: 'Các số 2, 3, 5, 7, 11 là số nguyên tố; phân tích số $120 = 2^3 \\cdot 3 \\cdot 5$.' },
+              { id: 'toan6-09', week: 7, title: 'Bài 9: Ước chung. Ước chung lớn nhất (ƯCLN)', examCode: 'TOAN06_01', theory: 'ƯCLN là số lớn nhất trong tập hợp các ước chung. Các bước tìm ƯCLN bằng cách phân tích ra thừa số nguyên tố (chọn thừa số chung với số mũ nhỏ nhất).', exercise: 'Tìm $\\text{ƯCLN}(36, 84)$; bài toán thực tế chia đều 48 cây bút và 72 quyển vở vào các túi quà.' },
+              { id: 'toan6-10', week: 8, title: 'Bài 10: Bội chung. Bội chung nhỏ nhất (BCNN)', examCode: 'TOAN06_01', isCurrent: true, theory: 'BCNN là số nhỏ nhất khác 0 trong tập hợp các bội chung. Chọn thừa số chung và riêng với số mũ lớn nhất.', exercise: 'Tìm $\\text{BCNN}(12, 18) = 36$; bài toán chu kỳ đèn tín hiệu hoặc xe buýt cùng rời bến sau bao nhiêu phút.' },
+              { id: 'toan6-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP & KIỂM TRA GIỮA HỌC KỲ I (TRỌNG TÂM TUẦN 8)', examCode: 'TOAN06_01', isExamFocus: true, isCurrent: true, theory: 'Tổng hợp toàn bộ kiến thức Số học (Lũy thừa, Chia hết, ƯCLN, BCNN) & Hình học trực quan (Hình vuông, Tam giác đều, Hình chữ nhật, Hình thoi).', exercise: 'Bộ 20 câu hỏi trắc nghiệm & tự luận tiêu chuẩn theo ma trận kiểm tra giữa kì của Bộ GD&ĐT.' }
             ]
           },
           {
-            chapterId: 'c2',
+            chapterId: 'c6_2',
             chapterTitle: 'Chương II: Số Nguyên (Chuẩn Bị Học)',
             lessons: [
-              { id: 'toan6-11', week: 9, title: 'Bài 11: Số nguyên âm và tập hợp các số nguyên', examId: 1, theory: 'Tập hợp số nguyên $\mathbb{Z} = \{... -3, -2, -1, 0, 1, 2, 3...\}$. Biểu diễn trên trục số và ứng dụng nhiệt độ dưới 0°C, độ cao dưới mực nước biển.', exercise: 'Biểu diễn các điểm $-3, 2, -1$ trên trục số; so sánh số nguyên.' },
-              { id: 'toan6-12', week: 10, title: 'Bài 12: Thứ tự trong tập hợp các số nguyên', examId: 1, theory: 'Mọi số âm đều nhỏ hơn 0 và nhỏ hơn mọi số dương. Số đối của $a$ là $-a$.', exercise: 'Sắp xếp các số sau theo thứ tự tăng dần: $-15, 0, 7, -2, 11$.' }
-            ]
-          },
-          {
-            chapterId: 'c3',
-            chapterTitle: 'Chương III: Hình Học Trực Quan',
-            lessons: [
-              { id: 'toan6-h1', week: 3, title: 'Bài 1: Tam giác đều. Hình vuông. Lục giác đều', examId: 1, theory: 'Đặc điểm cạnh bằng nhau, góc bằng nhau của tam giác đều và hình vuông; cấu tạo 6 tam giác đều của lục giác đều.', exercise: 'Vẽ tam giác đều cạnh 4cm; tính chu vi hình vuông có cạnh 5cm.' },
-              { id: 'toan6-h2', week: 5, title: 'Bài 2: Hình chữ nhật. Hình thoi. Hình bình hành. Hình thang cân', examId: 1, theory: 'Tính chất đối song song và bằng nhau của các cạnh, đường chéo cắt nhau tại trung điểm.', exercise: 'Nhận biết các hình tứ giác trong đời sống thực tế.' },
-              { id: 'toan6-h3', week: 8, title: 'Bài 3: Chu vi và diện tích các hình phẳng trong thực tiễn', examId: 1, isCurrent: true, theory: 'Công thức diện tích hình chữ nhật $S = a \cdot b$, hình bình hành $S = a \cdot h$, hình thoi $S = \frac{1}{2} d_1 d_2$, hình thang $S = \frac{(a+b)h}{2}$.', exercise: 'Bài toán lát gạch sàn nhà, tính diện tích mảnh vườn trồng rau hình thang cân.' }
+              { id: 'toan6-11', week: 9, title: 'Bài 11: Số nguyên âm và tập hợp các số nguyên', examCode: 'TOAN06_01', theory: 'Tập hợp số nguyên $\\mathbb{Z} = \\{... -3, -2, -1, 0, 1, 2, 3...\\}$. Biểu diễn trên trục số và ứng dụng nhiệt độ dưới 0°C, độ cao dưới mực nước biển.', exercise: 'Biểu diễn các điểm $-3, 2, -1$ trên trục số; so sánh số nguyên.' },
+              { id: 'toan6-12', week: 10, title: 'Bài 12: Thứ tự trong tập hợp các số nguyên', examCode: 'TOAN06_01', theory: 'Mọi số âm đều nhỏ hơn 0 và nhỏ hơn mọi số dương. Số đối của $a$ là $-a$.', exercise: 'Sắp xếp các số sau theo thứ tự tăng dần: $-15, 0, 7, -2, 11$.' }
             ]
           }
         ]
@@ -479,26 +481,85 @@
             chapterId: 'c7_1',
             chapterTitle: 'Chương I: Số Hữu Tỉ',
             lessons: [
-              { id: 'toan7-01', week: 1, title: 'Bài 1: Tập hợp các số hữu tỉ', examId: 2, theory: 'Số hữu tỉ là số viết được dưới dạng phân số $\frac{a}{b}$ với $a, b \in \mathbb{Z}, b \neq 0$. Kí hiệu tập hợp $\mathbb{Q}$.', exercise: 'So sánh các số hữu tỉ, biểu diễn trên trục số.' },
-              { id: 'toan7-02', week: 2, title: 'Bài 2: Các phép tính cộng, trừ, nhân, chia số hữu tỉ', examId: 2, theory: 'Quy tắc cộng trừ phân số, quy tắc nhân chia và tính chất phân phối.', exercise: 'Tính giá trị biểu thức phân số và số thập phân.' },
-              { id: 'toan7-03', week: 3, title: 'Bài 3: Lũy thừa của một số hữu tỉ', examId: 2, theory: 'Lũy thừa với số mũ tự nhiên: $(x \cdot y)^n = x^n \cdot y^n$; $(x^m)^n = x^{m \cdot n}$.', exercise: 'Tính giá trị: $(-\frac{1}{2})^3 = -\frac{1}{8}$; so sánh $2^{30}$ và $3^{20}$.' },
-              { id: 'toan7-04', week: 4, title: 'Bài 4: Quy tắc dấu ngoặc và quy tắc chuyển vế', examId: 2, theory: 'Khi bỏ dấu ngoặc có dấu "-" đằng trước phải đổi dấu tất cả các số hạng. Quy tắc chuyển vế: $x + a = b \Rightarrow x = b - a$.', exercise: 'Tìm $x$: $x - \frac{2}{3} = \frac{1}{2}$; rút gọn biểu thức có nhiều tầng ngoặc.' }
+              { id: 'toan7-01', week: 1, title: 'Bài 1: Tập hợp các số hữu tỉ', examCode: 'TOAN07_01', theory: 'Số hữu tỉ là số viết được dưới dạng phân số $\\frac{a}{b}$ với $a, b \\in \\mathbb{Z}, b \\neq 0$. Kí hiệu tập hợp $\\mathbb{Q}$.', exercise: 'So sánh các số hữu tỉ, biểu diễn trên trục số.' },
+              { id: 'toan7-02', week: 2, title: 'Bài 2: Các phép tính cộng, trừ, nhân, chia số hữu tỉ', examCode: 'TOAN07_01', theory: 'Quy tắc cộng trừ phân số, quy tắc nhân chia và tính chất phân phối.', exercise: 'Tính giá trị biểu thức phân số và số thập phân.' },
+              { id: 'toan7-03', week: 3, title: 'Bài 3: Lũy thừa của một số hữu tỉ', examCode: 'TOAN07_01', theory: 'Lũy thừa với số mũ tự nhiên: $(x \\cdot y)^n = x^n \\cdot y^n$; $(x^m)^n = x^{m \\cdot n}$.', exercise: 'Tính giá trị: $(-\\frac{1}{2})^3 = -\\frac{1}{8}$; so sánh $2^{30}$ và $3^{20}$.' },
+              { id: 'toan7-04', week: 4, title: 'Bài 4: Quy tắc dấu ngoặc và quy tắc chuyển vế', examCode: 'TOAN07_01', theory: 'Khi bỏ dấu ngoặc có dấu "-" đằng trước phải đổi dấu tất cả các số hạng. Quy tắc chuyển vế: $x + a = b \\Rightarrow x = b - a$.', exercise: 'Tìm $x$: $x - \\frac{2}{3} = \\frac{1}{2}$; rút gọn biểu thức có nhiều tầng ngoặc.' }
             ]
           },
           {
             chapterId: 'c7_2',
             chapterTitle: 'Chương II: Số Thực & Căn Bậc Hai Số Học',
             lessons: [
-              { id: 'toan7-05', week: 5, title: 'Bài 5: Số thập phân vô hạn tuần hoàn', examId: 2, theory: 'Mỗi số hữu tỉ biểu diễn bởi số thập phân hữu hạn hoặc vô hạn tuần hoàn.', exercise: 'Chuyển phân số $\frac{1}{3} = 0,(3)$ sang số thập phân tuần hoàn.' },
-              { id: 'toan7-06', week: 6, title: 'Bài 6: Số vô tỉ. Căn bậc hai số học', examId: 2, theory: 'Căn bậc hai số học của số $a \ge 0$ là số $x \ge 0$ sao cho $x^2 = a$. Kí hiệu $\sqrt{a}$. Số vô tỉ là số thập phân vô hạn không tuần hoàn.', exercise: 'Tính $\sqrt{25} = 5, \sqrt{0.64} = 0.8$.' },
-              { id: 'toan7-07', week: 8, title: 'Bài 7: Tập hợp các số thực (Tuần 8)', examId: 2, isCurrent: true, theory: 'Số thực $\mathbb{R}$ bao gồm số hữu tỉ và số vô tỉ. Trục số thực biểu diễn liên tục mọi số thực.', exercise: 'So sánh các số thực, tính giá trị tuyệt đối $|x|$.' },
-              { id: 'toan7-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP & KIỂM TRA GIỮA HỌC KỲ I TOÁN 7', examId: 2, isExamFocus: true, isCurrent: true, theory: 'Toàn bộ Số hữu tỉ, Lũy thừa, Góc đối đỉnh, Tia phân giác, Hai đường thẳng song song.', exercise: 'Đề thi 20 câu trắc nghiệm chuẩn ma trận Sở GD&ĐT TP.HCM.' }
+              { id: 'toan7-05', week: 5, title: 'Bài 5: Số thập phân vô hạn tuần hoàn', examCode: 'TOAN07_01', theory: 'Mỗi số hữu tỉ biểu diễn bởi số thập phân hữu hạn hoặc vô hạn tuần hoàn.', exercise: 'Chuyển phân số $\\frac{1}{3} = 0,(3)$ sang số thập phân tuần hoàn.' },
+              { id: 'toan7-06', week: 6, title: 'Bài 6: Số vô tỉ. Căn bậc hai số học', examCode: 'TOAN07_01', theory: 'Căn bậc hai số học của số $a \\ge 0$ là số $x \\ge 0$ sao cho $x^2 = a$. Kí hiệu $\\sqrt{a}$. Số vô tỉ là số thập phân vô hạn không tuần hoàn.', exercise: 'Tính $\\sqrt{25} = 5, \\sqrt{0.64} = 0.8$.' },
+              { id: 'toan7-07', week: 8, title: 'Bài 7: Tập hợp các số thực (Tuần 8)', examCode: 'TOAN07_01', isCurrent: true, theory: 'Số thực $\\mathbb{R}$ bao gồm số hữu tỉ và số vô tỉ. Trục số thực biểu diễn liên tục mọi số thực.', exercise: 'So sánh các số thực, tính giá trị tuyệt đối $|x|$.' },
+              { id: 'toan7-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP & KIỂM TRA GIỮA HỌC KỲ I TOÁN 7', examCode: 'TOAN07_01', isExamFocus: true, isCurrent: true, theory: 'Toàn bộ Số hữu tỉ, Lũy thừa, Góc đối đỉnh, Tia phân giác, Hai đường thẳng song song.', exercise: 'Đề thi 20 câu trắc nghiệm chuẩn ma trận Sở GD&ĐT TP.HCM.' },
+              { id: 'toan7-ck1', week: 8, title: 'Đề Ôn Cuối Kì I (KNTT) & THCS Phú An TP.HCM', examCode: 'TOAN07_CK1_KNTT', theory: 'Đề thi khảo sát chất lượng cuối kì I chuẩn ngân hàng đề của Thầy Tuấn.', exercise: 'Thực hành giải 15 câu trắc nghiệm có lời giải chi tiết.' }
+            ]
+          }
+        ]
+      },
+      'L08': {
+        title: 'Chương Trình Toán 8 (Kết Nối Tri Thức / Cánh Diều / Chân Trời)',
+        currentWeek: 8,
+        currentWeekFocus: 'Tuần 8: Phân tích đa thức thành nhân tử & LUYỆN ĐỀ ÔN TẬP GIỮA HỌC KÌ I (120 PHÚT)',
+        chapters: [
+          {
+            chapterId: 'c8_1',
+            chapterTitle: 'Chương I: Đa Thức Nhiều Biến',
+            lessons: [
+              { id: 'toan8-01', week: 1, title: 'Bài 1: Đơn thức và đa thức nhiều biến', examCode: 'TOAN08_01', theory: 'Đơn thức nhiều biến là biểu thức gồm tích giữa các số và các biến. Bậc của đơn thức có hệ số khác 0 là tổng số mũ của tất cả các biến.', exercise: 'Thu gọn đơn thức $2x^3y \\cdot (-3xy^2)$, tìm bậc của đa thức nhiều biến.' },
+              { id: 'toan8-02', week: 2, title: 'Bài 2: Các phép tính cộng, trừ đa thức nhiều biến', examCode: 'TOAN08_01', theory: 'Quy tắc cộng trừ đa thức: Bỏ dấu ngoặc rồi nhóm các hạng tử đồng dạng lại với nhau.', exercise: 'Cho $P = 2x^2y - 3xy + 1$ và $Q = -x^2y + xy - 5$. Tính $P + Q$ và $P - Q$.' },
+              { id: 'toan8-03', week: 3, title: 'Bài 3: Phép nhân và phép chia đa thức cho đơn thức', examCode: 'TOAN08_01', theory: 'Nhân đơn thức với đa thức $A(B + C) = AB + AC$; chia đa thức cho đơn thức: chia từng hạng tử rồi cộng kết quả.', exercise: 'Thực hiện phép tính: $2x(3x - 4y)$ và $(12x^3y^2 - 8x^2y^3) : 4xy^2$.' }
+            ]
+          },
+          {
+            chapterId: 'c8_2',
+            chapterTitle: 'Chương II: Hằng Đẳng Thức Đáng Nhớ & Ứng Dụng',
+            lessons: [
+              { id: 'toan8-04', week: 4, title: 'Bài 4: Bảy hằng đẳng thức đáng nhớ', examCode: 'TOAN08_01', theory: '$(a \\pm b)^2 = a^2 \\pm 2ab + b^2$; $a^2 - b^2 = (a-b)(a+b)$; $(a \\pm b)^3 = a^3 \\pm 3a^2b + 3ab^2 \\pm b^3$; $a^3 \\pm b^3 = (a \\pm b)(a^2 \\mp ab + b^2)$.', exercise: 'Khai triển $(3x - 2)^2$, tính nhanh $101^2$ và $99 \\cdot 101$.' },
+              { id: 'toan8-05', week: 6, title: 'Bài 5: Phân tích đa thức thành nhân tử', examCode: 'TOAN08_01', theory: 'Các phương pháp: Đặt nhân tử chung, dùng hằng đẳng thức, nhóm hạng tử và phối hợp nhiều phương pháp.', exercise: 'Phân tích thành nhân tử: $6x^2y - 9xy^2$; $x^2 - 2xy + y^2 - 9$.' },
+              { id: 'toan8-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP GIỮA HỌC KỲ I TOÁN 8 (BỘ ĐỀ 120 PHÚT CỦA THẦY TUẤN)', examCode: 'TOAN08_01', isExamFocus: true, isCurrent: true, theory: 'Tổng hợp toàn bộ Đa thức, Hằng đẳng thức, Phân tích nhân tử và Hình học Tứ giác (Hình thang cân, Hình thoi, Hình chữ nhật).', exercise: 'Đề thi chuẩn 15 câu trắc nghiệm + 15 bài tự luận trích từ ngân hàng đề của ThS. Đinh Quốc Tuấn.' }
+            ]
+          },
+          {
+            chapterId: 'c8_3',
+            chapterTitle: 'Chương III: Tứ Giác Đặc Biệt',
+            lessons: [
+              { id: 'toan8-06', week: 7, title: 'Bài 6: Định lý tổng các góc trong tứ giác & Hình thang cân', examCode: 'TOAN08_01', theory: 'Tổng 4 góc trong tứ giác bằng $360^\\circ$. Hình thang cân có 2 góc kề một đáy bằng nhau, 2 đường chéo bằng nhau.', exercise: 'Tìm góc chưa biết của tứ giác khi biết số đo 3 góc còn lại.' },
+              { id: 'toan8-07', week: 8, title: 'Bài 7: Hình bình hành, Hình chữ nhật, Hình thoi, Hình vuông', examCode: 'TOAN08_01', isCurrent: true, theory: 'Dấu hiệu nhận biết và tính chất về cạnh, góc, đường chéo (Hình thoi có 2 đường chéo vuông góc).', exercise: 'Chứng minh tứ giác là hình thoi, hình chữ nhật và ứng dụng tính độ dài.' }
+            ]
+          }
+        ]
+      },
+      'L09': {
+        title: 'Chương Trình Toán 9 (Chương Trình GDPT 2018 Mới)',
+        currentWeek: 8,
+        currentWeekFocus: 'Tuần 8: Hệ hai phương trình bậc nhất hai ẩn & HỆ THỨC LƯỢNG TAM GIÁC VUÔNG (ÔN GIỮA KÌ I)',
+        chapters: [
+          {
+            chapterId: 'c9_1',
+            chapterTitle: 'Chương I: Phương Trình & Hệ Hai Phương Trình Bậc Nhất Hai Ẩn',
+            lessons: [
+              { id: 'toan9-01', week: 1, title: 'Bài 1: Khái niệm phương trình & hệ phương trình bậc nhất hai ẩn', examCode: 'TOAN09_01', theory: 'Dạng tổng quát $ax + by = c$. Nghiệm của hệ là cặp số $(x_0; y_0)$ thỏa mãn đồng thời hai phương trình.', exercise: 'Kiểm tra cặp số $(2; 1)$ có là nghiệm của hệ phương trình hay không.' },
+              { id: 'toan9-02', week: 3, title: 'Bài 2: Phương pháp giải hệ: Phương pháp thế & Phương pháp cộng đại số', examCode: 'TOAN09_01', theory: 'Quy tắc thế: Rút một ẩn từ một phương trình rồi thế vào phương trình còn lại. Quy tắc cộng đại số: Nhân hệ số thích hợp rồi cộng/trừ triệt tiêu một ẩn.', exercise: 'Giải hệ: $\\begin{cases} 2x + y = 5 \\\\ x - y = 1 \\end{cases}$; $\\begin{cases} 3x - 2y = 7 \\\\ 2x + 3y = 9 \\end{cases}$.' },
+              { id: 'toan9-03', week: 5, title: 'Bài 3: Giải bài toán bằng cách lập hệ phương trình', examCode: 'TOAN09_01', theory: 'Các bước: Chọn ẩn, đặt điều kiện, lập hệ hai phương trình, giải hệ và đối chiếu điều kiện thực tế.', exercise: 'Bài toán chuyển động ngược chiều, toán năng suất lao động và phần trăm dung dịch.' }
+            ]
+          },
+          {
+            chapterId: 'c9_2',
+            chapterTitle: 'Chương II: Căn Thức Bậc Hai & Hệ Thức Lượng Tam Giác Vuông',
+            lessons: [
+              { id: 'toan9-04', week: 6, title: 'Bài 4: Căn bậc hai & Trục căn thức ở mẫu', examCode: 'TOAN09_01', theory: 'Điều kiện $\\sqrt{A}$ có nghĩa là $A \\ge 0$. Nhân liên hợp trục căn thức: $\\frac{c}{\\sqrt{a} \\pm b}$.', exercise: 'Tìm điều kiện xác định của $\\sqrt{2x-6}$; trục căn thức biểu thức $\\frac{2}{\\sqrt{3}-1}$.' },
+              { id: 'toan9-05', week: 7, title: 'Bài 5: Tỉ số lượng giác góc nhọn & Hệ thức trong tam giác vuông', examCode: 'TOAN09_01', theory: '$\\sin = \\frac{\\text{đối}}{\\text{huyền}}, \\cos = \\frac{\\text{kề}}{\\text{huyền}}, \\tan = \\frac{\\text{đối}}{\\text{kề}}$. Hệ thức $AH^2 = BH \\cdot CH, AB^2 = BC \\cdot BH$.', exercise: 'Cho tam giác $ABC$ vuông tại $A$, $AB=6, AC=8$. Tính $\\sin B$ và độ dài đường cao $AH$.' },
+              { id: 'toan9-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP GIỮA HỌC KỲ I TOÁN 9 (CHUYÊN ĐỀ TUẦN 8)', examCode: 'TOAN09_01', isExamFocus: true, isCurrent: true, theory: 'Tổng hợp Hệ phương trình 2 ẩn, Căn thức bậc hai, Tỉ số lượng giác và Giải tam giác vuông.', exercise: 'Đề thi trắc nghiệm bấm giờ 25 phút kèm bài giải chi tiết từng bước.' }
             ]
           }
         ]
       },
       'L10': {
-        title: 'Chương Trình Toán 10 (Chương Trình Mới)',
+        title: 'Chương Trình Toán 10 (Chương Trình GDPT 2018 Mới)',
         currentWeek: 8,
         currentWeekFocus: 'Tuần 8: Bất phương trình bậc nhất hai ẩn & HỆ THỨC LƯỢNG TAM GIÁC (ÔN GIỮA KÌ I)',
         chapters: [
@@ -506,17 +567,67 @@
             chapterId: 'c10_1',
             chapterTitle: 'Chương I: Mệnh Đề & Tập Hợp',
             lessons: [
-              { id: 'toan10-01', week: 1, title: 'Bài 1: Mệnh đề toán học, mệnh đề kéo theo, phủ định', examId: 3, theory: 'Mệnh đề là khẳng định đúng hoặc sai. Mệnh đề $P \Rightarrow Q$; phủ định $\overline{P}$. Mệnh đề chứa ký hiệu $\forall, \exists$.', exercise: 'Xét tính đúng sai của mệnh đề, lập mệnh đề đảo.' },
-              { id: 'toan10-02', week: 2, title: 'Bài 2: Tập hợp và các phép toán trên tập hợp', examId: 3, theory: 'Giao $A \cap B$, Hợp $A \cup B$, Hiệu $A \setminus B$, Phần bù $C_E A$. Khoảng, đoạn, nửa khoảng.', exercise: 'Cho $A = (-3; 4], B = [1; 6)$. Tìm $A \cap B, A \cup B, A \setminus B$.' }
+              { id: 'toan10-01', week: 1, title: 'Bài 1: Mệnh đề toán học, mệnh đề kéo theo, phủ định', examCode: 'TOAN10_01', theory: 'Mệnh đề là khẳng định đúng hoặc sai. Mệnh đề $P \\Rightarrow Q$; phủ định $\\overline{P}$. Mệnh đề chứa ký hiệu $\\forall, \\exists$.', exercise: 'Xét tính đúng sai của mệnh đề, lập mệnh đề đảo.' },
+              { id: 'toan10-02', week: 2, title: 'Bài 2: Tập hợp và các phép toán trên tập hợp', examCode: 'TOAN10_01', theory: 'Giao $A \\cap B$, Hợp $A \\cup B$, Hiệu $A \\setminus B$, Phần bù $C_E A$. Khoảng, đoạn, nửa khoảng.', exercise: 'Cho $A = (-3; 4], B = [1; 6)$. Tìm $A \\cap B, A \\cup B, A \\setminus B$.' }
             ]
           },
           {
             chapterId: 'c10_2',
-            chapterTitle: 'Chương II: Bất Phương Trình & Hệ Bất Phương Trình Bậc Nhất Hai Ẩn',
+            chapterTitle: 'Chương II: Bất Phương Trình & Hệ BPT Bậc Nhất Hai Ẩn',
             lessons: [
-              { id: 'toan10-03', week: 4, title: 'Bài 1: Bất phương trình bậc nhất hai ẩn $ax + by \le c$', examId: 3, theory: 'Biểu diễn miền nghiệm của bất phương trình trên mặt phẳng tọa độ $Oxy$ bằng nửa mặt phẳng.', exercise: 'Xác định miền nghiệm và kiểm tra điểm $M(x_0; y_0)$ có thuộc miền nghiệm hay không.' },
-              { id: 'toan10-04', week: 6, title: 'Bài 2: Hệ bất phương trình bậc nhất hai ẩn & Bài toán tối ưu', examId: 3, theory: 'Miền nghiệm là đa giác giao các nửa mặt phẳng. Giá trị lớn nhất/nhỏ nhất của $F(x,y) = ax+by$ đạt tại các đỉnh của đa giác.', exercise: 'Bài toán quy hoạch kinh tế: Lập kế hoạch sản xuất để lợi nhuận cao nhất.' },
-              { id: 'toan10-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP GIỮA HỌC KỲ I TOÁN 10', examId: 3, isExamFocus: true, isCurrent: true, theory: 'Mệnh đề, Tập hợp, Miền nghiệm BPT bậc nhất hai ẩn, Định lý Sin, Cosin tam giác.', exercise: 'Bộ đề thi rèn tư duy logic và kỹ năng vẽ đồ thị, bấm máy Casio.' }
+              { id: 'toan10-03', week: 4, title: 'Bài 3: Bất phương trình bậc nhất hai ẩn $ax + by \\le c$', examCode: 'TOAN10_01', theory: 'Biểu diễn miền nghiệm của bất phương trình trên mặt phẳng tọa độ $Oxy$ bằng nửa mặt phẳng.', exercise: 'Xác định miền nghiệm và kiểm tra điểm $M(x_0; y_0)$ có thuộc miền nghiệm hay không.' },
+              { id: 'toan10-04', week: 6, title: 'Bài 4: Hệ bất phương trình bậc nhất hai ẩn & Bài toán tối ưu', examCode: 'TOAN10_01', theory: 'Miền nghiệm là đa giác giao các nửa mặt phẳng. Giá trị lớn nhất/nhỏ nhất của $F(x,y) = ax+by$ đạt tại các đỉnh của đa giác.', exercise: 'Bài toán quy hoạch kinh tế: Lập kế hoạch sản xuất để lợi nhuận cao nhất.' },
+              { id: 'toan10-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP GIỮA HỌC KỲ I TOÁN 10', examCode: 'TOAN10_01', isExamFocus: true, isCurrent: true, theory: 'Mệnh đề, Tập hợp, Miền nghiệm BPT bậc nhất hai ẩn, Định lý Sin, Cosin tam giác.', exercise: 'Bộ đề thi rèn tư duy logic và kỹ năng vẽ đồ thị, bấm máy Casio.' }
+            ]
+          }
+        ]
+      },
+      'L11': {
+        title: 'Chương Trình Toán 11 (Chương Trình GDPT 2018 Mới)',
+        currentWeek: 8,
+        currentWeekFocus: 'Tuần 8: Hàm số lượng giác, Phương trình lượng giác & HÌNH HỌC KHÔNG GIAN (ÔN GIỮA KÌ I)',
+        chapters: [
+          {
+            chapterId: 'c11_1',
+            chapterTitle: 'Chương I: Hàm Số Lượng Giác & Phương Trình Lượng Giác',
+            lessons: [
+              { id: 'toan11-01', week: 1, title: 'Bài 1: Góc lượng giác, giá trị lượng giác và công thức biến đổi', examCode: 'TOAN11_01', theory: 'Đổi góc $180^\\circ = \\pi\\text{ rad}$. Công thức cơ bản: $\\sin^2\\alpha + \\cos^2\\alpha = 1$, $\\sin 2a = 2\\sin a \\cos a$, $\\cos 2a = \\cos^2 a - \\sin^2 a$.', exercise: 'Cho $\\cos\\alpha = -3/5$ với $\\pi/2 < \\alpha < \\pi$, tính $\\sin\\alpha$ và $\\tan 2\\alpha$.' },
+              { id: 'toan11-02', week: 3, title: 'Bài 2: Các hàm số lượng giác và tập xác định', examCode: 'TOAN11_01', theory: '$y = \\sin x$ (hàm lẻ, chu kỳ $2\\pi$), $y = \\cos x$ (hàm chẵn, chu kỳ $2\\pi$), $y = \\tan x$ ($x \\ne \\pi/2 + k\\pi$).', exercise: 'Tìm tập xác định của $y = \\tan(x - \\pi/3)$; tìm giá trị lớn nhất nhỏ nhất của $y = 4\\cos 2x - 1$.' },
+              { id: 'toan11-03', week: 5, title: 'Bài 3: Phương trình lượng giác cơ bản', examCode: 'TOAN11_01', theory: '$\\sin x = \\sin\\alpha \\iff x = \\alpha + k2\\pi$ hoặc $x = \\pi - \\alpha + k2\\pi$; $\\cos x = \\cos\\alpha \\iff x = \\pm\\alpha + k2\\pi$.', exercise: 'Giải phương trình: $\\cos x = -1/2$; $\\sin(2x - \\pi/3) = \\sqrt{3}/2$.' }
+            ]
+          },
+          {
+            chapterId: 'c11_2',
+            chapterTitle: 'Chương IV: Đường Thẳng & Mặt Phẳng Không Gian (Quan Hệ Song Song)',
+            lessons: [
+              { id: 'toan11-04', week: 6, title: 'Bài 4: Điểm, đường thẳng và các cách xác định mặt phẳng', examCode: 'TOAN11_01', theory: 'Qua 3 điểm không thẳng hàng hoặc qua 2 đường thẳng cắt nhau luôn xác định duy nhất một mặt phẳng.', exercise: 'Tìm giao tuyến của hai mặt phẳng $(SAC)$ và $(SBD)$ trong hình chóp $S.ABCD$.' },
+              { id: 'toan11-05', week: 7, title: 'Bài 5: Hai đường thẳng song song và đường thẳng song song mặt phẳng', examCode: 'TOAN11_01', theory: 'Nếu đường thẳng $d$ không nằm trong $(\\alpha)$ và $d \\parallel d' \\subset (\\alpha)$ thì $d \\parallel (\\alpha)$.', exercise: 'Chứng minh đường trung bình trong tứ diện song song với mặt phẳng đáy.' },
+              { id: 'toan11-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP GIỮA HỌC KỲ I TOÁN 11 (BỘ ĐỀ 25/10 THẦY TUẤN)', examCode: 'TOAN11_01', isExamFocus: true, isCurrent: true, theory: 'Tổng hợp Lượng giác (Góc, Công thức, Đồ thị, Phương trình) và Hình học không gian.', exercise: 'Bộ đề trắc nghiệm chuẩn 4 lựa chọn + đúng sai + trả lời ngắn có lời giải chi tiết.' }
+            ]
+          }
+        ]
+      },
+      'L12': {
+        title: 'Chương Trình Toán 12 (Chương Trình GDPT 2018 Mới)',
+        currentWeek: 8,
+        currentWeekFocus: 'Tuần 8: Ứng dụng đạo hàm khảo sát hàm số & TOẠ ĐỘ VECTƠ OXYZ (ÔN GIỮA KÌ I)',
+        chapters: [
+          {
+            chapterId: 'c12_1',
+            chapterTitle: 'Chương I: Ứng Dụng Đạo Hàm Khảo Sát & Vẽ Đồ Thị Hàm Số',
+            lessons: [
+              { id: 'toan12-01', week: 1, title: 'Bài 1: Tính đơn điệu của hàm số', examCode: 'TOAN12_01', theory: 'Hàm số đồng biến trên $K$ khi $f'(x) \\ge 0$, nghịch biến khi $f'(x) \\le 0$ (dấu bằng chỉ tại hữu hạn điểm).', exercise: 'Tìm các khoảng đơn điệu của hàm đa thức bậc ba $y = x^3 - 3x^2 + 2$.' },
+              { id: 'toan12-02', week: 3, title: 'Bài 2: Cực trị của hàm số', examCode: 'TOAN12_01', theory: 'Điều kiện đủ: Nếu $f'(x)$ đổi dấu từ dương sang âm qua $x_0$ thì $x_0$ là điểm cực đại; từ âm sang dương là cực tiểu.', exercise: 'Tìm toạ độ các điểm cực trị của đồ thị hàm số $y = x^3 - 3x^2 + 2$.' },
+              { id: 'toan12-03', week: 4, title: 'Bài 3: Giá trị lớn nhất và giá trị nhỏ nhất của hàm số', examCode: 'TOAN12_01', theory: 'Tìm GTLN-GTNN trên đoạn $[a; b]$: Tính giá trị tại các điểm dừng và tại hai đầu mút $a, b$.', exercise: 'Tìm GTLN của $y = -x^4 + 2x^2 + 3$ trên đoạn $[0; 2]$.' },
+              { id: 'toan12-04', week: 6, title: 'Bài 4: Đường tiệm cận của đồ thị hàm số', examCode: 'TOAN12_01', theory: 'Tiệm cận ngang: $\\lim_{x \\to \\pm\\infty} f(x) = y_0 \\implies y = y_0$. Tiệm cận đứng: $\\lim_{x \\to x_0} f(x) = \\pm\\infty \\implies x = x_0$.', exercise: 'Xác định đường tiệm cận đứng và tiệm cận ngang của hàm số $y = \\frac{2x - 1}{x + 3}$.' }
+            ]
+          },
+          {
+            chapterId: 'c12_2',
+            chapterTitle: 'Chương II: Toạ Độ Của Vectơ Trong Không Gian Oxyz',
+            lessons: [
+              { id: 'toan12-05', week: 7, title: 'Bài 5: Vectơ và các phép toán toạ độ trong không gian Oxyz', examCode: 'TOAN12_01', theory: '$\\vec{u} + \\vec{v} = (x_1+x_2; y_1+y_2; z_1+z_2)$, $k\\vec{u} = (kx; ky; kz)$, tích vô hướng $\\vec{u} \\cdot \\vec{v} = x_1x_2 + y_1y_2 + z_1z_2$.', exercise: 'Cho $\\vec{a} = (1; 2; -3)$ và $\\vec{b} = (-2; 1; 4)$. Tính toạ độ $\\vec{u} = 2\\vec{a} + \\vec{b}$.' },
+              { id: 'toan12-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP GIỮA HỌC KỲ I TOÁN 12 (TRỌNG TÂM THI TN THPT)', examCode: 'TOAN12_01', isExamFocus: true, isCurrent: true, theory: 'Khảo sát hàm số, Bảng biến thiên, Cực trị, Tiệm cận và Toạ độ vectơ không gian Oxyz.', exercise: 'Đề thi trắc nghiệm 4 lựa chọn bấm giờ có đo đạc tốc độ tư duy.' }
             ]
           }
         ]
@@ -530,8 +641,8 @@
             chapterId: 'cdgnl_1',
             chapterTitle: 'Phần 1: Tư Duy Định Lượng (Toán Học & Suy Luận Số Liệu)',
             lessons: [
-              { id: 'dgnl-01', week: 8, title: 'Đề số 01: Tư duy Định lượng & Logic suy luận (30 câu tính giờ)', examId: 4, isExamFocus: true, isCurrent: true, theory: 'Cấu trúc đề ĐHQG-HCM: Đại số, Hình học, Xác suất thống kê, Đọc hiểu biểu đồ ma trận.', exercise: '30 câu trắc nghiệm 4 lựa chọn, phân tích tốc độ dưới 1.5 phút/câu.' },
-              { id: 'dgnl-02', week: 8, title: 'Chuyên đề: Logic suy luận vị trí, sắp xếp thứ tự và suy diễn mệnh đề', examId: 4, theory: 'Quy tắc suy luận Modus Ponens, bảng chân trị và bài toán sắp xếp 5-7 đối tượng.', exercise: 'Các dạng bài toán xếp hàng, chọn môn học và phân tích điều kiện cần-đủ.' }
+              { id: 'dgnl-01', week: 8, title: 'Đề số 01: Tư duy Định lượng & Logic suy luận (Bộ đề chuẩn)', examCode: 'DGNL_2026_01', isExamFocus: true, isCurrent: true, theory: 'Cấu trúc đề ĐHQG-HCM: Đại số, Hình học, Xác suất thống kê, Đọc hiểu biểu đồ ma trận.', exercise: '30 câu trắc nghiệm 4 lựa chọn, phân tích tốc độ dưới 1.5 phút/câu.' },
+              { id: 'dgnl-02', week: 8, title: 'Đề số 02: Xử lý bảng biểu dữ liệu thực tế & Logic sắp xếp vị trí', examCode: 'DGNL_2026_02', isExamFocus: true, isCurrent: true, theory: 'Quy tắc suy luận Modus Ponens, bài toán xếp chỗ, tính tỷ trọng doanh thu và xác suất Venn.', exercise: 'Thực hành phân tích ma trận dữ liệu thực tế đề thi 2026.' }
             ]
           }
         ]
@@ -626,7 +737,7 @@
                     </div>
                     <p class="text-xs text-gray-600">Làm bài thi trắc nghiệm theo chuẩn cấu trúc thời gian để hệ thống đo đạc tốc độ và chỉ ra lỗ hổng kiến thức.</p>
                   </div>
-                  <a href="thi.html?exam_id=${ls.examId || 1}" class="w-full sm:w-auto bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition shadow flex items-center justify-center gap-2 whitespace-nowrap flex-none">
+                  <a href="${ls.examCode ? 'thi.html?exam_code=' + encodeURIComponent(ls.examCode) : 'thi.html?exam_id=' + (ls.examId || 1)}" class="w-full sm:w-auto bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition shadow flex items-center justify-center gap-2 whitespace-nowrap flex-none">
                     <i class="fas fa-play-circle"></i> <span>Vào Thi Ngay</span> <i class="fas fa-arrow-right"></i>
                   </a>
                 </div>
@@ -701,7 +812,7 @@
               </div>
               <div class="pt-3 border-t border-bac flex justify-between items-center">
                 <span class="text-xs text-gray-500 font-medium"><i class="fas fa-brain text-luc"></i> Hệ Thống Khảo Thí chấm</span>
-                <button onclick="startExam(${ex.exam_id})" class="bg-lam hover:bg-blue-900 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                <button onclick="startExam(${ex.exam_id}, '${ex.exam_code}')" class="bg-lam hover:bg-blue-900 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
                   <span>Vào thi ngay</span> <i class="fas fa-arrow-right"></i>
                 </button>
               </div>
@@ -713,15 +824,19 @@
       }
     }
 
-    function selectGrade(g) {
+    function selectGrade(g, btnEl) {
       currentGrade = g;
       document.querySelectorAll('.grade-btn').forEach(btn => {
         btn.classList.remove('bg-luc', 'text-white');
         btn.classList.add('bg-giay', 'text-gray-700');
       });
-      event.target.classList.add('bg-luc', 'text-white');
-      event.target.classList.remove('bg-giay', 'text-gray-700');
+      const target = btnEl || (window.event ? (window.event.currentTarget || window.event.target) : null);
+      if (target && target.classList) {
+        target.classList.add('bg-luc', 'text-white');
+        target.classList.remove('bg-giay', 'text-gray-700');
+      }
       loadExams();
+      renderCurriculumSyllabus(g === 'ALL' ? 'L06' : g);
     }
 
     async function handleGuestLogin(e) {
@@ -751,8 +866,12 @@
       }
     }
 
-    function startExam(examId) {
-      window.location.href = `thi.html?exam_id=${examId}`;
+    function startExam(examId, examCode) {
+      if (examCode) {
+        window.location.href = `thi.html?exam_code=${encodeURIComponent(examCode)}`;
+      } else {
+        window.location.href = `thi.html?exam_id=${examId}`;
+      }
     }
 
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }

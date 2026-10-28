@@ -124,7 +124,8 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const examId = urlParams.get('exam_id');
+    const examId = urlParams.get('exam_id') || '';
+    const examCode = urlParams.get('exam_code') || '';
     let examData = null;
     let timerInterval = null;
     let timeRemainingSeconds = 0;
@@ -136,14 +137,15 @@
     let isUnlocked = sessionStorage.getItem('bdvh_unlocked') === '1';
 
     async function init() {
-      if (!examId) {
+      if (!examId && !examCode) {
         alert('Thiếu mã đề thi!');
         window.location.href = 'index.html';
         return;
       }
 
       try {
-        const res = await fetch(`api.php?action=get_exam&exam_id=${examId}`);
+        const queryParam = examCode ? `exam_code=${encodeURIComponent(examCode)}` : `exam_id=${encodeURIComponent(examId)}`;
+        const res = await fetch(`api.php?action=get_exam&${queryParam}`);
         const data = await res.json();
 
         if (data.status === 'success') {
@@ -341,7 +343,8 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'submit_exam',
-            exam_id: examId,
+            exam_id: examData ? examData.exam_id : (examId || 0),
+            exam_code: examCode || (examData ? examData.exam_code : ''),
             student_name: currentStudentName,
             class_code: currentClassCode,
             answers: userAnswers,
