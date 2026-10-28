@@ -100,7 +100,7 @@
             <i class="fas fa-gift text-amber-300"></i> Miễn phí 2 lượt thi thử đầu tiên
           </div>
           <div class="flex items-center gap-2 text-xs bg-white/15 px-3 py-1.5 rounded-lg border border-white/10">
-            <i class="fas fa-coffee text-amber-300"></i> MoMo Bonus 5.000đ mở thêm 5 lượt
+            <i class="fas fa-graduation-cap text-amber-300"></i> Nhập mã lớp học dùng cho toàn khóa
           </div>
           <div class="flex items-center gap-2 text-xs bg-white/15 px-3 py-1.5 rounded-lg border border-white/10">
             <i class="fas fa-chalkboard-teacher text-amber-300"></i> Báo cáo chuẩn A4 gửi phụ huynh
@@ -108,30 +108,44 @@
         </div>
       </div>
 
-      <!-- Box Tra cứu nhanh tiến độ -->
-      <div class="bg-white text-muc p-6 rounded-2xl shadow-xl w-full md:w-80 border border-bac">
-        <h3 class="font-bold text-sm text-lam uppercase tracking-wide mb-3 flex items-center justify-between">
-          <span>Trạng thái của em</span>
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        </h3>
-        <div id="trial-counter-box" class="space-y-3">
-          <div class="bg-giay p-3 rounded-xl border border-bac flex justify-between items-center">
-            <span class="text-xs text-gray-600 font-medium">Làm bài & chấm điểm:</span>
-            <span class="font-bold text-luc text-sm">Miễn phí 100%</span>
+              <!-- Box Quản lý Tài khoản & Mã Lớp Học Sinh Dùng Cho Toàn Khóa -->
+        <div class="w-full lg:w-84 bg-white/95 backdrop-blur-md rounded-2xl p-5 shadow-2xl border border-white/20 text-muc space-y-3.5">
+          <div class="flex items-center justify-between pb-2.5 border-b border-bac">
+            <span class="text-xs font-bold text-gray-600 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fas fa-id-card text-luc"></i> Tài Khoản Học Sinh
+            </span>
+            <span id="hero-badge-status" class="text-[11px] bg-emerald-100 text-luc font-bold px-2 py-0.5 rounded-full">Sẵn sàng</span>
           </div>
-          <div class="bg-giay p-3 rounded-xl border border-bac flex justify-between items-center">
-            <span class="text-xs text-gray-600 font-medium">Lượt phân tích chuyên sâu:</span>
-            <span id="free-count" class="font-bold text-lam text-base">2 lượt</span>
+
+          <div id="hero-account-info" class="space-y-3 text-xs">
+            <div class="bg-giay p-3 rounded-xl border border-bac">
+              <div class="text-[11px] text-gray-500">Thí sinh:</div>
+              <div id="hero-student-name" class="font-bold text-muc text-sm truncate">Chưa đăng nhập</div>
+              <div id="hero-class-status" class="text-[11px] text-gray-600 mt-1">Chưa gắn mã lớp học</div>
+            </div>
+
+            <!-- Khung nhập mã lớp lưu dùng toàn khóa -->
+            <div id="hero-class-input-box" class="space-y-2">
+              <label class="block text-[11px] font-bold text-gray-700">Mã Lớp Giáo Viên Cung Cấp:</label>
+              <div class="flex gap-2">
+                <input type="text" id="quickClassCode" maxlength="8" placeholder="VD: 7K8B" class="w-full px-3 py-2 border-2 border-amber-300 bg-amber-50/50 rounded-xl text-center text-sm font-bold uppercase tracking-wider text-gray-800 outline-none focus:border-amber-500 font-mono">
+                <button onclick="saveQuickClassCode()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3.5 py-2 rounded-xl text-xs whitespace-nowrap transition shadow">
+                  Lưu Mã
+                </button>
+              </div>
+              <p class="text-[10px] text-gray-500 italic">Nhập 1 lần và dùng cho toàn bộ buổi học / toàn khóa học.</p>
+            </div>
+
+            <div class="pt-1 flex items-center justify-between gap-2">
+              <button onclick="openModal('modal-guest')" class="text-luc font-bold hover:underline flex items-center gap-1 text-xs">
+                <i class="fas fa-user-edit"></i> <span id="hero-auth-btn-label">Đăng Ký / Đăng Nhập</span>
+              </button>
+              <a href="https://zalo.me/0903052119" target="_blank" class="text-gray-500 hover:text-luc text-[11px]">
+                Zalo: 0903.052.119
+              </a>
+            </div>
           </div>
-          <button onclick="openBonusModal(5000)" class="w-full bg-gradient-to-r from-son to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow">
-            <i class="fas fa-heart"></i> Ủng hộ Thầy 5.000đ (+5 lượt phân tích chuyên sâu)
-          </button>
-          <p class="text-[10px] text-gray-500 text-center italic">
-            Học sinh khó khăn có thể gửi email về <a href="mailto:dqtuanhcmus@gmail.com" class="text-luc underline">dqtuanhcmus@gmail.com</a> để Thầy hỗ trợ miễn phí.
-          </p>
         </div>
-      </div>
-    </div>
   </section>
 
   <!-- BỘ LỌC KHỐI LỚP & MÔN HỌC -->
@@ -202,73 +216,24 @@
     </div>
   </div>
 
-  <!-- MODAL NẠP MOMO BONUS & NÂNG CẤP (TÂM LÝ SƯ PHẠM) -->
-  <div id="modal-bonus" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-bac animate-fadeIn">
-      <div class="flex justify-between items-center pb-3 border-b border-bac mb-4">
-        <h3 class="font-bold text-lg text-lam title-serif flex items-center gap-2">
-          <i class="fas fa-heart text-son"></i> Đồng Hành Cùng Thầy Đinh Quốc Tuấn
-        </h3>
-        <button onclick="closeModal('modal-bonus')" class="text-gray-400 hover:text-gray-700 text-xl"><i class="fas fa-times"></i></button>
-      </div>
-      
-      <div class="space-y-4 text-xs text-gray-700 leading-relaxed">
-        <p class="bg-emerald-50 text-luc p-3 rounded-xl border border-emerald-200">
-          🌱 <i>"Mỗi lượt chấm bài chi tiết và phân tích tư duy đều tiêu tốn chi phí điện toán tài nguyên máy chủ hệ thống của Thầy. Em hãy ủng hộ Thầy một ly trà đá (5.000đ) để cùng Thầy duy trì nền tảng và mở thêm các lượt rèn luyện tiếp theo nhé!"</i>
-        </p>
-
-        <!-- Lựa chọn gói bonus -->
-        <div class="grid grid-cols-3 gap-2 text-center">
-          <div onclick="selectBonusAmount(5000)" class="bonus-opt border-2 border-luc bg-emerald-50/50 p-2.5 rounded-xl cursor-pointer">
-            <span class="block font-bold text-son text-sm">5.000đ</span>
-            <span class="text-[11px] text-gray-500">+5 lượt thi</span>
-          </div>
-          <div onclick="selectBonusAmount(10000)" class="bonus-opt border border-bac p-2.5 rounded-xl cursor-pointer hover:border-luc">
-            <span class="block font-bold text-son text-sm">10.000đ</span>
-            <span class="text-[11px] text-gray-500">+12 lượt thi</span>
-          </div>
-          <div onclick="selectBonusAmount(20000)" class="bonus-opt border border-bac p-2.5 rounded-xl cursor-pointer hover:border-luc">
-            <span class="block font-bold text-son text-sm">20.000đ</span>
-            <span class="text-[11px] text-gray-500">+30 lượt thi</span>
-          </div>
-        </div>
-
-        <!-- Mã QR & Thông tin MoMo -->
-        <div class="bg-giay p-4 rounded-xl border border-bac flex flex-col sm:flex-row items-center gap-4">
-          <img id="momo-qr" src="" alt="MoMo QR" class="w-32 h-32 rounded-lg border border-gray-300 shadow-sm bg-white p-1">
-          <div class="space-y-1.5 flex-1 w-full text-left">
-            <p><b>Người nhận:</b> <span class="text-lam font-semibold">ThS. Đinh Quốc Tuấn</span></p>
-            <p><b>Số tiền:</b> <span id="momo-amount" class="text-son font-bold">5.000 VNĐ</span></p>
-            <p><b>Nội dung CK:</b> <span id="momo-memo" class="font-mono bg-white px-2 py-0.5 rounded border border-gray-300 text-luc font-bold select-all">BDVH ...</span></p>
-            <p class="text-[11px] text-gray-500 italic">Quét bằng ứng dụng MoMo hoặc Ngân hàng bất kỳ.</p>
-          </div>
-        </div>
-
-        <div class="pt-2 border-t border-bac flex flex-col sm:flex-row justify-between items-center gap-3">
-          <a href="mailto:dqtuanhcmus@gmail.com?subject=Dang%20ky%20Hoc%20Kem%20VIP%20ThS%20Dinh%20Quoc%20Tuan" class="text-xs text-lam hover:underline flex items-center gap-1 font-semibold">
-            <i class="fas fa-envelope"></i> Thỏa thuận nâng cấp VIP / Kèm riêng
-          </a>
-          <button onclick="closeModal('modal-bonus')" class="bg-luc text-white px-4 py-2 rounded-xl text-xs font-semibold hover:bg-emerald-800 transition">
-            Đã chuyển khoản xong
-          </button>
-        </div>
-      </div>
-    </div>
+  <!-- Đã gỡ bỏ modal-bonus ép 5.000đ -->
   </div>
 
-  <!-- FOOTER CHUẨN THƯƠNG HIỆU -->
-  <footer class="bg-muc text-white/80 py-8 border-t border-gray-800 text-xs">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="text-center md:text-left space-y-1">
-        <p class="font-bold text-white text-sm">Trung Tâm Bồi Dưỡng Văn Hóa — Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM</p>
-        <p class="text-white/60">Chịu trách nhiệm học thuật: ThS. Đinh Quốc Tuấn · Email: <a href="mailto:dqtuanhcmus@gmail.com" class="text-emerald-400 hover:underline">dqtuanhcmus@gmail.com</a></p>
+    <!-- FOOTER CHUẨN THƯƠNG HIỆU -->
+  <footer class="bg-white border-t border-bac py-8 text-xs text-gray-600 mt-12">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+      <div class="space-y-1">
+        <p class="font-bold text-muc text-sm title-serif">Trung Tâm Bồi Dưỡng Văn Hóa — Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM</p>
+        <p>Phụ trách chuyên môn Toán & Khảo thí: <b>ThS. Đinh Quốc Tuấn</b> · Email: dqtuanhcmus@gmail.com</p>
+        <p class="text-[10px] text-gray-500">Hệ thống khảo thí năng lực trực tuyến phục vụ học sinh & giáo viên.</p>
       </div>
-      <div class="flex items-center gap-4">
-        <span class="text-white/40">Nền tảng tích hợp Hệ Thống Phân Tích Tư Duy</span>
-        <div class="dqt-logo-o w-8 h-8">
-          <img src="assets/logo-sen.svg" alt="Logo Sen" class="w-full h-full">
-        </div>
+      <div class="flex items-center gap-4 text-sm text-gray-500">
+        <a href="thay-tuan.html" class="hover:text-luc transition font-semibold"><i class="fas fa-lock"></i> Giảng Viên</a>
+        <a href="https://zalo.me/0903052119" target="_blank" class="hover:text-luc transition font-semibold"><i class="fas fa-comment-dots"></i> Zalo Hỗ Trợ</a>
       </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-4 pt-4 mt-4 border-t border-bac text-center">
+      <p class="text-[10px] sm:text-[11px] italic text-black font-serif">Hỗ trợ tác giả ly cafe nếu thích (tùy hỷ 1k, 3k, 5k...) hoặc liên hệ tác giả: Zalo 0903052119</p>
     </div>
   </footer>
 
@@ -278,8 +243,74 @@
     let currentUser = null;
     let selectedAmount = 5000;
 
-    async function init() {
+    
+      function syncAccountAndClassUI() {
+        const studentName = localStorage.getItem('bdvh_student_name') || (currentUser ? currentUser.full_name : '');
+        const classCode = localStorage.getItem('bdvh_class_code') || '';
+        
+        const nameEl = document.getElementById('hero-student-name');
+        const statusEl = document.getElementById('hero-class-status');
+        const badgeEl = document.getElementById('hero-badge-status');
+        const btnLabel = document.getElementById('hero-auth-btn-label');
+        const quickInput = document.getElementById('quickClassCode');
+        
+        if (nameEl) {
+          nameEl.innerText = studentName || 'Học sinh vãng lai';
+        }
+        if (btnLabel) {
+          btnLabel.innerText = studentName ? 'Đổi tài khoản' : 'Đăng Ký / Đăng Nhập';
+        }
+        if (statusEl) {
+          if (classCode) {
+            statusEl.innerHTML = `<span class="text-luc font-bold"><i class="fas fa-check-circle"></i> Đã kích hoạt Lớp: <span class="font-mono">${esc(classCode)}</span> (Toàn khóa)</span>`;
+            if (badgeEl) {
+              badgeEl.className = 'text-[11px] bg-emerald-100 text-luc font-bold px-2 py-0.5 rounded-full';
+              badgeEl.innerText = 'Đã mở khóa';
+            }
+            if (quickInput) quickInput.value = classCode;
+          } else {
+            statusEl.innerText = 'Chưa nhập mã lớp giáo viên cấp';
+            if (badgeEl) {
+              badgeEl.className = 'text-[11px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full';
+              badgeEl.innerText = 'Cần mã lớp';
+            }
+          }
+        }
+      }
+
+      async function saveQuickClassCode() {
+        const input = document.getElementById('quickClassCode');
+        const code = input ? input.value.trim().toUpperCase() : '';
+        if (!code) {
+          alert('Vui lòng nhập mã lớp do Thầy/Cô cung cấp.');
+          return;
+        }
+        const studentName = localStorage.getItem('bdvh_student_name') || (currentUser ? currentUser.full_name : 'Học sinh');
+        try {
+          const res = await fetch('api.php?action=verify_class_code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code, student_name: studentName })
+          });
+          const data = await res.json();
+          if (data.status === 'success') {
+            localStorage.setItem('bdvh_class_code', code);
+            localStorage.setItem('bdvh_unlocked', '1');
+            sessionStorage.setItem('bdvh_class_code', code);
+            sessionStorage.setItem('bdvh_unlocked', '1');
+            syncAccountAndClassUI();
+            alert(data.message || 'Kích hoạt mã lớp thành công! Mã được lưu dùng cho toàn bộ buổi học / toàn khóa học.');
+          } else {
+            alert(data.message || 'Mã lớp không hợp lệ hoặc đã hết hạn.');
+          }
+        } catch (e) {
+          alert('Lỗi kết nối kiểm tra mã lớp: ' + e.message);
+        }
+      }
+
+      async function init() {
       await checkAuth();
+        syncAccountAndClassUI();
       await loadExams();
     }
 
@@ -385,6 +416,7 @@
         if (data.status === 'success') {
           closeModal('modal-guest');
           await checkAuth();
+        syncAccountAndClassUI();
           alert(data.message);
         } else {
           alert(data.message || 'Lỗi tạo tài khoản');
@@ -398,39 +430,6 @@
       window.location.href = `thi.html?exam_id=${examId}`;
     }
 
-    function openBonusModal(amt = 5000) {
-      if (!currentUser) {
-        openModal('modal-guest');
-        return;
-      }
-      selectBonusAmount(amt);
-      openModal('modal-bonus');
-    }
-
-    function selectBonusAmount(amt) {
-      selectedAmount = amt;
-      const username = currentUser ? currentUser.username : 'khach';
-      const memo = `BDVH ${username} ${amt / 1000}K`;
-      document.getElementById('momo-amount').innerText = amt.toLocaleString('vi-VN') + ' VNĐ';
-      document.getElementById('momo-memo').innerText = memo;
-      
-      // QR Code
-      const qrData = `2|99|0908xxxxxx|Đinh Quốc Tuấn||0|0|${amt}|${memo}|transfer_myqr`;
-      document.getElementById('momo-qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(qrData);
-
-      document.querySelectorAll('.bonus-opt').forEach(el => {
-        el.classList.remove('border-2', 'border-luc', 'bg-emerald-50/50');
-        el.classList.add('border-bac');
-      });
-      event?.currentTarget?.classList?.add('border-2', 'border-luc', 'bg-emerald-50/50');
-    }
-
-    async function logout() {
-      await fetch('api.php?action=logout');
-      await checkAuth();
-    }
-
-    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
     function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 

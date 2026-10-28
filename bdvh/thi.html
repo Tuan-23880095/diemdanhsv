@@ -119,25 +119,7 @@
     </form>
   </main>
 
-  <!-- MODAL BÁO HẾT LƯỢT LÀM BÀI -->
-  <div id="modal-quota" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center shadow-2xl border border-bac">
-      <div class="w-14 h-14 bg-red-100 text-son rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-        <i class="fas fa-lock"></i>
-      </div>
-      <h3 class="font-bold text-lg text-lam title-serif mb-2">Đã Hết 2 Lượt Thi Miễn Phí!</h3>
-      <p class="text-xs text-gray-600 leading-relaxed mb-6">
-        Em đã dùng hết 2 lượt làm bài miễn phí của tài khoản khách. Hãy ủng hộ Thầy một ly trà đá (5.000đ) để mở thêm 5 lượt thi thử tính giờ và nhận phân tích sư phạm chuyên sâu từ Hệ Thống nhé!
-      </p>
-      <div class="space-y-2">
-        <a href="index.html" class="block w-full bg-luc text-white font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-800 transition">
-          Về Trang Chủ & Nạp MoMo Bonus (5.000đ)
-        </a>
-        <a href="mailto:dqtuanhcmus@gmail.com?subject=Dang%20ky%20Hoc%20Kem%20VIP" class="block text-xs text-lam hover:underline font-semibold pt-2">
-          Liên hệ Thầy Tuấn để thỏa thuận nâng cấp VIP
-        </a>
-      </div>
-    </div>
+  <!-- Đã gỡ bỏ modal-quota ép 5.000đ -->
   </div>
 
   <script>
@@ -371,8 +353,7 @@
         if (data.status === 'success') {
           sessionStorage.setItem('last_submission', JSON.stringify(data));
           window.location.href = `ket-qua.html?sub_id=${data.submission_id}`;
-        } else if (data.status === 'quota_exceeded') {
-          document.getElementById('modal-quota').classList.remove('hidden');
+        
         } else {
           alert(data.message || 'Lỗi khi nộp bài!');
           btn.disabled = false;
