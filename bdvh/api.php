@@ -729,11 +729,21 @@ switch ($action) {
         $grade = $_GET['grade'] ?? '';
         $subject = $_GET['subject'] ?? '';
 
+        // Tự động đồng bộ ngân hàng đề thi chuẩn nếu cần
+        try {
+            $cntSt = $pdo->query("SELECT COUNT(*) as c FROM bdvh_exams");
+            $cntRow = $cntSt ? $cntSt->fetch() : null;
+            if (!$cntRow || (int)$cntRow['c'] < 11) {
+                seed_default_exams($pdo);
+            }
+        } catch (Throwable $e) {}
+
         $sql = "SELECT exam_id, exam_code, grade, subject, title, description, time_minutes FROM bdvh_exams WHERE status = 'ACTIVE'";
         $params = [];
-        if ($grade !== '') {
-            $sql .= " AND grade = ?";
+        if ($grade !== '' && $grade !== 'ALL') {
+            $sql .= " AND (grade = ? OR grade = ?)";
             $params[] = $grade;
+            $params[] = str_replace('L', '', $grade);
         }
         if ($subject !== '') {
             $sql .= " AND subject = ?";
@@ -749,7 +759,8 @@ switch ($action) {
     // 5. Lấy đề thi vào phòng làm bài (MỌI HỌC SINH ĐỀU ĐƯỢC VÀO THI MIỄN PHÍ KHÔNG GIỚI HẠN)
     case 'get_exam':
         $examId = (int)($_GET['exam_id'] ?? $inputData['exam_id'] ?? 0);
-        if ($examId <= 0) {
+        $examCode = trim((string)($_GET['exam_code'] ?? $inputData['exam_code'] ?? ''));
+        if ($examId <= 0 && $examCode === '') {
             json_out(['status' => 'error', 'message' => 'Mã đề thi không hợp lệ.'], 400);
         }
 
@@ -769,8 +780,13 @@ switch ($action) {
         }
 
         // Lấy đề thi và giấu đáp án đúng để học sinh làm bài
-        $stmt = $pdo->prepare("SELECT exam_id, exam_code, grade, subject, title, description, time_minutes, questions_json FROM bdvh_exams WHERE exam_id = ?");
-        $stmt->execute([$examId]);
+        if ($examId > 0) {
+            $stmt = $pdo->prepare("SELECT exam_id, exam_code, grade, subject, title, description, time_minutes, questions_json FROM bdvh_exams WHERE exam_id = ?");
+            $stmt->execute([$examId]);
+        } else {
+            $stmt = $pdo->prepare("SELECT exam_id, exam_code, grade, subject, title, description, time_minutes, questions_json FROM bdvh_exams WHERE exam_code = ?");
+            $stmt->execute([$examCode]);
+        }
         $exam = $stmt->fetch();
         if (!$exam) {
             json_out(['status' => 'error', 'message' => 'Không tìm thấy đề thi.'], 404);
@@ -805,12 +821,20 @@ switch ($action) {
     // 6. Nộp bài, chấm điểm và gọi Hệ Thống Khảo Thí phân tích tư duy (Chấm bài miễn phí, AI nhận xét cần bonus khi hết lượt)
     case 'submit_exam':
         $examId = (int)($inputData['exam_id'] ?? 0);
+        $examCode = trim((string)($inputData['exam_code'] ?? ''));
         $userAnswers = $inputData['answers'] ?? []; // mảng đáp án
         $durationSeconds = (int)($inputData['duration_seconds'] ?? 0);
 
         // Lấy đề thi gốc để chấm điểm
-        $stmt = $pdo->prepare("SELECT * FROM bdvh_exams WHERE exam_id = ?");
-        $stmt->execute([$examId]);
+        if ($examId > 0) {
+            $stmt = $pdo->prepare("SELECT * FROM bdvh_exams WHERE exam_id = ?");
+            $stmt->execute([$examId]);
+        } elseif ($examCode !== '') {
+            $stmt = $pdo->prepare("SELECT * FROM bdvh_exams WHERE exam_code = ?");
+            $stmt->execute([$examCode]);
+        } else {
+            json_out(['status' => 'error', 'message' => 'Không tìm thấy thông tin đề thi.'], 400);
+        }
         $exam = $stmt->fetch();
         if (!$exam) {
             json_out(['status' => 'error', 'message' => 'Không tìm thấy đề thi.'], 404);

@@ -104,7 +104,8 @@
           </label>
           <select id="class-selector" onchange="changeClassLecture(this.value)" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white text-xs font-bold rounded-xl px-3 py-2 outline-none cursor-pointer transition">
             <option value="toan7_phuan" class="text-gray-900 font-bold" selected>Lớp Toán 7 (THCS Phú An / KNTT) — Ôn Cuối Kì I</option>
-            <option value="toan6_kntt" class="text-gray-900 font-bold">Lớp Toán 6 — Bài 10: Bội Chung Nhỏ Nhất & Hình Phẳng Thực Tiễn</option>
+            <option value="toan6_kntt" class="text-gray-900 font-bold">Lớp Toán 6 (KNTT) — Ôn Cuối Kì I (3-Slide: Đề ➔ Đáp án ➔ Lời giải)</option>
+            <option value="khtn6_kntt" class="text-gray-900 font-bold">Lớp KHTN 6 (KNTT) — Ôn Cuối Kì I (3-Slide: Đề ➔ Đáp án ➔ Lời giải)</option>
             <option value="toan10_kntt" class="text-gray-900 font-bold">Lớp Toán 10 — BPT Bậc Nhất 2 Ẩn & Định Lý Sin/Cosin</option>
             <option value="dgnl_dhqg" class="text-gray-900 font-bold">Lớp Ôn Thi ĐGNL ĐHQG-HCM — Tư Duy Định Lượng & Suy Luận Logic</option>
           </select>
@@ -210,11 +211,18 @@
         tag: 'Lớp Toán 7 · Tuần 8'
       },
       'toan6_kntt': {
-        title: 'Slide Bài Giảng Toán 6: Lũy Thừa, BCNN & Hình Học Thực Tiễn',
-        subtitle: 'Phương pháp giải nhanh, nhận biết dấu hiệu chia hết & tính diện tích mảnh vườn thực tế',
-        slideUrl: 'slide-toan7.html', // có thể mở rộng thêm slide-toan6.html
+        title: 'Slide Trình Chiếu Bài Giảng Toán 6 – ThS. Đinh Quốc Tuấn',
+        subtitle: 'Chuẩn 3-Slide: 1 Slide Đề câu hỏi ➔ 1 Slide Đáp án ➔ 1 Slide Giải thích chi tiết (KNTT)',
+        slideUrl: 'slide-toan6.html',
         examUrl: 'thi.html?exam_id=1',
-        tag: 'Lớp Toán 6 · Tuần 8'
+        tag: 'Lớp Toán 6 · Ôn Cuối Kì I'
+      },
+      'khtn6_kntt': {
+        title: 'Slide Trình Chiếu Bài Giảng Khoa Học Tự Nhiên 6 – ThS. Đinh Quốc Tuấn',
+        subtitle: 'Chuẩn 3-Slide: 1 Slide Đề câu hỏi ➔ 1 Slide Đáp án ➔ 1 Slide Giải thích chi tiết (KNTT)',
+        slideUrl: 'slide-khtn6.html',
+        examUrl: 'thi.html?exam_id=1',
+        tag: 'Lớp KHTN 6 · Ôn Cuối Kì I'
       },
       'toan10_kntt': {
         title: 'Slide Bài Giảng Toán 10: Miền Nghiệm BPT Bậc Nhất 2 Ẩn & Định Lý Sin/Cosin',

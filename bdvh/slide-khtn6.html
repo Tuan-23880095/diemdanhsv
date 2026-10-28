@@ -1,0 +1,3847 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bài Giảng Điện Tử Khoa Học Tự Nhiên 6 – ThS. Đinh Quốc Tuấn</title>
+<link rel="icon" type="image/svg+xml" href="https://diemdanhsv.com/images/logo-sen.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {{
+  --luc-bode: #0F6B55;
+  --lam-hove: #1F4E79;
+  --giay: #F6F7F3;
+  --vang-sao: #D4AF37;
+  --muc: #1A202C;
+  --xam-vien: #E2E8F0;
+  --do-terra: #C53030;
+  --xanh-la: #2F855A;
+  --tim-indigo: #4F46E5;
+}}
+
+* {{ box-sizing: border-box; margin: 0; padding: 0; }}
+body {{
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #0d1a26;
+  color: var(--muc);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+}}
+
+/* Header bar */
+header {{
+  background: linear-gradient(135deg, #102A43 0%, #1F4E79 100%);
+  color: #fff;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  z-index: 100;
+  border-bottom: 2px solid var(--vang-sao);
+}}
+
+.brand-left {{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}}
+
+.logo-box {{
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}}
+.logo-box img {{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}}
+
+.teacher-info h1 {{
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}}
+.teacher-info p {{
+  font-size: 0.78rem;
+  color: #CBD5E1;
+  font-weight: 500;
+}}
+
+.header-controls {{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}}
+
+.topic-select {{
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}}
+.topic-select option {{
+  background: #1F4E79;
+  color: #fff;
+}}
+
+.btn-ctrl {{
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}}
+.btn-ctrl:hover {{
+  background: var(--luc-bode);
+  border-color: var(--luc-bode);
+}}
+
+/* Slide viewport container */
+.slide-stage {{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+}}
+
+.slide-card {{
+  background: #ffffff;
+  width: 100%;
+  max-width: 1200px;
+  height: 94%;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--xam-vien);
+  animation: fadeIn 0.22s ease-out;
+}}
+.slide-card.active {{
+  display: flex;
+}}
+
+@keyframes fadeIn {{
+  from {{ opacity: 0; transform: scale(0.985); }}
+  to {{ opacity: 1; transform: scale(1); }}
+}}
+
+.slide-header {{
+  padding: 14px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #EDF2F7;
+  background: #FAFCFF;
+}}
+
+.header-left-badges {{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}}
+
+.badge-tag {{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}}
+.badge-question {{
+  background: #EBF8FF;
+  color: #2B6CB0;
+  border: 1px solid #BEE3F8;
+}}
+.badge-answer {{
+  background: #FEFCBF;
+  color: #744210;
+  border: 1px solid #FAF089;
+}}
+.badge-explain {{
+  background: #F0FFF4;
+  color: #22543D;
+  border: 1px solid #C6F6D5;
+}}
+.badge-theory {{
+  background: #FDF2F8;
+  color: #9D174D;
+  border: 1px solid #FBCFE8;
+}}
+.badge-intro {{
+  background: #EBF4FF;
+  color: #312E81;
+  border: 1px solid #C7D2FE;
+}}
+
+/* Mini Step Indicator */
+.step-nav-pills {{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}}
+.step-pill {{
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 12px;
+  background: #EDF2F7;
+  color: #718096;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}}
+.step-pill.current {{
+  background: var(--lam-hove);
+  color: #fff;
+  border-color: var(--lam-hove);
+}}
+.step-pill.current-ans {{
+  background: #D97706;
+  color: #fff;
+}}
+.step-pill.current-sol {{
+  background: var(--luc-bode);
+  color: #fff;
+}}
+
+.slide-num-info {{
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #718096;
+}}
+
+.slide-body {{
+  flex: 1;
+  padding: 26px 36px;
+  overflow-y: auto;
+  font-size: 1.3rem;
+  line-height: 1.7;
+  color: #2D3748;
+}}
+
+/* Question & Answer Styles */
+.q-title {{
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--lam-hove);
+  margin-bottom: 20px;
+  line-height: 1.45;
+}}
+
+.opts-grid {{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}}
+.opts-grid.single-col {{
+  grid-template-columns: 1fr;
+}}
+
+.opt-item {{
+  background: #F8FAFC;
+  border: 2px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 14px 20px;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.2s;
+}}
+.opt-label {{
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #EDF2F7;
+  color: var(--lam-hove);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}}
+.opt-text {{
+  flex: 1;
+}}
+
+/* Correct & Highlight States */
+.opt-item.correct {{
+  background: #ECFDF5;
+  border-color: #10B981;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
+}}
+.opt-item.correct .opt-label {{
+  background: #10B981;
+  color: #ffffff;
+}}
+
+.opt-item.tf-true {{
+  border-left: 6px solid #10B981;
+  background: #F0FDF4;
+}}
+.opt-item.tf-false {{
+  border-left: 6px solid #EF4444;
+  background: #FEF2F2;
+}}
+
+.ans-badge-inline {{
+  display: inline-block;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-left: 8px;
+}}
+.ans-badge-true {{
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #86EFAC;
+}}
+.ans-badge-false {{
+  background: #FEE2E2;
+  color: #B91C1C;
+  border: 1px solid #FCA5A5;
+}}
+
+/* Answer Banner on Slide 2 */
+.answer-summary-card {{
+  margin-top: 24px;
+  padding: 16px 24px;
+  border-radius: 14px;
+  background: #FEF3C7;
+  border: 2px solid #F59E0B;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.12);
+}}
+.ans-key-highlight {{
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #92400E;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}}
+.ans-action-hint {{
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #B45309;
+  cursor: pointer;
+  background: rgba(255,255,255,0.7);
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #FCD34D;
+  transition: all 0.2s;
+}}
+.ans-action-hint:hover {{
+  background: #fff;
+  transform: translateX(3px);
+}}
+
+/* Solution Box on Slide 3 */
+.solution-box {{
+  background: #F0FDF4;
+  border-left: 6px solid var(--luc-bode);
+  padding: 24px 28px;
+  border-radius: 12px;
+  font-size: 1.25rem;
+  line-height: 1.8;
+  box-shadow: 0 4px 14px rgba(15,107,85,0.06);
+}}
+.sol-title {{
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--luc-bode);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}}
+.sol-content {{
+  color: #1F2937;
+}}
+
+/* Theory Box */
+.theory-block {{
+  background: #F8FAFC;
+  border: 1.5pt solid #CBD5E1;
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+}}
+.theory-block h3 {{
+  color: var(--lam-hove);
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}}
+.theory-block ul {{
+  padding-left: 24px;
+  margin-bottom: 0;
+}}
+.theory-block li {{
+  margin-bottom: 8px;
+}}
+
+/* Footer Navigation Bar */
+footer {{
+  background: #102A43;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}}
+
+.nav-buttons {{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}}
+.btn-nav {{
+  background: var(--lam-hove);
+  color: #fff;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}}
+.btn-nav:hover {{
+  background: var(--luc-bode);
+  transform: translateY(-2px);
+}}
+.btn-nav:disabled {{
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}}
+
+.key-hint {{
+  color: #A0AEC0;
+  font-size: 0.82rem;
+  font-weight: 500;
+}}
+.key-hint kbd {{
+  background: #2D3748;
+  color: #E2E8F0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #4A5568;
+}}
+
+/* Fullscreen mode */
+:fullscreen .slide-card {{
+  max-width: 96vw;
+  height: 94vh;
+}}
+:fullscreen .slide-body {{
+  font-size: 1.48rem;
+}}
+:fullscreen .q-title {{
+  font-size: 1.75rem;
+}}
+</style>
+
+<!-- MathJax 3 config -->
+<script>
+window.MathJax = {{
+  tex: {{
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }},
+  options: {{
+    enableMenu: false
+  }}
+}};
+</script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="brand-left">
+    <div class="logo-box">
+      <img src="https://diemdanhsv.com/images/logo-sen.svg" alt="Logo Sen Đinh Quốc Tuấn">
+    </div>
+    <div class="teacher-info">
+      <h1>LỚP KHOA HỌC TỰ NHIÊN 6 – ThS. ĐINH QUỐC TUẤN</h1>
+      <p>Hệ Thống Khảo Thí & Phân Tích Tư Duy · bdvh.diemdanhsv.com</p>
+    </div>
+  </div>
+  
+  <div class="header-controls">
+    <select id="topicFilter" class="topic-select" onchange="filterTopic(this.value)">
+      <option value="all">Tất cả bài học (Toàn bộ)</option>
+      <option value="theory">Chuyên đề: Kiến Thức Trọng Tâm</option>
+      <option value="tn">Phần 1: Trắc Nghiệm Chọn 1 Phương Án</option>
+      <option value="tf">Phần 2: Trắc Nghiệm Đúng / Sai</option>
+      <option value="tl">Phần 3: Tự Luận Trọng Tâm (18 bài)</option>
+    </select>
+    <button class="btn-ctrl" onclick="toggleFullscreen()">⛶ Toàn màn hình</button>
+  </div>
+</header>
+
+<div class="slide-stage" id="stage">
+
+<div class="slide-card active" data-topic="intro">
+  <div class="slide-header">
+    <span class="badge-tag badge-intro">⭐ BÀI GIẢNG ĐIỆN TỬ KHOA HỌC TỰ NHIÊN 6</span>
+    <span class="slide-num-info">KNTT · Học kỳ I</span>
+  </div>
+  <div class="slide-body" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+    <div style="background:#fff; border-radius:18px; padding:12px; box-shadow:0 8px 25px rgba(0,0,0,0.1); width:110px; height:110px; margin-bottom:20px;">
+      <img src="https://diemdanhsv.com/images/logo-sen.svg" style="width:100%; height:100%;">
+    </div>
+    <h2 style="font-family:'Source Serif 4', serif; font-size:2.2rem; color:var(--lam-hove); margin-bottom:12px;">CHUYÊN ĐỀ ÔN TẬP VÀ KIỂM TRA CUỐI HỌC KỲ I – KHTN 6</h2>
+    <p style="font-size:1.3rem; color:var(--luc-bode); font-weight:700; margin-bottom:24px;">Giảng viên: ThS. Đinh Quốc Tuấn · bdvh.diemdanhsv.com</p>
+    <div style="background:#F7FAFC; border:1px solid #E2E8F0; padding:20px 32px; border-radius:14px; max-width:860px; text-align:left; font-size:1.18rem; line-height:1.8;">
+      <p><b>Quy trình trình chiếu sư phạm chuẩn 3 bước:</b></p>
+      <p>1. <b>Slide Đề bài (Phím 1):</b> Học sinh đọc câu hỏi, quan sát và suy luận khoa học.</p>
+      <p>2. <b>Slide Đáp án (Phím 2):</b> Chốt nhanh kết quả chính xác, khoanh tròn phương án đúng.</p>
+      <p>3. <b>Slide Lời giải (Phím 3):</b> Giải thích nguyên lí khoa học, ứng dụng thực tiễn và ghi nhớ cốt lõi.</p>
+      <p style="margin-top:10px; color:#4A5568; font-style:italic;">👉 Dùng phím <b>Mũi tên phải [→]</b> hoặc phím <b>Cách [Space]</b> để chuyển slide.</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide-card" data-topic="theory">
+  <div class="slide-header">
+    <div class="header-left-badges">
+      <span class="badge-tag badge-theory">📖 LÝ THUYẾT TRỌNG TÂM · MỞ ĐẦU & CHẤT</span>
+    </div>
+    <span class="slide-num-info">Lý thuyết 1/2</span>
+  </div>
+  <div class="slide-body">
+    <div class="theory-block">
+      <h3>1. Mở đầu & Các phép đo cơ bản</h3>
+      <ul>
+        <li><b>Dụng cụ đo:</b> Thước (chiều dài, m), cân (khối lượng, kg), đồng hồ (thời gian, s), nhiệt kế (nhiệt độ, °C), ống đong (thể tích lỏng, mL).</li>
+        <li><b>GHĐ:</b> Giá trị lớn nhất ghi trên dụng cụ. <b>ĐCNN:</b> Độ dài/giá trị giữa 2 vạch chia liên tiếp.</li>
+        <li>Nước đá đang tan: $0^\circ\text{C}$; Nước đang sôi ở điều kiện thường: $100^\circ\text{C}$.</li>
+      </ul>
+    </div>
+    <div class="theory-block">
+      <h3>2. Ba thể của chất & Tính chất chất</h3>
+      <ul>
+        <li><b>Thể rắn:</b> Có hình dạng và thể tích xác định, rất khó bị nén.</li>
+        <li><b>Thể lỏng:</b> Có thể tích xác định, không có hình dạng xác định (theo bình chứa), khó bị nén.</li>
+        <li><b>Thể khí:</b> Không có hình dạng và thể tích xác định, chiếm toàn bộ bình chứa, rất dễ bị nén.</li>
+        <li><b>Tính chất vật lí:</b> Không tạo chất mới (nóng chảy, sôi, tan, dẫn điện...). <b>Tính chất hoá học:</b> Biến đổi tạo chất mới (cháy, gỉ...).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="slide-card" data-topic="theory">
+  <div class="slide-header">
+    <div class="header-left-badges">
+      <span class="badge-tag badge-theory">📖 LÝ THUYẾT TRỌNG TÂM · HỖN HỢP & TẾ BÀO</span>
+    </div>
+    <span class="slide-num-info">Lý thuyết 2/2</span>
+  </div>
+  <div class="slide-body">
+    <div class="theory-block">
+      <h3>3. Hỗn hợp & Phương pháp tách chất</h3>
+      <ul>
+        <li><b>Hỗn hợp đồng nhất:</b> Không phân biệt được các thành phần (dung dịch nước muối, nước đường). <b>Không đồng nhất:</b> Phân biệt được (dầu ăn và nước, nước lẫn cát).</li>
+        <li><b>Phương pháp tách:</b> Lọc (rắn không tan khỏi lỏng); Cô cạn (chất tan rắn khỏi dung dịch); Chiết (hai chất lỏng không tan tách lớp); Chưng cất (chất lỏng sôi ở nhiệt độ khác nhau); Nam châm (chất có từ tính).</li>
+      </ul>
+    </div>
+    <div class="theory-block">
+      <h3>4. Tế bào & Các cấp độ tổ chức sống</h3>
+      <ul>
+        <li><b>Cấu tạo tế bào:</b> Màng tế bào (bảo vệ, kiểm soát ra vào), Chất tế bào (nơi diễn ra hoạt động sống), Nhân hoặc Vùng nhân (chứa vật chất di truyền). Tế bào thực vật có thêm <b>thành tế bào</b> và <b>lục lạp</b>.</li>
+        <li><b>Sinh sản tế bào:</b> 1 tế bào sau $n$ lần phân chia tạo ra $2^n$ tế bào con.</li>
+        <li><b>Thứ bậc tổ chức cơ thể đa bào:</b> Tế bào $\to$ Mô $\to$ Cơ quan $\to$ Hệ cơ quan $\to$ Cơ thể.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_1" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 1:</b> Dụng cụ nào sau đây dùng để đo thể tích chất lỏng?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">Thước dây</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">Cân đồng hồ</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">Ống đong</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">Nhiệt kế</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_1" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 1:</b> Dụng cụ nào sau đây dùng để đo thể tích chất lỏng?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>Thước dây</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>Cân đồng hồ</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>Ống đong</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>Nhiệt kế</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> (Ống đong)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_1" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 1:</b> Dụng cụ nào sau đây dùng để đo thể tích chất lỏng?
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            • Ống đong (bình chia độ) dùng để đo thể tích chất lỏng.<br>• Thước dây dùng đo chiều dài, cân đồng hồ đo khối lượng, nhiệt kế dùng để đo nhiệt độ.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_2" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 2:</b> Nhiệt độ của nước đá đang tan ở điều kiện thường là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$0\,^\circ\text{C}$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$10\,^\circ\text{C}$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$100\,^\circ\text{C}$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$-10\,^\circ\text{C}$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_2" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 2:</b> Nhiệt độ của nước đá đang tan ở điều kiện thường là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item correct">
+            <div class="opt-label">A ✔</div>
+            <div class="opt-text"><b>$0\,^\circ\text{C}$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>$10\,^\circ\text{C}$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>$100\,^\circ\text{C}$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$-10\,^\circ\text{C}$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>A</b> ($0\,^\circ\text{C}$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_2" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 2:</b> Nhiệt độ của nước đá đang tan ở điều kiện thường là
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>A</b></span>
+          </div>
+          <div class="sol-content">
+            Trong thang nhiệt độ Celsius ở điều kiện tiêu chuẩn, nhiệt độ của nước đá đang tan là $0^\circ\text{C}$, nhiệt độ của hơi nước đang sôi là $100^\circ\text{C}$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_3" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 3:</b> Đặc điểm nào sau đây là của chất ở thể khí?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">Có hình dạng xác định</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">Rất khó bị nén</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">Dễ bị nén</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">Có thể tích xác định</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_3" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 3:</b> Đặc điểm nào sau đây là của chất ở thể khí?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>Có hình dạng xác định</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>Rất khó bị nén</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>Dễ bị nén</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>Có thể tích xác định</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> (Dễ bị nén)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_3" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 3:</b> Đặc điểm nào sau đây là của chất ở thể khí?
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            Các phân tử chất khí ở rất xa nhau và chuyển động hỗn loạn, do đó chất khí <b>rất dễ bị nén</b>, không có hình dạng xác định và không có thể tích xác định.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_4" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 4:</b> Sự chuyển từ thể lỏng sang thể hơi gọi là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">sự bay hơi</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">sự ngưng tụ</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">sự đông đặc</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">sự nóng chảy</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_4" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 4:</b> Sự chuyển từ thể lỏng sang thể hơi gọi là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item correct">
+            <div class="opt-label">A ✔</div>
+            <div class="opt-text"><b>sự bay hơi</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>sự ngưng tụ</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>sự đông đặc</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>sự nóng chảy</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>A</b> (sự bay hơi)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_4" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 4:</b> Sự chuyển từ thể lỏng sang thể hơi gọi là
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>A</b></span>
+          </div>
+          <div class="sol-content">
+            • Sự chuyển từ thể lỏng sang thể hơi là <b>sự bay hơi</b>.<br>• Hơi sang lỏng là ngưng tụ; lỏng sang rắn là đông đặc; rắn sang lỏng là nóng chảy.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_5" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 5:</b> Đâu là tính chất hoá học?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">Đường tan trong nước</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">Đồng dẫn điện</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">Sắt bị gỉ trong không khí ẩm</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">Nước đá tan chảy</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_5" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 5:</b> Đâu là tính chất hoá học?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>Đường tan trong nước</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>Đồng dẫn điện</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>Sắt bị gỉ trong không khí ẩm</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>Nước đá tan chảy</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> (Sắt bị gỉ trong không khí ẩm)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_5" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 5:</b> Đâu là tính chất hoá học?
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            Hiện tượng sắt bị gỉ trong không khí ẩm tạo thành chất mới (gỉ sắt $Fe_2O_3 \cdot nH_2O$) thể hiện <b>tính chất hoá học</b>. Các hiện tượng hoà tan, dẫn điện, nóng chảy là tính chất/hiện tượng vật lí.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_6" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 6:</b> Chất nào sau đây <b>không</b> phải là nhiên liệu?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">Than đá</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">Xăng</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">Khí gas</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">Nước</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_6" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 6:</b> Chất nào sau đây <b>không</b> phải là nhiên liệu?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>Than đá</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>Xăng</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>Khí gas</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">D ✔</div>
+            <div class="opt-text"><b>Nước</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>D</b> (Nước)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_6" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 6:</b> Chất nào sau đây <b>không</b> phải là nhiên liệu?
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>D</b></span>
+          </div>
+          <div class="sol-content">
+            Nhiên liệu là chất cháy được và khi cháy toả nhiều nhiệt để cung cấp năng lượng (than đá, xăng, gas...). Nước không cháy để sinh nhiệt nên không phải là nhiên liệu.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_7" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 7:</b> Vật liệu nào sau đây dẫn điện tốt?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">Nhựa</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">Gỗ khô</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">Đồng</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">Cao su</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_7" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 7:</b> Vật liệu nào sau đây dẫn điện tốt?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>Nhựa</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>Gỗ khô</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>Đồng</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>Cao su</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> (Đồng)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_7" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 7:</b> Vật liệu nào sau đây dẫn điện tốt?
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            Đồng là kim loại có mật độ electron tự do cao nên dẫn điện và dẫn nhiệt rất tốt, được dùng làm ruột dây dẫn điện. Nhựa, gỗ khô, cao su là chất cách điện.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_8" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 8:</b> Hỗn hợp nào sau đây là hỗn hợp đồng nhất?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">Nước muối</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">Nước và dầu ăn</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">Cát lẫn trong nước</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">Đất phù sa trong nước</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_8" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 8:</b> Hỗn hợp nào sau đây là hỗn hợp đồng nhất?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item correct">
+            <div class="opt-label">A ✔</div>
+            <div class="opt-text"><b>Nước muối</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>Nước và dầu ăn</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>Cát lẫn trong nước</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>Đất phù sa trong nước</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>A</b> (Nước muối)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_8" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 8:</b> Hỗn hợp nào sau đây là hỗn hợp đồng nhất?
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>A</b></span>
+          </div>
+          <div class="sol-content">
+            Nước muối là dung dịch đồng nhất vì các phân tử muối hoà tan và phân tán đều trong nước, không quan sát thấy ranh giới giữa các thành phần. Dầu ăn không tan nổi lên trên; cát và đất phù sa lắng đọng tạo hỗn hợp không đồng nhất.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_9" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 9:</b> Để tách muối ăn ra khỏi dung dịch nước muối, ta dùng phương pháp</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">lọc</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">cô cạn</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">chiết</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">dùng nam châm</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_9" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 9:</b> Để tách muối ăn ra khỏi dung dịch nước muối, ta dùng phương pháp</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>lọc</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">B ✔</div>
+            <div class="opt-text"><b>cô cạn</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>chiết</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>dùng nam châm</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>B</b> (cô cạn)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_9" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 9:</b> Để tách muối ăn ra khỏi dung dịch nước muối, ta dùng phương pháp
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>B</b></span>
+          </div>
+          <div class="sol-content">
+            Muối ăn là chất rắn tan trong nước và có nhiệt độ sôi rất cao ($1465^\circ\text{C}$). Khi đun nóng (cô cạn), nước bay hơi hết, muối ăn kết tinh đọng lại ở đáy dụng cụ. Phương pháp lọc không tách được chất tan.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_10" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 10:</b> Để tách bột sắt ra khỏi hỗn hợp bột sắt và cát, nên</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">lọc</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">cô cạn</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">dùng nam châm</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">chưng cất</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_10" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 10:</b> Để tách bột sắt ra khỏi hỗn hợp bột sắt và cát, nên</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>lọc</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>cô cạn</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>dùng nam châm</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>chưng cất</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> (dùng nam châm)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_10" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 10:</b> Để tách bột sắt ra khỏi hỗn hợp bột sắt và cát, nên
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            Sắt là kim loại có từ tính bị nam châm hút mạnh, trong khi cát không có từ tính. Vì vậy dùng nam châm là phương pháp đơn giản, nhanh chóng và giữ nguyên dạng khô của các chất.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_11" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 11:</b> Đơn vị cấu trúc và chức năng của cơ thể sống là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">mô</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">cơ quan</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">tế bào</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">hệ cơ quan</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_11" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 11:</b> Đơn vị cấu trúc và chức năng của cơ thể sống là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>mô</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>cơ quan</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>tế bào</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>hệ cơ quan</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> (tế bào)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_11" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 11:</b> Đơn vị cấu trúc và chức năng của cơ thể sống là
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            Mọi sinh vật sống (từ đơn bào đến đa bào) đều được cấu tạo từ tế bào. Tế bào thực hiện đầy đủ các hoạt động sống như trao đổi chất, lớn lên, cảm ứng, sinh sản.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_12" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 12:</b> Thành phần nào chỉ có ở tế bào thực vật mà không có ở tế bào động vật?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">Màng tế bào</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">Nhân</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">Lục lạp</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">Chất tế bào</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_12" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 12:</b> Thành phần nào chỉ có ở tế bào thực vật mà không có ở tế bào động vật?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>Màng tế bào</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>Nhân</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>Lục lạp</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>Chất tế bào</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> (Lục lạp)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="khtn6_mcq_12" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · KHTN 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 12:</b> Thành phần nào chỉ có ở tế bào thực vật mà không có ở tế bào động vật?
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            Lục lạp chứa chất diệp lục giúp thực vật quang hợp chỉ có ở tế bào thực vật. Ngoài ra, tế bào thực vật còn có thành tế bào cellulose và không bào lớn trung tâm mà tế bào động vật không có.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="khtn6_tf_13" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 13:</b> Về tế bào. Hãy chọn <b>Đúng</b> hoặc <b>Sai</b> cho mỗi ý:</div>
+        <div class="opts-grid single-col">
+    
+          <div class="opt-item">
+            <div class="opt-label">a</div>
+            <div class="opt-text">Tế bào là đơn vị cấu trúc và chức năng của sự sống.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">b</div>
+            <div class="opt-text">Mọi tế bào đều có nhân hoàn chỉnh.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">c</div>
+            <div class="opt-text">Từ 1 tế bào, sau 3 lần phân chia liên tiếp tạo ra 6 tế bào.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">d</div>
+            <div class="opt-text">Tế bào thực vật có lục lạp, tế bào động vật thì không.</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:20px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Kết quả Đúng/Sai</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="khtn6_tf_13" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN ĐÚNG / SAI · KHTN 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 13:</b> Về tế bào. Kết quả:</div>
+        <div class="opts-grid single-col">
+    
+          <div class="opt-item tf-true">
+            <div class="opt-label">a</div>
+            <div class="opt-text">Tế bào là đơn vị cấu trúc và chức năng của sự sống. <span class="ans-badge-inline ans-badge-true">✔ ĐÚNG</span></div>
+          </div>
+        
+          <div class="opt-item tf-false">
+            <div class="opt-label">b</div>
+            <div class="opt-text">Mọi tế bào đều có nhân hoàn chỉnh. <span class="ans-badge-inline ans-badge-false">✖ SAI</span></div>
+          </div>
+        
+          <div class="opt-item tf-false">
+            <div class="opt-label">c</div>
+            <div class="opt-text">Từ 1 tế bào, sau 3 lần phân chia liên tiếp tạo ra 6 tế bào. <span class="ans-badge-inline ans-badge-false">✖ SAI</span></div>
+          </div>
+        
+          <div class="opt-item tf-true">
+            <div class="opt-label">d</div>
+            <div class="opt-text">Tế bào thực vật có lục lạp, tế bào động vật thì không. <span class="ans-badge-inline ans-badge-true">✔ ĐÚNG</span></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            ✔ TỔNG KẾT: <b>a)</b> ĐÚNG, <b>b)</b> SAI, <b>c)</b> SAI, <b>d)</b> ĐÚNG
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Giải thích cặn kẽ ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="khtn6_tf_13" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI CHI TIẾT TỪNG Ý · KHTN 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 13:</b> Về tế bào.
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn phân tích từng mệnh đề:</div>
+          <div class="sol-content">
+            <ul style="padding-left:20px; line-height:1.9;">
+    
+              <li><b>Ý a):</b> Tế bào là đơn vị cấu trúc và chức năng của sự sống.<br/>➔ Kết luận: <b style="color:#15803D;">ĐÚNG</b>. <i>Giải thích:</i> Tế bào là đơn vị cơ bản cấu tạo nên mọi cơ thể sống và thực hiện đầy đủ các chức năng sống.</li>
+        
+              <li><b>Ý b):</b> Mọi tế bào đều có nhân hoàn chỉnh.<br/>➔ Kết luận: <b style="color:#B91C1C;">SAI</b>. <i>Giải thích:</i> Tế bào nhân sơ (như vi khuẩn) chưa có màng nhân bao bọc nên chỉ có 'vùng nhân', chưa có nhân hoàn chỉnh.</li>
+        
+              <li><b>Ý c):</b> Từ 1 tế bào, sau 3 lần phân chia liên tiếp tạo ra 6 tế bào.<br/>➔ Kết luận: <b style="color:#B91C1C;">SAI</b>. <i>Giải thích:</i> Số tế bào tạo thành sau $n$ lần phân chia là $2^n$. Sau 3 lần phân chia: $2^3 = 8$ tế bào, không phải 6 tế bào.</li>
+        
+              <li><b>Ý d):</b> Tế bào thực vật có lục lạp, tế bào động vật thì không.<br/>➔ Kết luận: <b style="color:#15803D;">ĐÚNG</b>. <i>Giải thích:</i> Lục lạp là bào quan đặc trưng chỉ có ở tế bào thực vật để thực hiện chức năng quang hợp tổng hợp chất hữu cơ.</li>
+        
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="khtn6_tf_14" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 14:</b> Về hỗn hợp và tách chất. Hãy chọn <b>Đúng</b> hoặc <b>Sai</b> cho mỗi ý:</div>
+        <div class="opts-grid single-col">
+    
+          <div class="opt-item">
+            <div class="opt-label">a</div>
+            <div class="opt-text">Nước đường là dung dịch, trong đó nước là dung môi.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">b</div>
+            <div class="opt-text">Nước và dầu ăn tạo thành hỗn hợp đồng nhất.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">c</div>
+            <div class="opt-text">Có thể dùng phễu chiết để tách nước và dầu ăn.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">d</div>
+            <div class="opt-text">Nước biển là chất tinh khiết.</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:20px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Kết quả Đúng/Sai</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="khtn6_tf_14" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN ĐÚNG / SAI · KHTN 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 14:</b> Về hỗn hợp và tách chất. Kết quả:</div>
+        <div class="opts-grid single-col">
+    
+          <div class="opt-item tf-true">
+            <div class="opt-label">a</div>
+            <div class="opt-text">Nước đường là dung dịch, trong đó nước là dung môi. <span class="ans-badge-inline ans-badge-true">✔ ĐÚNG</span></div>
+          </div>
+        
+          <div class="opt-item tf-false">
+            <div class="opt-label">b</div>
+            <div class="opt-text">Nước và dầu ăn tạo thành hỗn hợp đồng nhất. <span class="ans-badge-inline ans-badge-false">✖ SAI</span></div>
+          </div>
+        
+          <div class="opt-item tf-true">
+            <div class="opt-label">c</div>
+            <div class="opt-text">Có thể dùng phễu chiết để tách nước và dầu ăn. <span class="ans-badge-inline ans-badge-true">✔ ĐÚNG</span></div>
+          </div>
+        
+          <div class="opt-item tf-false">
+            <div class="opt-label">d</div>
+            <div class="opt-text">Nước biển là chất tinh khiết. <span class="ans-badge-inline ans-badge-false">✖ SAI</span></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            ✔ TỔNG KẾT: <b>a)</b> ĐÚNG, <b>b)</b> SAI, <b>c)</b> ĐÚNG, <b>d)</b> SAI
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Giải thích cặn kẽ ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="khtn6_tf_14" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI CHI TIẾT TỪNG Ý · KHTN 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 14:</b> Về hỗn hợp và tách chất.
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn phân tích từng mệnh đề:</div>
+          <div class="sol-content">
+            <ul style="padding-left:20px; line-height:1.9;">
+    
+              <li><b>Ý a):</b> Nước đường là dung dịch, trong đó nước là dung môi.<br/>➔ Kết luận: <b style="color:#15803D;">ĐÚNG</b>. <i>Giải thích:</i> Nước đường là dung dịch đồng nhất, trong đó chất tan là đường và dung môi là nước.</li>
+        
+              <li><b>Ý b):</b> Nước và dầu ăn tạo thành hỗn hợp đồng nhất.<br/>➔ Kết luận: <b style="color:#B91C1C;">SAI</b>. <i>Giải thích:</i> Dầu ăn không tan trong nước và nhẹ hơn nước nên nổi lên trên, tạo thành hỗn hợp không đồng nhất.</li>
+        
+              <li><b>Ý c):</b> Có thể dùng phễu chiết để tách nước và dầu ăn.<br/>➔ Kết luận: <b style="color:#15803D;">ĐÚNG</b>. <i>Giải thích:</i> Dầu ăn và nước không hoà tan vào nhau và tách lớp rõ rệt, do đó có thể dùng phễu chiết để tách lớp nước bên dưới ra khỏi dầu ăn.</li>
+        
+              <li><b>Ý d):</b> Nước biển là chất tinh khiết.<br/>➔ Kết luận: <b style="color:#B91C1C;">SAI</b>. <i>Giải thích:</i> Nước biển chứa nước và rất nhiều muối khoáng hoà tan (như NaCl, MgCl₂...) nên là hỗn hợp, không phải chất tinh khiết.</li>
+        
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_1" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 1.</b> Dụng cụ và đơn vị đo thông dụng:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Nêu tên dụng cụ đo và đơn vị đo thông dụng của: chiều dài, khối lượng, thời gian, nhiệt độ.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_1" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 1.</b> Dụng cụ và đơn vị đo thông dụng:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Nêu tên dụng cụ đo và đơn vị đo thông dụng của: chiều dài, khối lượng, thời gian, nhiệt độ.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Thước (m) | Cân (kg) | Đồng hồ (s) | Nhiệt kế (°C)
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_1" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 1:</b> Dụng cụ và đơn vị đo thông dụng:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Chiều dài:</b> Dụng cụ là thước (thước cuộn, thước kẻ, thước dây); đơn vị đo chuẩn là mét (m).<br>• <b>Khối lượng:</b> Dụng cụ là cân (cân đồng hồ, cân điện tử); đơn vị đo chuẩn là kilôgam (kg).<br>• <b>Thời gian:</b> Dụng cụ là đồng hồ (đồng hồ bấm giây, đồng hồ đeo tay); đơn vị chuẩn là giây (s).<br>• <b>Nhiệt độ:</b> Dụng cụ là nhiệt kế (nhiệt kế thuỷ ngân, nhiệt kế rượu); đơn vị thông dụng là độ C (°C).
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_2" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 2.</b> Xác định GHĐ và ĐCNN:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Một thước có ghi $20\text{ cm}$ và vạch chia nhỏ nhất là $1\text{ mm}$. Hãy cho biết GHĐ và ĐCNN của thước. Thước này đo được độ dài tối đa bao nhiêu, chính xác đến bao nhiêu?
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_2" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 2.</b> Xác định GHĐ và ĐCNN:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Một thước có ghi $20\text{ cm}$ và vạch chia nhỏ nhất là $1\text{ mm}$. Hãy cho biết GHĐ và ĐCNN của thước. Thước này đo được độ dài tối đa bao nhiêu, chính xác đến bao nhiêu?
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          GHĐ: 20 cm | ĐCNN: 1 mm | Tối đa 20 cm, chính xác đến 1 mm
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_2" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 2:</b> Xác định GHĐ và ĐCNN:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Giới hạn đo (GHĐ):</b> Là giá trị lớn nhất ghi trên thước $\Rightarrow \text{GHĐ} = 20\text{ cm}$.<br>• <b>Độ chia nhỏ nhất (ĐCNN):</b> Là giá trị giữa 2 vạch chia liên tiếp $\Rightarrow \text{ĐCNN} = 1\text{ mm}$.<br>• Thước đo được độ dài lớn nhất là $20\text{ cm}$ và cho kết quả chính xác đến $1\text{ mm}$ (tức $0{,}1\text{ cm}$).
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_3" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 3.</b> So sánh ba thể của chất:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Lập bảng so sánh ba thể của chất (rắn, lỏng, khí) về hình dạng và khả năng bị nén.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_3" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 3.</b> So sánh ba thể của chất:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Lập bảng so sánh ba thể của chất (rắn, lỏng, khí) về hình dạng và khả năng bị nén.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Rắn: hình dạng XĐ, rất khó nén | Lỏng: không có hình dạng XĐ, khó nén | Khí: không có hình dạng & thể tích XĐ, rất dễ nén
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_3" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 3:</b> So sánh ba thể của chất:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            <table class='ds' style='width:100%; border-collapse:collapse; margin-top:8px;' border='1'><tr style='background:#E2E8F0;'><th>Thể</th><th>Hình dạng</th><th>Khả năng bị nén</th></tr><tr><td><b>Rắn</b></td><td>Có hình dạng xác định</td><td>Rất khó bị nén</td></tr><tr><td><b>Lỏng</b></td><td>Không có hình dạng xác định (phụ thuộc bình chứa)</td><td>Khó bị nén</td></tr><tr><td><b>Khí</b></td><td>Không có hình dạng xác định (chiếm toàn bộ bình chứa)</td><td>Rất dễ bị nén</td></tr></table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_4" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 4.</b> Xác định các hiện tượng chuyển thể:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Gọi tên sự chuyển thể trong mỗi trường hợp:<br>a) Cục nước đá để ngoài trời nóng dần thành nước.<br>b) Hơi nước đọng thành giọt trên thành cốc nước lạnh.<br>c) Quần áo ướt phơi khô.<br>d) Nước lỏng để trong ngăn đá thành đá.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_4" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 4.</b> Xác định các hiện tượng chuyển thể:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Gọi tên sự chuyển thể trong mỗi trường hợp:<br>a) Cục nước đá để ngoài trời nóng dần thành nước.<br>b) Hơi nước đọng thành giọt trên thành cốc nước lạnh.<br>c) Quần áo ướt phơi khô.<br>d) Nước lỏng để trong ngăn đá thành đá.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          a) Nóng chảy | b) Ngưng tụ | c) Bay hơi | d) Đông đặc
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_4" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 4:</b> Xác định các hiện tượng chuyển thể:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • a) Rắn sang lỏng: <b>Sự nóng chảy</b>.<br>• b) Khí (hơi) sang lỏng: <b>Sự ngưng tụ</b>.<br>• c) Lỏng sang hơi: <b>Sự bay hơi</b>.<br>• d) Lỏng sang rắn: <b>Sự đông đặc</b>.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_5" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 5.</b> Phân biệt tính chất vật lí và hoá học:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Hiện tượng nào là tính chất vật lí, hiện tượng nào là tính chất hoá học?<br>a) Đường tan trong nước.<br>b) Tờ giấy cháy.<br>c) Sắt để lâu trong không khí ẩm bị gỉ.<br>d) Nước sôi ở $100^\circ\text{C}$.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_5" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 5.</b> Phân biệt tính chất vật lí và hoá học:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Hiện tượng nào là tính chất vật lí, hiện tượng nào là tính chất hoá học?<br>a) Đường tan trong nước.<br>b) Tờ giấy cháy.<br>c) Sắt để lâu trong không khí ẩm bị gỉ.<br>d) Nước sôi ở $100^\circ\text{C}$.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Tính chất vật lí: a, d | Tính chất hoá học: b, c
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_5" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 5:</b> Phân biệt tính chất vật lí và hoá học:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Tính chất vật lí:</b> a (đường tan chỉ là sự phân tán phân tử, không tạo chất mới), d (nước sôi chỉ là sự chuyển thể từ lỏng sang hơi).<br>• <b>Tính chất hoá học:</b> b (giấy cháy phản ứng với oxi tạo khí cacbonic và tro), c (sắt phản ứng với oxi và hơi ẩm tạo gỉ sắt là chất mới).
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_6" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 6.</b> Tính chất và ứng dụng của kim loại:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Nêu ba tính chất của kim loại và một ứng dụng của kim loại trong đời sống.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_6" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 6.</b> Tính chất và ứng dụng của kim loại:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Nêu ba tính chất của kim loại và một ứng dụng của kim loại trong đời sống.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Tính chất: Dẫn điện, dẫn nhiệt tốt, có ánh kim, dẻo | Ứng dụng: Làm dây điện, xoong nồi
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_6" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 6:</b> Tính chất và ứng dụng của kim loại:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Ba tính chất của kim loại:</b> Dẫn điện tốt, dẫn nhiệt tốt, có tính dẻo (dễ dát mỏng, uốn cong), có ánh kim.<br>• <b>Ứng dụng thực tế:</b> Kim loại đồng, nhôm dùng làm lõi dây dẫn điện; kim loại nhôm, inox dùng làm nồi, chảo nấu ăn vì dẫn nhiệt nhanh.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_7" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 7.</b> Sử dụng nhiên liệu an toàn và tiết kiệm:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Nêu hai tác hại của việc sử dụng nhiên liệu không hợp lí và hai biện pháp sử dụng nhiên liệu an toàn, tiết kiệm.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_7" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 7.</b> Sử dụng nhiên liệu an toàn và tiết kiệm:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Nêu hai tác hại của việc sử dụng nhiên liệu không hợp lí và hai biện pháp sử dụng nhiên liệu an toàn, tiết kiệm.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Tác hại: Ô nhiễm môi trường, nguy cơ cháy nổ | Biện pháp: Dùng đúng lượng, tắt khi không dùng
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_7" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 7:</b> Sử dụng nhiên liệu an toàn và tiết kiệm:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Tác hại:</b> Làm ô nhiễm môi trường không khí (khí thải $CO_2, SO_2$, bụi mịn gây hiệu ứng nhà kính); làm cạn kiệt tài nguyên hoá thạch; tiềm ẩn nguy cơ cháy nổ lớn.<br>• <b>Biện pháp an toàn, tiết kiệm:</b> Điều chỉnh ngọn lửa/lượng nhiên liệu vừa đủ với nhu cầu sử dụng; thường xuyên bảo dưỡng thiết bị đốt; tắt bếp/động cơ ngay khi không sử dụng; ưu tiên sử dụng năng lượng sạch tái tạo.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_8" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 8.</b> Lựa chọn vật liệu phù hợp:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Chọn vật liệu thích hợp (kim loại, nhựa, cao su, thuỷ tinh) để làm:<br>a) Ruột dây điện.<br>b) Vỏ bọc dây điện.<br>c) Lốp xe.<br>d) Bình hoa.<br>Giải thích ngắn gọn lý do chọn.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_8" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 8.</b> Lựa chọn vật liệu phù hợp:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Chọn vật liệu thích hợp (kim loại, nhựa, cao su, thuỷ tinh) để làm:<br>a) Ruột dây điện.<br>b) Vỏ bọc dây điện.<br>c) Lốp xe.<br>d) Bình hoa.<br>Giải thích ngắn gọn lý do chọn.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          a) Kim loại | b) Nhựa / Cao su | c) Cao su | d) Thuỷ tinh
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_8" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 8:</b> Lựa chọn vật liệu phù hợp:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • a) <b>Ruột dây điện:</b> Chọn <i>kim loại</i> (đồng, nhôm) vì có khả năng dẫn điện rất tốt và dễ uốn sợi.<br>• b) <b>Vỏ bọc dây điện:</b> Chọn <i>nhựa dẻo (PVC) hoặc cao su</i> vì cách điện an toàn, mềm dẻo và bền.<br>• c) <b>Lốp xe:</b> Chọn <i>cao su</i> vì có tính đàn hồi cao, chịu ma sát tốt và giảm xóc khi di chuyển.<br>• d) <b>Bình hoa:</b> Chọn <i>thuỷ tinh</i> vì trong suốt, không thấm nước, bền hoá học và có tính thẩm mĩ cao.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_9" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 9.</b> Nguồn thực phẩm giàu chất dinh dưỡng:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Kể tên một nguồn thực phẩm giàu mỗi chất dinh dưỡng sau: tinh bột, chất đạm, chất béo, vitamin.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_9" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 9.</b> Nguồn thực phẩm giàu chất dinh dưỡng:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Kể tên một nguồn thực phẩm giàu mỗi chất dinh dưỡng sau: tinh bột, chất đạm, chất béo, vitamin.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Tinh bột: Gạo | Đạm: Thịt, cá | Béo: Dầu mỡ, bơ | Vitamin: Rau, trái cây
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_9" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 9:</b> Nguồn thực phẩm giàu chất dinh dưỡng:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Tinh bột:</b> Gạo, ngô, khoai lang, sắn, bột mì.<br>• <b>Chất đạm (protein):</b> Thịt lợn, thịt bò, cá, trứng, sữa, các loại đậu đỗ.<br>• <b>Chất béo (lipid):</b> Dầu thực vật, mỡ lợn, bơ, lạc, mè.<br>• <b>Vitamin và khoáng chất:</b> Rau cải, cà rốt, cam, quýt, cà chua, táo.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_10" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 10.</b> Phân loại chất tinh khiết và hỗn hợp:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Phân loại các mẫu sau thành chất tinh khiết, hỗn hợp đồng nhất, hỗn hợp không đồng nhất: nước cất; nước biển; nước lẫn cát; sắt nguyên chất.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_10" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 10.</b> Phân loại chất tinh khiết và hỗn hợp:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Phân loại các mẫu sau thành chất tinh khiết, hỗn hợp đồng nhất, hỗn hợp không đồng nhất: nước cất; nước biển; nước lẫn cát; sắt nguyên chất.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Tinh khiết: Nước cất, Sắt | Đồng nhất: Nước biển | Không đồng nhất: Nước lẫn cát
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_10" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 10:</b> Phân loại chất tinh khiết và hỗn hợp:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Chất tinh khiết:</b> Nước cất ($H_2O$ tinh khiết), sắt nguyên chất (chỉ chứa một chất đồng nhất).<br>• <b>Hỗn hợp đồng nhất:</b> Nước biển (chứa nước và các muối khoáng tan đều, không phân biệt ranh giới).<br>• <b>Hỗn hợp không đồng nhất:</b> Nước lẫn cát (hạt cát không tan, lơ lửng và lắng xuống đáy).
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_11" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 11.</b> Khái niệm dung dịch, dung môi và chất tan:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Hoà tan đường vào nước được nước đường. Chỉ rõ dung môi, chất tan. Thế nào là dung dịch?
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_11" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 11.</b> Khái niệm dung dịch, dung môi và chất tan:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Hoà tan đường vào nước được nước đường. Chỉ rõ dung môi, chất tan. Thế nào là dung dịch?
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Chất tan: Đường | Dung môi: Nước | Dung dịch là hỗn hợp đồng nhất giữa dung môi và chất tan
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_11" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 11:</b> Khái niệm dung dịch, dung môi và chất tan:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Chất tan:</b> Là đường (chất bị hoà tan trong dung môi).<br>• <b>Dung môi:</b> Là nước (chất dùng để hoà tan chất tan).<br>• <b>Định nghĩa dung dịch:</b> Dung dịch là hỗn hợp đồng nhất của dung môi và chất tan.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_12" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 12.</b> Đề xuất phương pháp tách chất:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Đề xuất phương pháp tách:<br>a) Muối ăn từ nước muối.<br>b) Cát ra khỏi nước.<br>c) Dầu ăn ra khỏi nước.<br>d) Bột sắt ra khỏi bột nhôm (nhôm không bị nam châm hút).
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_12" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 12.</b> Đề xuất phương pháp tách chất:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Đề xuất phương pháp tách:<br>a) Muối ăn từ nước muối.<br>b) Cát ra khỏi nước.<br>c) Dầu ăn ra khỏi nước.<br>d) Bột sắt ra khỏi bột nhôm (nhôm không bị nam châm hút).
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          a) Cô cạn | b) Lọc | c) Dùng phễu chiết | d) Dùng nam châm
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_12" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 12:</b> Đề xuất phương pháp tách chất:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • a) <b>Muối từ nước muối:</b> Phương pháp <i>cô cạn</i> (đun sôi để nước bay hơi, muối ăn đọng lại).<br>• b) <b>Cát ra khỏi nước:</b> Phương pháp <i>lọc</i> (đổ qua phễu lọc có giấy lọc, cát bị giữ lại).<br>• c) <b>Dầu ăn ra khỏi nước:</b> Dùng <i>phễu chiết</i> (dầu nhẹ nổi lên trên, mở van xả nước ở dưới).<br>• d) <b>Bột sắt ra khỏi bột nhôm:</b> Dùng <i>nam châm</i> (nam châm hút sắt có từ tính, còn lại nhôm).
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_13" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 13.</b> Ba thành phần chính của tế bào:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Nêu ba thành phần chính của tế bào và chức năng của mỗi thành phần.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_13" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 13.</b> Ba thành phần chính của tế bào:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Nêu ba thành phần chính của tế bào và chức năng của mỗi thành phần.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Màng tế bào (bảo vệ/trao đổi chất) | Chất tế bào (nơi sống) | Nhân/Vùng nhân (điều khiển)
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_13" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 13:</b> Ba thành phần chính của tế bào:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>1. Màng tế bào:</b> Bao bọc bên ngoài tế bào, bảo vệ và kiểm soát sự di chuyển của các chất đi vào và đi ra khỏi tế bào.<br>• <b>2. Chất tế bào:</b> Vùng nằm giữa màng và nhân, chứa các bào quan, là nơi diễn ra phần lớn các hoạt động trao đổi chất của tế bào.<br>• <b>3. Nhân tế bào (hoặc vùng nhân):</b> Chứa vật chất di truyền (ADN), là trung tâm điều khiển mọi hoạt động sống và sinh sản của tế bào.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_14" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 14.</b> So sánh tế bào thực vật và động vật:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          So sánh tế bào thực vật và tế bào động vật: nêu điểm giống và điểm khác.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_14" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 14.</b> So sánh tế bào thực vật và động vật:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          So sánh tế bào thực vật và tế bào động vật: nêu điểm giống và điểm khác.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Giống: Có màng, chất tế bào, nhân | Khác: TV có thành TB, lục lạp, không bào lớn
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_14" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 14:</b> So sánh tế bào thực vật và động vật:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Điểm giống nhau:</b> Đều là tế bào nhân thực, đều có 3 thành phần cơ bản: màng sinh chất, chất tế bào và nhân hoàn chỉnh.<br>• <b>Điểm khác nhau:</b><br>- Tế bào thực vật: Có <i>thành tế bào</i> (cellulose) giúp giữ hình dạng cố định; có <i>lục lạp</i> chứa diệp lục để quang hợp; có <i>không bào trung tâm rất lớn</i>.<br>- Tế bào động vật: <i>Không có</i> thành tế bào, <i>không có</i> lục lạp, không bào nhỏ hoặc không có.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_15" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 15</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 15.</b> Bài toán phân chia tế bào:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Một tế bào mẹ phân chia liên tiếp $4$ lần. Có bao nhiêu tế bào con được tạo thành? Nếu phân chia $5$ lần thì có bao nhiêu tế bào?
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_15" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 15</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 15.</b> Bài toán phân chia tế bào:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Một tế bào mẹ phân chia liên tiếp $4$ lần. Có bao nhiêu tế bào con được tạo thành? Nếu phân chia $5$ lần thì có bao nhiêu tế bào?
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Sau 4 lần: 16 tế bào con | Sau 5 lần: 32 tế bào con
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_15" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 15</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 15:</b> Bài toán phân chia tế bào:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Công thức tính số tế bào con tạo thành từ 1 tế bào ban đầu sau $n$ lần phân chia là $2^n$.<br>• Sau 4 lần phân chia liên tiếp: $2^4 = 2 \times 2 \times 2 \times 2 = 16$ (tế bào con).<br>• Sau 5 lần phân chia liên tiếp: $2^5 = 16 \times 2 = 32$ (tế bào con).
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_16" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 16</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 16.</b> Cấp độ tổ chức của cơ thể đa bào:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Sắp xếp theo thứ tự từ nhỏ đến lớn các cấp độ tổ chức của cơ thể đa bào: cơ quan, tế bào, cơ thể, mô, hệ cơ quan. Lấy ví dụ ở người cho từng cấp.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_16" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 16</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 16.</b> Cấp độ tổ chức của cơ thể đa bào:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Sắp xếp theo thứ tự từ nhỏ đến lớn các cấp độ tổ chức của cơ thể đa bào: cơ quan, tế bào, cơ thể, mô, hệ cơ quan. Lấy ví dụ ở người cho từng cấp.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Tế bào ➔ Mô ➔ Cơ quan ➔ Hệ cơ quan ➔ Cơ thể
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_16" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 16</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 16:</b> Cấp độ tổ chức của cơ thể đa bào:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Thứ tự từ nhỏ đến lớn:</b> Tế bào $\to$ Mô $\to$ Cơ quan $\to$ Hệ cơ quan $\to$ Cơ thể.<br>• <b>Ví dụ minh hoạ ở người:</b><br>- Tế bào: Tế bào cơ tim (hoặc tế bào biểu mô ruột).<br>- Mô: Mô cơ tim (tập hợp các tế bào cơ tim).<br>- Cơ quan: Tim.<br>- Hệ cơ quan: Hệ tuần hoàn (gồm tim và các mạch máu).<br>- Cơ thể: Cơ thể người hoàn chỉnh.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_17" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 17</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 17.</b> Phân biệt cơ thể đơn bào và đa bào:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Phân biệt cơ thể đơn bào và cơ thể đa bào; mỗi loại nêu hai ví dụ.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_17" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 17</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 17.</b> Phân biệt cơ thể đơn bào và đa bào:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Phân biệt cơ thể đơn bào và cơ thể đa bào; mỗi loại nêu hai ví dụ.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Đơn bào: Cấu tạo từ 1 tế bào (Trùng roi, Vi khuẩn) | Đa bào: Nhiều tế bào (Cây bàng, Con người)
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_17" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 17</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 17:</b> Phân biệt cơ thể đơn bào và đa bào:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Cơ thể đơn bào:</b> Là sinh vật có cấu tạo chỉ gồm <i>duy nhất một tế bào</i> nhưng tế bào đó đảm nhiệm đầy đủ mọi chức năng sống của một cơ thể hoàn chỉnh.<br><i>Ví dụ:</i> Trùng roi, trùng giày, amip, vi khuẩn E. coli.<br>• <b>Cơ thể đa bào:</b> Là sinh vật được cấu tạo từ <i>nhiều tế bào</i>, các tế bào biệt hoá thành các mô và cơ quan khác nhau để thực hiện các chức năng sống.<br><i>Ví dụ:</i> Con người, con mèo, cây lúa, cây bàng.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_18" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 18</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 18.</b> Quy trình đo thể tích chất lỏng bằng ống đong:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Nêu cách đọc đúng thể tích chất lỏng bằng ống đong (đặt ống, vị trí mắt, đọc mực chất lỏng).
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_18" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 18</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 18.</b> Quy trình đo thể tích chất lỏng bằng ống đong:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Nêu cách đọc đúng thể tích chất lỏng bằng ống đong (đặt ống, vị trí mắt, đọc mực chất lỏng).
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Đặt thẳng đứng trên mặt phẳng ➔ Đặt mắt ngang tầm mặt khum ➔ Đọc theo đáy mặt khum gần vạch nhất
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="khtn6_essay_18" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · KHTN 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 18</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 18:</b> Quy trình đo thể tích chất lỏng bằng ống đong:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • <b>Bước 1 (Đặt ống):</b> Đặt ống đong thẳng đứng trên một mặt phẳng nằm ngang vững chắc.<br>• <b>Bước 2 (Vị trí mắt):</b> Đặt mắt nhìn ngang tầm với mặt thoáng của mực chất lỏng trong ống đong.<br>• <b>Bước 3 (Đọc kết quả):</b> Đọc và ghi kết quả đo theo vạch chia gần nhất với phần đáy của mặt khum chất lỏng.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</div>
+
+<footer>
+  <div class="key-hint">
+    Phím: <kbd>←</kbd> Trước | <kbd>→</kbd> hoặc <kbd>Space</kbd> Kế tiếp | <kbd>1</kbd> Đề bài | <kbd>2</kbd> Đáp án | <kbd>3</kbd> Lời giải | <kbd>F11</kbd> Chiếu bảng
+  </div>
+  
+  <div class="nav-buttons">
+    <button class="btn-nav" id="btnPrev" onclick="prevSlide()">◀ Slide trước</button>
+    <span id="slideCounter" style="color:#fff; font-weight:700; font-size:1.05rem; min-width:90px; text-align:center;">1 / 1</span>
+    <button class="btn-nav" id="btnNext" onclick="nextSlide()">Slide kế tiếp ▶</button>
+  </div>
+</footer>
+
+<script>
+let currentSlideIndex = 0;
+let visibleSlides = [];
+
+function updateSlideView() {{
+  const allSlides = document.querySelectorAll('.slide-card');
+  visibleSlides = Array.from(allSlides).filter(s => s.dataset.visible !== 'false');
+  
+  if (visibleSlides.length === 0) return;
+  if (currentSlideIndex >= visibleSlides.length) currentSlideIndex = visibleSlides.length - 1;
+  if (currentSlideIndex < 0) currentSlideIndex = 0;
+  
+  allSlides.forEach(s => s.classList.remove('active'));
+  visibleSlides[currentSlideIndex].classList.add('active');
+  
+  document.getElementById('slideCounter').innerText = `${{currentSlideIndex + 1}} / ${{visibleSlides.length}}`;
+  document.getElementById('btnPrev').disabled = (currentSlideIndex === 0);
+  document.getElementById('btnNext').disabled = (currentSlideIndex === visibleSlides.length - 1);
+  
+  // Re-typeset MathJax
+  if (window.MathJax && window.MathJax.typesetPromise) {{
+    window.MathJax.typesetPromise([visibleSlides[currentSlideIndex]]);
+  }}
+}}
+
+function nextSlide() {{
+  if (currentSlideIndex < visibleSlides.length - 1) {{
+    currentSlideIndex++;
+    updateSlideView();
+  }}
+}}
+
+function prevSlide() {{
+  if (currentSlideIndex > 0) {{
+    currentSlideIndex--;
+    updateSlideView();
+  }}
+}}
+
+function jumpToSlideIndex(idx) {{
+  if (idx >= 0 && idx < visibleSlides.length) {{
+    currentSlideIndex = idx;
+    updateSlideView();
+  }}
+}}
+
+function filterTopic(topic) {{
+  const allSlides = document.querySelectorAll('.slide-card');
+  allSlides.forEach(s => {{
+    if (topic === 'all' || s.dataset.topic === 'intro' || s.dataset.topic === topic) {{
+      s.dataset.visible = 'true';
+    }} else {{
+      s.dataset.visible = 'false';
+    }}
+  }});
+  currentSlideIndex = 0;
+  updateSlideView();
+}}
+
+function toggleFullscreen() {{
+  if (!document.fullscreenElement) {{
+    document.documentElement.requestFullscreen().catch(err => {{}});
+  }} else {{
+    document.exitFullscreen();
+  }}
+}}
+
+document.addEventListener('keydown', (e) => {{
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {{
+    e.preventDefault();
+    nextSlide();
+  }} else if (e.key === 'ArrowLeft' || e.key === 'Backspace' || e.key === 'PageUp') {{
+    e.preventDefault();
+    prevSlide();
+  }} else if (e.key === '1') {{
+    // Nhảy về slide Đề bài của nhóm hiện tại
+    const curr = visibleSlides[currentSlideIndex];
+    if (curr && curr.dataset.group) {{
+      const firstInGroup = visibleSlides.findIndex(s => s.dataset.group === curr.dataset.group && s.dataset.step === 'question');
+      if (firstInGroup !== -1) jumpToSlideIndex(firstInGroup);
+    }}
+  }} else if (e.key === '2') {{
+    // Nhảy đến slide Đáp án của nhóm hiện tại
+    const curr = visibleSlides[currentSlideIndex];
+    if (curr && curr.dataset.group) {{
+      const ansInGroup = visibleSlides.findIndex(s => s.dataset.group === curr.dataset.group && s.dataset.step === 'answer');
+      if (ansInGroup !== -1) jumpToSlideIndex(ansInGroup);
+    }}
+  }} else if (e.key === '3') {{
+    // Nhảy đến slide Giải thích của nhóm hiện tại
+    const curr = visibleSlides[currentSlideIndex];
+    if (curr && curr.dataset.group) {{
+      const solInGroup = visibleSlides.findIndex(s => s.dataset.group === curr.dataset.group && s.dataset.step === 'explain');
+      if (solInGroup !== -1) jumpToSlideIndex(solInGroup);
+    }}
+  }}
+}});
+
+window.addEventListener('DOMContentLoaded', () => {{
+  filterTopic('all');
+}});
+</script>
+</body>
+</html>

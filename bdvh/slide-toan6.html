@@ -1,0 +1,3847 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bài Giảng Điện Tử Toán 6 – ThS. Đinh Quốc Tuấn</title>
+<link rel="icon" type="image/svg+xml" href="https://diemdanhsv.com/images/logo-sen.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {{
+  --luc-bode: #0F6B55;
+  --lam-hove: #1F4E79;
+  --giay: #F6F7F3;
+  --vang-sao: #D4AF37;
+  --muc: #1A202C;
+  --xam-vien: #E2E8F0;
+  --do-terra: #C53030;
+  --xanh-la: #2F855A;
+  --tim-indigo: #4F46E5;
+}}
+
+* {{ box-sizing: border-box; margin: 0; padding: 0; }}
+body {{
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #0d1a26;
+  color: var(--muc);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+}}
+
+/* Header bar */
+header {{
+  background: linear-gradient(135deg, #102A43 0%, #1F4E79 100%);
+  color: #fff;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  z-index: 100;
+  border-bottom: 2px solid var(--vang-sao);
+}}
+
+.brand-left {{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}}
+
+.logo-box {{
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}}
+.logo-box img {{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}}
+
+.teacher-info h1 {{
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}}
+.teacher-info p {{
+  font-size: 0.78rem;
+  color: #CBD5E1;
+  font-weight: 500;
+}}
+
+.header-controls {{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}}
+
+.topic-select {{
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}}
+.topic-select option {{
+  background: #1F4E79;
+  color: #fff;
+}}
+
+.btn-ctrl {{
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}}
+.btn-ctrl:hover {{
+  background: var(--luc-bode);
+  border-color: var(--luc-bode);
+}}
+
+/* Slide viewport container */
+.slide-stage {{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+}}
+
+.slide-card {{
+  background: #ffffff;
+  width: 100%;
+  max-width: 1200px;
+  height: 94%;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--xam-vien);
+  animation: fadeIn 0.22s ease-out;
+}}
+.slide-card.active {{
+  display: flex;
+}}
+
+@keyframes fadeIn {{
+  from {{ opacity: 0; transform: scale(0.985); }}
+  to {{ opacity: 1; transform: scale(1); }}
+}}
+
+.slide-header {{
+  padding: 14px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #EDF2F7;
+  background: #FAFCFF;
+}}
+
+.header-left-badges {{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}}
+
+.badge-tag {{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 13px;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}}
+.badge-question {{
+  background: #EBF8FF;
+  color: #2B6CB0;
+  border: 1px solid #BEE3F8;
+}}
+.badge-answer {{
+  background: #FEFCBF;
+  color: #744210;
+  border: 1px solid #FAF089;
+}}
+.badge-explain {{
+  background: #F0FFF4;
+  color: #22543D;
+  border: 1px solid #C6F6D5;
+}}
+.badge-theory {{
+  background: #FDF2F8;
+  color: #9D174D;
+  border: 1px solid #FBCFE8;
+}}
+.badge-intro {{
+  background: #EBF4FF;
+  color: #312E81;
+  border: 1px solid #C7D2FE;
+}}
+
+/* Mini Step Indicator */
+.step-nav-pills {{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}}
+.step-pill {{
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 12px;
+  background: #EDF2F7;
+  color: #718096;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}}
+.step-pill.current {{
+  background: var(--lam-hove);
+  color: #fff;
+  border-color: var(--lam-hove);
+}}
+.step-pill.current-ans {{
+  background: #D97706;
+  color: #fff;
+}}
+.step-pill.current-sol {{
+  background: var(--luc-bode);
+  color: #fff;
+}}
+
+.slide-num-info {{
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #718096;
+}}
+
+.slide-body {{
+  flex: 1;
+  padding: 26px 36px;
+  overflow-y: auto;
+  font-size: 1.3rem;
+  line-height: 1.7;
+  color: #2D3748;
+}}
+
+/* Question & Answer Styles */
+.q-title {{
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--lam-hove);
+  margin-bottom: 20px;
+  line-height: 1.45;
+}}
+
+.opts-grid {{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}}
+.opts-grid.single-col {{
+  grid-template-columns: 1fr;
+}}
+
+.opt-item {{
+  background: #F8FAFC;
+  border: 2px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 14px 20px;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.2s;
+}}
+.opt-label {{
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #EDF2F7;
+  color: var(--lam-hove);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}}
+.opt-text {{
+  flex: 1;
+}}
+
+/* Correct & Highlight States */
+.opt-item.correct {{
+  background: #ECFDF5;
+  border-color: #10B981;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
+}}
+.opt-item.correct .opt-label {{
+  background: #10B981;
+  color: #ffffff;
+}}
+
+.opt-item.tf-true {{
+  border-left: 6px solid #10B981;
+  background: #F0FDF4;
+}}
+.opt-item.tf-false {{
+  border-left: 6px solid #EF4444;
+  background: #FEF2F2;
+}}
+
+.ans-badge-inline {{
+  display: inline-block;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-left: 8px;
+}}
+.ans-badge-true {{
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #86EFAC;
+}}
+.ans-badge-false {{
+  background: #FEE2E2;
+  color: #B91C1C;
+  border: 1px solid #FCA5A5;
+}}
+
+/* Answer Banner on Slide 2 */
+.answer-summary-card {{
+  margin-top: 24px;
+  padding: 16px 24px;
+  border-radius: 14px;
+  background: #FEF3C7;
+  border: 2px solid #F59E0B;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.12);
+}}
+.ans-key-highlight {{
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #92400E;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}}
+.ans-action-hint {{
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #B45309;
+  cursor: pointer;
+  background: rgba(255,255,255,0.7);
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #FCD34D;
+  transition: all 0.2s;
+}}
+.ans-action-hint:hover {{
+  background: #fff;
+  transform: translateX(3px);
+}}
+
+/* Solution Box on Slide 3 */
+.solution-box {{
+  background: #F0FDF4;
+  border-left: 6px solid var(--luc-bode);
+  padding: 24px 28px;
+  border-radius: 12px;
+  font-size: 1.25rem;
+  line-height: 1.8;
+  box-shadow: 0 4px 14px rgba(15,107,85,0.06);
+}}
+.sol-title {{
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--luc-bode);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}}
+.sol-content {{
+  color: #1F2937;
+}}
+
+/* Theory Box */
+.theory-block {{
+  background: #F8FAFC;
+  border: 1.5pt solid #CBD5E1;
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+}}
+.theory-block h3 {{
+  color: var(--lam-hove);
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}}
+.theory-block ul {{
+  padding-left: 24px;
+  margin-bottom: 0;
+}}
+.theory-block li {{
+  margin-bottom: 8px;
+}}
+
+/* Footer Navigation Bar */
+footer {{
+  background: #102A43;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}}
+
+.nav-buttons {{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}}
+.btn-nav {{
+  background: var(--lam-hove);
+  color: #fff;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}}
+.btn-nav:hover {{
+  background: var(--luc-bode);
+  transform: translateY(-2px);
+}}
+.btn-nav:disabled {{
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}}
+
+.key-hint {{
+  color: #A0AEC0;
+  font-size: 0.82rem;
+  font-weight: 500;
+}}
+.key-hint kbd {{
+  background: #2D3748;
+  color: #E2E8F0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #4A5568;
+}}
+
+/* Fullscreen mode */
+:fullscreen .slide-card {{
+  max-width: 96vw;
+  height: 94vh;
+}}
+:fullscreen .slide-body {{
+  font-size: 1.48rem;
+}}
+:fullscreen .q-title {{
+  font-size: 1.75rem;
+}}
+</style>
+
+<!-- MathJax 3 config -->
+<script>
+window.MathJax = {{
+  tex: {{
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }},
+  options: {{
+    enableMenu: false
+  }}
+}};
+</script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="brand-left">
+    <div class="logo-box">
+      <img src="https://diemdanhsv.com/images/logo-sen.svg" alt="Logo Sen Đinh Quốc Tuấn">
+    </div>
+    <div class="teacher-info">
+      <h1>LỚP TOÁN 6 – ThS. ĐINH QUỐC TUẤN</h1>
+      <p>Hệ Thống Khảo Thí & Phân Tích Tư Duy · bdvh.diemdanhsv.com</p>
+    </div>
+  </div>
+  
+  <div class="header-controls">
+    <select id="topicFilter" class="topic-select" onchange="filterTopic(this.value)">
+      <option value="all">Tất cả bài học (Toàn bộ)</option>
+      <option value="theory">Chuyên đề: Kiến Thức Trọng Tâm</option>
+      <option value="tn">Phần 1: Trắc Nghiệm Chọn 1 Phương Án</option>
+      <option value="tf">Phần 2: Trắc Nghiệm Đúng / Sai</option>
+      <option value="tl">Phần 3: Tự Luận Trọng Tâm (18 bài)</option>
+    </select>
+    <button class="btn-ctrl" onclick="toggleFullscreen()">⛶ Toàn màn hình</button>
+  </div>
+</header>
+
+<div class="slide-stage" id="stage">
+
+<div class="slide-card active" data-topic="intro">
+  <div class="slide-header">
+    <span class="badge-tag badge-intro">⭐ BÀI GIẢNG ĐIỆN TỬ TOÁN 6</span>
+    <span class="slide-num-info">KNTT · Học kỳ I</span>
+  </div>
+  <div class="slide-body" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+    <div style="background:#fff; border-radius:18px; padding:12px; box-shadow:0 8px 25px rgba(0,0,0,0.1); width:110px; height:110px; margin-bottom:20px;">
+      <img src="https://diemdanhsv.com/images/logo-sen.svg" style="width:100%; height:100%;">
+    </div>
+    <h2 style="font-family:'Source Serif 4', serif; font-size:2.2rem; color:var(--lam-hove); margin-bottom:12px;">CHUYÊN ĐỀ ÔN TẬP VÀ KIỂM TRA CUỐI HỌC KỲ I – TOÁN 6</h2>
+    <p style="font-size:1.3rem; color:var(--luc-bode); font-weight:700; margin-bottom:24px;">Giảng viên: ThS. Đinh Quốc Tuấn · bdvh.diemdanhsv.com</p>
+    <div style="background:#F7FAFC; border:1px solid #E2E8F0; padding:20px 32px; border-radius:14px; max-width:860px; text-align:left; font-size:1.18rem; line-height:1.8;">
+      <p><b>Quy trình trình chiếu sư phạm chuẩn 3 bước:</b></p>
+      <p>1. <b>Slide Đề bài (Phím 1):</b> Học sinh đọc đề, tư duy và làm bài.</p>
+      <p>2. <b>Slide Đáp án (Phím 2):</b> Chốt nhanh kết quả chính xác, khoanh tròn phương án đúng.</p>
+      <p>3. <b>Slide Lời giải (Phím 3):</b> Phân tích chi tiết phương pháp giải, công thức và bẫy đề.</p>
+      <p style="margin-top:10px; color:#4A5568; font-style:italic;">👉 Dùng phím <b>Mũi tên phải [→]</b> hoặc phím <b>Cách [Space]</b> để chuyển slide.</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide-card" data-topic="theory">
+  <div class="slide-header">
+    <div class="header-left-badges">
+      <span class="badge-tag badge-theory">📖 LÝ THUYẾT TRỌNG TÂM · CHƯƠNG I & II</span>
+    </div>
+    <span class="slide-num-info">Lý thuyết 1/2</span>
+  </div>
+  <div class="slide-body">
+    <div class="theory-block">
+      <h3>1. Số tự nhiên & Phép tính luỹ thừa</h3>
+      <ul>
+        <li>$a^m \cdot a^n = a^{m+n}$; $a^m : a^n = a^{m-n}$ ($a \ne 0, m \ge n$); $a^0 = 1$ ($a \ne 0$).</li>
+        <li><b>Thứ tự phép tính:</b> Luỹ thừa $\to$ Nhân & Chia $\to$ Cộng & Trừ. Trong ngoặc: $() \to [\ ] \to \{\ \}$.</li>
+        <li><b>Tính hợp lí:</b> Giao hoán, kết hợp, phân phối $a(b + c) = ab + ac$.</li>
+      </ul>
+    </div>
+    <div class="theory-block">
+      <h3>2. Tính chia hết, Số nguyên tố, ƯCLN & BCNN</h3>
+      <ul>
+        <li>Chia hết cho 2 (tận cùng chẵn), cho 5 (tận cùng 0 hoặc 5), cho 3 hoặc 9 (tổng chữ số chia hết cho 3 hoặc 9).</li>
+        <li><b>ƯCLN:</b> Tích các thừa số nguyên tố <b>chung</b> với số mũ <b>nhỏ nhất</b>. (Chia đều nhiều nhất).</li>
+        <li><b>BCNN:</b> Tích các thừa số nguyên tố <b>chung và riêng</b> với số mũ <b>lớn nhất</b>. (Lặp lại cùng lúc ít nhất).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="slide-card" data-topic="theory">
+  <div class="slide-header">
+    <div class="header-left-badges">
+      <span class="badge-tag badge-theory">📖 LÝ THUYẾT TRỌNG TÂM · CHƯƠNG III & IV-V</span>
+    </div>
+    <span class="slide-num-info">Lý thuyết 2/2</span>
+  </div>
+  <div class="slide-body">
+    <div class="theory-block">
+      <h3>3. Số nguyên & Quy tắc dấu</h3>
+      <ul>
+        <li>Số đối của $a$ là $-a$; $|a|$ là khoảng cách từ $a$ đến 0 trên trục số.</li>
+        <li><b>Cộng cùng dấu:</b> Cộng hai GTTĐ, giữ dấu. <b>Khác dấu:</b> Lấy GTTĐ lớn trừ nhỏ, lấy dấu của số có GTTĐ lớn hơn.</li>
+        <li><b>Nhân/chia:</b> Cùng dấu $\to (+)$; khác dấu $\to (-)$.</li>
+      </ul>
+    </div>
+    <div class="theory-block">
+      <h3>4. Chu vi, Diện tích & Tính đối xứng</h3>
+      <ul>
+        <li>Hình chữ nhật: $C = 2(a+b), S = ab$. Hình vuông: $C = 4a, S = a^2$.</li>
+        <li>Hình thoi: $S = \frac{m \cdot n}{2}$. Hình thang: $S = \frac{(a+b)h}{2}$. Hình bình hành: $S = a \cdot h$.</li>
+        <li><b>Tâm đối xứng:</b> Hình bình hành, chữ nhật, thoi, vuông, tròn. (Tam giác đều và hình thang cân <b>không</b> có tâm đối xứng).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_1" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 1:</b> Số đối của $-9$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$-9$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$9$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$0$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$\frac{1}{9}$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_1" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 1:</b> Số đối của $-9$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>$-9$</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">B ✔</div>
+            <div class="opt-text"><b>$9$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>$0$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$\frac{1}{9}$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>B</b> ($9$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_1" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 1:</b> Số đối của $-9$ là
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>B</b></span>
+          </div>
+          <div class="sol-content">
+            Hai số đối nhau có tổng bằng $0$. Số đối của số nguyên âm là số nguyên dương tương ứng: $-(-9) = 9$. Do đó số đối của $-9$ là $9$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_2" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 2:</b> Kết quả của $(-12) + 5$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$-17$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$-7$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$7$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$17$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_2" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 2:</b> Kết quả của $(-12) + 5$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>$-17$</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">B ✔</div>
+            <div class="opt-text"><b>$-7$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>$7$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$17$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>B</b> ($-7$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_2" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 2:</b> Kết quả của $(-12) + 5$ là
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>B</b></span>
+          </div>
+          <div class="sol-content">
+            Cộng hai số nguyên khác dấu: Vì $|-12| = 12 > |5| = 5$, ta lấy $12 - 5 = 7$ rồi mang dấu âm: $(-12) + 5 = -(12 - 5) = -7$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_3" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 3:</b> Kết quả của $(-4) \cdot (-6)$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$24$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$-24$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$-10$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$10$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_3" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 3:</b> Kết quả của $(-4) \cdot (-6)$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item correct">
+            <div class="opt-label">A ✔</div>
+            <div class="opt-text"><b>$24$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>$-24$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>$-10$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$10$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>A</b> ($24$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_3" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 3:</b> Kết quả của $(-4) \cdot (-6)$ là
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>A</b></span>
+          </div>
+          <div class="sol-content">
+            Nhân hai số nguyên cùng dấu âm cho kết quả là một số nguyên dương: $(-4) \cdot (-6) = +(4 \cdot 6) = 24$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_4" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 4:</b> Giá trị của $3^2 \cdot 2^3$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$36$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$72$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$54$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$18$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_4" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 4:</b> Giá trị của $3^2 \cdot 2^3$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>$36$</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">B ✔</div>
+            <div class="opt-text"><b>$72$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>$54$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$18$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>B</b> ($72$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_4" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 4:</b> Giá trị của $3^2 \cdot 2^3$ là
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>B</b></span>
+          </div>
+          <div class="sol-content">
+            Ta có $3^2 = 9$ và $2^3 = 8$. Do đó: $3^2 \cdot 2^3 = 9 \cdot 8 = 72$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_5" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 5:</b> $\text{ƯCLN}(12; 18)$ bằng</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$2$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$3$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$6$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$36$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_5" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 5:</b> $\text{ƯCLN}(12; 18)$ bằng</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>$2$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>$3$</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>$6$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$36$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> ($6$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_5" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 5:</b> $\text{ƯCLN}(12; 18)$ bằng
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            Phân tích ra thừa số nguyên tố: $12 = 2^2 \cdot 3$ và $18 = 2 \cdot 3^2$. Thừa số chung là $2$ và $3$ với số mũ nhỏ nhất là $1$. Vậy $\text{ƯCLN}(12; 18) = 2^1 \cdot 3^1 = 6$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_6" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 6:</b> $\text{BCNN}(4; 6)$ bằng</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$2$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$12$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$24$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$10$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_6" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 6:</b> $\text{BCNN}(4; 6)$ bằng</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>$2$</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">B ✔</div>
+            <div class="opt-text"><b>$12$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>$24$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$10$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>B</b> ($12$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_6" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 6:</b> $\text{BCNN}(4; 6)$ bằng
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>B</b></span>
+          </div>
+          <div class="sol-content">
+            Ta có $4 = 2^2$ và $6 = 2 \cdot 3$. Thừa số nguyên tố chung và riêng là $2$ và $3$ với số mũ lớn nhất lần lượt là $2$ và $1$. Do đó $\text{BCNN}(4; 6) = 2^2 \cdot 3 = 4 \cdot 3 = 12$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_7" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 7:</b> Số nào sau đây chia hết cho cả 3 và 5?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$35$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$45$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$55$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$65$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_7" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 7:</b> Số nào sau đây chia hết cho cả 3 và 5?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>$35$</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">B ✔</div>
+            <div class="opt-text"><b>$45$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>$55$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$65$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>B</b> ($45$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_7" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 7:</b> Số nào sau đây chia hết cho cả 3 và 5?
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>B</b></span>
+          </div>
+          <div class="sol-content">
+            Dấu hiệu chia hết cho 5: Tận cùng bằng 0 hoặc 5 (cả 4 số đều thỏa mãn). Dấu hiệu chia hết cho 3: Tổng chữ số chia hết cho 3. Ta thấy $4 + 5 = 9$ chia hết cho 3. Vậy số 45 chia hết cho cả 3 và 5.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_8" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 8:</b> Số nào sau đây là số nguyên tố?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$21$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$27$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$29$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$33$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_8" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 8:</b> Số nào sau đây là số nguyên tố?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>$21$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>$27$</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>$29$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$33$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> ($29$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_8" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 8:</b> Số nào sau đây là số nguyên tố?
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            Số nguyên tố là số tự nhiên lớn hơn 1 chỉ có đúng 2 ước là 1 và chính nó. Số 29 chỉ có ước là 1 và 29 nên là số nguyên tố. (21 chia hết cho 3, 7; 27 chia hết cho 3, 9; 33 chia hết cho 3, 11).
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_9" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 9:</b> Chu vi hình chữ nhật có chiều dài $9\text{ cm}$, chiều rộng $5\text{ cm}$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$14\text{ cm}$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$28\text{ cm}$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$45\text{ cm}$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$22\text{ cm}$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_9" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 9:</b> Chu vi hình chữ nhật có chiều dài $9\text{ cm}$, chiều rộng $5\text{ cm}$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>$14\text{ cm}$</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">B ✔</div>
+            <div class="opt-text"><b>$28\text{ cm}$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>$45\text{ cm}$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$22\text{ cm}$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>B</b> ($28\text{ cm}$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_9" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 9:</b> Chu vi hình chữ nhật có chiều dài $9\text{ cm}$, chiều rộng $5\text{ cm}$ là
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>B</b></span>
+          </div>
+          <div class="sol-content">
+            Công thức chu vi hình chữ nhật: $C = 2 \cdot (a + b) = 2 \cdot (9 + 5) = 2 \cdot 14 = 28\text{ cm}$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_10" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 10:</b> Diện tích hình vuông cạnh $7\text{ cm}$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$28\text{ cm}^2$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$14\text{ cm}^2$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$49\text{ cm}^2$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$7\text{ cm}^2$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_10" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 10:</b> Diện tích hình vuông cạnh $7\text{ cm}$ là</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>$28\text{ cm}^2$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>$14\text{ cm}^2$</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>$49\text{ cm}^2$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$7\text{ cm}^2$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> ($49\text{ cm}^2$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_10" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 10:</b> Diện tích hình vuông cạnh $7\text{ cm}$ là
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            Công thức diện tích hình vuông: $S = a^2 = 7^2 = 49\text{ cm}^2$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_11" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 11:</b> Hình thoi có hai đường chéo dài $6\text{ cm}$ và $8\text{ cm}$ có diện tích</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">$14\text{ cm}^2$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">$24\text{ cm}^2$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">$48\text{ cm}^2$</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">$28\text{ cm}^2$</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_11" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 11:</b> Hình thoi có hai đường chéo dài $6\text{ cm}$ và $8\text{ cm}$ có diện tích</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>$14\text{ cm}^2$</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">B ✔</div>
+            <div class="opt-text"><b>$24\text{ cm}^2$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text"><b>$48\text{ cm}^2$</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>$28\text{ cm}^2$</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>B</b> ($24\text{ cm}^2$)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_11" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 11:</b> Hình thoi có hai đường chéo dài $6\text{ cm}$ và $8\text{ cm}$ có diện tích
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>B</b></span>
+          </div>
+          <div class="sol-content">
+            Diện tích hình thoi bằng nửa tích độ dài hai đường chéo: $S = \frac{m \cdot n}{2} = \frac{6 \cdot 8}{2} = \frac{48}{2} = 24\text{ cm}^2$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_12" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 12:</b> Hình nào sau đây có tâm đối xứng?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text">Tam giác đều</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text">Hình thang cân</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">C</div>
+            <div class="opt-text">Hình bình hành</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text">Hình thang thường</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> hoặc <b>[Space]</b> để xem Đáp án</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_12" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN CHÍNH XÁC · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 12:</b> Hình nào sau đây có tâm đối xứng?</div>
+        <div class="opts-grid">
+    
+          <div class="opt-item">
+            <div class="opt-label">A</div>
+            <div class="opt-text"><b>Tam giác đều</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">B</div>
+            <div class="opt-text"><b>Hình thang cân</b></div>
+          </div>
+        
+          <div class="opt-item correct">
+            <div class="opt-label">C ✔</div>
+            <div class="opt-text"><b>Hình bình hành</b></div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">D</div>
+            <div class="opt-text"><b>Hình thang thường</b></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>CHỐT ĐÁP ÁN: <b>C</b> (Hình bình hành)</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Phân tích Lời giải chi tiết ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tn" data-group="toan6_mcq_12" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI & PHÂN TÍCH CHI TIẾT · Toán 6 · Trắc nghiệm</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:14px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 12:</b> Hình nào sau đây có tâm đối xứng?
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">
+            <span>✔ Phương án đúng: <b>C</b></span>
+          </div>
+          <div class="sol-content">
+            Hình bình hành có tâm đối xứng là giao điểm của hai đường chéo. Tam giác đều và hình thang cân chỉ có trục đối xứng chứ <b>không</b> có tâm đối xứng.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="toan6_tf_13" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 13:</b> Cho số 2340. Hãy chọn <b>Đúng</b> hoặc <b>Sai</b> cho mỗi ý:</div>
+        <div class="opts-grid single-col">
+    
+          <div class="opt-item">
+            <div class="opt-label">a</div>
+            <div class="opt-text">2340 chia hết cho cả 2, 5 và 9.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">b</div>
+            <div class="opt-text">2340 là số nguyên tố.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">c</div>
+            <div class="opt-text">$2340 = 2^2 \cdot 3^2 \cdot 5 \cdot 13$.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">d</div>
+            <div class="opt-text">2340 chia hết cho 8.</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:20px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Kết quả Đúng/Sai</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="toan6_tf_13" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN ĐÚNG / SAI · Toán 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 13:</b> Cho số 2340. Kết quả:</div>
+        <div class="opts-grid single-col">
+    
+          <div class="opt-item tf-true">
+            <div class="opt-label">a</div>
+            <div class="opt-text">2340 chia hết cho cả 2, 5 và 9. <span class="ans-badge-inline ans-badge-true">✔ ĐÚNG</span></div>
+          </div>
+        
+          <div class="opt-item tf-false">
+            <div class="opt-label">b</div>
+            <div class="opt-text">2340 là số nguyên tố. <span class="ans-badge-inline ans-badge-false">✖ SAI</span></div>
+          </div>
+        
+          <div class="opt-item tf-true">
+            <div class="opt-label">c</div>
+            <div class="opt-text">$2340 = 2^2 \cdot 3^2 \cdot 5 \cdot 13$. <span class="ans-badge-inline ans-badge-true">✔ ĐÚNG</span></div>
+          </div>
+        
+          <div class="opt-item tf-false">
+            <div class="opt-label">d</div>
+            <div class="opt-text">2340 chia hết cho 8. <span class="ans-badge-inline ans-badge-false">✖ SAI</span></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            ✔ TỔNG KẾT: <b>a)</b> ĐÚNG, <b>b)</b> SAI, <b>c)</b> ĐÚNG, <b>d)</b> SAI
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Giải thích cặn kẽ ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="toan6_tf_13" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI CHI TIẾT TỪNG Ý · Toán 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 13:</b> Cho số 2340.
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn phân tích từng mệnh đề:</div>
+          <div class="sol-content">
+            <ul style="padding-left:20px; line-height:1.9;">
+    
+              <li><b>Ý a):</b> 2340 chia hết cho cả 2, 5 và 9.<br/>➔ Kết luận: <b style="color:#15803D;">ĐÚNG</b>. <i>Giải thích:</i> Tận cùng là chữ số 0 nên chia hết cho cả 2 và 5; tổng các chữ số là $2 + 3 + 4 + 0 = 9$ chia hết cho 9.</li>
+        
+              <li><b>Ý b):</b> 2340 là số nguyên tố.<br/>➔ Kết luận: <b style="color:#B91C1C;">SAI</b>. <i>Giải thích:</i> 2340 có nhiều hơn hai ước (chia hết cho 1, 2, 5, 9, 2340...) nên là hợp số, không phải số nguyên tố.</li>
+        
+              <li><b>Ý c):</b> $2340 = 2^2 \cdot 3^2 \cdot 5 \cdot 13$.<br/>➔ Kết luận: <b style="color:#15803D;">ĐÚNG</b>. <i>Giải thích:</i> Thực hiện phân tích ra TSNT: $2340 = 234 \cdot 10 = 2 \cdot 9 \cdot 13 \cdot 2 \cdot 5 = 2^2 \cdot 3^2 \cdot 5 \cdot 13$.</li>
+        
+              <li><b>Ý d):</b> 2340 chia hết cho 8.<br/>➔ Kết luận: <b style="color:#B91C1C;">SAI</b>. <i>Giải thích:</i> Ba chữ số tận cùng là 340. Vì $340 : 8 = 42$ dư 4 nên 2340 không chia hết cho 8.</li>
+        
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="toan6_tf_14" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 14:</b> Về số nguyên. Hãy chọn <b>Đúng</b> hoặc <b>Sai</b> cho mỗi ý:</div>
+        <div class="opts-grid single-col">
+    
+          <div class="opt-item">
+            <div class="opt-label">a</div>
+            <div class="opt-text">$(-3) \cdot (-4) = -12$.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">b</div>
+            <div class="opt-text">$-15 < -14$.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">c</div>
+            <div class="opt-text">$-5 > -7$.</div>
+          </div>
+        
+          <div class="opt-item">
+            <div class="opt-label">d</div>
+            <div class="opt-text">Tổng của hai số nguyên âm là một số nguyên dương.</div>
+          </div>
+        
+        </div>
+        <div style="margin-top:20px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Kết quả Đúng/Sai</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="toan6_tf_14" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 ĐÁP ÁN ĐÚNG / SAI · Toán 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp án</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Câu 14:</b> Về số nguyên. Kết quả:</div>
+        <div class="opts-grid single-col">
+    
+          <div class="opt-item tf-false">
+            <div class="opt-label">a</div>
+            <div class="opt-text">$(-3) \cdot (-4) = -12$. <span class="ans-badge-inline ans-badge-false">✖ SAI</span></div>
+          </div>
+        
+          <div class="opt-item tf-true">
+            <div class="opt-label">b</div>
+            <div class="opt-text">$-15 < -14$. <span class="ans-badge-inline ans-badge-true">✔ ĐÚNG</span></div>
+          </div>
+        
+          <div class="opt-item tf-true">
+            <div class="opt-label">c</div>
+            <div class="opt-text">$-5 > -7$. <span class="ans-badge-inline ans-badge-true">✔ ĐÚNG</span></div>
+          </div>
+        
+          <div class="opt-item tf-false">
+            <div class="opt-label">d</div>
+            <div class="opt-text">Tổng của hai số nguyên âm là một số nguyên dương. <span class="ans-badge-inline ans-badge-false">✖ SAI</span></div>
+          </div>
+        
+        </div>
+        <div class="answer-summary-card">
+          <div class="ans-key-highlight">
+            ✔ TỔNG KẾT: <b>a)</b> SAI, <b>b)</b> ĐÚNG, <b>c)</b> ĐÚNG, <b>d)</b> SAI
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] để xem Giải thích cặn kẽ ➔
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tf" data-group="toan6_tf_14" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 LỜI GIẢI CHI TIẾT TỪNG Ý · Toán 6 · Đúng/Sai</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp án</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Câu 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.35rem; color:#4A5568;">
+          <b>Câu 14:</b> Về số nguyên.
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn phân tích từng mệnh đề:</div>
+          <div class="sol-content">
+            <ul style="padding-left:20px; line-height:1.9;">
+    
+              <li><b>Ý a):</b> $(-3) \cdot (-4) = -12$.<br/>➔ Kết luận: <b style="color:#B91C1C;">SAI</b>. <i>Giải thích:</i> Tích của hai số nguyên cùng dấu âm là một số nguyên dương: $(-3) \cdot (-4) = +12$.</li>
+        
+              <li><b>Ý b):</b> $-15 < -14$.<br/>➔ Kết luận: <b style="color:#15803D;">ĐÚNG</b>. <i>Giải thích:</i> Trên trục số nằm ngang, điểm $-15$ nằm về phía bên trái điểm $-14$, do đó $-15 < -14$.</li>
+        
+              <li><b>Ý c):</b> $-5 > -7$.<br/>➔ Kết luận: <b style="color:#15803D;">ĐÚNG</b>. <i>Giải thích:</i> Điểm $-5$ nằm bên phải điểm $-7$ trên trục số, do đó $-5 > -7$.</li>
+        
+              <li><b>Ý d):</b> Tổng của hai số nguyên âm là một số nguyên dương.<br/>➔ Kết luận: <b style="color:#B91C1C;">SAI</b>. <i>Giải thích:</i> Tổng của hai số nguyên âm luôn luôn là một số nguyên âm, ví dụ $(-2) + (-3) = -5 < 0$.</li>
+        
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_1" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 1.</b> Thực hiện phép tính (tính hợp lí nếu có thể):</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          a) $125 \cdot 17 \cdot 8$<br>b) $36 \cdot 47 + 36 \cdot 53$<br>c) $2^3 \cdot 5 - 72 : 3^2$
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_1" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 1.</b> Thực hiện phép tính (tính hợp lí nếu có thể):</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          a) $125 \cdot 17 \cdot 8$<br>b) $36 \cdot 47 + 36 \cdot 53$<br>c) $2^3 \cdot 5 - 72 : 3^2$
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          a) 17 000 &nbsp;&nbsp;|&nbsp;&nbsp; b) 3 600 &nbsp;&nbsp;|&nbsp;&nbsp; c) 32
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_1" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 1</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 1:</b> Thực hiện phép tính (tính hợp lí nếu có thể):
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            a) $(125 \cdot 8) \cdot 17 = 1000 \cdot 17 = 17\,000$.<br>b) $36 \cdot (47 + 53) = 36 \cdot 100 = 3\,600$.<br>c) $8 \cdot 5 - 72 : 9 = 40 - 8 = 32$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_2" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 2.</b> Thực hiện phép tính số nguyên:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          a) $(-25) + 18$<br>b) $32 - (-15)$<br>c) $(-7) \cdot (-8)$<br>d) $(-36) : 4$
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_2" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 2.</b> Thực hiện phép tính số nguyên:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          a) $(-25) + 18$<br>b) $32 - (-15)$<br>c) $(-7) \cdot (-8)$<br>d) $(-36) : 4$
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          a) -7 &nbsp;&nbsp;|&nbsp;&nbsp; b) 47 &nbsp;&nbsp;|&nbsp;&nbsp; c) 56 &nbsp;&nbsp;|&nbsp;&nbsp; d) -9
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_2" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 2</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 2:</b> Thực hiện phép tính số nguyên:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            a) $(-25) + 18 = -(25 - 18) = -7$.<br>b) $32 - (-15) = 32 + 15 = 47$.<br>c) $(-7) \cdot (-8) = 56$.<br>d) $(-36) : 4 = -(36 : 4) = -9$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_3" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 3.</b> Tính hợp lí:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          a) $127 - (35 - 73)$<br>b) $25 \cdot (-18) \cdot 4$<br>c) $15 \cdot (-12) + 15 \cdot (-8)$
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_3" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 3.</b> Tính hợp lí:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          a) $127 - (35 - 73)$<br>b) $25 \cdot (-18) \cdot 4$<br>c) $15 \cdot (-12) + 15 \cdot (-8)$
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          a) 165 &nbsp;&nbsp;|&nbsp;&nbsp; b) -1800 &nbsp;&nbsp;|&nbsp;&nbsp; c) -300
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_3" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 3</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 3:</b> Tính hợp lí:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            a) Phá ngoặc: $127 - 35 + 73 = (127 + 73) - 35 = 200 - 35 = 165$.<br>b) $[25 \cdot 4] \cdot (-18) = 100 \cdot (-18) = -1800$.<br>c) $15 \cdot [(-12) + (-8)] = 15 \cdot (-20) = -300$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_4" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 4.</b> Tìm số nguyên $x$, biết:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          a) $x - 15 = -7$<br>b) $2x + 9 = -11$<br>c) $(x - 3) \cdot 5 = -40$<br>d) $x : (-3) = 4$
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_4" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 4.</b> Tìm số nguyên $x$, biết:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          a) $x - 15 = -7$<br>b) $2x + 9 = -11$<br>c) $(x - 3) \cdot 5 = -40$<br>d) $x : (-3) = 4$
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          a) $x = 8$ &nbsp;&nbsp;|&nbsp;&nbsp; b) $x = -10$ &nbsp;&nbsp;|&nbsp;&nbsp; c) $x = -5$ &nbsp;&nbsp;|&nbsp;&nbsp; d) $x = -12$
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_4" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 4</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 4:</b> Tìm số nguyên $x$, biết:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            a) $x = -7 + 15 = 8$.<br>b) $2x = -11 - 9 = -20 \Rightarrow x = -10$.<br>c) $x - 3 = -40 : 5 = -8 \Rightarrow x = -8 + 3 = -5$.<br>d) $x = 4 \cdot (-3) = -12$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_5" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 5.</b> Tìm chữ số thích hợp:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          a) Thay $a$ để số $\overline{5a7}$ chia hết cho $9$.<br>b) Thay $b$ để số $\overline{34b}$ chia hết cho cả $2$ và $5$.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_5" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 5.</b> Tìm chữ số thích hợp:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          a) Thay $a$ để số $\overline{5a7}$ chia hết cho $9$.<br>b) Thay $b$ để số $\overline{34b}$ chia hết cho cả $2$ và $5$.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          a) $a = 6$ (số 567) &nbsp;&nbsp;|&nbsp;&nbsp; b) $b = 0$ (số 340)
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_5" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 5</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 5:</b> Tìm chữ số thích hợp:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            a) Để $\overline{5a7} \,\vdots\, 9$ thì $(5 + a + 7) = (12 + a) \,\vdots\, 9$. Vì $0 \le a \le 9$ nên $12 + a = 18 \Rightarrow a = 6$.<br>b) Để $\overline{34b}$ chia hết cho cả 2 và 5 thì chữ số tận cùng $b$ phải bằng $0$. Vậy $b = 0$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_6" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 6.</b> Phân tích và tìm ƯCLN, BCNN:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Phân tích $84$ và $126$ ra thừa số nguyên tố, rồi tìm $\text{ƯCLN}(84; 126)$ và $\text{BCNN}(84; 126)$.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_6" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 6.</b> Phân tích và tìm ƯCLN, BCNN:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Phân tích $84$ và $126$ ra thừa số nguyên tố, rồi tìm $\text{ƯCLN}(84; 126)$ và $\text{BCNN}(84; 126)$.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          ƯCLN = 42 &nbsp;&nbsp;|&nbsp;&nbsp; BCNN = 252
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_6" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 6</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 6:</b> Phân tích và tìm ƯCLN, BCNN:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • $84 = 2^2 \cdot 3 \cdot 7$<br>• $126 = 2 \cdot 3^2 \cdot 7$<br>➔ $\text{ƯCLN}(84; 126) = 2 \cdot 3 \cdot 7 = 42$.<br>➔ $\text{BCNN}(84; 126) = 2^2 \cdot 3^2 \cdot 7 = 4 \cdot 9 \cdot 7 = 252$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_7" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 7.</b> Bài toán chia tổ y tế:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Một đội y tế có $48$ bác sĩ và $108$ y tá, được chia thành các tổ sao cho số bác sĩ và y tá ở mỗi tổ bằng nhau. Hỏi chia được <b>nhiều nhất</b> bao nhiêu tổ? Khi đó mỗi tổ có bao nhiêu bác sĩ, bao nhiêu y tá?
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_7" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 7.</b> Bài toán chia tổ y tế:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Một đội y tế có $48$ bác sĩ và $108$ y tá, được chia thành các tổ sao cho số bác sĩ và y tá ở mỗi tổ bằng nhau. Hỏi chia được <b>nhiều nhất</b> bao nhiêu tổ? Khi đó mỗi tổ có bao nhiêu bác sĩ, bao nhiêu y tá?
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Chia nhiều nhất 12 tổ (Mỗi tổ: 4 bác sĩ, 9 y tá)
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_7" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 7</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 7:</b> Bài toán chia tổ y tế:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Gọi số tổ là $a$. Vì chia đều số bác sĩ và y tá nên $a \in \text{ƯC}(48; 108)$. Để số tổ nhiều nhất thì $a = \text{ƯCLN}(48; 108)$.<br>Ta có $48 = 2^4 \cdot 3$ và $108 = 2^2 \cdot 3^3 \Rightarrow \text{ƯCLN}(48; 108) = 2^2 \cdot 3 = 12$.<br>Vậy chia được nhiều nhất <b>12 tổ</b>.<br>Khi đó mỗi tổ có: $48 : 12 = 4$ bác sĩ và $108 : 12 = 9$ y tá.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_8" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 8.</b> Bài toán xe buýt cùng về bến:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Ba xe buýt cùng rời bến lúc $6$ giờ sáng. Xe 1 cứ $15$ phút, xe 2 cứ $20$ phút, xe 3 cứ $24$ phút lại quay về bến một lần. Hỏi lúc mấy giờ ba xe lại cùng về bến?
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_8" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 8.</b> Bài toán xe buýt cùng về bến:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Ba xe buýt cùng rời bến lúc $6$ giờ sáng. Xe 1 cứ $15$ phút, xe 2 cứ $20$ phút, xe 3 cứ $24$ phút lại quay về bến một lần. Hỏi lúc mấy giờ ba xe lại cùng về bến?
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Lúc 8 giờ sáng (sau 120 phút)
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_8" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 8</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 8:</b> Bài toán xe buýt cùng về bến:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Thời gian ít nhất để 3 xe cùng về bến là $\text{BCNN}(15; 20; 24)$.<br>• $15 = 3 \cdot 5$<br>• $20 = 2^2 \cdot 5$<br>• $24 = 2^3 \cdot 3$<br>$\Rightarrow \text{BCNN} = 2^3 \cdot 3 \cdot 5 = 120$ phút = $2$ giờ.<br>Thời điểm 3 xe lại cùng về bến: $6\text{ giờ} + 2\text{ giờ} = 8\text{ giờ sáng}$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_9" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 9.</b> Tìm số tự nhiên nhỏ nhất khác 0:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Tìm số tự nhiên $a$ nhỏ nhất khác $0$, biết $a$ chia hết cho cả $6$, $8$ và $15$.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_9" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 9.</b> Tìm số tự nhiên nhỏ nhất khác 0:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Tìm số tự nhiên $a$ nhỏ nhất khác $0$, biết $a$ chia hết cho cả $6$, $8$ và $15$.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          a = 120
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_9" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 9</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 9:</b> Tìm số tự nhiên nhỏ nhất khác 0:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Vì $a$ nhỏ nhất khác $0$ và chia hết cho $6, 8, 15$ nên $a = \text{BCNN}(6; 8; 15)$.<br>• $6 = 2 \cdot 3$<br>• $8 = 2^3$<br>• $15 = 3 \cdot 5$<br>$\Rightarrow a = 2^3 \cdot 3 \cdot 5 = 120$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_10" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 10.</b> Tìm tập hợp ước chung:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Tìm tất cả các ước chung của $24$ và $36$.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_10" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 10.</b> Tìm tập hợp ước chung:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Tìm tất cả các ước chung của $24$ và $36$.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          ƯC(24; 36) = {1; 2; 3; 4; 6; 12}
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_10" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 10</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 10:</b> Tìm tập hợp ước chung:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Ta tìm $\text{ƯCLN}(24; 36)$:<br>$24 = 2^3 \cdot 3$ và $36 = 2^2 \cdot 3^2 \Rightarrow \text{ƯCLN}(24; 36) = 2^2 \cdot 3 = 12$.<br>Các ước của 12 là: $\{1; 2; 3; 4; 6; 12\}$.<br>Vậy $\text{ƯC}(24; 36) = \{1; 2; 3; 4; 6; 12\}$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_11" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 11.</b> Bài toán nhiệt độ Sa Pa:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Nhiệt độ buổi sáng ở Sa Pa là $-3^\circ\text{C}$; buổi trưa tăng thêm $8^\circ\text{C}$; buổi tối giảm $5^\circ\text{C}$ so với buổi trưa. Tính nhiệt độ buổi tối.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_11" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 11.</b> Bài toán nhiệt độ Sa Pa:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Nhiệt độ buổi sáng ở Sa Pa là $-3^\circ\text{C}$; buổi trưa tăng thêm $8^\circ\text{C}$; buổi tối giảm $5^\circ\text{C}$ so với buổi trưa. Tính nhiệt độ buổi tối.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Nhiệt độ buổi tối: 0 °C
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_11" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 11:</b> Bài toán nhiệt độ Sa Pa:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Nhiệt độ buổi trưa là: $(-3) + 8 = +5\,(^\circ\text{C})$.<br>Nhiệt độ buổi tối là: $5 - 5 = 0\,(^\circ\text{C})$.<br>Vậy nhiệt độ buổi tối là $0^\circ\text{C}$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_12" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 12.</b> Tìm số tự nhiên thỏa điều kiện:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Tìm số tự nhiên $x$ biết $x \in \text{ƯC}(30; 45)$ và $x > 5$.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_12" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 12.</b> Tìm số tự nhiên thỏa điều kiện:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Tìm số tự nhiên $x$ biết $x \in \text{ƯC}(30; 45)$ và $x > 5$.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          x = 15
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_12" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 12</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 12:</b> Tìm số tự nhiên thỏa điều kiện:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Ta có $30 = 2 \cdot 3 \cdot 5$ và $45 = 3^2 \cdot 5 \Rightarrow \text{ƯCLN}(30; 45) = 3 \cdot 5 = 15$.<br>Các ước chung là $\text{Ư}(15) = \{1; 3; 5; 15\}$.<br>Vì $x > 5$ nên ta chọn $x = 15$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_13" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 13.</b> Hình chữ nhật có chu vi và hiệu:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Một hình chữ nhật có chu vi $30\text{ cm}$, chiều dài hơn chiều rộng $3\text{ cm}$. Tính chiều dài, chiều rộng và diện tích hình chữ nhật.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_13" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 13.</b> Hình chữ nhật có chu vi và hiệu:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Một hình chữ nhật có chu vi $30\text{ cm}$, chiều dài hơn chiều rộng $3\text{ cm}$. Tính chiều dài, chiều rộng và diện tích hình chữ nhật.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Dài 9 cm, Rộng 6 cm, Diện tích = 54 cm²
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_13" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 13</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 13:</b> Hình chữ nhật có chu vi và hiệu:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Nửa chu vi hình chữ nhật: $30 : 2 = 15\text{ cm}$.<br>Chiều dài là: $(15 + 3) : 2 = 9\text{ cm}$.<br>Chiều rộng là: $15 - 9 = 6\text{ cm}$.<br>Diện tích hình chữ nhật: $S = 9 \cdot 6 = 54\text{ cm}^2$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_14" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 14.</b> Chu vi và diện tích hình thoi:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Hình thoi có cạnh $5\text{ cm}$, hai đường chéo dài $6\text{ cm}$ và $8\text{ cm}$. Tính chu vi và diện tích hình thoi.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_14" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 14.</b> Chu vi và diện tích hình thoi:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Hình thoi có cạnh $5\text{ cm}$, hai đường chéo dài $6\text{ cm}$ và $8\text{ cm}$. Tính chu vi và diện tích hình thoi.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Chu vi: 20 cm &nbsp;&nbsp;|&nbsp;&nbsp; Diện tích: 24 cm²
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_14" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 14</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 14:</b> Chu vi và diện tích hình thoi:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Chu vi hình thoi: $C = 4 \cdot a = 4 \cdot 5 = 20\text{ cm}$.<br>Diện tích hình thoi: $S = \frac{m \cdot n}{2} = \frac{6 \cdot 8}{2} = 24\text{ cm}^2$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_15" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 15</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 15.</b> Diện tích hình thang cân:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Hình thang cân có hai đáy dài $8\text{ cm}$ và $14\text{ cm}$, chiều cao $5\text{ cm}$. Tính diện tích hình thang cân.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_15" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 15</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 15.</b> Diện tích hình thang cân:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Hình thang cân có hai đáy dài $8\text{ cm}$ và $14\text{ cm}$, chiều cao $5\text{ cm}$. Tính diện tích hình thang cân.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Diện tích: 55 cm²
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_15" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 15</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 15:</b> Diện tích hình thang cân:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Công thức tính diện tích hình thang: $S = \frac{(a + b) \cdot h}{2}$.<br>Thay số: $S = \frac{(8 + 14) \cdot 5}{2} = \frac{22 \cdot 5}{2} = 11 \cdot 5 = 55\text{ cm}^2$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_16" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 16</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 16.</b> Diện tích và chu vi hình bình hành:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Hình bình hành có cạnh đáy $12\text{ cm}$, chiều cao tương ứng $7\text{ cm}$, cạnh bên $8\text{ cm}$. Tính diện tích và chu vi.
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_16" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 16</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 16.</b> Diện tích và chu vi hình bình hành:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Hình bình hành có cạnh đáy $12\text{ cm}$, chiều cao tương ứng $7\text{ cm}$, cạnh bên $8\text{ cm}$. Tính diện tích và chu vi.
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Diện tích: 84 cm² &nbsp;&nbsp;|&nbsp;&nbsp; Chu vi: 40 cm
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_16" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 16</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 16:</b> Diện tích và chu vi hình bình hành:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            Diện tích hình bình hành: $S = a \cdot h = 12 \cdot 7 = 84\text{ cm}^2$.<br>Chu vi hình bình hành: $C = 2 \cdot (12 + 8) = 2 \cdot 20 = 40\text{ cm}$.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_17" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 17</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 17.</b> Tam giác đều & tính đối xứng:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Tam giác đều cạnh $6\text{ cm}$. Tính chu vi; hình này có bao nhiêu trục đối xứng? Có tâm đối xứng không?
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_17" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 17</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 17.</b> Tam giác đều & tính đối xứng:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Tam giác đều cạnh $6\text{ cm}$. Tính chu vi; hình này có bao nhiêu trục đối xứng? Có tâm đối xứng không?
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Chu vi 18 cm; Có 3 trục đối xứng; KHÔNG có tâm đối xứng
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_17" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 17</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 17:</b> Tam giác đều & tính đối xứng:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            • Chu vi: $C = 3 \cdot a = 3 \cdot 6 = 18\text{ cm}$.<br>• Trục đối xứng: Có $3$ trục đối xứng (chính là $3$ đường cao/phân giác đi qua 3 đỉnh).<br>• Tâm đối xứng: Tam giác đều <b>không có</b> tâm đối xứng.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_18" data-step="question">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-question">📝 ĐỀ BÀI · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill current">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 18</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 18.</b> Bài toán lát sân gạch thực tế:</div>
+        <div style="background:#F8FAFC; border:2px solid #E2E8F0; border-radius:14px; padding:24px 28px; font-size:1.3rem; line-height:1.8;">
+          Một sân hình chữ nhật dài $20\text{ m}$, rộng $12\text{ m}$ được lát kín bằng gạch vuông cạnh $40\text{ cm}$. Hỏi cần bao nhiêu viên gạch?
+        </div>
+        <div style="margin-top:24px; text-align:right;">
+          <span style="font-size:0.95rem; color:#718096; font-style:italic;">Bấm phím <b>[→]</b> để xem Đáp số chốt</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_18" data-step="answer">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-answer">🎯 KẾT QUẢ / ĐÁP SỐ · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill current-ans">2. Đáp số</span>
+            <span class="step-pill">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 18</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title"><b>Bài 18.</b> Bài toán lát sân gạch thực tế:</div>
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:14px; padding:18px 24px; font-size:1.2rem; color:#64748B; margin-bottom:20px;">
+          Một sân hình chữ nhật dài $20\text{ m}$, rộng $12\text{ m}$ được lát kín bằng gạch vuông cạnh $40\text{ cm}$. Hỏi cần bao nhiêu viên gạch?
+        </div>
+        <div class="answer-summary-card" style="background:#ECFDF5; border-color:#10B981;">
+          <div class="ans-key-highlight" style="color:#065F46;">
+            <span style="background:#10B981; color:#fff; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">✔</span>
+            <span>ĐÁP SỐ CHÍNH THỨC:</span>
+          </div>
+          <div class="ans-action-hint">
+            Bấm [→] xem Trình bày bài giải mẫu ➔
+          </div>
+        </div>
+        <div style="margin-top:16px; background:#fff; border:2px dashed #10B981; border-radius:12px; padding:18px 24px; font-size:1.35rem; font-weight:700; color:#065F46;">
+          Cần dùng: 1 500 viên gạch
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide-card" data-topic="tl" data-group="toan6_essay_18" data-step="explain">
+      <div class="slide-header">
+        <div class="header-left-badges">
+          <span class="badge-tag badge-explain">💡 TRÌNH BÀY LỜI GIẢI MẪU · Toán 6 · Tự Luận</span>
+          <div class="step-nav-pills">
+            <span class="step-pill">1. Đề bài</span>
+            <span class="step-pill">2. Đáp số</span>
+            <span class="step-pill current-sol">3. Lời giải</span>
+          </div>
+        </div>
+        <span class="slide-num-info">Bài 18</span>
+      </div>
+      <div class="slide-body">
+        <div class="q-title" style="margin-bottom:12px; font-size:1.3rem; color:#4A5568;">
+          <b>Bài 18:</b> Bài toán lát sân gạch thực tế:
+        </div>
+        <div class="solution-box">
+          <div class="sol-title">✔ Hướng dẫn giải chi tiết từng bước:</div>
+          <div class="sol-content">
+            <b>Cách 1:</b><br>Đổi $20\text{ m} = 2000\text{ cm}$; $12\text{ m} = 1200\text{ cm}$.<br>Số viên gạch lát theo chiều dài: $2000 : 40 = 50$ (viên).<br>Số viên gạch lát theo chiều rộng: $1200 : 40 = 30$ (viên).<br>Tổng số viên gạch: $50 \cdot 30 = 1500$ (viên).<br><br><b>Cách 2:</b><br>Diện tích sân: $20 \cdot 12 = 240\text{ m}^2 = 2\,400\,000\text{ cm}^2$.<br>Diện tích 1 viên gạch: $40 \cdot 40 = 1600\text{ cm}^2$.<br>Số viên gạch cần dùng: $2\,400\,000 : 1600 = 1500$ (viên).
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</div>
+
+<footer>
+  <div class="key-hint">
+    Phím: <kbd>←</kbd> Trước | <kbd>→</kbd> hoặc <kbd>Space</kbd> Kế tiếp | <kbd>1</kbd> Đề bài | <kbd>2</kbd> Đáp án | <kbd>3</kbd> Lời giải | <kbd>F11</kbd> Chiếu bảng
+  </div>
+  
+  <div class="nav-buttons">
+    <button class="btn-nav" id="btnPrev" onclick="prevSlide()">◀ Slide trước</button>
+    <span id="slideCounter" style="color:#fff; font-weight:700; font-size:1.05rem; min-width:90px; text-align:center;">1 / 1</span>
+    <button class="btn-nav" id="btnNext" onclick="nextSlide()">Slide kế tiếp ▶</button>
+  </div>
+</footer>
+
+<script>
+let currentSlideIndex = 0;
+let visibleSlides = [];
+
+function updateSlideView() {{
+  const allSlides = document.querySelectorAll('.slide-card');
+  visibleSlides = Array.from(allSlides).filter(s => s.dataset.visible !== 'false');
+  
+  if (visibleSlides.length === 0) return;
+  if (currentSlideIndex >= visibleSlides.length) currentSlideIndex = visibleSlides.length - 1;
+  if (currentSlideIndex < 0) currentSlideIndex = 0;
+  
+  allSlides.forEach(s => s.classList.remove('active'));
+  visibleSlides[currentSlideIndex].classList.add('active');
+  
+  document.getElementById('slideCounter').innerText = `${{currentSlideIndex + 1}} / ${{visibleSlides.length}}`;
+  document.getElementById('btnPrev').disabled = (currentSlideIndex === 0);
+  document.getElementById('btnNext').disabled = (currentSlideIndex === visibleSlides.length - 1);
+  
+  // Re-typeset MathJax
+  if (window.MathJax && window.MathJax.typesetPromise) {{
+    window.MathJax.typesetPromise([visibleSlides[currentSlideIndex]]);
+  }}
+}}
+
+function nextSlide() {{
+  if (currentSlideIndex < visibleSlides.length - 1) {{
+    currentSlideIndex++;
+    updateSlideView();
+  }}
+}}
+
+function prevSlide() {{
+  if (currentSlideIndex > 0) {{
+    currentSlideIndex--;
+    updateSlideView();
+  }}
+}}
+
+function jumpToSlideIndex(idx) {{
+  if (idx >= 0 && idx < visibleSlides.length) {{
+    currentSlideIndex = idx;
+    updateSlideView();
+  }}
+}}
+
+function filterTopic(topic) {{
+  const allSlides = document.querySelectorAll('.slide-card');
+  allSlides.forEach(s => {{
+    if (topic === 'all' || s.dataset.topic === 'intro' || s.dataset.topic === topic) {{
+      s.dataset.visible = 'true';
+    }} else {{
+      s.dataset.visible = 'false';
+    }}
+  }});
+  currentSlideIndex = 0;
+  updateSlideView();
+}}
+
+function toggleFullscreen() {{
+  if (!document.fullscreenElement) {{
+    document.documentElement.requestFullscreen().catch(err => {{}});
+  }} else {{
+    document.exitFullscreen();
+  }}
+}}
+
+document.addEventListener('keydown', (e) => {{
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {{
+    e.preventDefault();
+    nextSlide();
+  }} else if (e.key === 'ArrowLeft' || e.key === 'Backspace' || e.key === 'PageUp') {{
+    e.preventDefault();
+    prevSlide();
+  }} else if (e.key === '1') {{
+    // Nhảy về slide Đề bài của nhóm hiện tại
+    const curr = visibleSlides[currentSlideIndex];
+    if (curr && curr.dataset.group) {{
+      const firstInGroup = visibleSlides.findIndex(s => s.dataset.group === curr.dataset.group && s.dataset.step === 'question');
+      if (firstInGroup !== -1) jumpToSlideIndex(firstInGroup);
+    }}
+  }} else if (e.key === '2') {{
+    // Nhảy đến slide Đáp án của nhóm hiện tại
+    const curr = visibleSlides[currentSlideIndex];
+    if (curr && curr.dataset.group) {{
+      const ansInGroup = visibleSlides.findIndex(s => s.dataset.group === curr.dataset.group && s.dataset.step === 'answer');
+      if (ansInGroup !== -1) jumpToSlideIndex(ansInGroup);
+    }}
+  }} else if (e.key === '3') {{
+    // Nhảy đến slide Giải thích của nhóm hiện tại
+    const curr = visibleSlides[currentSlideIndex];
+    if (curr && curr.dataset.group) {{
+      const solInGroup = visibleSlides.findIndex(s => s.dataset.group === curr.dataset.group && s.dataset.step === 'explain');
+      if (solInGroup !== -1) jumpToSlideIndex(solInGroup);
+    }}
+  }}
+}});
+
+window.addEventListener('DOMContentLoaded', () => {{
+  filterTopic('all');
+}});
+</script>
+</body>
+</html>

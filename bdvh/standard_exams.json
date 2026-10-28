@@ -261,7 +261,7 @@
   },
   {
     "exam_code": "TOAN07_CK1_KNTT",
-    "grade": 7,
+    "grade": "L07",
     "subject": "Toán",
     "title": "Toán 7 - Ôn tập Cuối kì I (Kết nối tri thức)",
     "description": "Phạm vi: Số hữu tỉ, Số thực, Góc & Đường thẳng song song, Tam giác bằng nhau, Biểu đồ & Hình hộp",
@@ -436,7 +436,7 @@
   },
   {
     "exam_code": "TOAN07_CK1_PHUAN",
-    "grade": 7,
+    "grade": "L07",
     "subject": "Toán",
     "title": "Đề thi Cuối kì I - Toán 7 - THCS Phú An (TP.HCM)",
     "description": "Đề thi chính thức HK1 THCS Phú An: Trắc nghiệm khách quan & Vận dụng đại số, hình học",
@@ -595,6 +595,386 @@
         ],
         "ans": 1,
         "exp": "<b>Giải thích:</b> Đổi $20\\text{ cm} = 0{,}2\\text{ m}$.<br>Chiều cao của cột nước là: $1{,}5 - 0{,}2 = 1{,}3\\text{ m}$.<br>Lượng nước bơm vào là: $V = 12 \\cdot 5 \\cdot 1{,}3 = 78\\text{ m}^3$. Chọn <b>B</b>."
+      }
+    ]
+  },
+  {
+    "exam_code": "TOAN08_01",
+    "grade": "L08",
+    "subject": "TOAN",
+    "title": "Đấu Trường Toán 8: Đa thức, Hằng đẳng thức & Tứ giác (Ôn Giữa Kì I)",
+    "description": "Đề ôn tập chuẩn GDPT 2018 trọng tâm Tuần 8: Đơn thức, đa thức nhiều biến, 7 hằng đẳng thức đáng nhớ, phân tích nhân tử và các hình tứ giác đặc biệt.",
+    "time_minutes": 25,
+    "questions": [
+      {
+        "q": "Trong các biểu thức sau, biểu thức nào là đơn thức?",
+        "opts": [
+          "$3x^2y$",
+          "$x + 2y$",
+          "$\\frac{x}{y}$",
+          "$x^2 - 1$"
+        ],
+        "ans": 0,
+        "exp": "<b>Khái niệm:</b> Đơn thức là biểu thức đại số chỉ gồm một số, hoặc một biến, hoặc một tích giữa các số và các biến.<br>• $3x^2y$ là tích giữa số 3 và các biến $x, y$ nên là đơn thức.<br>• $x + 2y$ và $x^2 - 1$ có phép cộng, phép trừ nên là đa thức.<br>• $\\frac{x}{y}$ có biến ở mẫu nên không phải là đơn thức.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Đa thức $P = 2x^3y - 5x^2y^2 + 3x^3y + 1$ sau khi thu gọn có bậc là:",
+        "opts": [
+          "$3$",
+          "$4$",
+          "$5$",
+          "$6$"
+        ],
+        "ans": 1,
+        "exp": "<b>Phương pháp giải:</b> Thu gọn các hạng tử đồng dạng trước, sau đó tìm bậc của hạng tử có bậc cao nhất.<br><b>Lời giải chi tiết:</b><br>$P = (2x^3y + 3x^3y) - 5x^2y^2 + 1 = 5x^3y - 5x^2y^2 + 1$.<br>• Hạng tử $5x^3y$ có bậc là $3 + 1 = 4$.<br>• Hạng tử $-5x^2y^2$ có bậc là $2 + 2 = 4$.<br>• Hạng tử $1$ có bậc 0.<br>Vậy bậc của đa thức $P$ là 4.<br><b>Kết luận:</b> Chọn đáp án <b>B</b>."
+      },
+      {
+        "q": "Kết quả của phép nhân đơn thức $2x$ với đa thức $(3x - 4y)$ là:",
+        "opts": [
+          "$6x^2 - 8xy$",
+          "$6x^2 - 4y$",
+          "$6x - 8xy$",
+          "$5x^2 - 8xy$"
+        ],
+        "ans": 0,
+        "exp": "<b>Quy tắc nhân đơn thức với đa thức:</b> $A(B - C) = A \\cdot B - A \\cdot C$.<br><b>Lời giải:</b><br>$2x(3x - 4y) = 2x \\cdot 3x - 2x \\cdot 4y = 6x^2 - 8xy$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Kết quả của phép chia $(12x^3y^2 - 8x^2y^3) : 4xy^2$ là:",
+        "opts": [
+          "$3x^2 - 2xy$",
+          "$3x^2 - 2y$",
+          "$3x - 2xy$",
+          "$3x^2y - 2xy$"
+        ],
+        "ans": 0,
+        "exp": "<b>Quy tắc chia đa thức cho đơn thức:</b> Chia từng hạng tử của đa thức cho đơn thức rồi cộng các kết quả lại.<br><b>Lời giải:</b><br>$\\frac{12x^3y^2}{4xy^2} - \\frac{8x^2y^3}{4xy^2} = 3x^{3-1}y^{2-2} - 2x^{2-1}y^{3-2} = 3x^2 - 2xy$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Khai triển hằng đẳng thức $(3x - 2)^2$ ta được kết quả là:",
+        "opts": [
+          "$9x^2 - 12x + 4$",
+          "$9x^2 - 6x + 4$",
+          "$9x^2 - 4$",
+          "$3x^2 - 12x + 4$"
+        ],
+        "ans": 0,
+        "exp": "<b>Áp dụng hằng đẳng thức:</b> $(A - B)^2 = A^2 - 2AB + B^2$.<br>Với $A = 3x, B = 2$, ta có:<br>$(3x - 2)^2 = (3x)^2 - 2 \\cdot (3x) \\cdot 2 + 2^2 = 9x^2 - 12x + 4$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Điền biểu thức thích hợp vào chỗ trống để được đẳng thức đúng: $x^3 - 8 = (x - 2)(\\dots\\dots)$",
+        "opts": [
+          "$x^2 + 2x + 4$",
+          "$x^2 - 2x + 4$",
+          "$x^2 + 4x + 4$",
+          "$x^2 - 4$"
+        ],
+        "ans": 0,
+        "exp": "<b>Hằng đẳng thức hiệu hai lập phương:</b> $A^3 - B^3 = (A - B)(A^2 + AB + B^2)$.<br>Với $A = x, B = 2$ ($B^3 = 2^3 = 8$):<br>$x^3 - 8 = (x - 2)(x^2 + 2x + 4)$.<br><b>Kết luận:</b> Biểu thức cần điền là $x^2 + 2x + 4$. Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Kết quả phân tích đa thức $6x^2y - 9xy^2$ thành nhân tử bằng phương pháp đặt nhân tử chung là:",
+        "opts": [
+          "$3xy(2x - 3y)$",
+          "$3xy(2x + 3y)$",
+          "$6xy(x - 3y)$",
+          "$3x(2xy - 3y)$"
+        ],
+        "ans": 0,
+        "exp": "<b>Phương pháp:</b> Tìm thừa số chung giữa hệ số ($ƯCLN(6, 9) = 3$) và phần biến ($xy$). Nhân tử chung là $3xy$.<br><b>Lời giải:</b><br>$6x^2y - 9xy^2 = 3xy \\cdot 2x - 3xy \\cdot 3y = 3xy(2x - 3y)$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Phân tích đa thức $x^2 - 2xy + y^2 - 9$ thành nhân tử ta được:",
+        "opts": [
+          "$(x - y - 3)(x - y + 3)$",
+          "$(x + y - 3)(x + y + 3)$",
+          "$(x - y - 9)(x - y + 9)$",
+          "$(x - y - 3)^2$"
+        ],
+        "ans": 0,
+        "exp": "<b>Phương pháp nhóm hạng tử và dùng hằng đẳng thức:</b><br>$x^2 - 2xy + y^2 - 9 = (x^2 - 2xy + y^2) - 3^2 = (x - y)^2 - 3^2$.<br>Áp dụng hiệu hai bình phương $A^2 - B^2 = (A - B)(A + B)$ với $A = x - y, B = 3$:<br>$= (x - y - 3)(x - y + 3)$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Tứ giác $ABCD$ có số đo các góc $\\widehat{A} = 60^\\circ, \\widehat{B} = 120^\\circ, \\widehat{C} = 100^\\circ$. Số đo góc $D$ bằng:",
+        "opts": [
+          "$80^\\circ$",
+          "$70^\\circ$",
+          "$90^\\circ$",
+          "$100^\\circ$"
+        ],
+        "ans": 0,
+        "exp": "<b>Định lý:</b> Tổng các góc trong một tứ giác luôn bằng $360^\\circ$.<br>$\\widehat{A} + \\widehat{B} + \\widehat{C} + \\widehat{D} = 360^\\circ$<br>$\\Rightarrow \\widehat{D} = 360^\\circ - (60^\\circ + 120^\\circ + 100^\\circ) = 360^\\circ - 280^\\circ = 80^\\circ$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Trong các hình tứ giác sau, hình nào luôn có hai đường chéo vuông góc với nhau?",
+        "opts": [
+          "Hình chữ nhật",
+          "Hình bình hành",
+          "Hình thoi",
+          "Hình thang cân"
+        ],
+        "ans": 2,
+        "exp": "<b>Tính chất hình học:</b><br>• Hình thoi có hai đường chéo vuông góc với nhau và cắt nhau tại trung điểm của mỗi đường (đây cũng là tính chất của hình vuông vì hình vuông là hình thoi đặc biệt).<br>• Hình chữ nhật và hình thang cân có hai đường chéo bằng nhau nhưng không nhất thiết vuông góc.<br><b>Kết luận:</b> Chọn đáp án <b>C</b> (Hình thoi)."
+      }
+    ]
+  },
+  {
+    "exam_code": "TOAN09_01",
+    "grade": "L09",
+    "subject": "TOAN",
+    "title": "Đấu Trường Toán 9: Hệ hai PT bậc nhất 2 ẩn & Hệ thức lượng tam giác vuông",
+    "description": "Đề ôn tập chuẩn GDPT 2018 trọng tâm Tuần 8: Phương pháp cộng đại số, phương pháp thế, tỉ số lượng giác và hệ thức lượng trong tam giác vuông.",
+    "time_minutes": 25,
+    "questions": [
+      {
+        "q": "Điều kiện xác định của biểu thức căn thức bậc hai $\\sqrt{2x - 6}$ là:",
+        "opts": [
+          "$x \\ge 3$",
+          "$x > 3$",
+          "$x \\le 3$",
+          "$x \\ge -3$"
+        ],
+        "ans": 0,
+        "exp": "<b>Quy tắc:</b> Biểu thức $\\sqrt{A}$ xác định khi và chỉ khi $A \\ge 0$.<br>Ta có: $2x - 6 \\ge 0 \\iff 2x \\ge 6 \\iff x \\ge 3$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Trục căn thức ở mẫu của biểu thức $\\frac{2}{\\sqrt{3} - 1}$ ta được kết quả là:",
+        "opts": [
+          "$\\sqrt{3} + 1$",
+          "$\\sqrt{3} - 1$",
+          "$2(\\sqrt{3} + 1)$",
+          "$\\frac{\\sqrt{3} + 1}{2}$"
+        ],
+        "ans": 0,
+        "exp": "<b>Phương pháp nhân liên hợp:</b> Nhân cả tử và mẫu với $(\\sqrt{3} + 1)$:<br>$$\\frac{2(\\sqrt{3} + 1)}{(\\sqrt{3} - 1)(\\sqrt{3} + 1)} = \\frac{2(\\sqrt{3} + 1)}{3 - 1} = \\frac{2(\\sqrt{3} + 1)}{2} = \\sqrt{3} + 1$$<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Cặp số $(x; y)$ nào sau đây là nghiệm của hệ phương trình $\\begin{cases} 2x + y = 5 \\\\ x - y = 1 \\end{cases}$?",
+        "opts": [
+          "$(2; 1)$",
+          "$(1; 2)$",
+          "$(3; -1)$",
+          "$(0; 5)$"
+        ],
+        "ans": 0,
+        "exp": "<b>Giải hệ phương trình bằng phương pháp cộng đại số:</b><br>Cộng vế theo vế hai phương trình:<br>$(2x + y) + (x - y) = 5 + 1 \\iff 3x = 6 \\iff x = 2$.<br>Thay $x = 2$ vào phương trình thứ hai: $2 - y = 1 \\iff y = 1$.<br>Vậy nghiệm của hệ là $(2; 1)$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Cho tam giác $ABC$ vuông tại $A$ có $AB = 6\\text{ cm}$ và $AC = 8\\text{ cm}$. Giá trị của $\\sin B$ bằng:",
+        "opts": [
+          "$\\frac{4}{5} = 0.8$",
+          "$\\frac{3}{5} = 0.6$",
+          "$\\frac{4}{3}$",
+          "$\\frac{3}{4}$"
+        ],
+        "ans": 0,
+        "exp": "<b>Lời giải chi tiết:</b><br>Áp dụng định lý Pythagore trong tam giác vuông $ABC$:<br>$BC = \\sqrt{AB^2 + AC^2} = \\sqrt{6^2 + 8^2} = \\sqrt{36 + 64} = 10\\text{ cm}$.<br>Theo định nghĩa tỉ số lượng giác sin:<br>$$\\sin B = \\frac{\\text{cạnh đối}}{\\text{cạnh huyền}} = \\frac{AC}{BC} = \\frac{8}{10} = \\frac{4}{5} = 0.8$$<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Cho tam giác $ABC$ vuông tại $A$, đường cao $AH$. Khẳng định nào sau đây là đúng?",
+        "opts": [
+          "$AH^2 = BH \\cdot CH$",
+          "$AB^2 = BH \\cdot AH$",
+          "$AH = BH \\cdot CH$",
+          "$AC^2 = CH \\cdot AH$"
+        ],
+        "ans": 0,
+        "exp": "<b>Hệ thức lượng trong tam giác vuông:</b><br>• Bình phương đường cao ứng với cạnh huyền bằng tích hai hình chiếu của hai cạnh góc vuông trên cạnh huyền: $AH^2 = BH \\cdot CH$.<br>• Bình phương mỗi cạnh góc vuông bằng tích cạnh huyền và hình chiếu của nó: $AB^2 = BC \\cdot BH$; $AC^2 = BC \\cdot CH$.<br><b>Kết luận:</b> Hệ thức đúng là $AH^2 = BH \\cdot CH$. Chọn đáp án <b>A</b>."
+      }
+    ]
+  },
+  {
+    "exam_code": "TOAN11_01",
+    "grade": "L11",
+    "subject": "TOAN",
+    "title": "Đấu Trường Toán 11: Lượng giác & Quan hệ song song không gian (Ôn Giữa Kì I)",
+    "description": "Đề thi ôn tập giữa kì I chuẩn chương trình GDPT 2018 biên soạn từ ngân hàng đề của ThS. Đinh Quốc Tuấn: Hàm số lượng giác, công thức biến đổi và quan hệ song song.",
+    "time_minutes": 25,
+    "questions": [
+      {
+        "q": "Góc lượng giác có số đo $120^\\circ$ tương ứng với số đo radian nào sau đây?",
+        "opts": [
+          "$\\frac{2\\pi}{3}$",
+          "$\\frac{3\\pi}{4}$",
+          "$\\frac{5\\pi}{6}$",
+          "$\\frac{\\pi}{3}$"
+        ],
+        "ans": 0,
+        "exp": "<b>Công thức đổi từ độ sang radian:</b> $\\alpha\\text{ rad} = a^\\circ \\cdot \\frac{\\pi}{180^\\circ}$.<br>Với $a = 120^\\circ$:<br>$$\\alpha = 120 \\cdot \\frac{\\pi}{180} = \\frac{2\\pi}{3}\\text{ rad}$$<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Cho $\\cos\\alpha = -\\frac{3}{5}$ với $\\frac{\\pi}{2} < \\alpha < \\pi$. Giá trị của $\\sin\\alpha$ bằng:",
+        "opts": [
+          "$\\frac{4}{5}$",
+          "$-\\frac{4}{5}$",
+          "$\\frac{16}{25}$",
+          "$-\\frac{16}{25}$"
+        ],
+        "ans": 0,
+        "exp": "<b>Lời giải chi tiết:</b><br>Ta có $\\sin^2\\alpha + \\cos^2\\alpha = 1 \\implies \\sin^2\\alpha = 1 - \\left(-\\frac{3}{5}\\right)^2 = 1 - \\frac{9}{25} = \\frac{16}{25}$.<br>Vì $\\frac{\\pi}{2} < \\alpha < \\pi$ (góc phần tư thứ II) nên $\\sin\\alpha > 0$.<br>Do đó: $\\sin\\alpha = \\sqrt{\\frac{16}{25}} = \\frac{4}{5}$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Khẳng định nào sau đây là khẳng định **SAI**?",
+        "opts": [
+          "$\\sin 2a = \\sin a \\cos a$",
+          "$\\sin(a - b) = \\sin a\\cos b - \\cos a\\sin b$",
+          "$\\cos(a + b) = \\cos a\\cos b - \\sin a\\sin b$",
+          "$\\cos 2a = \\cos^2 a - \\sin^2 a$"
+        ],
+        "ans": 0,
+        "exp": "<b>Công thức nhân đôi chuẩn:</b><br>$$\\sin 2a = 2\\sin a\\cos a$$<br>Khẳng định $\\sin 2a = \\sin a\\cos a$ thiếu hệ số 2 nên là khẳng định <b>SAI</b>.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Tập xác định $D$ của hàm số $y = \\tan\\left(x - \\frac{\\pi}{3}\\right)$ là:",
+        "opts": [
+          "$D = \\mathbb{R} \\setminus \\left\\{\\frac{5\\pi}{6} + k\\pi, k \\in \\mathbb{Z}\\right\\}$",
+          "$D = \\mathbb{R} \\setminus \\left\\{\\frac{\\pi}{3} + k\\pi, k \\in \\mathbb{Z}\\right\\}$",
+          "$D = \\mathbb{R} \\setminus \\left\\{\\frac{5\\pi}{6} + k2\\pi, k \\in \\mathbb{Z}\\right\\}$",
+          "$D = \\mathbb{R} \\setminus \\left\\{\\frac{\\pi}{6} + k\\pi, k \\in \\mathbb{Z}\\right\\}$"
+        ],
+        "ans": 0,
+        "exp": "<b>Điều kiện xác định:</b> Hàm số $\\tan u$ xác định khi $u \\ne \\frac{\\pi}{2} + k\\pi$ ($k \\in \\mathbb{Z}$).<br>Ta có:<br>$$x - \\frac{\\pi}{3} \\ne \\frac{\\pi}{2} + k\\pi \\iff x \\ne \\frac{\\pi}{2} + \\frac{\\pi}{3} + k\\pi \\iff x \\ne \\frac{5\\pi}{6} + k\\pi$$<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Giá trị nhỏ nhất $m$ của hàm số $y = 4\\cos 2x - 1$ trên $\\mathbb{R}$ bằng:",
+        "opts": [
+          "$m = -5$",
+          "$m = -1$",
+          "$m = 3$",
+          "$m = -3$"
+        ],
+        "ans": 0,
+        "exp": "<b>Lời giải:</b><br>Với mọi $x \\in \\mathbb{R}$, ta luôn có: $-1 \\le \\cos 2x \\le 1$.<br>Nhân cả hai vế với 4: $-4 \\le 4\\cos 2x \\le 4$.<br>Trừ 1 ở cả hai vế: $-4 - 1 \\le 4\\cos 2x - 1 \\le 4 - 1 \\implies -5 \\le y \\le 3$.<br>Vậy giá trị nhỏ nhất của hàm số là $m = -5$ (đạt được khi $\\cos 2x = -1$).<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Số nghiệm của phương trình $\\cos x = -\\frac{1}{2}$ trong khoảng $(0; 2\\pi)$ là:",
+        "opts": [
+          "2",
+          "1",
+          "3",
+          "4"
+        ],
+        "ans": 0,
+        "exp": "<b>Lời giải:</b><br>Ta có $\\cos x = \\cos\\left(\\frac{2\\pi}{3}\\right) \\iff x = \\pm \\frac{2\\pi}{3} + k2\\pi$ ($k \\in \\mathbb{Z}$).<br>Trong khoảng $(0; 2\\pi)$:<br>• Với $x = \\frac{2\\pi}{3} + k2\\pi$, chọn $k = 0 \\implies x_1 = \\frac{2\\pi}{3}$.<br>• Với $x = -\\frac{2\\pi}{3} + k2\\pi$, chọn $k = 1 \\implies x_2 = \\frac{4\\pi}{3}$.<br>Vậy có đúng 2 nghiệm thỏa mãn.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Trong không gian, qua hai đường thẳng cắt nhau có thể xác định được bao nhiêu mặt phẳng?",
+        "opts": [
+          "Duy nhất 1 mặt phẳng",
+          "Vô số mặt phẳng",
+          "2 mặt phẳng",
+          "Không có mặt phẳng nào"
+        ],
+        "ans": 0,
+        "exp": "<b>Định lý xác định mặt phẳng:</b> Một mặt phẳng được hoàn toàn xác định nếu nó đi qua hai đường thẳng cắt nhau.<br><b>Kết luận:</b> Có duy nhất 1 mặt phẳng. Chọn đáp án <b>A</b>."
+      }
+    ]
+  },
+  {
+    "exam_code": "TOAN12_01",
+    "grade": "L12",
+    "subject": "TOAN",
+    "title": "Đấu Trường Toán 12: Đạo hàm khảo sát hàm số & Toạ độ không gian Oxyz",
+    "description": "Đề ôn tập thi tốt nghiệp THPT & ĐGNL chuẩn GDPT 2018: Đơn điệu, cực trị, giá trị lớn nhất nhỏ nhất, tiệm cận và vectơ toạ độ Oxyz.",
+    "time_minutes": 25,
+    "questions": [
+      {
+        "q": "Cho hàm số $y = x^3 - 3x^2 + 2$. Điểm cực đại của đồ thị hàm số là điểm:",
+        "opts": [
+          "$(0; 2)$",
+          "$(2; -2)$",
+          "$(0; 0)$",
+          "$(2; 2)$"
+        ],
+        "ans": 0,
+        "exp": "<b>Lời giải chi tiết:</b><br>Tập xác định $D = \\mathbb{R}$.<br>Ta có đạo hàm: $y' = 3x^2 - 6x = 3x(x - 2)$.<br>Cho $y' = 0 \\iff x = 0$ hoặc $x = 2$.<br>Bảng xét dấu $y'$:<br>• Qua $x = 0$, $y'$ đổi dấu từ dương sang âm $\\implies$ điểm cực đại là $x = 0$, tung độ tương ứng $y(0) = 2$.<br>• Qua $x = 2$, $y'$ đổi dấu từ âm sang dương $\\implies$ điểm cực tiểu là $x = 2, y(2) = -2$.<br>Vậy điểm cực đại của đồ thị hàm số là $(0; 2)$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Đường tiệm cận ngang của đồ thị hàm số $y = \\frac{2x - 1}{x + 3}$ là đường thẳng:",
+        "opts": [
+          "$y = 2$",
+          "$x = -3$",
+          "$y = -3$",
+          "$x = 2$"
+        ],
+        "ans": 0,
+        "exp": "<b>Quy tắc tìm tiệm cận ngang:</b><br>$$\\lim_{x \\to \\pm\\infty} \\frac{2x - 1}{x + 3} = \\lim_{x \\to \\pm\\infty} \\frac{2 - \\frac{1}{x}}{1 + \\frac{3}{x}} = 2$$<br>Vậy đồ thị có đường tiệm cận ngang là $y = 2$ (đường $x = -3$ là tiệm cận đứng).<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Giá trị lớn nhất của hàm số $y = -x^4 + 2x^2 + 3$ trên đoạn $[0; 2]$ bằng:",
+        "opts": [
+          "$4$",
+          "$3$",
+          "$-5$",
+          "$5$"
+        ],
+        "ans": 0,
+        "exp": "<b>Lời giải:</b><br>Đạo hàm: $y' = -4x^3 + 4x = -4x(x^2 - 1)$.<br>Trên đoạn $[0; 2]$, $y' = 0 \\iff x = 0$ hoặc $x = 1$.<br>Tính giá trị tại các điểm biên và điểm dừng:<br>• $y(0) = 3$<br>• $y(1) = -(1)^4 + 2(1)^2 + 3 = 4$<br>• $y(2) = -(2)^4 + 2(2)^2 + 3 = -16 + 8 + 3 = -5$<br>So sánh các giá trị: $\\max_{[0; 2]} y = 4$ (tại $x = 1$).<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Trong không gian $Oxyz$, cho hai vectơ $\\vec{a} = (1; 2; -3)$ và $\\vec{b} = (-2; 1; 4)$. Toạ độ của vectơ $\\vec{u} = 2\\vec{a} + \\vec{b}$ là:",
+        "opts": [
+          "$(0; 5; -2)$",
+          "$(0; 5; 2)$",
+          "$(-1; 3; 1)$",
+          "$(4; 3; -10)$"
+        ],
+        "ans": 0,
+        "exp": "<b>Quy tắc toạ độ vectơ:</b><br>$2\\vec{a} = 2(1; 2; -3) = (2; 4; -6)$.<br>$\\vec{u} = 2\\vec{a} + \\vec{b} = (2 + (-2); 4 + 1; -6 + 4) = (0; 5; -2)$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Cho hàm số $y = f(x)$ có bảng biến thiên với $f'(x) > 0$ trên $(-\\infty; 1)$ và $(3; +\\infty)$, $f'(x) < 0$ trên $(1; 3)$. Hàm số đã cho nghịch biến trên khoảng nào?",
+        "opts": [
+          "$(1; 3)$",
+          "$(-\\infty; 1)$",
+          "$(3; +\\infty)$",
+          "$(0; 2)$"
+        ],
+        "ans": 0,
+        "exp": "<b>Định lý:</b> Hàm số nghịch biến trên khoảng mà đạo hàm $f'(x) < 0$.<br>Theo giả thiết, $f'(x) < 0$ với mọi $x \\in (1; 3)$ nên hàm số nghịch biến trên khoảng $(1; 3)$.<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
+      }
+    ]
+  },
+  {
+    "exam_code": "DGNL_2026_02",
+    "grade": "DGNL",
+    "subject": "DGNL",
+    "title": "ĐGNL ĐHQG-HCM: Phân tích bảng số liệu & Logic suy luận (Đề số 02)",
+    "description": "Bộ đề thi phân tích dữ liệu thực tế ma trận bảng biểu, logic hoán vị sắp xếp và bài toán điều kiện cần - đủ chuẩn kỳ thi Đánh Giá Năng Lực 2026.",
+    "time_minutes": 25,
+    "questions": [
+      {
+        "q": "Năm bạn An, Bình, Cúc, Dũng, Em ngồi vào một hàng ngang gồm 5 ghế đánh số từ 1 đến 5 (từ trái sang phải). Biết rằng: An ngồi ở ghế số 1; Cúc ngồi cạnh Bình; Dũng không ngồi cạnh An và không ngồi cạnh Cúc. Hỏi Em ngồi ở ghế số mấy?",
+        "opts": [
+          "Ghế số 2",
+          "Ghế số 3",
+          "Ghế số 4",
+          "Ghế số 5"
+        ],
+        "ans": 0,
+        "exp": "<b>Phân tích logic suy luận từng bước:</b><br>1. An ngồi ở ghế 1: [An, _, _, _, _]. Các ghế 2, 3, 4, 5 dành cho Bình, Cúc, Dũng, Em.<br>2. Dũng không ngồi cạnh An (ghế 1) $\\implies$ Dũng không thể ngồi ở ghế 2.<br>3. Cúc và Bình ngồi cạnh nhau nên chiếm một cặp ghế kề nhau: (2,3) hoặc (3,4) hoặc (4,5).<br>• Nếu Cúc - Bình ngồi ghế (2,3): Dũng còn ghế 4 hoặc 5. Nhưng Dũng không ngồi cạnh Cúc (ghế 3), nên Dũng không thể ở ghế 4 $\\implies$ Dũng ở ghế 5. Khi đó Em ở ghế 4. Cúc ở ghế 2, Bình ở ghế 3 $\\implies$ thỏa mãn.<br>• Nếu cặp Cúc - Bình ở ghế khác: Dũng phải ở ghế 2 (mâu thuẫn điều kiện 2).<br>Do đó: Cúc và Bình chiếm ghế 3 và 4 (hoặc 4 và 5). Nếu Cúc-Bình ở (4,5), Dũng không ở 2 và không ở 3 (cạnh Cúc) $\\implies$ mâu thuẫn.<br>Suy ra duy nhất ghế số 2 phải là bạn <b>Em</b> ngồi (để cách li Dũng khỏi An)! Khi đó dãy là: 1-An, 2-Em, 3-Cúc, 4-Bình, 5-Dũng.<br><b>Kết luận:</b> Em ngồi ở ghế số 2. Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Một công ty có 100 nhân viên. Có 70 người biết tiếng Anh, 45 người biết tiếng Trung, và 10 người không biết cả hai thứ tiếng này. Số nhân viên biết cả hai thứ tiếng Anh và Trung là:",
+        "opts": [
+          "25 người",
+          "15 người",
+          "35 người",
+          "20 người"
+        ],
+        "ans": 0,
+        "exp": "<b>Áp dụng công thức tập hợp Venn:</b><br>Số nhân viên biết ít nhất một trong hai thứ tiếng là:<br>$$|A \\cup B| = 100 - 10 = 90\\text{ người}$$<br>Theo công thức hợp hai tập hợp:<br>$$|A \\cup B| = |A| + |B| - |A \\cap B|$$<br>$$\\implies 90 = 70 + 45 - |A \\cap B| \\iff |A \\cap B| = 115 - 90 = 25\\text{ người}$$<br><b>Kết luận:</b> Có 25 nhân viên biết cả hai ngoại ngữ. Chọn đáp án <b>A</b>."
+      },
+      {
+        "q": "Bảng thống kê doanh thu quý 3 của 4 chi nhánh: Chi nhánh Đông đạt 120 triệu; Tây đạt 150 triệu; Nam đạt 180 triệu; Bắc đạt 150 triệu. Tỷ lệ phần trăm doanh thu của Chi nhánh Nam so với tổng doanh thu của toàn công ty là:",
+        "opts": [
+          "$30\\%$",
+          "$25\\%$",
+          "$35\\%$",
+          "$20\\%$"
+        ],
+        "ans": 0,
+        "exp": "<b>Tính toán số liệu:</b><br>Tổng doanh thu của cả 4 chi nhánh là:<br>$$T = 120 + 150 + 180 + 150 = 600\\text{ triệu đồng}$$<br>Tỷ trọng của Chi nhánh Nam là:<br>$$P = \\frac{180}{600} \\times 100\\% = \\frac{3}{10} \\times 100\\% = 30\\%$$<br><b>Kết luận:</b> Chọn đáp án <b>A</b>."
       }
     ]
   }
