@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lớp Học Trực Tiếp & Slide Giảng Dạy — ThS. Đinh Quốc Tuấn</title>
+  <link rel="icon" type="image/svg+xml" href="https://diemdanhsv.com/images/logo-sen.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            luc: '#0F6B55',
+            lam: '#1F4E79',
+            giay: '#F6F7F3',
+            son: '#C53030',
+            vang: '#D4AF37',
+            muc: '#1A202C',
+            bac: '#E2E8F0',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Source Serif 4"', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #1A202C; }
+    .title-serif { font-family: 'Source Serif 4', serif; }
+    .card-shadow { box-shadow: 0 4px 20px -2px rgba(15, 107, 85, 0.08); }
+    .slide-container { height: calc(100vh - 220px); min-height: 580px; }
+    @media (max-width: 768px) {
+      .slide-container { height: 480px; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- TOP HEADER / NAV -->
+  <header class="bg-white border-b border-bac sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2.5 hover:opacity-90 transition">
+          <img src="https://diemdanhsv.com/images/logo-sen.svg" alt="Logo TTBDVH" class="w-9 h-9">
+          <div>
+            <h1 class="text-sm font-bold text-muc tracking-tight flex items-center gap-1.5">
+              <span>LỚP HỌC TRỰC TIẾP</span>
+              <span class="bg-emerald-100 text-luc text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Giáo Viên</span>
+            </h1>
+            <p class="text-[10px] text-gray-500 font-serif">Trung Tâm Bồi Dưỡng Văn Hóa — HCMUS</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- THANH THỜI GIAN THỰC: THỨ, NGÀY, THÁNG, NĂM -->
+      <div class="hidden md:flex items-center gap-4 bg-giay px-4 py-1.5 rounded-2xl border border-bac">
+        <div class="flex items-center gap-2 text-xs font-bold text-gray-700">
+          <i class="far fa-calendar-alt text-luc"></i>
+          <span id="current-day-of-week">Thứ ...</span>,
+          <span id="current-full-date">...</span>
+        </div>
+        <div class="h-4 w-px bg-gray-300"></div>
+        <div class="flex items-center gap-1.5 text-xs font-mono font-bold text-lam">
+          <i class="far fa-clock text-amber-600"></i>
+          <span id="current-live-time">00:00:00</span>
+        </div>
+      </div>
+
+      <!-- ĐIỀU HƯỚNG NHANH -->
+      <div class="flex items-center gap-2.5">
+        <a href="thay-tuan.html" class="text-xs bg-slate-100 hover:bg-slate-200 text-gray-700 font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5">
+          <i class="fas fa-chart-line text-luc"></i> <span class="hidden sm:inline">Bảng Quản Trị</span>
+        </a>
+        <a href="index.html" class="text-xs bg-luc hover:bg-emerald-800 text-white font-bold px-3.5 py-2 rounded-xl transition shadow flex items-center gap-1.5">
+          <i class="fas fa-home"></i> <span>Trang Chủ</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- THANH ĐIỀU KHIỂN LỚP HỌC & MÃ PHÁT SÓNG TRỰC TIẾP -->
+  <section class="bg-gradient-to-r from-slate-900 via-blue-950 to-emerald-950 text-white py-4 shadow-inner border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+      
+      <!-- CHỌN LỚP HỌC & CA DẠY -->
+      <div class="space-y-1.5 w-full lg:w-auto">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">
+            <i class="fas fa-broadcast-tower text-[9px]"></i> ĐANG LÊN LỚP
+          </span>
+          <span class="text-xs text-amber-300 font-bold" id="header-schedule-tag">Học kỳ I · Tuần 8</span>
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="text-xs text-gray-300 font-semibold flex items-center gap-1">
+            <i class="fas fa-chalkboard-teacher text-amber-400"></i> Lớp học:
+          </label>
+          <select id="class-selector" onchange="changeClassLecture(this.value)" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white text-xs font-bold rounded-xl px-3 py-2 outline-none cursor-pointer transition">
+            <option value="toan7_phuan" class="text-gray-900 font-bold" selected>Lớp Toán 7 (THCS Phú An / KNTT) — Ôn Cuối Kì I</option>
+            <option value="toan6_kntt" class="text-gray-900 font-bold">Lớp Toán 6 — Bài 10: Bội Chung Nhỏ Nhất & Hình Phẳng Thực Tiễn</option>
+            <option value="toan10_kntt" class="text-gray-900 font-bold">Lớp Toán 10 — BPT Bậc Nhất 2 Ẩn & Định Lý Sin/Cosin</option>
+            <option value="dgnl_dhqg" class="text-gray-900 font-bold">Lớp Ôn Thi ĐGNL ĐHQG-HCM — Tư Duy Định Lượng & Suy Luận Logic</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- MÃ PHÒNG THI / MÃ LỚP 4 KÝ TỰ CHIẾU LÊN BẢNG CHO HỌC SINH -->
+      <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/20 self-stretch sm:self-auto justify-between sm:justify-start">
+        <div class="space-y-0.5">
+          <div class="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1">
+            <i class="fas fa-qrcode"></i> Mã Vào Lớp Cho Học Sinh
+          </div>
+          <div class="text-[11px] text-gray-300">Chiếu lên bảng máy chiếu</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <div id="live-rolling-code" class="bg-amber-400 text-slate-950 font-mono font-black text-xl px-3.5 py-1 rounded-xl shadow tracking-widest">
+            ----
+          </div>
+          <button onclick="refreshClassCode()" title="Làm mới mã" class="text-xs bg-white/15 hover:bg-white/25 p-2 rounded-xl text-white transition">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- KHU VỰC TRÌNH CHIẾU SLIDE BÀI HỌC TRỰC TIẾP -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex-1 flex flex-col w-full">
+
+    <!-- THANH CÔNG CỤ ĐIỀU KHIỂN SLIDE -->
+    <div class="bg-white rounded-2xl p-3.5 border border-bac shadow-sm mb-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <div class="flex items-center gap-3 text-xs">
+        <span class="w-8 h-8 rounded-xl bg-emerald-50 text-luc font-bold flex items-center justify-center flex-none text-base border border-emerald-200">
+          <i class="fas fa-desktop"></i>
+        </span>
+        <div>
+          <h2 class="font-bold text-sm text-muc" id="slide-lecture-title">Slide Trình Chiếu Bài Giảng Toán 7 – ThS. Đinh Quốc Tuấn</h2>
+          <p class="text-[11px] text-gray-500" id="slide-lecture-subtitle">1 Slide Đề câu hỏi ➔ 1 Slide Đáp án & Lời giải chi tiết xen kẽ (KNTT & THCS Phú An)</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <a id="btn-open-fullscreen-slide" href="slide-toan7.html" target="_blank" class="bg-amber-500 hover:bg-amber-600 text-muc font-bold px-4 py-2 rounded-xl text-xs transition shadow flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fas fa-expand-arrows-alt"></i> <span>Mở Chiếu Toàn Màn Hình</span>
+        </a>
+        <a href="thi.html?exam_id=2" class="bg-luc hover:bg-emerald-800 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fas fa-paper-plane"></i> <span>Cho Học Sinh Làm Bài</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- KHUNG TRÌNH CHIẾU SLIDE HTML (IFRAME CAO CẤP TƯƠNG TÁC TRỰC TIẾP) -->
+    <div class="bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-800 flex-1 relative slide-container">
+      <iframe id="lecture-slide-frame" src="slide-toan7.html" class="w-full h-full border-0" allowfullscreen></iframe>
+    </div>
+
+    <!-- DÒNG HƯỚNG DẪN DÀNH CHO GIÁO VIÊN KHI LÊN LỚP -->
+    <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-gray-600">
+      <div class="bg-white p-3 rounded-xl border border-bac flex items-start gap-2.5">
+        <i class="fas fa-keyboard text-luc mt-0.5 text-sm"></i>
+        <div>
+          <b>Phím tắt chuyển slide:</b> Dùng phím mũi tên <b>← / →</b> hoặc <b>Space</b> để qua câu hỏi / đáp án tiếp theo.
+        </div>
+      </div>
+      <div class="bg-white p-3 rounded-xl border border-bac flex items-start gap-2.5">
+        <i class="fas fa-eye text-amber-600 mt-0.5 text-sm"></i>
+        <div>
+          <b>Sư phạm xen kẽ:</b> Mỗi câu hỏi có 1 slide đề bài và 1 slide phân tích phương pháp giải chi tiết từng bước.
+        </div>
+      </div>
+      <div class="bg-white p-3 rounded-xl border border-bac flex items-start gap-2.5">
+        <i class="fas fa-user-check text-lam mt-0.5 text-sm"></i>
+        <div>
+          <b>Đồng bộ làm bài:</b> Bấm <i>"Cho Học Sinh Làm Bài"</i> để chuyển mã thi cho cả lớp cùng làm trắc nghiệm tính giờ.
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-bac py-6 text-xs text-gray-600 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-center sm:text-left">
+      <div>
+        <p class="font-bold text-muc title-serif">Lớp Học Trực Tiếp — ThS. Đinh Quốc Tuấn (HCMUS)</p>
+        <p class="text-[11px] text-gray-500">Giáo án điện tử & Slide HTML giảng dạy chuẩn mực sư phạm.</p>
+      </div>
+      <div class="text-[10px] sm:text-[11px] italic text-black font-serif">
+        Hỗ trợ tác giả ly cafe nếu thích (tùy hỷ 1k, 3k, 5k...) hoặc liên hệ tác giả: Zalo 0903052119
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Dữ liệu các lớp học & bài giảng slide
+    const LECTURES = {
+      'toan7_phuan': {
+        title: 'Slide Trình Chiếu Bài Giảng Toán 7 – ThS. Đinh Quốc Tuấn',
+        subtitle: '1 Slide Đề câu hỏi ➔ 1 Slide Đáp án & Lời giải chi tiết xen kẽ (KNTT & THCS Phú An)',
+        slideUrl: 'slide-toan7.html',
+        examUrl: 'thi.html?exam_id=2',
+        tag: 'Lớp Toán 7 · Tuần 8'
+      },
+      'toan6_kntt': {
+        title: 'Slide Bài Giảng Toán 6: Lũy Thừa, BCNN & Hình Học Thực Tiễn',
+        subtitle: 'Phương pháp giải nhanh, nhận biết dấu hiệu chia hết & tính diện tích mảnh vườn thực tế',
+        slideUrl: 'slide-toan7.html', // có thể mở rộng thêm slide-toan6.html
+        examUrl: 'thi.html?exam_id=1',
+        tag: 'Lớp Toán 6 · Tuần 8'
+      },
+      'toan10_kntt': {
+        title: 'Slide Bài Giảng Toán 10: Miền Nghiệm BPT Bậc Nhất 2 Ẩn & Định Lý Sin/Cosin',
+        subtitle: 'Tối ưu hóa kinh tế thực tế & kỹ năng giải tam giác ôn thi giữa kì I',
+        slideUrl: 'slide-toan7.html',
+        examUrl: 'thi.html?exam_id=3',
+        tag: 'Lớp Toán 10 · Tuần 8'
+      },
+      'dgnl_dhqg': {
+        title: 'Slide Luyện Thi ĐGNL ĐHQG-HCM: Tư Duy Định Lượng & Suy Luận Logic',
+        subtitle: 'Rèn luyện tốc độ xử lý số liệu ma trận bảng biểu & logic bài toán xếp hàng',
+        slideUrl: 'slide-toan7.html',
+        examUrl: 'thi.html?exam_id=4',
+        tag: 'Lớp ĐGNL · Tuần 8'
+      }
+    };
+
+    function updateLiveDateTime() {
+      const now = new Date();
+      const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+      const dayOfWeek = days[now.getDay()];
+      const dateStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+      const elDay = document.getElementById('current-day-of-week');
+      const elDate = document.getElementById('current-full-date');
+      const elTime = document.getElementById('current-live-time');
+
+      if (elDay) elDay.innerText = dayOfWeek;
+      if (elDate) elDate.innerText = dateStr;
+      if (elTime) elTime.innerText = timeStr;
+    }
+
+    function changeClassLecture(key) {
+      const lecture = LECTURES[key];
+      if (!lecture) return;
+
+      document.getElementById('slide-lecture-title').innerText = lecture.title;
+      document.getElementById('slide-lecture-subtitle').innerText = lecture.subtitle;
+      document.getElementById('lecture-slide-frame').src = lecture.slideUrl;
+      document.getElementById('btn-open-fullscreen-slide').href = lecture.slideUrl;
+      document.getElementById('header-schedule-tag').innerText = lecture.tag;
+    }
+
+    async function refreshClassCode() {
+      const codeEl = document.getElementById('live-rolling-code');
+      try {
+        const res = await fetch('api.php?action=get_teacher_code');
+        const data = await res.json();
+        if (data.status === 'success' && data.rolling_code) {
+          codeEl.innerText = data.rolling_code;
+        } else {
+          // Sinh mã fallback 4 ký tự
+          codeEl.innerText = '7K8B';
+        }
+      } catch (e) {
+        codeEl.innerText = '7K8B';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateLiveDateTime();
+      setInterval(updateLiveDateTime, 1000);
+      refreshClassCode();
+      setInterval(refreshClassCode, 60000);
+    });
+  </script>
+</body>
+</html>
