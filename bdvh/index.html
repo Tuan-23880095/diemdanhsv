@@ -164,17 +164,52 @@
       <button onclick="selectGrade('DGNL')" class="grade-btn px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap bg-amber-100 text-amber-900 border border-amber-300 hover:bg-amber-200">⭐ Ôn thi ĐGNL ĐHQG</button>
     </div>
 
-    <!-- Danh sách Đề thi -->
-    <div>
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-bold title-serif text-lam" id="exam-list-title">Danh sách đề thi & bài rèn luyện</h3>
-        <span class="text-xs text-gray-500 font-medium" id="exam-count-badge">Đang tải dữ liệu...</span>
+    <!-- BANNER PHÂN TÍCH TIẾN ĐỘ NĂM HỌC BỘ GD&ĐT & GỢI Ý HỌC TẬP TUẦN NÀY -->
+    <section class="mb-8">
+      <div class="bg-gradient-to-r from-blue-900 via-emerald-900 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-xl border border-white/10 relative overflow-hidden">
+        <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 relative z-10">
+          <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 bg-amber-400 text-muc px-3 py-1 rounded-full text-xs font-black shadow-sm tracking-wide">
+              <i class="fas fa-calendar-check"></i> TUẦN 8 NĂM HỌC (28/10/2026) · CAO ĐIỂM GIỮA KÌ I
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold title-serif text-white">
+              Tiến Độ Giảng Dạy & Gợi Ý Học Tập Tuần Này
+            </h3>
+            <p class="text-xs sm:text-sm text-gray-200 leading-relaxed max-w-3xl">
+              Tính từ ngày khai giảng <b>05/09 (Tuần 1)</b>, hôm nay là <b>28/10 (Tuần 8)</b>. Theo chuẩn khung kế hoạch thời gian năm học của Bộ Giáo dục & Đào tạo, các trường THCS & THPT trên toàn quốc đang hoàn thành bài học cuối chương và bước vào <b>ĐỢT KIỂM TRA ĐÁNH GIÁ GIỮA HỌC KỲ I</b>.
+            </p>
+          </div>
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-center lg:text-right w-full lg:w-auto flex-none space-y-1">
+            <div class="text-[11px] text-amber-300 font-bold uppercase tracking-wider">Trọng Tâm Tuần Này:</div>
+            <div class="text-base font-black text-white">LUYỆN ĐỀ ÔN TẬP GIỮA KÌ I</div>
+            <div class="text-[11px] text-gray-300">Rèn phản xạ tốc độ & quản lý thời gian thi</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MỤC LỤC CHƯƠNG BÀI HỌC DẠNG TEXT (PHÂN CẤP THÔNG MINH) -->
+    <section class="mb-12">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+        <div>
+          <h3 class="text-xl sm:text-2xl font-bold title-serif text-lam flex items-center gap-2.5">
+            <i class="fas fa-list-ol text-luc"></i> <span id="syllabus-title">Mục Lục Chương Trình & Bài Học</span>
+          </h3>
+          <p class="text-xs text-gray-500 mt-1">Bấm vào tên từng bài học để xem <b>Lý thuyết</b>, <b>Bài tập lớp</b> và vào <b>Thi trắc nghiệm tính giờ</b>.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs bg-emerald-50 text-luc border border-emerald-200 px-3 py-1.5 rounded-xl font-bold">
+            <i class="fas fa-circle text-[8px] text-luc animate-pulse"></i> Tuần 8: Bài 10 - 11 & Ôn Giữa Kì
+          </span>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="exams-container">
-        <!-- Render tự động từ API -->
+      <!-- Container hiển thị mục lục phân cấp dạng Text -->
+      <div id="syllabus-tree-container" class="space-y-4">
+        <!-- Render tự động theo khối lớp -->
       </div>
-    </div>
+    </section>
   </main>
 
   <!-- MODAL ĐĂNG KÝ TÀI KHOẢN KHÁCH NHANH -->
@@ -312,6 +347,7 @@
       await checkAuth();
         syncAccountAndClassUI();
       await loadExams();
+        renderCurriculumSyllabus('L06');
     }
 
     async function checkAuth() {
@@ -344,6 +380,255 @@
         }
       } catch (err) {
         console.error('Lỗi checkAuth:', err);
+      }
+    }
+
+    
+    // =========================================================================
+    // HỆ THỐNG MỤC LỤC CHƯƠNG - BÀI HỌC DẠNG TEXT (PHÂN CẤP THÔNG MINH)
+    // TÍNH TỪ 5/9 (TUẦN 1) -> 28/10 LÀ TUẦN 8 (CAO ĐIỂM ÔN TẬP & THI GIỮA KÌ I)
+    // =========================================================================
+
+    const SYLLABUS_DATA = {
+      'L06': {
+        title: 'Chương Trình Toán 6 (Kết Nối Tri Thức / Cánh Diều / Chân Trời)',
+        currentWeek: 8,
+        currentWeekFocus: 'Tuần 8: Bài 10 (Bội chung nhỏ nhất) & LUYỆN ĐỀ ÔN TẬP GIỮA HỌC KÌ I',
+        chapters: [
+          {
+            chapterId: 'c1',
+            chapterTitle: 'Chương I: Tập Hợp Các Số Tự Nhiên',
+            lessons: [
+              { id: 'toan6-01', week: 1, title: 'Bài 1: Tập hợp và phần tử của tập hợp', examId: 1, theory: 'Khái niệm tập hợp, các phần tử $a \in A, b \notin A$. Cách cho tập hợp: Liệt kê hoặc nêu dấu hiệu đặc trưng.', exercise: 'Viết tập hợp các chữ cái trong từ "HOC TOAN", biểu diễn tập hợp số tự nhiên nhỏ hơn 10.' },
+              { id: 'toan6-02', week: 1, title: 'Bài 2: Tập hợp các số tự nhiên. Ghi số tự nhiên', examId: 1, theory: 'Tập hợp $\mathbb{N} = \{0, 1, 2, 3...\}$, tập hợp $\mathbb{N}^* = \{1, 2, 3...\}$. Chữ số La Mã và cấu tạo thập phân.', exercise: 'Đọc và viết các số La Mã: XIV, XXIX, XLV; biểu diễn số $\overline{ab} = 10a + b$.' },
+              { id: 'toan6-03', week: 2, title: 'Bài 3: Các phép tính trong tập hợp số tự nhiên', examId: 1, theory: 'Tính chất giao hoán, kết hợp, phân phối của phép nhân đối với phép cộng: $a(b + c) = ab + ac$.', exercise: 'Tính nhanh: $25 \times 37 + 25 \times 63$; phép chia có dư: $a = b \cdot q + r (0 \le r < b)$.' },
+              { id: 'toan6-04', week: 3, title: 'Bài 4: Lũy thừa với số mũ tự nhiên', examId: 1, theory: '$a^n = a \cdot a \dots a$ (n thừa số $a$). Nhân/chia hai lũy thừa cùng cơ số: $a^m \cdot a^n = a^{m+n}$; $a^m : a^n = a^{m-n}$.', exercise: 'Tính giá trị: $2^3 \cdot 2^2 = 2^5 = 32$; $3^4 : 3^2 = 9$. Tìm $x$ biết $3^x = 27$.' },
+              { id: 'toan6-05', week: 4, title: 'Bài 5: Thứ tự thực hiện các phép tính', examId: 1, theory: 'Ưu tiên: Lũy thừa $\rightarrow$ Nhân & Chia $\rightarrow$ Cộng & Trừ. Trong ngoặc: $( ) \rightarrow [ ] \rightarrow \{ \}$.', exercise: 'Tính: $15 + 5 \cdot 2^2 = 15 + 20 = 35$; $100 - [60 - (9 - 2)^2]$.' },
+              { id: 'toan6-06', week: 5, title: 'Bài 6: Chia hết và dấu hiệu chia hết cho 2, cho 5', examId: 1, theory: 'Tính chất chia hết của một tổng: $a \vdots m$ và $b \vdots m \Rightarrow (a+b) \vdots m$. Dấu hiệu chia hết cho 2 (tận cùng chẵn), cho 5 (tận cùng 0 hoặc 5).', exercise: 'Xét xem tổng $120 + 45$ có chia hết cho 5 không? Tìm chữ số $x$ để số $\overline{47x}$ chia hết cho 2.' },
+              { id: 'toan6-07', week: 5, title: 'Bài 7: Dấu hiệu chia hết cho 3, cho 9', examId: 1, theory: 'Số chia hết cho 9 khi tổng các chữ số chia hết cho 9. Số chia hết cho 3 khi tổng các chữ số chia hết cho 3.', exercise: 'Tìm chữ số $x$ để $\overline{1x5}$ chia hết cho 9; số nào chia hết cho cả 2, 3, 5, 9?' },
+              { id: 'toan6-08', week: 6, title: 'Bài 8: Số nguyên tố. Hợp số. Phân tích ra thừa số nguyên tố', examId: 1, theory: 'Số nguyên tố là số tự nhiên lớn hơn 1 chỉ có 2 ước là 1 và chính nó. Phân tích số ra tích các thừa số nguyên tố.', exercise: 'Các số 2, 3, 5, 7, 11 là số nguyên tố; phân tích số $120 = 2^3 \cdot 3 \cdot 5$.' },
+              { id: 'toan6-09', week: 7, title: 'Bài 9: Ước chung. Ước chung lớn nhất (ƯCLN)', examId: 1, theory: 'ƯCLN là số lớn nhất trong tập hợp các ước chung. Các bước tìm ƯCLN bằng cách phân tích ra thừa số nguyên tố (chọn thừa số chung với số mũ nhỏ nhất).', exercise: 'Tìm $\text{ƯCLN}(36, 84)$; bài toán thực tế chia đều 48 cây bút và 72 quyển vở vào các túi quà.' },
+              { id: 'toan6-10', week: 8, title: 'Bài 10: Bội chung. Bội chung nhỏ nhất (BCNN)', examId: 1, isCurrent: true, theory: 'BCNN là số nhỏ nhất khác 0 trong tập hợp các bội chung. Chọn thừa số chung và riêng với số mũ lớn nhất.', exercise: 'Tìm $\text{BCNN}(12, 18) = 36$; bài toán chu kỳ đèn tín hiệu hoặc xe buýt cùng rời bến sau bao nhiêu phút.' },
+              { id: 'toan6-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP & KIỂM TRA GIỮA HỌC KỲ I (TRỌNG TÂM TUẦN 8)', examId: 1, isExamFocus: true, isCurrent: true, theory: 'Tổng hợp toàn bộ kiến thức Số học (Lũy thừa, Chia hết, ƯCLN, BCNN) & Hình học trực quan (Hình vuông, Tam giác đều, Hình chữ nhật, Hình thoi).', exercise: 'Bộ 20 câu hỏi trắc nghiệm & tự luận tiêu chuẩn theo ma trận kiểm tra giữa kì của Bộ GD&ĐT.' }
+            ]
+          },
+          {
+            chapterId: 'c2',
+            chapterTitle: 'Chương II: Số Nguyên (Chuẩn Bị Học)',
+            lessons: [
+              { id: 'toan6-11', week: 9, title: 'Bài 11: Số nguyên âm và tập hợp các số nguyên', examId: 1, theory: 'Tập hợp số nguyên $\mathbb{Z} = \{... -3, -2, -1, 0, 1, 2, 3...\}$. Biểu diễn trên trục số và ứng dụng nhiệt độ dưới 0°C, độ cao dưới mực nước biển.', exercise: 'Biểu diễn các điểm $-3, 2, -1$ trên trục số; so sánh số nguyên.' },
+              { id: 'toan6-12', week: 10, title: 'Bài 12: Thứ tự trong tập hợp các số nguyên', examId: 1, theory: 'Mọi số âm đều nhỏ hơn 0 và nhỏ hơn mọi số dương. Số đối của $a$ là $-a$.', exercise: 'Sắp xếp các số sau theo thứ tự tăng dần: $-15, 0, 7, -2, 11$.' }
+            ]
+          },
+          {
+            chapterId: 'c3',
+            chapterTitle: 'Chương III: Hình Học Trực Quan',
+            lessons: [
+              { id: 'toan6-h1', week: 3, title: 'Bài 1: Tam giác đều. Hình vuông. Lục giác đều', examId: 1, theory: 'Đặc điểm cạnh bằng nhau, góc bằng nhau của tam giác đều và hình vuông; cấu tạo 6 tam giác đều của lục giác đều.', exercise: 'Vẽ tam giác đều cạnh 4cm; tính chu vi hình vuông có cạnh 5cm.' },
+              { id: 'toan6-h2', week: 5, title: 'Bài 2: Hình chữ nhật. Hình thoi. Hình bình hành. Hình thang cân', examId: 1, theory: 'Tính chất đối song song và bằng nhau của các cạnh, đường chéo cắt nhau tại trung điểm.', exercise: 'Nhận biết các hình tứ giác trong đời sống thực tế.' },
+              { id: 'toan6-h3', week: 8, title: 'Bài 3: Chu vi và diện tích các hình phẳng trong thực tiễn', examId: 1, isCurrent: true, theory: 'Công thức diện tích hình chữ nhật $S = a \cdot b$, hình bình hành $S = a \cdot h$, hình thoi $S = \frac{1}{2} d_1 d_2$, hình thang $S = \frac{(a+b)h}{2}$.', exercise: 'Bài toán lát gạch sàn nhà, tính diện tích mảnh vườn trồng rau hình thang cân.' }
+            ]
+          }
+        ]
+      },
+      'L07': {
+        title: 'Chương Trình Toán 7 (Kết Nối Tri Thức / Cánh Diều / Chân Trời)',
+        currentWeek: 8,
+        currentWeekFocus: 'Tuần 8: Bài 7 (Tập hợp các số thực) & LUYỆN ĐỀ ÔN TẬP GIỮA HỌC KÌ I',
+        chapters: [
+          {
+            chapterId: 'c7_1',
+            chapterTitle: 'Chương I: Số Hữu Tỉ',
+            lessons: [
+              { id: 'toan7-01', week: 1, title: 'Bài 1: Tập hợp các số hữu tỉ', examId: 2, theory: 'Số hữu tỉ là số viết được dưới dạng phân số $\frac{a}{b}$ với $a, b \in \mathbb{Z}, b \neq 0$. Kí hiệu tập hợp $\mathbb{Q}$.', exercise: 'So sánh các số hữu tỉ, biểu diễn trên trục số.' },
+              { id: 'toan7-02', week: 2, title: 'Bài 2: Các phép tính cộng, trừ, nhân, chia số hữu tỉ', examId: 2, theory: 'Quy tắc cộng trừ phân số, quy tắc nhân chia và tính chất phân phối.', exercise: 'Tính giá trị biểu thức phân số và số thập phân.' },
+              { id: 'toan7-03', week: 3, title: 'Bài 3: Lũy thừa của một số hữu tỉ', examId: 2, theory: 'Lũy thừa với số mũ tự nhiên: $(x \cdot y)^n = x^n \cdot y^n$; $(x^m)^n = x^{m \cdot n}$.', exercise: 'Tính giá trị: $(-\frac{1}{2})^3 = -\frac{1}{8}$; so sánh $2^{30}$ và $3^{20}$.' },
+              { id: 'toan7-04', week: 4, title: 'Bài 4: Quy tắc dấu ngoặc và quy tắc chuyển vế', examId: 2, theory: 'Khi bỏ dấu ngoặc có dấu "-" đằng trước phải đổi dấu tất cả các số hạng. Quy tắc chuyển vế: $x + a = b \Rightarrow x = b - a$.', exercise: 'Tìm $x$: $x - \frac{2}{3} = \frac{1}{2}$; rút gọn biểu thức có nhiều tầng ngoặc.' }
+            ]
+          },
+          {
+            chapterId: 'c7_2',
+            chapterTitle: 'Chương II: Số Thực & Căn Bậc Hai Số Học',
+            lessons: [
+              { id: 'toan7-05', week: 5, title: 'Bài 5: Số thập phân vô hạn tuần hoàn', examId: 2, theory: 'Mỗi số hữu tỉ biểu diễn bởi số thập phân hữu hạn hoặc vô hạn tuần hoàn.', exercise: 'Chuyển phân số $\frac{1}{3} = 0,(3)$ sang số thập phân tuần hoàn.' },
+              { id: 'toan7-06', week: 6, title: 'Bài 6: Số vô tỉ. Căn bậc hai số học', examId: 2, theory: 'Căn bậc hai số học của số $a \ge 0$ là số $x \ge 0$ sao cho $x^2 = a$. Kí hiệu $\sqrt{a}$. Số vô tỉ là số thập phân vô hạn không tuần hoàn.', exercise: 'Tính $\sqrt{25} = 5, \sqrt{0.64} = 0.8$.' },
+              { id: 'toan7-07', week: 8, title: 'Bài 7: Tập hợp các số thực (Tuần 8)', examId: 2, isCurrent: true, theory: 'Số thực $\mathbb{R}$ bao gồm số hữu tỉ và số vô tỉ. Trục số thực biểu diễn liên tục mọi số thực.', exercise: 'So sánh các số thực, tính giá trị tuyệt đối $|x|$.' },
+              { id: 'toan7-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP & KIỂM TRA GIỮA HỌC KỲ I TOÁN 7', examId: 2, isExamFocus: true, isCurrent: true, theory: 'Toàn bộ Số hữu tỉ, Lũy thừa, Góc đối đỉnh, Tia phân giác, Hai đường thẳng song song.', exercise: 'Đề thi 20 câu trắc nghiệm chuẩn ma trận Sở GD&ĐT TP.HCM.' }
+            ]
+          }
+        ]
+      },
+      'L10': {
+        title: 'Chương Trình Toán 10 (Chương Trình Mới)',
+        currentWeek: 8,
+        currentWeekFocus: 'Tuần 8: Bất phương trình bậc nhất hai ẩn & HỆ THỨC LƯỢNG TAM GIÁC (ÔN GIỮA KÌ I)',
+        chapters: [
+          {
+            chapterId: 'c10_1',
+            chapterTitle: 'Chương I: Mệnh Đề & Tập Hợp',
+            lessons: [
+              { id: 'toan10-01', week: 1, title: 'Bài 1: Mệnh đề toán học, mệnh đề kéo theo, phủ định', examId: 3, theory: 'Mệnh đề là khẳng định đúng hoặc sai. Mệnh đề $P \Rightarrow Q$; phủ định $\overline{P}$. Mệnh đề chứa ký hiệu $\forall, \exists$.', exercise: 'Xét tính đúng sai của mệnh đề, lập mệnh đề đảo.' },
+              { id: 'toan10-02', week: 2, title: 'Bài 2: Tập hợp và các phép toán trên tập hợp', examId: 3, theory: 'Giao $A \cap B$, Hợp $A \cup B$, Hiệu $A \setminus B$, Phần bù $C_E A$. Khoảng, đoạn, nửa khoảng.', exercise: 'Cho $A = (-3; 4], B = [1; 6)$. Tìm $A \cap B, A \cup B, A \setminus B$.' }
+            ]
+          },
+          {
+            chapterId: 'c10_2',
+            chapterTitle: 'Chương II: Bất Phương Trình & Hệ Bất Phương Trình Bậc Nhất Hai Ẩn',
+            lessons: [
+              { id: 'toan10-03', week: 4, title: 'Bài 1: Bất phương trình bậc nhất hai ẩn $ax + by \le c$', examId: 3, theory: 'Biểu diễn miền nghiệm của bất phương trình trên mặt phẳng tọa độ $Oxy$ bằng nửa mặt phẳng.', exercise: 'Xác định miền nghiệm và kiểm tra điểm $M(x_0; y_0)$ có thuộc miền nghiệm hay không.' },
+              { id: 'toan10-04', week: 6, title: 'Bài 2: Hệ bất phương trình bậc nhất hai ẩn & Bài toán tối ưu', examId: 3, theory: 'Miền nghiệm là đa giác giao các nửa mặt phẳng. Giá trị lớn nhất/nhỏ nhất của $F(x,y) = ax+by$ đạt tại các đỉnh của đa giác.', exercise: 'Bài toán quy hoạch kinh tế: Lập kế hoạch sản xuất để lợi nhuận cao nhất.' },
+              { id: 'toan10-mid', week: 8, title: '⭐ ĐỀ ÔN TẬP GIỮA HỌC KỲ I TOÁN 10', examId: 3, isExamFocus: true, isCurrent: true, theory: 'Mệnh đề, Tập hợp, Miền nghiệm BPT bậc nhất hai ẩn, Định lý Sin, Cosin tam giác.', exercise: 'Bộ đề thi rèn tư duy logic và kỹ năng vẽ đồ thị, bấm máy Casio.' }
+            ]
+          }
+        ]
+      },
+      'DGNL': {
+        title: 'Chuyên Đề Luyện Thi ĐGNL ĐHQG-HCM 2026',
+        currentWeek: 8,
+        currentWeekFocus: 'Tuần 8: Tư duy Định lượng, Suy luận Logic & Xử lý số liệu bảng biểu',
+        chapters: [
+          {
+            chapterId: 'cdgnl_1',
+            chapterTitle: 'Phần 1: Tư Duy Định Lượng (Toán Học & Suy Luận Số Liệu)',
+            lessons: [
+              { id: 'dgnl-01', week: 8, title: 'Đề số 01: Tư duy Định lượng & Logic suy luận (30 câu tính giờ)', examId: 4, isExamFocus: true, isCurrent: true, theory: 'Cấu trúc đề ĐHQG-HCM: Đại số, Hình học, Xác suất thống kê, Đọc hiểu biểu đồ ma trận.', exercise: '30 câu trắc nghiệm 4 lựa chọn, phân tích tốc độ dưới 1.5 phút/câu.' },
+              { id: 'dgnl-02', week: 8, title: 'Chuyên đề: Logic suy luận vị trí, sắp xếp thứ tự và suy diễn mệnh đề', examId: 4, theory: 'Quy tắc suy luận Modus Ponens, bảng chân trị và bài toán sắp xếp 5-7 đối tượng.', exercise: 'Các dạng bài toán xếp hàng, chọn môn học và phân tích điều kiện cần-đủ.' }
+            ]
+          }
+        ]
+      }
+    };
+
+    // Render Mục Lục Theo Khối Đang Chọn
+    function renderCurriculumSyllabus(grade) {
+      const container = document.getElementById('syllabus-tree-container');
+      const titleEl = document.getElementById('syllabus-title');
+      if (!container) return;
+
+      const curData = SYLLABUS_DATA[grade] || SYLLABUS_DATA['L06'];
+      if (titleEl) {
+        titleEl.innerText = curData.title;
+      }
+
+      container.innerHTML = curData.chapters.map(ch => {
+        const lessonsHtml = ch.lessons.map(ls => {
+          const isCurrentBadge = ls.isCurrent ? `
+            <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-black px-2 py-0.5 rounded-full uppercase animate-pulse">
+              <i class="fas fa-thumbtack text-amber-700"></i> Tuần 8 (Hiện tại)
+            </span>` : (ls.week < 8 ? `
+            <span class="text-[10px] text-gray-400 font-semibold bg-gray-100 px-2 py-0.5 rounded-full">
+              Tuần ${ls.week} · Đã học
+            </span>` : `
+            <span class="text-[10px] text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 rounded-full">
+              Tuần ${ls.week} · Sắp học
+            </span>`);
+
+          const focusClass = ls.isExamFocus ? 'border-2 border-amber-400 bg-amber-50/40 shadow-md' : 'border border-bac bg-white hover:border-luc/50';
+
+          return `
+            <div class="rounded-2xl ${focusClass} transition overflow-hidden">
+              <!-- HÀNG TEXT TIÊU ĐỀ BÀI HỌC (CLICK ĐỂ BUNG 3 PHẦN) -->
+              <div onclick="toggleLesson('${ls.id}')" class="p-4 sm:p-4.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 cursor-pointer select-none hover:bg-emerald-50/30 transition">
+                <div class="flex items-start sm:items-center gap-3">
+                  <span class="w-7 h-7 rounded-xl bg-gray-100 text-gray-700 text-xs font-mono font-bold flex items-center justify-center flex-none">
+                    ${ls.id.replace(/[^0-9]/g, '') || '★'}
+                  </span>
+                  <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-xs font-mono text-gray-400 font-semibold">[${esc(ls.id)}]</span>
+                      ${isCurrentBadge}
+                    </div>
+                    <h4 class="font-bold text-sm sm:text-base text-gray-900 mt-0.5 ${ls.isExamFocus ? 'text-amber-900' : ''}">
+                      ${esc(ls.title)}
+                    </h4>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2 self-end sm:self-auto text-xs text-luc font-bold">
+                  <span class="hidden sm:inline text-[11px] text-gray-400 font-normal">Xem bài học</span>
+                  <i id="icon-toggle-${ls.id}" class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                </div>
+              </div>
+
+              <!-- KHUNG BÀI HỌC GỒM 3 PHẦN: LÝ THUYẾT, BÀI TẬP LỚP, TRẮC NGHIỆM TRỰC TUYẾN -->
+              <div id="panel-${ls.id}" class="hidden border-t border-bac bg-slate-50/70 p-4 sm:p-6 space-y-4 animate-fadeIn">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- PHẦN 1: LÝ THUYẾT TRỌNG TÂM -->
+                  <div class="bg-white rounded-2xl p-4.5 border border-bac shadow-sm space-y-2">
+                    <div class="flex items-center justify-between">
+                      <h5 class="font-bold text-xs uppercase tracking-wider text-lam flex items-center gap-1.5">
+                        <i class="fas fa-file-alt text-blue-600"></i> 1. Lý Thuyết Cốt Lõi
+                      </h5>
+                      <span class="text-[10px] text-gray-400">Tóm tắt chuẩn</span>
+                    </div>
+                    <p class="text-xs text-gray-700 leading-relaxed">${esc(ls.theory)}</p>
+                  </div>
+
+                  <!-- PHẦN 2: BÀI TẬP LỚP -->
+                  <div class="bg-white rounded-2xl p-4.5 border border-bac shadow-sm space-y-2">
+                    <div class="flex items-center justify-between">
+                      <h5 class="font-bold text-xs uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
+                        <i class="fas fa-edit text-luc"></i> 2. Bài Tập Trên Lớp
+                      </h5>
+                      <span class="text-[10px] text-gray-400">Rèn luyện tự luận</span>
+                    </div>
+                    <p class="text-xs text-gray-700 leading-relaxed">${esc(ls.exercise)}</p>
+                  </div>
+                </div>
+
+                <!-- PHẦN 3: TRẮC NGHIỆM TRỰC TUYẾN (TÍNH THỜI GIAN) -->
+                <div class="bg-white rounded-2xl p-4 sm:p-5 border border-purple-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-bold text-purple-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fas fa-stopwatch text-purple-600"></i> 3. Trắc Nghiệm Trực Tuyến (Tính Thời Gian)
+                      </span>
+                      <span class="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Chấm điểm & Phân tích AI</span>
+                    </div>
+                    <p class="text-xs text-gray-600">Làm bài thi trắc nghiệm theo chuẩn cấu trúc thời gian để hệ thống đo đạc tốc độ và chỉ ra lỗ hổng kiến thức.</p>
+                  </div>
+                  <a href="thi.html?exam_id=${ls.examId || 1}" class="w-full sm:w-auto bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition shadow flex items-center justify-center gap-2 whitespace-nowrap flex-none">
+                    <i class="fas fa-play-circle"></i> <span>Vào Thi Ngay</span> <i class="fas fa-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="bg-white/80 rounded-3xl p-5 sm:p-6 border border-bac shadow-sm space-y-3.5">
+            <h4 class="font-bold text-base sm:text-lg text-lam title-serif flex items-center gap-2 pb-2 border-b border-bac">
+              <i class="fas fa-book-open text-luc"></i> ${esc(ch.chapterTitle)}
+            </h4>
+            <div class="space-y-3">
+              ${lessonsHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function toggleLesson(lessonId) {
+      const panel = document.getElementById('panel-' + lessonId);
+      const icon = document.getElementById('icon-toggle-' + lessonId);
+      if (!panel) return;
+
+      const isHidden = panel.classList.contains('hidden');
+      if (isHidden) {
+        panel.classList.remove('hidden');
+        if (icon) icon.classList.add('rotate-180');
+      } else {
+        panel.classList.add('hidden');
+        if (icon) icon.classList.remove('rotate-180');
+      }
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
       }
     }
 
