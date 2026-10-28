@@ -968,13 +968,13 @@ switch ($action) {
                     'diff_minutes' => round(abs($durationSeconds - $targetSeconds) / 60, 1),
                     'avg_seconds_per_question' => $avgSec,
                     'pace_category' => ($durationSeconds <= $targetSeconds) ? 'Đúng tiến độ' : 'Cần tăng tốc',
-                    'time_strategy_advice' => 'Phân tích tư duy sâu và mẹo giải nhanh độc quyền đang được khóa. Hãy ủng hộ Thầy 5.000đ để mở khóa phân tích sư phạm chuyên sâu nhé!'
+                    'time_strategy_advice' => 'Em có thể xin mã lớp từ Thầy/Cô phụ trách để mở khóa hướng dẫn giải chi tiết cho toàn bộ câu hỏi nhé!'
                 ],
                 'root_causes' => [
-                    "Tính năng chỉ ra chính xác lỗ hổng tư duy từng câu của Hệ Thống Khảo Thí yêu cầu mở khóa bonus.",
-                    "Học sinh có hoàn cảnh khó khăn có thể gửi email về dqtuanhcmus@gmail.com để được Thầy mở miễn phí."
+                    "Nhập mã lớp học do Thầy Đinh Quốc Tuấn hoặc Giáo viên cấp để mở khóa toàn bộ hướng dẫn giải chi tiết từng bước.",
+                    "Liên hệ tác giả: Zalo 0903052119 để được hỗ trợ học tập và nhận mã lớp."
                 ],
-                'exclusive_tip' => "Mẹo giải nhanh của Thầy Tuấn đang được khóa. Ủng hộ 5.000đ để xem phân tích chi tiết."
+                'exclusive_tip' => "Nhập mã lớp của giáo viên cung cấp để xem phương pháp và mẹo giải nhanh từng câu."
             ];
         }
 
@@ -1003,6 +1003,16 @@ switch ($action) {
             }
         }
 
+        // Đếm tổng số bài thi của user này để xác định thứ tự làm bài
+        $userSubmissionCount = 1;
+        if ($userId > 0) {
+            try {
+                $cStmt = $pdo->prepare("SELECT COUNT(*) FROM bdvh_submissions WHERE user_id = ?");
+                $cStmt->execute([$userId]);
+                $userSubmissionCount = (int)$cStmt->fetchColumn();
+            } catch (Throwable $e) {}
+        }
+
         json_out([
             'status' => 'success',
             'submission_id' => $submissionId,
@@ -1012,6 +1022,8 @@ switch ($action) {
             'duration_seconds' => $durationSeconds,
             'free_trials_left' => $freeLeft,
             'paid_trials_left' => $paidLeft,
+            'user_submission_count' => $userSubmissionCount,
+            'is_class_student' => !empty($_SESSION['bdvh_is_class_student']) || $hasAiAccess,
             'ai_evaluation' => $aiResult,
             'details' => $details
         ]);

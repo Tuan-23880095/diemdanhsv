@@ -132,37 +132,22 @@
         </div>
       </div>
 
-      <!-- Hộp thoại nhắc số lượt còn lại & MoMo Bonus -->
-      <div class="bg-giay p-4 rounded-xl border border-bac w-full sm:w-64 text-center sm:text-right no-print">
-        <span class="text-xs text-gray-600 block">Lượt miễn phí còn lại:</span>
-        <span class="text-lg font-bold text-son block" id="res-trials-left">0 lượt</span>
-        <a href="index.html" class="mt-2 inline-block text-xs text-luc font-bold hover:underline">
-          <i class="fas fa-heart text-son"></i> Nạp MoMo 5.000đ ủng hộ Thầy
-        </a>
+      <!-- Thông tin thí sinh & Mã lớp -->
+      <div class="bg-giay p-4 rounded-xl border border-bac w-full sm:w-72 text-center sm:text-right no-print">
+        <span class="text-xs text-gray-600 block" id="candidate-badge-label">Tài khoản học tập:</span>
+        <span class="text-sm font-bold text-muc block" id="res-candidate-name">Học sinh</span>
+        <div id="class-code-status-box" class="mt-2">
+          <button onclick="openClassCodeModal()" class="text-xs text-luc font-bold hover:underline">
+            <i class="fas fa-key"></i> Nhập mã lớp để lưu phiên
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- KHỐI ĐÁNH GIÁ SƯ PHẠM CỦA GEMINI AI (CÓ CHẾ ĐỘ MỞ KHÓA HOẶC LÀM MỜ NẾU HẾT LƯỢT AI) -->
     <div id="ai-block-container" class="relative bg-white rounded-2xl p-6 sm:p-8 border-l-4 border-luc border-y border-r border-bac shadow-md card-shadow space-y-4 overflow-hidden">
       
-      <!-- Overlay khi chưa mở khóa AI nhận xét -->
-      <div id="ai-locked-overlay" class="hidden absolute inset-0 bg-white/85 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center p-6 text-center space-y-3">
-        <div class="w-12 h-12 rounded-full bg-emerald-100 text-luc flex items-center justify-center text-xl shadow">
-          <i class="fas fa-lock text-son"></i>
-        </div>
-        <h3 class="text-base sm:text-lg font-bold text-lam title-serif">Mở Khóa Nhận Xét Phân Tích Tư Duy Từ Hệ Thống Khảo Thí</h3>
-        <p class="text-xs text-gray-700 max-w-lg leading-relaxed">
-          🌱 Em vẫn xem điểm số, số câu đúng/sai và phân tích thời gian <b>hoàn toàn miễn phí</b>. Để mở khóa phần chỉ ra chính xác lỗ hổng tư duy và mẹo giải nhanh từ Thầy Đinh Quốc Tuấn, em hãy ủng hộ Thầy một ly trà đá (5.000đ) qua MoMo để bù chi phí tài nguyên máy chủ hệ thống nhé!
-        </p>
-        <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
-          <a href="index.html" class="bg-gradient-to-r from-son to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition shadow flex items-center gap-2">
-            <i class="fas fa-heart"></i> Ủng Hộ MoMo (5.000đ) Mở Khóa Phân Tích Chuyên Sâu
-          </a>
-          <a href="mailto:dqtuanhcmus@gmail.com?subject=Xin%20Mien%20Phi%20Nhan%20Xet%20AI%20Cho%20Hoc%20Sinh%20Kho%20Khan" class="text-xs text-lam hover:underline font-semibold block sm:inline">
-            <i class="fas fa-envelope"></i> Học sinh khó khăn? Bấm để Thầy hỗ trợ miễn phí
-          </a>
-        </div>
-      </div>
+      <!-- Đã gỡ bỏ overlay ép 5.000đ -->
 
       <div class="flex items-center gap-2 text-luc font-bold text-sm">
         <i class="fas fa-brain text-base"></i> <span>Phân Tích Sư Phạm & Nhận Xét Tư Duy Từ Thầy Đinh Quốc Tuấn (Hệ Thống Khảo Thí)</span>
@@ -269,23 +254,34 @@
       </div>
     </div>
 
-    <!-- LỜI KÊU GỌI ĐỒNG HÀNH CUỐI BÀI -->
-    <div class="bg-gradient-to-r from-lam to-luc text-white p-6 rounded-2xl shadow-lg no-print flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="space-y-1">
-        <h4 class="font-bold text-base title-serif">Muốn nâng cao năng lực và luyện các đề thi khó hơn?</h4>
-        <p class="text-xs text-white/80">Ủng hộ Thầy 5.000đ qua MoMo để mở thêm 5 lượt thi thử hoặc liên hệ học nhóm kèm riêng.</p>
+    <!-- HỘP THÔNG BÁO ỦNG HỘ LY CAFE TÙY HỶ CUỐI BÀI THỨ 2 CỦA KHÁCH -->
+    <div id="guest-coffee-box" class="hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-6 sm:p-7 shadow-sm text-center space-y-4 no-print">
+      <div class="w-12 h-12 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center mx-auto text-xl shadow-inner">
+        <i class="fas fa-coffee"></i>
       </div>
-      <a href="index.html" class="bg-amber-400 hover:bg-amber-500 text-muc font-bold px-5 py-2.5 rounded-xl text-xs whitespace-nowrap transition shadow">
-        Ủng Hộ MoMo (5.000đ)
-      </a>
+      <div class="space-y-1">
+        <h4 class="font-bold text-base text-gray-900 title-serif">Gửi Tặng Tác Giả Ly Cà Phê Đồng Hành</h4>
+        <p class="text-xs text-gray-700 max-w-lg mx-auto leading-relaxed">
+          Cảm ơn bạn đã trải nghiệm hệ thống! Nếu thấy hữu ích, bạn có thể hỗ trợ tác giả ly cafe tuỳ người dùng <b>1k - 3k - 5k... tuỳ hỷ</b>; hoặc liên hệ tác giả: <b>Zalo 0903052119</b>. Chúc bạn luôn đạt kết quả cao trong học tập!
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
+        <button onclick="openCoffeeModal()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition shadow flex items-center gap-2">
+          <i class="fas fa-heart text-amber-200"></i> <span>Gửi tặng ly cafe (1k - 3k - 5k tùy hỷ)</span>
+        </button>
+        <a href="https://zalo.me/0903052119" target="_blank" class="bg-white border border-gray-300 hover:border-gray-400 text-gray-800 font-bold py-2.5 px-6 rounded-xl text-xs transition shadow flex items-center gap-2">
+          <i class="fas fa-comment-dots text-luc"></i> <span>Liên hệ Zalo: 0903.052.119</span>
+        </a>
+      </div>
     </div>
 
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-white border-t border-bac py-4 text-center text-xs text-gray-500 no-print mt-auto">
-    Trung Tâm Bồi Dưỡng Văn Hóa — Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM · ThS. Đinh Quốc Tuấn
-  </footer>
+      <footer class="bg-white border-t border-bac py-4 text-center text-xs text-gray-500 no-print mt-auto">
+      <div>Trung Tâm Bồi Dưỡng Văn Hóa — Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM · ThS. Đinh Quốc Tuấn</div>
+      <div class="mt-2 text-[10px] sm:text-[11px] italic text-black font-serif">Hỗ trợ tác giả ly cafe nếu thích (tùy hỷ 1k, 3k, 5k...) hoặc liên hệ tác giả: Zalo 0903052119</div>
+    </footer>
 
   <script>
     async function init() {
@@ -373,7 +369,36 @@
         }
       }
 
-      const totalLeft = (data.free_trials_left || 0) + (data.paid_trials_left || 0);
+      
+      // Kiểm tra bài làm thứ 2 của khách
+      const classCode = localStorage.getItem('bdvh_class_code') || sessionStorage.getItem('bdvh_class_code') || '';
+      const guestExamCount = parseInt(localStorage.getItem('bdvh_guest_exam_count') || '0', 10);
+      const isClassStudent = Boolean(classCode) || (data.is_class_student === true);
+
+      const candidateName = localStorage.getItem('bdvh_student_name') || sessionStorage.getItem('bdvh_student_name') || data.student_name || 'Học sinh';
+      const candEl = document.getElementById('res-candidate-name');
+      if (candEl) candEl.innerText = candidateName;
+
+      const codeStatusEl = document.getElementById('class-code-status-box');
+      if (codeStatusEl) {
+        if (isClassStudent && classCode) {
+          codeStatusEl.innerHTML = `<span class="text-xs text-luc font-bold"><i class="fas fa-check-circle"></i> Lớp: ${esc(classCode)}</span>`;
+        } else {
+          codeStatusEl.innerHTML = `<button onclick="openClassCodeModal()" class="text-xs text-luc font-bold hover:underline"><i class="fas fa-key"></i> Nhập mã lớp giáo viên cấp</button>`;
+        }
+      }
+
+      // Hiện box cà phê tùy hỷ nếu là khách và ở bài thi thứ 2
+      const coffeeBox = document.getElementById('guest-coffee-box');
+      if (coffeeBox) {
+        if (!isClassStudent && (guestExamCount === 2 || data.user_submission_count === 2)) {
+          coffeeBox.classList.remove('hidden');
+        } else {
+          coffeeBox.classList.add('hidden');
+        }
+      }
+
+      // totalLeft check
       document.getElementById('res-trials-left').innerText = totalLeft + ' lượt';
 
       // Chi tiết câu hỏi
@@ -490,9 +515,42 @@ ${d.is_explanation_locked ? `
 
       <div class="border-t border-bac pt-3 text-center">
         <p class="text-[11px] text-gray-500 mb-2">Em không có mã lớp?</p>
-        <button onclick="openBonusFromKetQua()" class="text-xs text-luc font-bold hover:underline">
-          <i class="fas fa-heart text-son"></i> Ủng hộ Thầy 5.000đ qua Ngân Hàng / MoMo để mở khóa
-        </button>
+        <a href="https://zalo.me/0903052119" target="_blank" class="text-xs text-luc font-bold hover:underline"><i class="fas fa-comment-dots"></i> Nhắn Thầy Tuấn (Zalo: 0903.052.119) để nhận mã lớp</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL GỬI TẶNG LY CÀ PHÊ TÙY HỶ (1k, 3k, 5k... tùy hỷ) -->
+  <div id="modal-coffee" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-bac space-y-4 text-center animate-scaleIn">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">☕</span>
+          <h3 class="font-bold text-base text-gray-900 title-serif">Gửi Tặng Tác Giả Ly Cà Phê</h3>
+        </div>
+        <button onclick="closeCoffeeModal()" class="text-gray-400 hover:text-gray-700 text-lg">✕</button>
+      </div>
+
+      <p class="text-xs text-gray-600 leading-relaxed text-left">
+        Nền tảng được phát triển bởi <b>ThS. Đinh Quốc Tuấn</b> nhằm hỗ trợ học sinh ôn luyện. Bạn có thể gửi tặng tác giả ly cà phê tùy hỷ <b>(1k, 3k, 5k...)</b> để cùng duy trì máy chủ, hoặc kết nối trao đổi qua Zalo.
+      </p>
+
+      <!-- Mã QR VietQR tùy hỷ -->
+      <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200 text-center space-y-2">
+        <img src="https://img.vietqr.io/image/970407-19033385750013-compact2.png?amount=0&addInfo=Ung%20ho%20cafe%20bdvh&accountName=DINH%20QUOC%20TUAN" alt="QR VietQR" class="w-44 h-44 mx-auto rounded-xl shadow-sm border border-bac">
+        <p class="text-[11px] font-bold text-muc">Chủ TK: ĐINH QUỐC TUẤN</p>
+        <p class="text-[10px] text-gray-500">Techcombank: 19033385750013 · Nội dung: Ung ho cafe bdvh</p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <a href="https://img.vietqr.io/image/970407-19033385750013-compact2.png?amount=1000&addInfo=Ly%20tra%20da%201k&accountName=DINH%20QUOC%20TUAN" target="_blank" class="py-2 bg-gray-100 hover:bg-amber-100 rounded-xl text-xs font-bold text-gray-700 transition">1.000đ</a>
+        <a href="https://img.vietqr.io/image/970407-19033385750013-compact2.png?amount=3000&addInfo=Ly%20cafe%203k&accountName=DINH%20QUOC%20TUAN" target="_blank" class="py-2 bg-gray-100 hover:bg-amber-100 rounded-xl text-xs font-bold text-gray-700 transition">3.000đ</a>
+        <a href="https://img.vietqr.io/image/970407-19033385750013-compact2.png?amount=5000&addInfo=Ly%20cafe%205k&accountName=DINH%20QUOC%20TUAN" target="_blank" class="py-2 bg-gray-100 hover:bg-amber-100 rounded-xl text-xs font-bold text-gray-700 transition">5.000đ</a>
+      </div>
+
+      <div class="pt-2 border-t border-bac flex items-center justify-between text-xs">
+        <span class="text-gray-500">Zalo tác giả: <b>0903052119</b></span>
+        <a href="https://zalo.me/0903052119" target="_blank" class="text-luc font-bold hover:underline">Mở Zalo</a>
       </div>
     </div>
   </div>
