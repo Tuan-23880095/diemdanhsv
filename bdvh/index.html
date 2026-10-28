@@ -53,7 +53,7 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- HEADER GIAO DIỆN CHUẨN THƯƠNG HIỆU -->
+    <!-- HEADER GIAO DIỆN CHUẨN THƯƠNG HIỆU -->
   <header class="bg-white border-b border-bac sticky top-0 z-40 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center gap-4">
       <div class="flex items-center gap-3">
@@ -68,21 +68,24 @@
         </div>
       </div>
 
+      <!-- THANH ĐIỀU HƯỚNG BÊN PHẢI HEADER -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <a href="giao-vien.html" class="bg-gradient-to-r from-emerald-950 to-slate-900 hover:from-black hover:to-slate-900 text-amber-300 border border-amber-400/50 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
-          <i class="fas fa-broadcast-tower text-amber-400 text-xs"></i> <span>Lớp Trực Tiếp</span>
+        <!-- 1. NÚT LỚP HỌC TRỰC TIẾP -->
+        <a href="giao-vien.html" class="bg-gradient-to-r from-emerald-950 to-slate-900 hover:from-black text-amber-300 border border-amber-400/50 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+          <i class="fas fa-broadcast-tower text-amber-400 text-xs"></i> <span class="hidden sm:inline">Lớp Trực Tiếp</span>
         </a>
-      <!-- Khung thông tin tài khoản / Đăng nhập -->
-      <div id="auth-box" class="flex items-center gap-3">
 
-        <button onclick="openClassModal()" class="bg-amber-500 hover:bg-amber-600 text-white px-3.5 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 shadow-sm">
-          <i class="fas fa-key"></i> <span>Mã Lớp Học (4 ký tự)</span>
+        <!-- 2. NÚT NHẬP MÃ LỚP CỐ ĐỊNH (LUÔN HIỆN DIỆN, KHÔNG BAO GIỜ BIẾN MẤT) -->
+        <button id="btn-header-class-code" onclick="openClassModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 shadow-sm whitespace-nowrap cursor-pointer">
+          <i class="fas fa-key text-slate-950"></i> <span id="header-class-label">Nhập Mã Lớp</span>
         </button>
 
-        <button onclick="openModal('modal-guest')" class="bg-luc hover:bg-emerald-800 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-sm">
-          <i class="fas fa-user-plus"></i> <span>Tạo Tài Khoản Khách</span>
-        </button>
-      </div>
+        <!-- 3. KHUNG THÔNG TIN TÀI KHOẢN HỌC SINH -->
+        <div id="auth-box" class="flex items-center">
+          <button onclick="openModal('modal-guest')" class="bg-luc hover:bg-emerald-800 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow-sm whitespace-nowrap">
+            <i class="fas fa-user-plus"></i> <span class="hidden sm:inline">Tạo Tài Khoản Khách</span><span class="sm:hidden">Đăng Ký</span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -368,6 +371,7 @@
             sessionStorage.setItem('bdvh_class_code', code);
             sessionStorage.setItem('bdvh_unlocked', '1');
             syncAccountAndClassUI();
+        updateClassCodeHeaderButton();
             alert(data.message || 'Kích hoạt mã lớp thành công! Mã được lưu dùng cho toàn bộ buổi học / toàn khóa học.');
           } else {
             alert(data.message || 'Mã lớp không hợp lệ hoặc đã hết hạn.');
@@ -380,6 +384,7 @@
       async function init() {
       await checkAuth();
         syncAccountAndClassUI();
+        updateClassCodeHeaderButton();
       await loadExams();
         renderCurriculumSyllabus('L06');
     }
@@ -736,6 +741,7 @@
           closeModal('modal-guest');
           await checkAuth();
         syncAccountAndClassUI();
+        updateClassCodeHeaderButton();
           alert(data.message);
         } else {
           alert(data.message || 'Lỗi tạo tài khoản');
@@ -795,6 +801,22 @@
 
 
   <script>
+    
+    function updateClassCodeHeaderButton() {
+      const code = localStorage.getItem('bdvh_class_code') || '';
+      const btn = document.getElementById('btn-header-class-code');
+      const label = document.getElementById('header-class-label');
+      if (btn && label) {
+        if (code) {
+          label.innerHTML = `Lớp: <span class="font-mono">${esc(code)}</span>`;
+          btn.className = 'bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 shadow-sm whitespace-nowrap cursor-pointer';
+        } else {
+          label.innerText = 'Nhập Mã Lớp';
+          btn.className = 'bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 shadow-sm whitespace-nowrap cursor-pointer';
+        }
+      }
+    }
+
     function openClassModal() {
       document.getElementById('modal-class').classList.remove('hidden');
       setTimeout(() => document.getElementById('classCodeInput').focus(), 100);
