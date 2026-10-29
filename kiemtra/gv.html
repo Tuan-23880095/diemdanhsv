@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Kiểm tra trực tuyến — Giảng viên</title>
+<link rel="icon" href="https://diemdanhsv.com/images/logo-sen.svg">
+<link rel="stylesheet" href="assets/kt.css?v=20261029">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#exams"><img src="https://diemdanhsv.com/images/logo-sen.svg" alt="" onerror="this.style.display='none'"><span>Kiểm tra trực tuyến<small>diemdanhsv.com · Giảng viên</small></span></a>
+    <span class="spacer"></span>
+    <select id="sel-course" class="hidden" style="max-width:280px;min-height:36px;background:#24343e;color:#fff;border-color:#3a4b55"></select>
+    <span class="who" id="who"></span>
+    <button class="btn sm hidden" id="btn-logout" style="background:transparent;color:#fff;border-color:#3a4b55">Đăng xuất</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="v-login" class="narrow hidden">
+    <div class="card stack" style="margin-top:6vh">
+      <h1>Đăng nhập giảng viên</h1>
+      <p class="muted small">Dùng tài khoản của hệ thống điểm danh diemdanhsv.com.</p>
+      <div><label class="f" for="lg-user">Tên đăng nhập</label><input id="lg-user" type="text" autocomplete="username"></div>
+      <div><label class="f" for="lg-pass">Mật khẩu</label><input id="lg-pass" type="password" autocomplete="current-password"></div>
+      <button class="btn primary lg block" id="lg-btn">Đăng nhập</button>
+    </div>
+  </section>
+
+  <section id="v-app" class="hidden">
+    <nav class="tabs" id="tabs">
+      <button data-tab="exams">Đề kiểm tra</button>
+      <button data-tab="bank">Ngân hàng câu hỏi</button>
+      <button data-tab="clo">Chuẩn đầu ra (CLO)</button>
+      <button data-tab="report">Báo cáo CLO theo lớp</button>
+      <button data-tab="guide">Hướng dẫn</button>
+    </nav>
+    <div id="view"></div>
+  </section>
+</main>
+
+<div id="proj" class="proj hidden"></div>
+
+<script src="assets/qrcode.js?v=20261029"></script>
+<script src="assets/common.js?v=20261029"></script>
+<script src="assets/gv.js?v=20261029"></script>
+</body>
+</html>
