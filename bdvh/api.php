@@ -379,6 +379,10 @@ function verify_class_code_check(PDO $pdo, string $code): array {
     return ['valid' => false, 'teacher' => null, 'label' => ''];
 }
 
+// PHÒNG THI TRỰC TIẾP CÓ GIÁM SÁT (action room_*) — xem phong-thi-api.php
+define('BDVH_API', true);
+require_once __DIR__ . '/phong-thi-api.php';
+
 // ROUTER CÁC CHỨC NĂNG
 // -------------------------------------------------------------
 
@@ -781,16 +785,18 @@ switch ($action) {
 
         // Lấy đề thi và giấu đáp án đúng để học sinh làm bài
         if ($examId > 0) {
-            $stmt = $pdo->prepare("SELECT exam_id, exam_code, grade, subject, title, description, time_minutes, questions_json FROM bdvh_exams WHERE exam_id = ?");
+            $stmt = $pdo->prepare("SELECT exam_id, exam_code, grade, subject, title, description, time_minutes, questions_json, status FROM bdvh_exams WHERE exam_id = ?");
             $stmt->execute([$examId]);
         } else {
-            $stmt = $pdo->prepare("SELECT exam_id, exam_code, grade, subject, title, description, time_minutes, questions_json FROM bdvh_exams WHERE exam_code = ?");
+            $stmt = $pdo->prepare("SELECT exam_id, exam_code, grade, subject, title, description, time_minutes, questions_json, status FROM bdvh_exams WHERE exam_code = ?");
             $stmt->execute([$examCode]);
         }
         $exam = $stmt->fetch();
         if (!$exam) {
             json_out(['status' => 'error', 'message' => 'Không tìm thấy đề thi.'], 404);
         }
+        // Đề kín / đề đang thi trong phòng trực tiếp: không mở ở chế độ luyện tập
+        room_guard_exam($exam);
 
         $questions = json_decode($exam['questions_json'], true);
         $safeQuestions = [];
@@ -839,6 +845,9 @@ switch ($action) {
         if (!$exam) {
             json_out(['status' => 'error', 'message' => 'Không tìm thấy đề thi.'], 404);
         }
+        // Không cho nộp bài luyện tập để dò đáp án của đề kín / đề đang thi trong phòng
+        room_guard_exam($exam);
+        $examId = (int) $exam['exam_id'];
         $questions = json_decode($exam['questions_json'], true);
 
         $correctCount = 0;
@@ -1059,6 +1068,8 @@ switch ($action) {
         if ($subId <= 0) {
             json_out(['status' => 'error', 'message' => 'Thiếu mã bài nộp (sub_id).'], 400);
         }
+        // Bài làm trong phòng thi: chỉ xem lời giải khi giáo viên đã công bố
+        room_guard_submission($subId);
 
         $stmt = $pdo->prepare("
             SELECT s.*, u.full_name as student_name, u.phone as student_phone, u.role as student_role,

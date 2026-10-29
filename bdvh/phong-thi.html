@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#15232c">
+<title>Phòng thi trực tiếp — BDVH</title>
+<link rel="icon" href="assets/logo-sen.svg">
+<link rel="stylesheet" href="assets/phong-thi.css?v=20261029">
+<script>
+  window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }, startup: { typeset: false } };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="sv">
+
+<!-- 1. Nhập mã phòng (khi mở trang không qua QR) -->
+<section id="s-code" class="narrow hidden">
+  <div class="card stack" style="margin-top:8vh">
+    <div class="row"><img src="assets/logo-sen.svg" alt="" width="40" height="40" onerror="this.remove()"><h1 style="margin:0">Phòng thi trực tiếp</h1></div>
+    <p class="muted">Quét mã QR thầy cô chiếu trên bảng, hoặc nhập mã phòng 6 ký tự.</p>
+    <input id="in-code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" maxlength="6" placeholder="VD: K7PQ3M" class="big-code" style="min-height:64px">
+    <button id="btn-code" class="btn primary lg block">Tiếp tục</button>
+  </div>
+</section>
+
+<!-- 2. Đăng nhập tài khoản bdvh rồi vào phòng -->
+<section id="s-join" class="narrow hidden">
+  <div class="card stack" style="margin-top:4vh">
+    <div class="muted small" id="j-course"></div>
+    <h1 id="j-title"></h1>
+    <div class="row small">
+      <span class="badge acc" id="j-class"></span>
+      <span class="badge" id="j-q"></span>
+      <span class="badge" id="j-dur"></span>
+      <span class="badge" id="j-status"></span>
+    </div>
+    <div id="j-me" class="callout hidden"></div>
+    <div id="j-login" class="stack hidden">
+      <p class="small muted" style="margin:0">Đăng nhập tài khoản BDVH của em (dùng đúng số điện thoại đã đăng ký để bài thi lưu vào lịch sử của em).</p>
+      <div><label class="f" for="in-name">Họ và tên</label><input id="in-name" type="text" autocomplete="name" placeholder="VD: Nguyễn Văn An"></div>
+      <div><label class="f" for="in-phone">Số điện thoại</label><input id="in-phone" type="text" inputmode="tel" autocomplete="tel" maxlength="12" placeholder="VD: 0912345678"></div>
+    </div>
+    <button id="btn-join" class="btn primary lg block">Vào phòng thi</button>
+    <button id="btn-other" class="btn ghost sm hidden">Không phải em? Đăng nhập tài khoản khác</button>
+    <p class="tiny muted">Mỗi tài khoản chỉ làm bài trên <b>một thiết bị</b>. Hệ thống ghi nhận việc rời khỏi trang, chuyển ứng dụng, sao chép… trong giờ làm bài.</p>
+  </div>
+</section>
+
+<!-- 3. Phòng chờ 5 phút -->
+<section id="s-lobby" class="narrow hidden">
+  <div class="card stack" style="margin-top:2vh">
+    <div class="small muted" id="l-title"></div>
+    <div class="row">
+      <div class="seat" id="l-seat">–<small>Số máy</small></div>
+      <div class="grow">
+        <div class="muted small">Xin chào</div>
+        <h2 style="margin:0" id="l-name"></h2>
+        <div class="mono muted" id="l-mssv"></div>
+      </div>
+    </div>
+    <div class="callout small">Kiểm tra lại họ tên. Nếu <b>không phải em</b>, giơ tay báo thầy cô ngay.</div>
+    <div>
+      <div class="muted small" style="text-align:center" id="l-cd-label">Thời gian chuẩn bị còn</div>
+      <div class="countdown" id="l-cd">--:--</div>
+      <div class="muted small" style="text-align:center" id="l-count"></div>
+    </div>
+  </div>
+
+  <div class="card stack">
+    <h2>Quy định phòng thi</h2>
+    <ul class="rules small" id="l-rules"></ul>
+  </div>
+
+  <div class="card stack" id="l-check">
+    <h2>Kiểm tra trước khi thi</h2>
+    <div class="checkitem"><span>📶</span><span>Kết nối máy chủ</span><span class="st badge" id="ck-net">…</span></div>
+    <div class="checkitem"><span>🔋</span><span>Pin / sạc</span><span class="st badge" id="ck-bat">…</span></div>
+    <div class="checkitem"><span>⛶</span><span>Toàn màn hình</span><button class="st btn sm" id="ck-fs">Thử</button></div>
+    <label class="check"><input type="checkbox" id="ck-dnd"> <span>Em đã bật <b>Không làm phiền</b> / tắt thông báo, đóng các ứng dụng khác.</span></label>
+    <label class="check"><input type="checkbox" id="ck-rules"> <span>Em đã đọc quy định và cam kết tự làm bài, không dùng tài liệu, thiết bị hay sự trợ giúp nào khác.</span></label>
+    <button id="btn-ready" class="btn primary lg block" disabled>Em đã sẵn sàng</button>
+  </div>
+  <div class="card hidden" id="l-ready">
+    <div class="callout">✅ <b>Đã sẵn sàng.</b> Giữ nguyên trang này. Khi đến giờ, nút <b>Bắt đầu làm bài</b> sẽ hiện ra.</div>
+  </div>
+  <div class="card hidden" id="l-go">
+    <button id="btn-go" class="btn rose lg block">▶ Bắt đầu làm bài</button>
+  </div>
+</section>
+
+<!-- 4. Làm bài -->
+<section id="s-exam" class="hidden">
+  <header class="sv-head">
+    <div class="t"><b id="x-title"></b><span id="x-who"></span></div>
+    <span class="vio" id="x-vio" title="Số lần vi phạm">⚠ 0/3</span>
+    <span class="timer" id="x-timer">--:--</span>
+  </header>
+  <div class="progress"><i id="x-prog"></i></div>
+  <div class="narrow" style="padding-bottom:110px">
+    <div class="row between small" style="margin:6px 0 10px">
+      <button class="btn sm" id="x-togglenav">☰ Danh sách câu <span id="x-done"></span></button>
+      <span class="saving" id="x-saving"></span>
+    </div>
+    <div class="card hidden" id="x-nav" style="margin-bottom:12px">
+      <div class="navgrid" id="x-grid"></div>
+      <p class="tiny muted" style="margin:.6em 0 0">Ô màu: đã trả lời · chấm cam: đánh dấu xem lại.</p>
+    </div>
+    <div id="x-q"></div>
+    <div class="q-nav">
+      <button class="btn" id="x-prev">← Trước</button>
+      <button class="btn" id="x-flag">⚑ Đánh dấu</button>
+      <button class="btn primary" id="x-next">Sau →</button>
+    </div>
+    <button class="btn danger block" id="x-submit" style="margin-top:22px">Nộp bài</button>
+  </div>
+  <div class="watermark" id="x-wm"></div>
+</section>
+
+<!-- 5. Đã nộp -->
+<section id="s-done" class="narrow hidden">
+  <div class="card stack" style="margin-top:6vh;text-align:center">
+    <div style="font-size:3rem">✅</div>
+    <h1>Đã nộp bài</h1>
+    <div id="d-score"></div>
+    <p class="muted small" id="d-info"></p>
+    <a class="btn primary hidden" id="btn-review" href="#">Xem phiếu kết quả, đáp án và lời giải</a>
+    <p class="tiny muted">Em có thể đóng trang. Đáp án và lời giải sẽ xem được tại đây sau khi thầy cô công bố.</p>
+  </div>
+  </section>
+
+<!-- Khoá bài -->
+<div class="lock hidden" id="ov-lock" role="alertdialog" aria-live="assertive">
+  <div class="box stack">
+    <div style="display:flex;justify-content:center"><div class="seat" id="lk-seat">–<small>Số máy</small></div></div>
+    <h1>Bài làm đã bị khoá</h1>
+    <p id="lk-reason"></p>
+    <p><b>Giơ tay báo thầy cô.</b> Thời gian làm bài vẫn tiếp tục chạy.</p>
+    <input id="lk-pin" type="password" inputmode="numeric" maxlength="6" placeholder="PIN của thầy cô" autocomplete="off">
+    <button class="btn lg block" id="lk-btn">Mở khoá</button>
+  </div>
+</div>
+
+<!-- Cảnh báo thoát toàn màn hình -->
+<div class="lock hidden" id="ov-fs" style="background:#7a4a00">
+  <div class="box stack">
+    <h1>Em đã thoát chế độ toàn màn hình</h1>
+    <p>Việc này đã được ghi nhận là một lần vi phạm. Bấm nút dưới đây để tiếp tục làm bài.</p>
+    <button class="btn lg block" id="fs-back">Trở lại toàn màn hình</button>
+  </div>
+</div>
+<div class="alertbar hidden" id="ov-warn"></div>
+
+<noscript><div class="narrow"><div class="card">Trình duyệt cần bật JavaScript để làm bài.</div></div></noscript>
+<script src="assets/phong-thi-common.js?v=20261029"></script>
+<script src="assets/phong-thi.js?v=20261029"></script>
+</body>
+</html>
