@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kiểm tra trực tuyến — diemdanhsv.com</title>
+<link rel="icon" href="https://diemdanhsv.com/images/logo-sen.svg">
+<link rel="stylesheet" href="assets/kt.css?v=20261029">
+</head>
+<body>
+<header class="topbar"><div class="wrap"><a class="brand" href="./"><img src="https://diemdanhsv.com/images/logo-sen.svg" alt="" onerror="this.style.display='none'"><span>Kiểm tra trực tuyến<small>Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM</small></span></a><span class="spacer"></span><a class="btn sm" style="background:transparent;color:#fff;border-color:#3a4b55" href="https://diemdanhsv.com/">← diemdanhsv.com</a></div></header>
+<main class="narrow">
+  <div class="card stack" style="margin-top:6vh">
+    <h1>Vào phòng kiểm tra</h1>
+    <p class="muted">Quét mã QR trên màn chiếu bằng camera điện thoại, hoặc nhập mã phòng 6 ký tự.</p>
+    <input id="c" type="text" maxlength="6" autocomplete="off" autocapitalize="characters" placeholder="Mã phòng" class="big-code" style="min-height:64px">
+    <button class="btn primary lg block" id="go">Vào phòng</button>
+  </div>
+  <p class="small muted" style="text-align:center;margin-top:18px">Giảng viên: <a href="gv.html">đăng nhập trang quản lý đề, giám sát và kết quả</a></p>
+</main>
+<script>
+  const i = document.getElementById('c');
+  const go = () => { const v = i.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); if (v.length === 6) location.href = 'sv.html?c=' + v; else i.focus(); };
+  document.getElementById('go').onclick = go;
+  i.onkeydown = e => { if (e.key === 'Enter') go(); };
+</script>
+</body>
+</html>
