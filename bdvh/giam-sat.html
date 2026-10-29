@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Phòng thi trực tiếp — Giáo viên</title>
+<link rel="icon" href="assets/logo-sen.svg">
+<link rel="stylesheet" href="assets/phong-thi.css?v=20261029">
+<script>
+  window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }, startup: { typeset: false } };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#rooms"><img src="assets/logo-sen.svg" alt="" onerror="this.style.display='none'"><span>Phòng thi trực tiếp<small>BDVH · Giáo viên</small></span></a>
+    <span class="spacer"></span>
+    <a class="btn sm" href="thay-tuan.html" style="background:transparent;color:#fff;border-color:#3a4b55">← Bảng điều khiển</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="v-login" class="narrow hidden">
+    <div class="card stack" style="margin-top:6vh">
+      <h1>Đăng nhập giáo viên</h1>
+      <p class="muted small">Dùng mật khẩu quản trị của trang thay-tuan.html.</p>
+      <div><label class="f" for="lg-pass">Mật khẩu</label><input id="lg-pass" type="password" autocomplete="current-password"></div>
+      <button class="btn primary lg block" id="lg-btn">Đăng nhập</button>
+    </div>
+  </section>
+
+  <section id="v-app" class="hidden">
+    <nav class="tabs" id="tabs">
+      <button data-tab="rooms">Phòng thi</button>
+      <button data-tab="exams">Đề thi &amp; đề kín</button>
+      <button data-tab="guide">Hướng dẫn</button>
+    </nav>
+    <div id="view"></div>
+  </section>
+</main>
+
+<div id="proj" class="proj hidden"></div>
+
+<script src="assets/qrcode.js?v=20261029"></script>
+<script src="assets/phong-thi-common.js?v=20261029"></script>
+<script src="assets/giam-sat.js?v=20261029"></script>
+</body>
+</html>
