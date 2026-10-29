@@ -3,6 +3,8 @@
 Hệ thống điểm danh sinh viên có kiểm chứng + xem điểm.
 Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM — Đinh Quốc Tuấn.
 
+> **Bản đồ toàn bộ trang (mọi mục, đường dẫn, việc còn treo): [`docs/00-BAN-DO-HE-THONG.md`](docs/00-BAN-DO-HE-THONG.md)** — đọc trước tiên.
+
 ## Cấu trúc thư mục
 
 ```
