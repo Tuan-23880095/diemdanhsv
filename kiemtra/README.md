@@ -28,19 +28,17 @@ KIEMTRA **không có CSDL hay tài khoản riêng**:
 
 ## Triển khai lên Hostinger
 
-Gói Premium cho tối đa **3 website** và đã dùng hết (diemdanhsv.com, hopviec, bdvh), nên KIEMTRA **không chạy
-như website riêng**. Thay vào đó, GitHub Action `.github/workflows/dong-bo-diemdanhsv.yml` chép KIEMTRA vào
-thư mục `kiemtra/` của repo **diemdanhsv** mỗi khi đẩy code; Hostinger đang auto-deploy diemdanhsv nên trang
-chạy tại **`https://diemdanhsv.com/kiemtra/`**.
+Gói Premium cho tối đa **3 website** và đã dùng hết (diemdanhsv.com, hopviec, bdvh), nên KIEMTRA chạy như
+**thư mục `kiemtra/` trong repo diemdanhsv**; Hostinger auto-deploy diemdanhsv nên trang chạy tại
+**`https://diemdanhsv.com/kiemtra/`**. Repo KIEMTRA này là bản gốc để phát triển.
 
-1. **Tạo bảng**: hPanel → Databases → phpMyAdmin → chọn CSDL của diemdanhsv → *Import* → `db/schema.mysql.sql`.
-2. **Tạo token**: GitHub → Settings → Developer settings → Fine-grained tokens → *Generate new token*:
-   chỉ repo `diemdanhsv`, quyền **Contents: Read and write**.
-3. **Gắn token vào KIEMTRA**: repo KIEMTRA → Settings → Secrets and variables → Actions → *New repository secret*
-   `DIEMDANHSV_TOKEN` = token vừa tạo.
-4. **Chạy đồng bộ**: KIEMTRA → Actions → “Dong bo sang diemdanhsv/kiemtra” → *Run workflow* (các lần sau tự chạy).
-   Nếu nhánh `main` của diemdanhsv bật bảo vệ (bắt buộc PR), cho phép token này bỏ qua hoặc đổi workflow sang tạo PR.
-5. **Kiểm tra**: `https://diemdanhsv.com/kiemtra/api/index.php?action=ping` → `{"status":"success",…}`;
+1. **Tạo bảng** (một lần): phpMyAdmin → CSDL của diemdanhsv → *Import* → `db/schema.mysql.sql`.
+2. **Cập nhật**: sửa ở KIEMTRA → chép các file đã theo dõi vào `diemdanhsv/kiemtra/` (bỏ `.git`, `.gitignore`)
+   trên một nhánh mới → mở pull request vào `main` của diemdanhsv → Merge.
+   ```bash
+   git -C KIEMTRA archive HEAD | tar -x -C diemdanhsv/kiemtra --exclude=.gitignore
+   ```
+3. **Kiểm tra**: `https://diemdanhsv.com/kiemtra/api/index.php?action=ping` → `{"status":"success",…}`;
    mở `https://diemdanhsv.com/kiemtra/gv.html` → đăng nhập bằng tài khoản điểm danh.
 
 Nếu sau này có website trống (nâng gói hoặc bỏ một website), có thể triển khai thẳng lên subdomain
