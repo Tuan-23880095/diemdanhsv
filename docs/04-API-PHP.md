@@ -1316,3 +1316,15 @@ Tuỳ chọn **mã điểm danh đang OPEN** (`attendance_keys`) khi mở phòng
 - **Dự phòng:** mở bằng `file://` → không gọi máy chủ, vẫn phát/nhận `BroadcastChannel` như cũ (trang trình chiếu bấm "Bật nhận câu trả lời ngoại tuyến"). Khi đã có phòng máy chủ, trang trình chiếu bỏ qua BroadcastChannel để không đếm trùng.
 
 **Vận hành.** Chạy migration 010 một lần (phpMyAdmin → SQL, hoặc `php tools/migrate.php --yes`). Kiểm thử: `php tools/smoke_liveroom.php --config=<CSDL thử>` (35 ca: hai phòng song song không lẫn, quiz trùng, khoá sai, tải 3 phòng × 50 SV × 7 lượt chung một IP, phân trang `more`, đổi bài, đóng, quá hạn). `?v=20261025-phong`.
+
+## 37. Khu vực giảng viên `dkv/gv.html` (31/10/2026) — `dkv/tai-lieu.php`, `dkv/_gv/`
+
+**Vấn đề.** `dkv/quanly.html` có nút "Khu vực giảng viên (hồ sơ, đáp án)" trỏ tới `dkv/gv.html` nhưng trang chưa có (404).
+
+**Trang.** `dkv/gv.html` theo mẫu `chd-tt/gv.html`: lối tắt (Duyệt phiếu, Trình chiếu, Quản trị), các bước đầu kỳ, lịch 5 buổi + tuần 6 thi, rồi các nút mở tài liệu khoá: Kế hoạch và hướng dẫn tổ chức thực tập; Đáp án 5 phiếu; Bảng đối chiếu khoáng vật và đá; 4 PDF nguồn của bộ môn. Nút mở `fetch('tai-lieu.php?f=…', {X-Token})` vào cửa sổ mới (HTML ghi thẳng, PDF/ảnh qua blob URL); HTTP 404 báo "tài liệu chưa được tải lên máy chủ".
+
+**`dkv/tai-lieu.php`.** Bản sao `chd-tt/tai-lieu.php` (yêu cầu `LECTURER|ADMIN`, chặn `..`, realpath trong `_gv/`), thêm đuôi `pdf` (`application/pdf`). Chặn truy cập trực tiếp: `RewriteRule ^dkv/_gv(/|$) - [F,L]` ở `.htaccess` gốc + `dkv/_gv/.htaccess`.
+
+**Khác KHTĐ/CHĐ: nội dung `dkv/_gv/` không nằm trong Git** (repo công khai — đáp án và PDF của bộ môn sẽ lộ trên GitHub). `.gitignore`: `dkv/_gv/*` trừ `.htaccess`, `README.md`. Tệp tải lên `public_html/dkv/_gv/` bằng File Manager; danh mục và cách cập nhật ở `dkv/_gv/README.md`. Hai tệp đáp án/bảng đối chiếu dựng tự động từ `api/lib/dkv_phieu.json` — sửa phiếu thì dựng lại.
+
+**Lưu ý bảo mật còn treo.** `khtd/_gv/`, `chd-tt/_gv/` (đề kiểm tra, đáp án) và trường `answer_key` trong `api/lib/*_phieu.json` đang công khai trên GitHub dù web đã chặn. Cách xử lý: chuyển repo sang riêng tư (Hostinger deploy cần khoá deploy) hoặc rút các tệp đó khỏi Git như `dkv/_gv/`.

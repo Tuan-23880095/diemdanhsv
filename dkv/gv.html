@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Khu vực giảng viên — Đá và Khoáng vật</title><meta name="robots" content="noindex"/>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg?v=20261014-logo"/>
+<link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="../favicon.ico?v=20261014-logo"/>
+<link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png?v=20261014-logo"/>
+<meta name="theme-color" content="#0b4f9e"/>
+<style>
+:root{--b:#0b4f9e;--b2:#117A65;--bg:#f6f8fb;--card:#fff;--ink:#17202a;--mute:#5b6b7c;--line:#dde5ee}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1722;--card:#17212e;--ink:#e8eef6;--mute:#9fb0c2;--line:#27374a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Segoe UI",Inter,system-ui,-apple-system,sans-serif}
+header{background:linear-gradient(100deg,var(--b),var(--b2));color:#fff;padding:20px 16px}
+header .in{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:14px}
+header img{height:46px;width:auto;background:#fff;border-radius:8px;padding:5px;flex:none}
+header h1{margin:0;font-size:19px;line-height:1.3}
+header p{margin:3px 0 0;font-size:13px;opacity:.9}
+header img.sen{margin-left:auto;height:56px;padding:4px}
+main{max-width:900px;margin:0 auto;padding:18px 16px 40px}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+nav a,nav button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:10px;padding:9px 14px;font:inherit;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--b)}
+nav a.primary{background:var(--b);border-color:var(--b);color:#fff}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:16px}
+section h2{margin:0 0 4px;font-size:17px;color:var(--b)}
+@media(prefers-color-scheme:dark){section h2{color:#7cb3f0}}
+section p.note{margin:4px 0 10px;font-size:13.5px;color:var(--mute)}
+ul.list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+ul.list a{display:flex;align-items:baseline;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+  text-decoration:none;color:var(--ink)}
+ul.list a:hover{border-color:var(--b);background:rgba(11,79,158,.05)}
+ul.list .n{flex:none;min-width:26px;height:26px;border-radius:7px;background:var(--b);color:#fff;font-size:13px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center}
+ul.list .t{font-weight:600}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px}
+.btnrow button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 13px;
+  font:inherit;font-size:14px;cursor:pointer;text-align:left}
+.btnrow button:hover{border-color:var(--b)}
+.warn{border:1px solid #f0c36d;background:#fff8e6;color:#6b4e00;border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:14.5px}
+@media(prefers-color-scheme:dark){.warn{background:#3a2f12;color:#f3dfa8;border-color:#7a6327}}
+footer{max-width:900px;margin:0 auto;padding:0 16px 30px;font-size:13px;color:var(--mute);display:flex;
+  justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer a{color:var(--mute)}
+</style></head><body>
+<header><div class="in"><img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM"/>
+<div><h1>Khu vực giảng viên — Đá và Khoáng vật</h1><p>Học phần LEC10001 · Phần thực tập · HK1 · 2026–2027 · tài liệu khoá, sinh viên không xem được</p></div><img class="sen" src="../images/logo-sen.svg?v=20261014-logo" alt="Biểu tượng hệ thống: hoa sen đọng sương"/></div></header><main>
+<nav>
+<a href="../index.html">← Trang chủ diemdanhsv</a>
+<a href="../pages/lecturer.html">Bảng điều khiển giảng viên</a>
+<a class="primary" href="quanly.html">Duyệt phiếu online &amp; mã vào lớp</a>
+<a href="trinhchieu.html">Trang trình chiếu</a>
+<a href="../pages/admin.html">Quản trị lớp</a>
+<a href="index.html">Xem như sinh viên</a>
+</nav>
+<div id="noauth" class="warn" hidden>Chưa đăng nhập giảng viên. Mở <a href="../pages/lecturer.html">trang Giảng viên</a> để đăng nhập (phiên 6 giờ), rồi quay lại trang này.</div>
+<section><h2>Bắt đầu học kỳ</h2>
+<p class="note">1) Ở <a href="../pages/admin.html">Quản trị lớp</a> tạo lớp LEC10001 (tên học phần có chữ “Đá và khoáng vật”) và nhập danh sách sinh viên. 2) Mở <a href="quanly.html">Duyệt phiếu online</a>, chọn lớp, bấm “Tạo / bổ sung phiếu Đ&amp;KV”. 3) Mỗi buổi mở mã vào lớp; trên <a href="trinhchieu.html">trang trình chiếu</a> bấm “Mở phòng tương tác” để lấy QR câu hỏi nhanh.</p></section>
+<section><h2>Lịch 5 buổi thực tập</h2>
+<ul class="list">
+<li><a href="index.html#lich"><span class="n">1</span><span><span class="t">24/10 · Khoáng vật (1/2)</span> — tự sinh, sulfur, oxit – hydroxit, khoáng vật tạo đá · 10 mẫu</span></a></li>
+<li><a href="index.html#lich"><span class="n">2</span><span><span class="t">31/10 · Khoáng vật (2/2)</span> — silicat, carbonat, sulfat, wolframat, halogenua · 10 mẫu</span></a></li>
+<li><a href="index.html#lich"><span class="n">3</span><span><span class="t">07/11 · Đá magma</span> — độ hạt, chỉ số màu, xâm nhập / phun trào · 5 mẫu</span></a></li>
+<li><a href="index.html#lich"><span class="n">4</span><span><span class="t">14/11 · Đá trầm tích</span> — cỡ hạt, HCl, cấu tạo · 5 mẫu</span></a></li>
+<li><a href="index.html#lich"><span class="n">5</span><span><span class="t">21/11 · Đá biến chất</span> — phiến / không phiến, đá mẹ · 5 mẫu</span></a></li>
+<li><a href="index.html#lich"><span class="n">6</span><span><span class="t">28/11 · Thi thực tập</span></span></a></li>
+</ul></section>
+<section><h2>Hồ sơ tổ chức thực tập</h2>
+<p class="note">Chỉ giảng viên xem được: tệp nằm ngoài vùng công khai, mỗi lượt mở đều kiểm tra token đăng nhập. Mở ra rồi Ctrl+P để in hoặc lưu PDF.</p>
+<div class="btnrow"><button type="button" data-f="KeHoach_HuongDan_ThucTap_DKV.html">Kế hoạch và hướng dẫn tổ chức thực tập (lịch, chuẩn bị, trình tự xác định khoáng vật – đá, lỗi hay gặp, soát lỗi tài liệu)</button></div></section>
+<section><h2>Đáp án và dữ liệu chấm</h2>
+<p class="note">Đáp án câu hỏi vận dụng, rubric và nguyên tắc chấm từng mẫu của 5 phiếu; bảng đối chiếu là đúng bộ dữ liệu phần mềm dùng để chấm điểm tạm tính.</p>
+<div class="btnrow"><button type="button" data-f="DapAn_Phieu_Tuan1_den_Tuan5.html">Đáp án 5 phiếu thực tập</button><button type="button" data-f="BangDoiChieu_KhoangVat_Da.html">Bảng đối chiếu khoáng vật và đá (52 khoáng vật, 27 loại đá)</button></div></section>
+<section><h2>Tài liệu nguồn (PDF)</h2>
+<p class="note">Bản gốc của bộ môn, font TCVN3: đọc và in bình thường, sao chép chữ ra sẽ lỗi dấu.</p>
+<div class="btnrow"><button type="button" data-f="BangTra_KhoangVat_HoanChinh.pdf">Bảng tra khoáng vật hoàn chỉnh (32 trang)</button><button type="button" data-f="HuongDan_ThucHanh_MauKhoangVat_2023.pdf">Hướng dẫn thực hành mẫu khoáng vật (2023, 23 trang)</button><button type="button" data-f="DanhSach_KhoangVat_Bai2-5.pdf">Danh sách khoáng vật thực hành Bài 2–5</button><button type="button" data-f="Phieu_MoTa_KhoangVat_BanGiay.pdf">Phiếu mô tả khoáng vật bản giấy (khi mất mạng)</button></div></section>
+<section><h2>Tài liệu sinh viên cũng xem được</h2>
+<ul class="list"><li><a href="tai-lieu/BangMoTa_14KhoangVat.html"><span class="n">↗</span><span class="t">Bảng mô tả 14 khoáng vật mẫu</span></a></li>
+<li><a href="online.html"><span class="n">↗</span><span class="t">Phiếu thực tập online (giao diện sinh viên)</span></a></li></ul></section>
+<section><h2>Bảng điểm</h2>
+<p class="note">Điểm phiếu xuất từ trang <a href="quanly.html">Duyệt phiếu online</a>. Điểm gửi sinh viên là điểm tạm tính (“phần mềm chấm tự động, giảng viên chưa chốt điểm”) cho tới khi giảng viên duyệt. Không lưu bảng điểm có tên sinh viên trong khu vực tài liệu này.</p></section>
+</main><footer><span>Khoa Địa chất · Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM</span>
+<a href="index.html">← Trang lớp học</a></footer>
+<script>
+(function () {
+  var token = sessionStorage.getItem('dd_token');
+  if (!token) document.getElementById('noauth').hidden = false;
+  document.querySelectorAll('.btnrow button[data-f]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var t = sessionStorage.getItem('dd_token');
+      if (!t) { document.getElementById('noauth').hidden = false; window.scrollTo(0, 0); return; }
+      var w = window.open('', '_blank');            // mở ngay để không bị chặn popup
+      var nhan = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Đang mở…';
+      fetch('tai-lieu.php?f=' + encodeURIComponent(btn.dataset.f), { headers: { 'X-Token': t } })
+        .then(function (r) {
+          if (!r.ok) throw new Error(r.status === 403
+            ? 'Phiên đăng nhập đã hết hạn — đăng nhập lại ở trang Giảng viên.'
+            : r.status === 404 ? 'Tài liệu chưa được tải lên máy chủ (thư mục dkv/_gv — xem dkv/_gv/README.md).'
+            : 'Không mở được tài liệu (HTTP ' + r.status + ').');
+          return /\.(png|svg|pdf)$/.test(btn.dataset.f) ? r.blob() : r.text();
+        })
+        .then(function (noiDung) {
+          if (typeof noiDung === 'string') { w.document.open(); w.document.write(noiDung); w.document.close(); }
+          else { w.location = URL.createObjectURL(noiDung); }
+        })
+        .catch(function (e) { if (w) w.close(); alert(e.message); })
+        .then(function () { btn.disabled = false; btn.textContent = nhan; });
+    });
+  });
+})();
+</script></body></html>
