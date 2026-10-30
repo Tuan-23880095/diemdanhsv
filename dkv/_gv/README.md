@@ -11,12 +11,10 @@ Hostinger Git deploy chỉ kéo tệp có trong Git, không xoá tệp bị bỏ
 | `KeHoach_HuongDan_ThucTap_DKV.html` | Lịch, chuẩn bị, diễn tiến buổi, trình tự xác định khoáng vật và đá, lỗi hay gặp, đánh giá, soát lỗi tài liệu | Soạn từ Tài liệu thực tập Địa chất đại cương (BM Địa chất cơ sở, 1999), phiếu dự kiến học phần, `dkv_phieu.json` |
 | `DapAn_Phieu_Tuan1_den_Tuan5.html` | Đáp án câu hỏi vận dụng, rubric, nguyên tắc chấm 5 phiếu | Dựng tự động từ `api/lib/dkv_phieu.json` |
 | `BangDoiChieu_KhoangVat_Da.html` | 52 khoáng vật, 27 loại đá — dữ liệu phần mềm dùng để chấm | Dựng tự động từ trường `reference` của `dkv_phieu.json` |
-| `BangTra_KhoangVat_HoanChinh.pdf` | Bảng tra khoáng vật 22 cột (32 tr.) | Bộ môn, bản gốc TCVN3 |
-| `HuongDan_ThucHanh_MauKhoangVat_2023.pdf` | Hướng dẫn thực hành mẫu khoáng vật (23 tr.) | BM Thạch học và Khoáng sản, 2023 |
-| `DanhSach_KhoangVat_Bai2-5.pdf` | Danh sách khoáng vật thực hành Bài 2–5 | Bộ môn |
-| `Phieu_MoTa_KhoangVat_BanGiay.pdf` | Phiếu mô tả bản giấy (dự phòng mất mạng) | Bộ môn |
 | `HS_DeCuong_ChiTiet_C4_C5_Muc6-3.html`, `HS_GiaoAn_…`, `HS_GiaoTrinh_…` (.html, .pdf), `HS_BoTriFile_README.html` | Hồ sơ phần lý thuyết C4, C5, 6.3 | `D:\2026-Da&KV\_v1.1\` (bản kiểm định 22/9/2026), đổi `6.3` → `6-3` trong tên tệp |
 | `DG_KiemTra_ThuongXuyen_KTTX.html`, `DG_KiemTra_GiuaKy_phanC4.html`, `DG_Thi_CuoiKy_…`, `DG_PhieuHocTap_…`, `DG_PhieuThucHanh_…`, `DG_Rubric_Bloom_DanhGia.html` | Đề kiểm tra kèm đáp án, phiếu, rubric | `D:\2026-Da&KV\_v1.1\04_DanhGia\` |
+
+4 PDF của bộ môn (bảng tra, hướng dẫn thực hành, danh sách Bài 2–5, phiếu giấy) đã chuyển sang `dkv/tai-lieu/` (công khai, có trong Git) từ 31/10/2026 để sinh viên tham khảo.
 
 **Tải lên / cập nhật:** hPanel → diemdanhsv.com → File Manager → `public_html/dkv/_gv/` →
 Upload gói `dkv_gv.zip` → Extract (ghi đè). Giữ nguyên `.htaccess` của thư mục.
