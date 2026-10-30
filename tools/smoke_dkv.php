@@ -88,7 +88,7 @@ $sv = $tok('KHTD', 'DKT_S1');
 
 echo "== Bộ phiếu Đ&KV (api/lib/dkv_phieu.json) ==\n";
 $defs = dkv_default_worksheets();
-check('đọc được 5 phiếu (5 tuần thực tập)', array_keys($defs) === [1, 2, 3, 4, 5], array_keys($defs));
+check('đọc được 6 phiếu (5 tuần thực tập + phiếu thử 2 mẫu)', array_keys($defs) === [1, 2, 3, 4, 5, 6], array_keys($defs));
 $okRub = true; $okPhoto = true; $okMon = true;
 foreach ($defs as $no => $d) {
     if (abs(array_sum(array_column($d['rubric']['criteria'], 'max')) - 10) > 1e-9) $okRub = false;
@@ -100,7 +100,7 @@ check('mỗi phiếu rubric tổng 10 điểm', $okRub);
 check('mỗi phiếu có bảng mô tả mẫu với cột "Ảnh mẫu"', $okPhoto);
 check('mỗi phiếu có thông tin môn Đ&KV, link dkv/online.html', $okMon);
 $rowsOf = static function (array $d): int { foreach ($d['sections'] as $s) if (($s['id'] ?? '') === 'mota') return count($s['rows']); return 0; };
-check('phiếu khoáng vật 10 mẫu, phiếu đá 5 mẫu', $rowsOf($defs[1]) === 10 && $rowsOf($defs[2]) === 10 && $rowsOf($defs[3]) === 5 && $rowsOf($defs[4]) === 5 && $rowsOf($defs[5]) === 5);
+check('phiếu khoáng vật 10 mẫu, phiếu đá 5 mẫu', $rowsOf($defs[1]) === 10 && $rowsOf($defs[2]) === 10 && $rowsOf($defs[3]) === 5 && $rowsOf($defs[4]) === 5 && $rowsOf($defs[5]) === 5 && $rowsOf($defs[6]) === 2);
 $okCrit = true;
 foreach ($defs as $d) { $n = $rowsOf($d); $ids = array_column($d['rubric']['criteria'], 'id'); for ($k = 1; $k <= $n; $k++) if (!in_array("m$k", $ids, true)) $okCrit = false; }
 check('rubric chấm riêng từng mẫu (tiêu chí m1…mN)', $okCrit);
@@ -110,7 +110,7 @@ check('nhãn điểm gửi SV: phần mềm chấm tự động, GV chưa chốt
 
 echo "== Tạo phiếu cho lớp (bo=dkv) ==\n";
 $r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'DKT_C1', 'bo' => 'dkv']);
-check('GV tạo 5 phiếu Đ&KV', ok($r) && count($r['data']['created']) === 5, $r);
+check('GV tạo 6 phiếu Đ&KV', ok($r) && count($r['data']['created']) === 6, $r);
 $ids = []; foreach (($r['data']['created'] ?? []) as $c) $ids[(int) $c['no']] = $c['id'];
 $r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'DKT_C1', 'bo' => 'dkv']);
 check('tạo lại không trùng (0 phiếu mới, 0 cập nhật)', ok($r) && count($r['data']['created']) === 0 && count($r['data']['updated'] ?? []) === 0, $r);
@@ -118,7 +118,7 @@ $pdo->prepare("UPDATE khtd_worksheets SET SchemaJSON = :s WHERE WorksheetID = :i
 $r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'DKT_C1', 'bo' => 'dkv']);
 check('phiếu đã tạo nhưng chưa có bài làm → cập nhật nội dung mới', ok($r) && array_column($r['data']['updated'] ?? [], 'no') === [2], $r['data'] ?? $r);
 $st = $pdo->query("SELECT No, Status, MaxAttempts, ScorePolicy FROM khtd_worksheets WHERE ClassID = 'DKT_C1' ORDER BY No")->fetchAll();
-check('5 phiếu đều mở, làm tối đa 2 lần, lấy điểm cao nhất', count($st) === 5 && !array_filter($st, static fn ($x) => $x['Status'] !== 'OPEN' || (int) $x['MaxAttempts'] !== 2 || $x['ScorePolicy'] !== 'BEST'), $st);
+check('6 phiếu đều mở, làm tối đa 2 lần, lấy điểm cao nhất', count($st) === 6 && !array_filter($st, static fn ($x) => $x['Status'] !== 'OPEN' || (int) $x['MaxAttempts'] !== 2 || $x['ScorePolicy'] !== 'BEST'), $st);
 $r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'DKT_C2']);
 check('lớp khác không truyền bo → vẫn tạo bộ KHTĐ cũ (7 phiếu)', ok($r) && count($r['data']['created']) === 7, $r);
 
@@ -126,7 +126,7 @@ echo "== Sinh viên ==\n";
 $r = call('GET', ['action' => 'khtdListWorksheets', 'token' => $sv]);
 $nos = array_map(static fn ($w) => (int) ($w['No'] ?? $w['no'] ?? 0), $r['data']['worksheets'] ?? ($r['data'] ?? []));
 sort($nos);
-check('SV thấy đúng 5 phiếu Đ&KV', ok($r) && $nos === [1, 2, 3, 4, 5], $nos ?: $r);
+check('SV thấy đúng 6 phiếu Đ&KV', ok($r) && $nos === [1, 2, 3, 4, 5, 6], $nos ?: $r);
 $r = call('GET', ['action' => 'khtdGetWorksheet', 'token' => $sv, 'worksheetId' => $ids[1]]);
 $schema = $r['data']['worksheet']['schema'] ?? ($r['data']['schema'] ?? []);
 check('SV mở phiếu 1: không lộ đáp án / dữ liệu chuẩn / lời dặn chấm', ok($r) && !isset($schema['answer_key']) && !isset($schema['reference']) && !isset($schema['answer_hints']), array_keys($schema));
@@ -180,7 +180,7 @@ if (($cfgApp['mail_stub_log_body'] ?? false) === true) {
 
 echo "== Giảng viên ==\n";
 $r = call('GET', ['action' => 'khtdLecturerList', 'token' => $gv, 'classId' => 'DKT_C1']);
-check('GV xem danh sách 5 phiếu + bài nộp', ok($r) && count($r['data']['worksheets']) === 5 && count($r['data']['submissions'] ?? $r['data']['rows'] ?? []) >= 1, ok($r) ? array_keys($r['data']) : $r);
+check('GV xem danh sách 6 phiếu + bài nộp', ok($r) && count($r['data']['worksheets']) === 6 && count($r['data']['submissions'] ?? $r['data']['rows'] ?? []) >= 1, ok($r) ? array_keys($r['data']) : $r);
 $r = call('POST', ['action' => 'khtdLecturerGrade', 'token' => $gv, 'submissionId' => $row['SubmissionID'], 'finalScore' => '8.5', 'note' => 'Mô tả tốt', 'sendEmail' => '1']);
 check('GV chốt điểm, tạo phiếu điểm PDF (SV thử không có email)', ok($r), $r);
 $r = call('GET', ['action' => 'khtdStats', 'token' => $gv, 'classId' => 'DKT_C1']);
