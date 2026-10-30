@@ -1,0 +1,8 @@
+# Tài liệu giảng viên Đá và khoáng vật: chỉ phục vụ qua dkv/tai-lieu.php sau khi kiểm tra token giảng viên.
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

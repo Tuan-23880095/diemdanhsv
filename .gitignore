@@ -34,3 +34,9 @@ config.php
 api/lib/pdf/font/unifont/*.mtx.php
 api/lib/pdf/font/unifont/*.cw.dat
 api/lib/pdf/font/unifont/*.cw127.php
+
+# Tài liệu giảng viên Đá và khoáng vật (đáp án, PDF của bộ môn): repo công khai nên KHÔNG đưa lên Git,
+# tải thẳng lên máy chủ vào public_html/dkv/_gv/ (xem dkv/_gv/README.md).
+dkv/_gv/*
+!dkv/_gv/.htaccess
+!dkv/_gv/README.md
