@@ -1321,7 +1321,7 @@ Tuỳ chọn **mã điểm danh đang OPEN** (`attendance_keys`) khi mở phòng
 
 **Vấn đề.** `dkv/quanly.html` có nút "Khu vực giảng viên (hồ sơ, đáp án)" trỏ tới `dkv/gv.html` nhưng trang chưa có (404).
 
-**Trang.** `dkv/gv.html` theo mẫu `chd-tt/gv.html`: lối tắt (Duyệt phiếu, Trình chiếu, Quản trị), các bước đầu kỳ, lịch 5 buổi + tuần 6 thi, rồi các nút mở tài liệu khoá: Kế hoạch và hướng dẫn tổ chức thực tập; Đáp án 5 phiếu; Bảng đối chiếu khoáng vật và đá; 4 PDF nguồn của bộ môn. Nút mở `fetch('tai-lieu.php?f=…', {X-Token})` vào cửa sổ mới (HTML ghi thẳng, PDF/ảnh qua blob URL); HTTP 404 báo "tài liệu chưa được tải lên máy chủ".
+**Trang.** `dkv/gv.html` theo mẫu `chd-tt/gv.html`: lối tắt (Duyệt phiếu, Trình chiếu, Quản trị), các bước đầu kỳ, lịch 5 buổi + tuần 6 thi, rồi các nút mở tài liệu khoá: hồ sơ lý thuyết C4, C5, 6.3 bản v1.1 (`HS_*`), đề kiểm tra kèm đáp án, phiếu, rubric (`DG_*`); Kế hoạch và hướng dẫn tổ chức thực tập; Đáp án 5 phiếu; Bảng đối chiếu khoáng vật và đá; 4 PDF nguồn của bộ môn. Nút mở `fetch('tai-lieu.php?f=…', {X-Token})` vào cửa sổ mới (HTML ghi thẳng, PDF/ảnh qua blob URL); HTTP 404 báo "tài liệu chưa được tải lên máy chủ".
 
 **`dkv/tai-lieu.php`.** Bản sao `chd-tt/tai-lieu.php` (yêu cầu `LECTURER|ADMIN`, chặn `..`, realpath trong `_gv/`), thêm đuôi `pdf` (`application/pdf`). Chặn truy cập trực tiếp: `RewriteRule ^dkv/_gv(/|$) - [F,L]` ở `.htaccess` gốc + `dkv/_gv/.htaccess`.
 

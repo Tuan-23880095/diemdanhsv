@@ -15,9 +15,13 @@ Hostinger Git deploy chỉ kéo tệp có trong Git, không xoá tệp bị bỏ
 | `HuongDan_ThucHanh_MauKhoangVat_2023.pdf` | Hướng dẫn thực hành mẫu khoáng vật (23 tr.) | BM Thạch học và Khoáng sản, 2023 |
 | `DanhSach_KhoangVat_Bai2-5.pdf` | Danh sách khoáng vật thực hành Bài 2–5 | Bộ môn |
 | `Phieu_MoTa_KhoangVat_BanGiay.pdf` | Phiếu mô tả bản giấy (dự phòng mất mạng) | Bộ môn |
+| `HS_DeCuong_ChiTiet_C4_C5_Muc6-3.html`, `HS_GiaoAn_…`, `HS_GiaoTrinh_…` (.html, .pdf), `HS_BoTriFile_README.html` | Hồ sơ phần lý thuyết C4, C5, 6.3 | `D:\2026-Da&KV\_v1.1\` (bản kiểm định 22/9/2026), đổi `6.3` → `6-3` trong tên tệp |
+| `DG_KiemTra_ThuongXuyen_KTTX.html`, `DG_KiemTra_GiuaKy_phanC4.html`, `DG_Thi_CuoiKy_…`, `DG_PhieuHocTap_…`, `DG_PhieuThucHanh_…`, `DG_Rubric_Bloom_DanhGia.html` | Đề kiểm tra kèm đáp án, phiếu, rubric | `D:\2026-Da&KV\_v1.1\04_DanhGia\` |
 
 **Tải lên / cập nhật:** hPanel → diemdanhsv.com → File Manager → `public_html/dkv/_gv/` →
 Upload gói `dkv_gv.zip` → Extract (ghi đè). Giữ nguyên `.htaccess` của thư mục.
 Sửa `dkv_phieu.json` thì dựng lại hai tệp “Dựng tự động” rồi tải lên lại.
+
+Tên tệp chỉ dùng chữ không dấu, số, `_`, `-` (không có dấu chấm ngoài đuôi), nếu không `tai-lieu.php` từ chối.
 
 **Không** đặt bảng điểm hay tệp có tên sinh viên vào đây.
