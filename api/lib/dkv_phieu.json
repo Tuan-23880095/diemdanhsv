@@ -809,34 +809,20 @@
   "score_policy": "BEST"
  },
  "6": {
-  "title": "Phiếu thử – 2 mẫu khoáng vật (làm quen hệ thống)",
+  "title": "Phiếu thử có giám sát – mô tả 2 mẫu khoáng vật",
   "tuan": 2,
   "ngay": "31/10/2026",
   "sections": [
-   {
-    "id": "thongtin",
-    "type": "table",
-    "title": "Thông tin buổi thực tập",
-    "columns": [
-     "Nội dung"
-    ],
-    "rows": [
-     "Lớp / tổ / nhóm số",
-     "Ngày thực tập",
-     "Mã hộp mẫu (nếu có)"
-    ],
-    "photos": false
-   },
    {
     "id": "mau",
     "type": "info",
     "title": "Mẫu của buổi",
     "lines": [
-     "Phiếu thử để làm quen cách làm phiếu trên điện thoại: giảng viên phát ngẫu nhiên 2 mẫu khoáng vật trong bộ mẫu của học phần (bảng tra khoáng vật).",
-     "Yêu cầu với mỗi mẫu (theo phiếu mô tả khoáng vật học): xác định mẫu đơn khoáng hay đa khoáng; với từng khoáng vật mô tả đặc điểm hình thái (hình dạng, dạng tập hợp) và tính chất vật lý (màu, vết vạch, ánh, độ trong suốt, độ cứng, cát khai, vết vỡ, tính chất đặc biệt); gọi tên khoáng vật; phân loại khoáng vật (nhánh, lớp); nêu vai trò đối với hình thành đất và giá trị sử dụng.",
-     "Dụng cụ: tấm sứ thử vết vạch, móng tay (≈2,5), đồng xu (≈3,5), dao thép hoặc mảnh kính (≈5,5), nam châm, kính lúp; HCl loãng khi được hướng dẫn. Đối chiếu bảng tra rồi mới gọi tên. Chụp 1–3 ảnh mỗi mẫu.",
-     "Chấm: các cột mô tả và phân loại được đối chiếu với lý thuyết của khoáng vật em đã gọi tên; tên gọi đúng hay sai do giảng viên xác định theo mẫu thật.",
-     "An toàn: chỉ dùng HCl loãng khi có giảng viên hướng dẫn; không nếm mẫu (kể cả halit, sylvin); rửa tay sau buổi thực tập."
+     "Phiếu thử có giám sát: giảng viên phát ngẫu nhiên 2 mẫu khoáng vật trong bộ mẫu của học phần. Chỉ làm một việc: chụp ảnh và mô tả từng mẫu theo bảng mô tả mẫu bên dưới (như các phiếu 1–5).",
+     "Mỗi mẫu: quan sát, thử độ cứng, vết vạch, cát khai, phản ứng HCl (khi được hướng dẫn), điền đủ các cột, gọi tên và chụp 1–3 ảnh mẫu.",
+     "Trong lúc làm, trang ghi nhận khi em rời trang, chuyển ứng dụng, chia đôi màn hình hoặc sao chép / dán. Bấm “Chụp ảnh” hay “Chọn ảnh” mẫu thì không tính.",
+     "Chấm: các cột mô tả đối chiếu với lý thuyết của khoáng vật em đã gọi tên; tên gọi đúng hay sai do giảng viên xác định theo mẫu thật.",
+     "An toàn: chỉ dùng HCl loãng khi có giảng viên hướng dẫn; không nếm mẫu; rửa tay sau buổi thực tập."
     ]
    },
    {
@@ -844,7 +830,6 @@
     "type": "table",
     "title": "Bảng mô tả 2 mẫu khoáng vật",
     "columns": [
-     "Đơn khoáng / đa khoáng (đa khoáng: kể các khoáng vật thấy được)",
      "Màu sắc",
      "Màu vết vạch",
      "Ánh",
@@ -855,7 +840,6 @@
      "Hình dạng, dạng tập hợp",
      "Tính chất đặc biệt",
      "Tên khoáng vật xác định",
-     "Phân loại khoáng vật (nhánh, lớp)",
      "Vai trò đối với hình thành đất",
      "Giá trị sử dụng, ý nghĩa kinh tế"
     ],
@@ -866,30 +850,18 @@
     "photos": true,
     "photo_label": "Ảnh mẫu",
     "photo_hint": "Mỗi mẫu chụp 1–3 ảnh rõ nét: toàn mẫu đặt cạnh thước hoặc đồng xu, và cận cảnh mặt cát khai, vết vạch hoặc phép thử. Ảnh để giảng viên kiểm chứng phần mô tả; ảnh được nén tự động trước khi gửi."
-   },
-   {
-    "id": "tdg",
-    "type": "self",
-    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
-    "items": [
-     "Nhận biết khoáng vật qua màu, ánh, độ cứng, cát khai và tính chất đặc trưng",
-     "Dùng dụng cụ đơn giản để kiểm tra, so sánh, mô tả mẫu",
-     "Gọi tên và phân loại khoáng vật (nhánh, lớp)",
-     "Liên hệ khoáng vật với hình thành đất và giá trị kinh tế",
-     "Thao tác làm phiếu và chụp ảnh trên điện thoại"
-    ]
    }
   ],
   "rubric": {
    "criteria": [
     {
      "id": "m1",
-     "name": "Mẫu 1: các cột mô tả và phân loại khớp lý thuyết của khoáng vật đã gọi tên, có ảnh",
+     "name": "Mẫu 1: các cột mô tả khớp lý thuyết của khoáng vật đã gọi tên, có ảnh",
      "max": 4
     },
     {
      "id": "m2",
-     "name": "Mẫu 2: các cột mô tả và phân loại khớp lý thuyết của khoáng vật đã gọi tên, có ảnh",
+     "name": "Mẫu 2: các cột mô tả khớp lý thuyết của khoáng vật đã gọi tên, có ảnh",
      "max": 4
     },
     {
@@ -912,10 +884,14 @@
   },
   "cham": {
    "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu mô tả mẫu khoáng vật và đá trong buổi thực tập của sinh viên.",
-   "quy_tac_bang": "Bảng 'mota' có 2 hàng 'Mẫu 1', 'Mẫu 2'; hàng 'Mẫu k' ứng với tiêu chí 'm{k}' (chấm RIÊNG từng mẫu). Giảng viên phát mẫu khoáng vật thật, ngẫu nhiên, nên KHÔNG có đáp án cố định. Với mỗi hàng: (1) lấy tên sinh viên ghi ở cột 'Tên khoáng vật xác định'; (2) tra tên đó trong 'du_lieu_chuan'; tên không có trong bảng thì đối chiếu theo lý thuyết khoáng vật học chuẩn và ghi chú; (3) đối chiếu TỪNG ô (mọi cột trừ cột tên) với lý thuyết của chính tên đã gọi. Cột 'Phân loại khoáng vật (nhánh, lớp)' đúng khi khớp nhóm của tên đó trong 'du_lieu_chuan' (nguyên tố tự sinh; sulfur và tương tự; oxit và hydroxit; silicat và alumosilicat; carbonat; sulfat; wolframat; halogenua), ghi thêm nhánh hay phân lớp silicat hợp lý thì càng tốt. Cột 'Đơn khoáng / đa khoáng' phần mềm không kiểm chứng được (giảng viên xem ảnh): điền có nghĩa là đúng, trống là thiếu; ghi đa khoáng thì các ô tính chất mô tả khoáng vật chính đã gọi tên. Các cột còn lại: khớp là đúng; biến thể hợp lý của mẫu thật (màu đổi do tạp chất, phong hóa) là đúng hoặc đúng một phần; độ cứng lệch không quá 0,5 bậc Mohs là đúng; ô mâu thuẫn với tên đã gọi là sai; ô trống là thiếu. (4) điểm 'm{k}' = tỉ lệ ô mô tả đúng (đúng một phần tính nửa) nhân điểm tối đa; KHÔNG tính cột tên vào 'm{k}'. Hàng hoàn toàn trống hoặc không có tên: 0 điểm. (5) Tiêu chí 'ten': phần mềm không biết mẫu thật nên KHÔNG kết luận tên đúng hay sai; cho điểm TẠM 1 điểm mỗi mẫu khi tên đã gọi nhất quán với phần lớn tính chất mô tả, 0 khi trống hoặc mâu thuẫn rõ; trong nhận xét tiêu chí ghi 'Tên mẫu chờ giảng viên xác định theo mẫu thật'. Ảnh mẫu do giảng viên tự xem; không suy đoán nội dung ảnh. Trong 'doi_chieu', mỗi mẫu một dòng: 'muc' = 'Mẫu k – <tên đã gọi>', 'bai_lam' tóm tắt mô tả, 'dap_an' tóm tắt lý thuyết của tên đó.",
+   "quy_tac_bang": "Bảng 'mota' có 2 hàng 'Mẫu 1', 'Mẫu 2'; hàng 'Mẫu k' ứng với tiêu chí 'm{k}' (chấm RIÊNG từng mẫu). Giảng viên phát mẫu khoáng vật thật, ngẫu nhiên, nên KHÔNG có đáp án cố định. Với mỗi hàng: (1) lấy tên sinh viên ghi ở cột 'Tên khoáng vật xác định'; (2) tra tên đó trong 'du_lieu_chuan'; tên không có trong bảng thì đối chiếu theo lý thuyết khoáng vật học chuẩn và ghi chú; (3) đối chiếu TỪNG ô (mọi cột trừ cột tên) với lý thuyết của chính tên đã gọi: khớp là đúng; biến thể hợp lý của mẫu thật (màu đổi do tạp chất, phong hóa) là đúng hoặc đúng một phần; độ cứng lệch không quá 0,5 bậc Mohs là đúng; ô mâu thuẫn với tên đã gọi là sai; ô trống là thiếu. (4) điểm 'm{k}' = tỉ lệ ô mô tả đúng (đúng một phần tính nửa) nhân điểm tối đa; KHÔNG tính cột tên vào 'm{k}'. Hàng hoàn toàn trống hoặc không có tên: 0 điểm. (5) Tiêu chí 'ten': phần mềm không biết mẫu thật nên KHÔNG kết luận tên đúng hay sai; cho điểm TẠM 1 điểm mỗi mẫu khi tên đã gọi nhất quán với phần lớn tính chất mô tả, 0 khi trống hoặc mâu thuẫn rõ; trong nhận xét tiêu chí ghi 'Tên mẫu chờ giảng viên xác định theo mẫu thật'. Ảnh mẫu do giảng viên tự xem; không suy đoán nội dung ảnh. Trong 'doi_chieu', mỗi mẫu một dòng: 'muc' = 'Mẫu k – <tên đã gọi>', 'bai_lam' tóm tắt mô tả, 'dap_an' tóm tắt lý thuyết của tên đó.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mẫu và cột (vd 'Mẫu 3 – Độ cứng Mohs'), sai hoặc thiếu gì và nên quan sát hay làm phép thử nào để tự kiểm lại (vạch móng tay, đồng xu, dao thép hoặc mảnh kính, tấm sứ thử vết vạch, HCl loãng, nam châm, kính lúp); không chép nguyên đáp án. Hàng không có ảnh mẫu thì ghi vào 'sua_bai' là thiếu ảnh để giảng viên kiểm chứng. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
   },
   "max_attempts": 2,
-  "score_policy": "BEST"
+  "score_policy": "BEST",
+  "giam_sat": {
+   "max": 3,
+   "blur_grace_sec": 3
+  }
  }
 }

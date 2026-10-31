@@ -42,7 +42,7 @@ Subdomain tạo trong mục *Subdomains* của diemdanhsv.com (không tốn su�
 |---|---|---|---|
 | Thực tập Khoa học Trái đất | `khtd/index.html`, `khtd/online.html` | `khtd/gv.html`, `khtd/quanly.html`, `khtd/Rubric_R1-R4.html` | `khtd*.php` · mục 26–33 |
 | Thực tập Cơ học đất (GEO10404) | `chd-tt/index.html`, `chd-tt/online.html` | `chd-tt/gv.html`, `chd-tt/quanly.html` | `chd.php`, `chd_phieu.json` · mục 34 |
-| Đá và Khoáng vật (LEC10001) | `dkv/index.html`, `dkv/online.html`, `dkv/sv.html` | `dkv/gv.html`, `dkv/trinhchieu.html`, `dkv/quanly.html` | `dkv.php`, `liveroom.php`, `dkv/tai-lieu.php` · mục 35–37 |
+| Đá và Khoáng vật (LEC10001) | `dkv/index.html`, `dkv/online.html`, `dkv/sv.html` | `dkv/gv.html`, `dkv/trinhchieu.html`, `dkv/quanly.html` | `dkv.php`, `liveroom.php`, `dkv/tai-lieu.php`, `khtd_giamsat.php` · mục 35–39 (phiếu 6 có giám sát + PIN) |
 | Kiểm tra trực tuyến | `kiemtra/`, `kiemtra/sv.html?c=MÃ` | `kiemtra/gv.html` | `kiemtra/api/` · bảng `kt_*` · gốc ở repo `KIEMTRA` |
 
 ### Tuyển sinh & sự kiện

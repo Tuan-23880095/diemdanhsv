@@ -54,7 +54,7 @@ class KhtdController {
 
   async showList() {
     this.view.show('login', false); this.view.show('ws-panel', false); this.view.show('list', true);
-    clearTimeout(this.autosave); this._stopTimer();
+    clearTimeout(this.autosave); this._stopTimer(); this._gsStop('Về danh sách phiếu');
     try {
       const d = await this.api.khtdListWorksheets(this.token);
       this.view.setStudent(d.student); this.view.renderWorksheetList(d.worksheets, d.examForecast);
@@ -75,6 +75,7 @@ class KhtdController {
       this._stopTimer();
       const clock = d.exam && d.exam.clock;
       if (clock && d.worksheet.open && (!d.submission || d.submission.Status === 'DRAFT')) this._startTimer(clock);
+      this._gsUpdate(d);
       window.scrollTo(0, 0);
     } catch (err) { this.view.msg(err.message, 'err'); }
   }
@@ -102,6 +103,23 @@ class KhtdController {
   }
 
   _stopTimer() { clearInterval(this._timer); this._timer = null; }
+
+  /* ---------- Giám sát chống gian lận (phiếu có schema.giam_sat, docs/04 mục 39) ---------- */
+  _gsUpdate(d) {
+    const doing = d.giamSat && d.worksheet.open && (!d.submission || d.submission.Status === 'DRAFT');
+    if (!doing) return this._gsStop(this.gs && this.gs.on ? 'Đã nộp / phiếu đóng' : '');
+    if (typeof KhtdGiamSat === 'undefined') return;
+    if (this.gs && this.gs.on && this.gsWs === d.worksheet.id) return;
+    this._gsStop('');
+    const wsId = d.worksheet.id; this.gsWs = wsId;
+    this.gs = new KhtdGiamSat((type, detail) => this.api.khtdLogEvent(this.token, wsId, type, detail),
+      (pin) => this.api.khtdGsUnlock(this.token, wsId, pin).then((st) => { if (!st.locked) this.view.msg('Đã mở khoá. Làm tiếp bài — vi phạm tiếp theo bài sẽ khoá lại.', 'ok'); return st; }));
+    this.gs.start(d.giamSat);
+    // Tạo bản nháp ngay khi mở để sinh viên hiện trong danh sách Duyệt phiếu (kèm số vi phạm) kể cả khi chưa gõ gì.
+    if (!d.submission && !d.giamSat.locked) this.saveDraft(false);
+  }
+
+  _gsStop(reason) { if (this.gs) { this.gs.stop(reason); this.gs = null; this.gsWs = null; } }
 
   _scheduleAutosave() {
     clearTimeout(this.autosave);
