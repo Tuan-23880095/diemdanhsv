@@ -22,6 +22,7 @@ require_once __DIR__ . '/khtd_kb.php';
 require_once __DIR__ . '/khtd_exam.php';
 require_once __DIR__ . '/chd.php';
 require_once __DIR__ . '/dkv.php';
+require_once __DIR__ . '/khtd_giamsat.php';
 
 const KHTD_TOKEN_TTL = 3 * 3600;
 
@@ -317,6 +318,9 @@ function action_khtd_get_worksheet(array $params): void
     } elseif ($sub && $sub['Status'] !== 'DRAFT') {
         $more['forecast'] = khtd_exam_forecast($ws['schema'], $ansArr ?? []);
     }
+    if ($gs = khtd_giamsat_cfg($ws['schema'])) {   // giám sát chống gian lận (docs/04 mục 39)
+        $more['giamSat'] = $gs + khtd_giamsat_state($ws['WorksheetID'], $me['studentId'], $gs);
+    }
     api_ok(['worksheet' => ['id' => $ws['WorksheetID'], 'no' => (int) $ws['No'], 'title' => $ws['Title'],
             'classId' => $ws['ClassID'], 'open' => khtd_is_open($ws), 'closeAt' => $ws['CloseAt'], 'schema' => $schema,
             'maxAttempts' => (int) $ws['MaxAttempts'], 'scorePolicy' => $ws['ScorePolicy']],
@@ -347,6 +351,7 @@ function action_khtd_save_draft(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không lưu được nữa.'); return; }
+    if (!khtd_giamsat_guard($ws, $me['studentId'])) return;   // bài đang khoá do vi phạm giám sát (mục 39)
     $answers = khtd_clean_meta(khtd_clean_photo_refs(khtd_clean_answers($params['answers'] ?? null), $ws, $me['studentId']));
     $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
     $sub = $sum['latest'];
@@ -377,6 +382,7 @@ function action_khtd_submit(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không nộp được nữa.'); return; }
+    if (!khtd_giamsat_guard($ws, $me['studentId'])) return;   // bài đang khoá do vi phạm giám sát (mục 39)
     $ip = rate_limit_client_ip();
     rate_limit_guard('khtd_submit_ip', $ip);
     rate_limit_guard('khtd_submit_student', $me['studentId']);
@@ -582,6 +588,7 @@ function action_khtd_upload_photo(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không tải ảnh được nữa.'); return; }
+    if (!khtd_giamsat_guard($ws, $me['studentId'])) return;   // bài đang khoá do vi phạm giám sát (mục 39)
     $ip = rate_limit_client_ip();
     rate_limit_guard('khtd_upload_ip', $ip);
     rate_limit_record('khtd_upload_ip', $ip);
@@ -1090,6 +1097,7 @@ function action_khtd_lecturer_list(array $params): void
         $sc = json_decode((string) $w['SchemaJSON'], true) ?: [];
         $w['IsExam'] = khtd_is_exam($sc);
         if ($w['IsExam']) $w['ExamKey'] = khtd_exam_key_text($sc);
+        if ($gs = khtd_giamsat_cfg($sc)) $w['GiamSat'] = $gs + ['pin' => khtd_giamsat_pin((string) $w['WorksheetID'])];   // PIN giám thị (mục 39)
         unset($w['SchemaJSON']);
     }
     unset($w);
@@ -1102,8 +1110,10 @@ function action_khtd_lecturer_list(array $params): void
     $subs->execute(['c' => $classId]);
     $rows = $subs->fetchAll();
     $sum = khtd_class_summaries($classId, $sheets, $rows);
+    $gsCount = khtd_giamsat_class_counts($classId);
     foreach ($rows as &$r) {
         $x = $sum[$r['WorksheetID'] . '|' . $r['StudentID']];
+        $r['Violations'] = $gsCount[$r['WorksheetID'] . '|' . $r['StudentID']] ?? null;
         $r['AttemptsUsed'] = $x['used']; $r['AttemptsAllowed'] = $x['allowed']; $r['Extra'] = $x['extra'];
         $r['IsCounted'] = $x['countedNo'] === (int) $r['AttemptNo'];
         $r['IsLatest'] = $x['latest'] && (int) $x['latest']['AttemptNo'] === (int) $r['AttemptNo'];
@@ -1155,6 +1165,11 @@ function action_khtd_lecturer_submission(array $params): void
     $row['attempt'] = khtd_attempt_public($sum);
     foreach ($row['attempt']['attempts'] as $i => &$a) $a['submissionId'] = $sum['rows'][$i]['SubmissionID'];
     unset($a);
+    if ($gs = khtd_giamsat_cfg($row['schema'])) {
+        $ev = khtd_giamsat_events((string) $row['WorksheetID'], (string) $row['StudentID']);
+        $row['giamSat'] = $gs + khtd_giamsat_state((string) $row['WorksheetID'], (string) $row['StudentID'], $gs, $ev)
+                        + ['events' => $ev, 'pin' => khtd_giamsat_pin((string) $row['WorksheetID'])];
+    }
     unset($row['AnswersJSON'], $row['AiJSON'], $row['SchemaJSON']);
     api_ok($row);
 }

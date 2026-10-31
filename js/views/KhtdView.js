@@ -422,7 +422,7 @@ class KhtdView {
         <label>Số lần nộp <select data-policy="max" class="rounded border px-1 py-0.5">${maxOpts(max)}</select></label>
         <label>Điểm tính <select data-policy="score" class="rounded border px-1 py-0.5" ${max === 1 ? 'title="Chỉ có tác dụng khi sinh viên nộp từ 2 lần (cho làm nhiều lần hoặc được cấp thêm lượt)"' : ''}>
           <option value="BEST" ${w.ScorePolicy !== 'LAST' ? 'selected' : ''}>cao nhất các lần</option><option value="LAST" ${w.ScorePolicy === 'LAST' ? 'selected' : ''}>lần nộp cuối</option></select></label>
-      </div>${w.IsExam ? '<p class="mt-1 text-xs font-semibold text-amber-800">Luyện thi — không tính điểm tổng (xuất CSV thành cột dự báo / điểm cộng đề xuất / thái độ).</p>' + this.examKeyHtml(w) : ''}</div>`;
+      </div>${w.GiamSat ? `<p class="mt-1 text-xs"><span class="font-semibold text-red-800">👁 Có giám sát</span> · khoá bài khi đủ ${this._esc(w.GiamSat.max)} vi phạm · <span title="Nhập trên máy sinh viên để mở khoá; mỗi lần mở cho thêm 1 lượt">mã PIN mở khoá: <b class="font-mono text-base tracking-widest">${this._esc(w.GiamSat.pin)}</b></span></p>` : ''}${w.IsExam ? '<p class="mt-1 text-xs font-semibold text-amber-800">Luyện thi — không tính điểm tổng (xuất CSV thành cột dự báo / điểm cộng đề xuất / thái độ).</p>' + this.examKeyHtml(w) : ''}</div>`;
     }).join('')
       : '<p class="text-sm text-slate-500">Lớp chưa có phiếu — bấm "Tạo / bổ sung phiếu mặc định".</p>';
     const subs = data.submissions;
@@ -433,7 +433,7 @@ class KhtdView {
         ? `<button data-grant="${this._esc(s.SubmissionID)}" class="ml-1 rounded border border-blue-600 px-2 py-0.5 text-xs text-blue-700 hover:bg-blue-50" title="Cấp thêm 1 lượt làm lại cho sinh viên này (vd bấm nhầm nộp)">Cho làm lại</button>` : '';
       return `<tr class="border-b hover:bg-slate-50${s.IsLatest ? '' : ' text-slate-500'}">
       <td class="px-2 py-1">${this._esc(s.No)}</td><td class="px-2 py-1 whitespace-nowrap">${lan}</td><td class="px-2 py-1">${this._esc(s.MSSV)}</td><td class="px-2 py-1">${this._esc(s.FullName)}</td>
-      <td class="px-2 py-1 text-xs">${this._esc(s.Status)}</td><td class="px-2 py-1 text-right">${s.AiScore != null ? this._esc(s.AiScore) : (s.AiError ? `<span class="cursor-help text-xs text-red-600" title="${this._esc(s.AiError)}">lỗi chấm</span>` : '')}</td>
+      <td class="px-2 py-1 text-xs">${this._esc(s.Status)}${s.Violations ? ` <span class="ml-1 whitespace-nowrap rounded bg-red-100 px-1.5 font-semibold text-red-700" title="Số lần vi phạm giám sát của SV trên phiếu này (mọi lần làm) — xem nhật ký trong “Xem / chấm”">⚠ ${this._esc(s.Violations)} vi phạm</span>` : ''}</td><td class="px-2 py-1 text-right">${s.AiScore != null ? this._esc(s.AiScore) : (s.AiError ? `<span class="cursor-help text-xs text-red-600" title="${this._esc(s.AiError)}">lỗi chấm</span>` : '')}</td>
       <td class="px-2 py-1 text-right font-semibold">${s.FinalScore == null ? '' : this._esc(s.FinalScore)}</td><td class="px-2 py-1 text-xs">${s.EmailSentAt ? '✓' : ''}</td>
       <td class="px-2 py-1 whitespace-nowrap"><button data-sub="${this._esc(s.SubmissionID)}" class="rounded border px-2 py-0.5 text-xs hover:bg-slate-100">Xem / chấm</button>${grant}</td></tr>`;
     }).join('')
@@ -462,7 +462,7 @@ class KhtdView {
       att.attempts.map((a) => `<button type="button" data-sub-open="${this._esc(a.submissionId)}" class="rounded border px-2 py-0.5 ${Number(a.no) === Number(row.AttemptNo) ? 'border-blue-600 bg-blue-50 font-semibold' : 'hover:bg-slate-50'}">Lần ${this._esc(a.no)}${a.status === 'DRAFT' ? ' (nháp)' : a.score != null ? ': ' + this._esc(a.score) : ''}${a.counted ? ' ★' : ''}</button>`).join('') + '</div>' : '';
     const canGrant = att && att.allowed != null && att.currentNo === Number(row.AttemptNo) && row.Status !== 'DRAFT';
     box.innerHTML = `<div class="flex items-start justify-between"><h3 class="text-lg font-bold">Phiếu ${this._esc(row.No)}${multi ? ' · lần ' + this._esc(row.AttemptNo) : ''} · ${this._esc(row.FullName)} (${this._esc(row.MSSV)})</h3><button id="sub-close" class="text-slate-500 hover:text-slate-900">✕</button></div>
-      <p class="text-xs text-slate-500">Nộp: ${this._esc(row.SubmittedAt || '')} · Email: ${this._esc(row.Email || '(chưa có)')} · Trạng thái: ${this._esc(row.Status)}${canGrant ? ` · <button type="button" id="btn-grant" data-grant-id="${this._esc(row.SubmissionID)}" class="text-blue-700 underline">Cho làm lại (+1 lượt)</button>` : ''}${row.Status !== 'DRAFT' ? ` · <button type="button" data-pdf-sub="${this._esc(row.SubmissionID)}" class="text-blue-700 underline">Tải phiếu điểm PDF</button>` : ''}</p>${nav}${body}${aiH}${aiErrH}
+      <p class="text-xs text-slate-500">Nộp: ${this._esc(row.SubmittedAt || '')} · Email: ${this._esc(row.Email || '(chưa có)')} · Trạng thái: ${this._esc(row.Status)}${canGrant ? ` · <button type="button" id="btn-grant" data-grant-id="${this._esc(row.SubmissionID)}" class="text-blue-700 underline">Cho làm lại (+1 lượt)</button>` : ''}${row.Status !== 'DRAFT' ? ` · <button type="button" data-pdf-sub="${this._esc(row.SubmissionID)}" class="text-blue-700 underline">Tải phiếu điểm PDF</button>` : ''}</p>${nav}${this.giamSatHtml(row.giamSat)}${body}${aiH}${aiErrH}
       <form id="grade-form" class="mt-4 grid gap-2 rounded-lg border p-3 sm:grid-cols-[120px_1fr_auto]">
         <label class="text-sm">Điểm chính thức<input id="grade-score" type="number" min="0" max="10" step="0.25" value="${row.FinalScore != null ? this._esc(row.FinalScore) : (ai ? this._esc(ai.total) : '')}" class="mt-1 w-full rounded border px-2 py-1" required/></label>
         <label class="text-sm">Nhận xét của GV (kèm vào email)<textarea id="grade-note" rows="2" class="mt-1 w-full rounded border px-2 py-1">${this._esc(row.FinalNote || '')}</textarea></label>
@@ -470,6 +470,20 @@ class KhtdView {
       </form>`;
     box.dataset.sub = row.SubmissionID;
     this.hydratePhotos(box);
+  }
+
+  /* ---------- Nhật ký giám sát chống gian lận (GV, docs/04 mục 39) ---------- */
+  giamSatHtml(gs) {
+    if (!gs) return '';
+    const NAME = { start: 'Mở phiếu', stop: 'Rời phiếu', back: 'Quay lại trang', photo: 'Chụp / chọn ảnh mẫu (không tính)', offline: 'Mất mạng', online: 'Có mạng lại',
+      unlock: '🔓 Mở khoá bằng PIN', pin_fail: 'Nhập sai PIN',
+      hidden: 'Rời trang', blur: 'Mất tiêu điểm', split: 'Chia đôi / thu nhỏ màn hình', copy: 'Sao chép', cut: 'Cắt', paste: 'Dán', devtools: 'Công cụ nhà phát triển', printscreen: 'PrintScreen' };
+    const ev = gs.events || []; const n = ev.filter((x) => x.counted).length;
+    const cls = gs.locked || n >= gs.max ? 'border-red-300 bg-red-50' : n ? 'border-amber-300 bg-amber-50' : 'border-green-200 bg-green-50';
+    const rows = ev.map((x) => `<tr class="${x.counted ? 'font-semibold text-red-700' : x.type === 'unlock' ? 'font-semibold text-green-700' : 'text-slate-600'}"><td class="pr-2 whitespace-nowrap">${this._esc(String(x.at).slice(11, 19))}</td><td class="pr-2 whitespace-nowrap">${this._esc(NAME[x.type] || x.type)}</td><td class="pr-2">${x.attemptNo > 1 ? 'lần ' + this._esc(x.attemptNo) : ''}</td><td>${this._esc(x.detail)}</td></tr>`).join('');
+    return `<details class="mt-2 rounded-lg border p-2 text-sm ${cls}" ${n ? 'open' : ''}><summary class="cursor-pointer font-semibold">👁 Giám sát: ${n} vi phạm · ${gs.locked ? '🔒 đang khoá' : 'không khoá'}${gs.unlocks ? ` · đã mở khoá ${this._esc(gs.unlocks)} lần` : ''} · ${ev.length} sự kiện <span class="font-normal text-slate-600">(PIN mở khoá: <b class="font-mono">${this._esc(gs.pin || '')}</b>)</span></summary>
+      ${ev.length ? `<div class="mt-1 max-h-56 overflow-y-auto"><table class="text-xs">${rows}</table></div>` : '<p class="mt-1 text-xs text-slate-600">Chưa ghi sự kiện nào (sinh viên chưa mở phiếu từ khi bật giám sát).</p>'}
+      <p class="mt-1 text-xs text-slate-500">Tín hiệu từ trình duyệt — không phát hiện được điện thoại thứ hai hay trao đổi bài; dùng kèm giám sát trực tiếp.</p></details>`;
   }
 
   /* ---------- Thống kê theo buổi (GV, docs/04 mục 31) ---------- */

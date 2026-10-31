@@ -74,6 +74,8 @@ const KNOWN_ACTIONS = [
     'khtdSetWorksheetPolicy' => 'POST',
     'khtdGrantRetake'        => 'POST',
     'khtdUploadPhoto'        => 'POST',
+    'khtdLogEvent'           => 'POST',   // giám sát chống gian lận (docs/04 mục 39)
+    'khtdGsUnlock'           => 'POST',
     'khtdStats'              => 'GET',
     // Phiếu luyện thi cuối khóa (api/lib/khtd_exam.php, docs/04 mục 33)
     'khtdStartExam'          => 'POST',
@@ -204,6 +206,8 @@ function api_dispatch(string $action, string $method, array $params): void
         case 'khtdActiveCode':         action_khtd_active_code($params);          return;
         case 'khtdRetake':             action_khtd_retake($params);               return;
         case 'khtdSetWorksheetPolicy': action_khtd_set_worksheet_policy($params); return;
+        case 'khtdLogEvent':           action_khtd_log_event($params);            return;
+        case 'khtdGsUnlock':           action_khtd_gs_unlock($params);            return;
         case 'khtdGrantRetake':        action_khtd_grant_retake($params);         return;
         case 'khtdUploadPhoto':        action_khtd_upload_photo($params);         return;
         case 'khtdStats':              action_khtd_stats($params);                return;
