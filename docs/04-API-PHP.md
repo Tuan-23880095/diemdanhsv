@@ -1356,3 +1356,17 @@ Tuỳ chọn **mã điểm danh đang OPEN** (`attendance_keys`) khi mở phòng
 **Kiểm thử.** `php tools/smoke_giamsat.php --config=<CSDL thử>` (35 ca: nội dung phiếu 6, báo sự kiện, từ chối loại lạ / phiếu không giám sát / token sai, khoá chặn lưu-nộp-tải ảnh, PIN sai/đúng/chặn 5 lần, ngưỡng sau mở khoá, nhật ký đúng thứ tự trong cùng giây, bỏ qua sau khi nộp). `smoke_dkv` 31/33, `smoke_khtd_exam` 66/67 — các ca lỗi có sẵn trên main trước thay đổi này (nhãn email đổi chữ).
 
 **Giới hạn.** Tín hiệu từ trình duyệt: không thấy điện thoại thứ hai, trao đổi bài, chụp màn hình bằng phím cứng; iPhone không có toàn màn hình. Dùng kèm giám sát trực tiếp.
+
+## 40. Ôn bài ở nhà: mã ôn tập, chế độ xem lại, phiếu ôn tập Đ&KV 11–15 (31/10/2026) — `api/lib/khtd_ontap.php`
+
+**Vấn đề.** SV chỉ đăng nhập phiếu bằng mã buổi học đang mở (token KHTD 3 giờ) → về nhà không xem lại được bài đã làm.
+
+**Mã ôn tập của lớp.** GV tạo ở `dkv/quanly.html` (khung "Mã ôn tập ở nhà": hạn 7/30/60/120 ngày, tạo mã mới, thu hồi) — action `khtdReviewCode {token, classId, op: get|create|revoke, days}`. Mã 6 ký tự (bảng chữ `app.code_alphabet`), hết hạn 23:59:59 ngày cuối. Lưu trong `audit_log` (Action `khtdReviewCode`, TargetType `khtd_review`, TargetID = ClassID, Data `{code, expiresAt, days, ts}` hoặc `{revoked, ts}`); dòng mới nhất là hiệu lực → không bảng mới, không migration. Tạo mã mới thì mã cũ hết hiệu lực.
+
+**Đăng nhập ở nhà.** `dkv/online.html`: ô mã nhận 4 ký tự (mã buổi học → `khtdLogin`) hoặc 6 ký tự (mã ôn tập → `khtdReviewLogin {mssv, code}`; bỏ dấu cách, không phân biệt hoa thường; chỉ khớp mã của lớp SV đang ghi danh; giới hạn sai theo `khtd_login_ip`). Cấp token **Kind `GRADE`** 4 giờ (ENUM sẵn có; `khtd_require_student` vốn nhận GRADE nhưng chưa trang nào dùng) → `me.review = true`.
+
+**Chế độ ôn tập.** Phiếu thường (1–6): `open = false`, `reviewOnly = true`, `canRetake = false` → giao diện chỉ xem (ẩn nút, khoá ô nhập, thông báo "chế độ ôn tập ở nhà"); máy chủ từ chối `khtdSaveDraft`, `khtdSubmit`, `khtdUploadPhoto`, `khtdRetake`, `khtdStartExam` (`khtd_review_guard`), `khtdLogEvent`/`khtdGsUnlock`; không bật giám sát. Xem được bài đã nộp, ảnh mẫu, điểm, nhận xét, chỗ cần sửa; bảng đối chiếu đáp án theo quy tắc cũ (sau khi GV duyệt và hết lượt). Danh sách phiếu: nhãn "Xem lại"; băng xanh "Chế độ ôn tập ở nhà".
+
+**Phiếu ôn tập** (`schema.on_tap = true`, `max_attempts 0` = không giới hạn): Đ&KV số 11–15, mỗi tuần một phiếu, 10 câu (8 nhận biết khoáng vật/đá theo mô tả + 2 vận dụng), rubric 1 điểm/câu, `answer_key` từng câu, dữ liệu chuẩn = `reference` của phiếu tuần tương ứng. Làm được ở cả hai chế độ. Nộp xong `khtdGetWorksheet` trả `onTapKey` [{text, answer}] → khung "Đáp án tham khảo"; giữ `doi_chieu` của lần chấm. **Không tính điểm:** `khtdExportCsv` bỏ cột Phieu11–15, thêm `OnTap_SoLanNop`. Seed: "Tạo / bổ sung phiếu Đ&KV" thêm 11–15 (phiếu cũ đã có bài làm giữ nguyên).
+
+**Kiểm thử.** `php tools/smoke_ontap.php --config=<CSDL thử>` 31 ca; `smoke_dkv` cập nhật 11 phiếu (31/33, 2 ca lỗi có sẵn trên main); `smoke_giamsat` 35/35, `smoke_chd` 33/33, `smoke_khtd_attempts` 67/67, `smoke_liveroom` 35/35.

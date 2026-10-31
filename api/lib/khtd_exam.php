@@ -525,6 +525,7 @@ function action_khtd_start_exam(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_exam($ws['schema'])) { api_fail('Phiếu này không bấm giờ.'); return; }
+    if (!khtd_review_guard($me, $ws)) return;   // chế độ ôn tập ở nhà (mục 40)
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng.'); return; }
     $cfg = khtd_exam_cfg($ws['schema']);
     $count = (int) ($params['count'] ?? 0);

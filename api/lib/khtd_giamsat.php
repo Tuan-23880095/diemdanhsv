@@ -123,6 +123,7 @@ function action_khtd_log_event(array $params): void
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     $cfg = khtd_giamsat_cfg($ws['schema']);
     if (!$cfg) { api_fail('Phiếu này không bật giám sát.'); return; }
+    if (!empty($me['review'])) { api_fail('Chế độ ôn tập ở nhà không làm phiếu có giám sát.'); return; }
     $type = trim((string) ($params['type'] ?? ''));
     if (!in_array($type, KHTD_GS_COUNTED, true) && !in_array($type, KHTD_GS_CLIENT_INFO, true)) { api_fail('Loại sự kiện không hợp lệ.'); return; }
     $detail = mb_substr(trim((string) ($params['detail'] ?? '')), 0, 160);
@@ -144,6 +145,7 @@ function action_khtd_gs_unlock(array $params): void
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     $cfg = khtd_giamsat_cfg($ws['schema']);
     if (!$cfg) { api_fail('Phiếu này không bật giám sát.'); return; }
+    if (!empty($me['review'])) { api_fail('Chế độ ôn tập ở nhà không làm phiếu có giám sát.'); return; }
     $st = khtd_giamsat_state($ws['WorksheetID'], $me['studentId'], $cfg);
     if (!$st['locked']) { api_ok($st); return; }
     $fails = db()->prepare("SELECT COUNT(*) FROM audit_log WHERE TargetType = 'khtd_gs' AND TargetID = :w AND Actor = :s AND `Time` > NOW() - INTERVAL 10 MINUTE AND JSON_UNQUOTE(JSON_EXTRACT(`Data`, '$.type')) = 'pin_fail'");

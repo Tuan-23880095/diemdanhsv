@@ -43,9 +43,10 @@ class KhtdController {
 
   async login() {
     const mssv = document.getElementById('mssv').value.trim();
-    const code = document.getElementById('code').value.trim().toUpperCase();
+    const code = document.getElementById('code').value.replace(/\s+/g, '').toUpperCase();
     try {
-      const d = await this.api.khtdLogin(mssv, code);
+      // 6 ký tự = mã ôn tập ở nhà (chế độ xem lại + phiếu ôn tập, docs/04 mục 40); 4 ký tự = mã buổi học trên lớp.
+      const d = code.length === 6 ? await this.api.khtdReviewLogin(mssv, code) : await this.api.khtdLogin(mssv, code);
       this.token = d.token; sessionStorage.setItem('khtd_token', d.token);
       if (!d.email) this.view.msg('Hồ sơ của bạn chưa có email — điểm chính thức sau khi giảng viên duyệt sẽ không gửi được qua thư; báo giảng viên cập nhật.', 'err');
       this.showList();
@@ -71,7 +72,7 @@ class KhtdController {
       this.ws = d.worksheet; this.schema = d.worksheet.schema;
       this.sub = d.submission; this.attempt = d.attempt || null;
       this.view.show('list', false); this.view.show('ws-panel', true);
-      this.view.renderWorksheet(d.worksheet, d.submission, d.attempt, { exam: d.exam || null, forecast: d.forecast || null });
+      this.view.renderWorksheet(d.worksheet, d.submission, d.attempt, { exam: d.exam || null, forecast: d.forecast || null, onTapKey: d.onTapKey || null });
       this._stopTimer();
       const clock = d.exam && d.exam.clock;
       if (clock && d.worksheet.open && (!d.submission || d.submission.Status === 'DRAFT')) this._startTimer(clock);
@@ -236,6 +237,8 @@ class KhtdController {
     document.getElementById('btn-reload').addEventListener('click', () => this.loadClass());
     document.getElementById('btn-open-code').addEventListener('click', () => this.openCode());
     document.getElementById('btn-refresh-code').addEventListener('click', () => this.loadCode());
+    const rc = document.getElementById('btn-review-create'); if (rc) rc.addEventListener('click', () => this.loadReview('create'));
+    const rr = document.getElementById('btn-review-revoke'); if (rr) rr.addEventListener('click', () => this.loadReview('revoke'));
     document.getElementById('lec-ws').addEventListener('click', (e) => {
       const b = e.target.closest('[data-ws-toggle]'); if (b) return this.toggleWs(b.dataset.wsToggle, b.dataset.next);
       const k = e.target.closest('[data-exam-key-save]'); if (k) return this.saveExamKey(k);
@@ -282,7 +285,20 @@ class KhtdController {
     try { this.view.renderLecturer(await this.api.khtdLecturerList(this.token, this.classId)); }
     catch (err) { this.view.msg(err.message, 'err'); }
     this.loadCode();
+    this.loadReview();
     this.loadStats();
+  }
+
+  /* ---------- Mã ôn tập ở nhà (docs/04 mục 40); chỉ trang có #review-box (dkv/quanly.html) ---------- */
+  async loadReview(op) {
+    if (!this.classId || !document.getElementById('review-box')) return;
+    if (op === 'revoke' && !confirm('Thu hồi mã ôn tập? Sinh viên đang ôn sẽ không đăng nhập lại được bằng mã này.')) return;
+    try {
+      const days = Number((document.getElementById('review-days') || {}).value || 30);
+      const d = await this.api.khtdReviewCode(this.token, this.classId, op || 'get', days);
+      this.view.renderReviewCode(d.review);
+      if (op === 'create') this.view.msg('Đã tạo mã ôn tập mới — công bố cho sinh viên; mã cũ (nếu có) hết hiệu lực.', 'ok');
+    } catch (err) { this.view.msg('Mã ôn tập: ' + err.message, 'err'); }
   }
 
   async loadStats() {

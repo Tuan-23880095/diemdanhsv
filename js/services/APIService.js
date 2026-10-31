@@ -120,6 +120,8 @@ class APIService {
   khtdUploadPhoto(token, worksheetId, sectionId, row, image) { return this.post('khtdUploadPhoto', { token, worksheetId, sectionId, row, image }); }
   khtdLogEvent(token, worksheetId, type, detail) { return this.post('khtdLogEvent', { token, worksheetId, type, detail }); }
   khtdGsUnlock(token, worksheetId, pin)       { return this.post('khtdGsUnlock', { token, worksheetId, pin }); }
+  khtdReviewLogin(mssv, code)                 { return this.post('khtdReviewLogin', { mssv, code }); }
+  khtdReviewCode(token, classId, op, days)    { return this.post('khtdReviewCode', { token, classId, op, days }); }
   khtdStats(token, classId)                   { return this.get('khtdStats', { token, classId }); }
   /* ---- Phiếu luyện thi cuối khóa (api/lib/khtd_exam.php, docs/04 mục 33) ---- */
   khtdStartExam(token, worksheetId, count)    { return this.post('khtdStartExam', { token, worksheetId, count }); }
