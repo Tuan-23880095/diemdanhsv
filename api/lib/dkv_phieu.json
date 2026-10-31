@@ -893,5 +893,740 @@
    "max": 3,
    "blur_grace_sec": 3
   }
+ },
+ "11": {
+  "title": "Ôn tập 1 – Khoáng vật (1/2): nhận biết theo mô tả",
+  "tuan": 1,
+  "ngay": "",
+  "on_tap": true,
+  "sections": [
+   {
+    "id": "mau",
+    "type": "info",
+    "title": "Phiếu ôn tập ở nhà",
+    "lines": [
+     "Phiếu ôn tập, KHÔNG tính điểm, làm không giới hạn số lần. Nộp xong em thấy ngay điểm tự chấm và đáp án tham khảo.",
+     "Câu 1–8: đọc mô tả, gọi tên khoáng vật (hoặc đá) và nêu một dấu hiệu quyết định. Câu 9–10: câu vận dụng.",
+     "Dùng bảng tra và tài liệu trên trang lớp để ôn; tự làm trước rồi mới xem đáp án."
+    ]
+   },
+   {
+    "id": "ontap",
+    "type": "questions",
+    "title": "Câu hỏi ôn tập",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Màu đen chì, vết vạch đen xám, độ cứng 1, sờ trơn và bẩn tay, dẫn điện."
+     },
+     {
+      "id": "q2",
+      "text": "Vàng đồng thau nhạt, ánh kim, độ cứng 6–6,5 (dao không vạch được), vết vạch đen hơi lục, tinh thể lập phương có vết khía."
+     },
+     {
+      "id": "q3",
+      "text": "Xám chì, ánh kim mạnh, rất nặng, độ cứng 2,5, cát khai hoàn toàn 3 phương vuông góc."
+     },
+     {
+      "id": "q4",
+      "text": "Màu đen, ánh kim, vết vạch đen, bị nam châm hút mạnh."
+     },
+     {
+      "id": "q5",
+      "text": "Mẫu có thể đen hoặc xám thép nhưng vết vạch luôn đỏ nâu (đỏ anh đào), không bị nam châm hút."
+     },
+     {
+      "id": "q6",
+      "text": "Không màu đến trắng, ánh thủy tinh, độ cứng 7 (vạch được kính), không cát khai, vết vỡ vỏ sò."
+     },
+     {
+      "id": "q7",
+      "text": "Dạng đất, xốp, màu vàng nâu đến nâu đen, vết vạch nâu vàng, thường gặp trong đá ong."
+     },
+     {
+      "id": "q8",
+      "text": "Độ cứng 9, ánh thủy tinh, tinh thể lăng trụ sáu phương; biến thể đỏ là ruby, xanh lam là saphia."
+     },
+     {
+      "id": "q9",
+      "text": "Pyrit và chalcopyrit đều vàng, ánh kim. Nêu hai dấu hiệu phân biệt trên mẫu tay."
+     },
+     {
+      "id": "q10",
+      "text": "Vì sao đất hình thành trên trầm tích giàu pyrit (vd vùng ven biển, đồng bằng sông Cửu Long) dễ trở nên rất chua?"
+     }
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "q1",
+     "name": "Câu 1: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q2",
+     "name": "Câu 2: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q3",
+     "name": "Câu 3: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q4",
+     "name": "Câu 4: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q5",
+     "name": "Câu 5: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q6",
+     "name": "Câu 6: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q7",
+     "name": "Câu 7: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q8",
+     "name": "Câu 8: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q9",
+     "name": "Câu 9: vận dụng: đủ ý chính, lập luận đúng",
+     "max": 1
+    },
+    {
+     "id": "q10",
+     "name": "Câu 10: vận dụng: đủ ý chính, lập luận đúng",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Graphit (C). Dấu hiệu: rất mềm (độ cứng 1), trơn, bẩn tay, vết vạch đen xám; khác molipdenit ở vết vạch không ánh lục và nhẹ hơn.",
+   "q2": "Pyrit (FeS₂). Dấu hiệu: cứng 6–6,5, vết vạch đen lục, tinh thể lập phương có khía.",
+   "q3": "Galenit (PbS). Dấu hiệu: rất nặng, cát khai lập phương 3 phương, mềm.",
+   "q4": "Magnetit (Fe₃O₄). Dấu hiệu: từ tính mạnh, vết vạch đen.",
+   "q5": "Hematit (Fe₂O₃). Dấu hiệu: vết vạch đỏ nâu, không từ tính.",
+   "q6": "Thạch anh (SiO₂). Dấu hiệu: độ cứng 7, vết vỡ vỏ sò, không cát khai.",
+   "q7": "Limonit (hỗn hợp hydroxit sắt, chủ yếu goethit). Dấu hiệu: vết vạch nâu vàng, dạng đất, gặp trong laterit.",
+   "q8": "Corindon (Al₂O₃). Dấu hiệu: độ cứng 9, chỉ thua kim cương.",
+   "q9": "Độ cứng: pyrit 6–6,5, dao thép không vạch được; chalcopyrit 3,5–4, dao vạch được. Màu: pyrit vàng đồng thau nhạt, tinh thể lập phương có khía; chalcopyrit vàng đậm, mặt thường xỉn sặc sỡ.",
+   "q10": "Pyrit bị oxy hóa khi lộ ra không khí (tháo nước, đào kênh) tạo axit sulfuric và sắt sulfat, làm pH giảm mạnh → đất phèn, giải phóng nhôm, sắt độc cho cây."
+  },
+  "answer_hints": "Phiếu ôn tập: câu 1–8 đúng tên là đạt phần lớn điểm (tên đúng 0,75, dấu hiệu quyết định 0,25); câu 9–10 chấm theo ý chính trong đáp án.",
+  "reference": "BẢNG ĐỐI CHIẾU KHOÁNG VẬT của học phần (dùng chung cho mọi buổi khoáng vật; mẫu phát ở phòng thực tập lấy trong bảng này). Vật thử độ cứng: móng tay khoảng 2,5; đồng xu khoảng 3,5; dao thép, mảnh kính khoảng 5,5. Màu có thể đổi theo tạp chất và mức phong hóa; vết vạch ổn định hơn màu. — NGUYÊN TỐ TỰ SINH. Graphit C: đen chì, vạch đen xám, ánh kim loại đến mỡ, độ cứng 1, cát khai hoàn toàn 1 phương, vảy mềm trơn, bẩn tay, dẫn điện; ruột bút chì, vật liệu chịu lửa. Vàng Au: vàng kim, vạch vàng, ánh kim, độ cứng 2,5–3, không cát khai, dẻo, rất nặng; kim loại quý. — SULFUR VÀ TƯƠNG TỰ. Pyrit FeS₂: vàng đồng thau nhạt, vạch đen hơi lục, ánh kim, độ cứng 6–6,5, không cát khai, tinh thể lập phương có vết khía; phong hóa sinh axit sulfuric (liên quan đất phèn); nguyên liệu axit sulfuric. Chalcopyrit CuFeS₂: vàng đồng thau đậm, mặt thường xỉn sặc sỡ, vạch đen lục, ánh kim, độ cứng 3,5–4, không cát khai rõ; quặng đồng. Arsenopyrit FeAsS: trắng bạc đến xám thép, vạch đen xám, ánh kim, độ cứng 5,5–6, tinh thể trụ thoi, đập có mùi tỏi; quặng asen. Pyrotin Fe₁₋ₓS: vàng đồng thau ánh nâu đỏ, vạch xám đen, ánh kim, độ cứng 3,5–4,5, có từ tính yếu. Galenit PbS: xám chì, vạch xám chì đến đen, ánh kim mạnh, độ cứng 2,5–3, cát khai hoàn toàn 3 phương lập phương, rất nặng; quặng chì. Antimonit Sb₂S₃: xám chì, vạch xám chì, ánh kim, độ cứng 2, tinh thể que kim tỏa tia có vạch dọc, cát khai hoàn toàn 1 phương; quặng antimon. Molipdenit MoS₂: xám chì ánh lam, vạch xám lục, ánh kim, độ cứng 1–1,5, vảy mềm bẩn tay (khác graphit ở vết vạch ánh lục và nặng hơn); quặng molipden. Sphalerit ZnS: nâu, vàng nâu, đen, vạch nâu nhạt đến trắng vàng, ánh kim cương đến nhựa, độ cứng 3,5–4, cát khai hoàn toàn nhiều phương; quặng kẽm. Bornit Cu₅FeS₄: đỏ đồng trên mặt vỡ mới, mặt cũ xỉn tím xanh sặc sỡ, vạch xám đen, ánh kim, độ cứng 3; quặng đồng. — OXIT VÀ HYDROXIT. Magnetit Fe₃O₄: đen, vạch đen, ánh kim, độ cứng 5,5–6,5, không cát khai, có từ tính mạnh; quặng sắt. Hematit Fe₂O₃: đỏ nâu, xám thép, đen, vạch đỏ nâu (đỏ anh đào), ánh kim đến ánh đất, độ cứng 5–6,5, không cát khai; quặng sắt, tạo màu đỏ cho đất. Goethit FeO(OH): nâu đến nâu đen, vạch nâu vàng, ánh bán kim đến ánh đất, độ cứng 5–5,5; thành phần chính của limonit, tạo màu vàng nâu cho đất. Pyrolusit MnO₂: đen, vạch đen, ánh bán kim đến ánh đất, độ cứng 2–6 (dạng bột mềm, bẩn tay), dạng cành cây hoặc kết hạch; quặng mangan. Manganit MnO(OH): đen đến xám thép, vạch nâu đen, ánh bán kim, độ cứng 4, lăng trụ có khía dọc; quặng mangan. Psilomelan (Ba,Mn) oxit mangan ngậm nước: đen, vạch nâu đen, dạng thận, chùm nho, độ cứng 5–6; quặng mangan. Corindon Al₂O₃: xám, nâu, xanh, đỏ (ruby, saphia), ánh thủy tinh, độ cứng 9, lăng trụ hoặc tháp đôi sáu phương, không cát khai; vật liệu mài, đá quý. Diaspor AlO(OH): trắng, xám, ánh thủy tinh đến ngọc trai, độ cứng 6,5–7, cát khai hoàn toàn 1 phương; thành phần bauxit. Boehmit AlO(OH): trắng, độ cứng 3–3,5, thường ẩn tinh trong bauxit. Gibbsit (gipxit) Al(OH)₃: trắng, xám, ánh ngọc trai đến thủy tinh, độ cứng 2,5–3,5, cát khai hoàn toàn 1 phương; quặng nhôm chính của bauxit nhiệt đới. Thạch anh SiO₂: không màu, trắng, xám, tím, ánh thủy tinh, độ cứng 7, không cát khai, vết vỡ vỏ sò, vạch được kính; thành phần chính của cát và đất cát. Opal SiO₂·nH₂O: không màu, trắng, nhiều màu, ánh thủy tinh đến nhựa, vô định hình, độ cứng 5,5–6,5, vết vỡ vỏ sò. Chalcedon SiO₂ ẩn tinh: trắng, xám, nhiều màu, dạng thận, chùm nho, dải đồng tâm (agat), ánh sáp, độ cứng 6,5–7, vết vỡ vỏ sò. Quặng limonit: hỗn hợp hydroxit sắt (chủ yếu goethit), vàng nâu đến nâu đen, vạch nâu vàng, dạng đất, xốp, kết hạch; có trong laterit, tạo màu vàng nâu cho đất; quặng sắt nghèo. Quặng bauxit: hỗn hợp gibbsit, boehmit, diaspor cùng oxit sắt và kaolinit, dạng hạt đậu (pizolit) hoặc đất, đỏ nâu, trắng, xám; quặng nhôm, sản phẩm phong hóa laterit nhiệt đới. — SILICAT VÀ ALUMOSILICAT. Olivin (Mg,Fe)₂SiO₄: xanh lục, vàng lục, ánh thủy tinh, độ cứng 6,5–7, không cát khai rõ, dạng hạt; trong đá mafic và siêu mafic, phong hóa nhanh giải phóng Mg, Fe. Pyroxen (augit): đen lục, lục sẫm, ánh thủy tinh, độ cứng 5,5–6, 2 phương cát khai gần vuông góc (khoảng 87°), lăng trụ ngắn; trong đá mafic. Amfibol (hornblend): đen, lục đen, ánh thủy tinh, độ cứng 5,5–6, 2 phương cát khai giao nhau khoảng 124° và 56°, lăng trụ dài; trong đá trung tính, biến chất. Mica – muscovit: không màu, trắng bạc, vàng nhạt, ánh thủy tinh đến ngọc trai, độ cứng 2–2,5, cát khai hoàn toàn 1 phương, tách lá mỏng đàn hồi; góp phần hình thành khoáng vật sét. Mica – biotit: nâu sẫm, nâu đen, đen, độ cứng 2,5–3, cát khai hoàn toàn 1 phương, lá mỏng; phong hóa giải phóng K, Fe, Mg. Felspat – felspat kali (orthoclas, microclin): trắng, hồng, đỏ nhạt, ánh thủy tinh, độ cứng 6, 2 phương cát khai gần vuông góc, không có vạch song song; cung cấp kali khi phong hóa, tạo sét. Felspat – plagioclas: trắng, xám, độ cứng 6–6,5, 2 phương cát khai gần vuông góc, có vạch song song (song tinh) trên mặt cát khai; cung cấp Ca, Na khi phong hóa. Turmalin: đen (schorl), nâu, lục, hồng, ánh thủy tinh, độ cứng 7–7,5, không cát khai, lăng trụ có khía dọc, mặt cắt tam giác cầu; trong pegmatit, granit. Kaolinit: trắng, trắng ngà, xám nhạt, ánh đất, mờ, độ cứng 2–2,5, dạng đất mịn, dẻo khi ướt; khoáng vật sét, ảnh hưởng tính chất cơ lý và giữ nước của đất; nguyên liệu gốm sứ. Talc: trắng, xanh nhạt, xám lục, ánh ngọc trai đến mỡ, độ cứng 1, cát khai hoàn toàn 1 phương, trơn như xà phòng; khoáng sản công nghiệp. Serpentin: lục, lục vàng, lục đen, ánh mỡ đến sáp, độ cứng 2,5–4, sờ trơn, dạng khối hoặc sợi (chrysotil, amiăng); sản phẩm biến đổi olivin, pyroxen. Granat: đỏ, đỏ nâu, nâu, ánh thủy tinh đến nhựa, độ cứng 6,5–7,5, không cát khai, tinh thể 12 mặt thoi hoặc 24 mặt; trong đá biến chất; vật liệu mài, đá quý. — CARBONAT. Canxit CaCO₃: không màu, trắng, ánh thủy tinh, độ cứng 3, cát khai hoàn toàn 3 phương dạng thoi, sủi bọt mạnh với HCl loãng nguội; thành phần đá vôi, cải tạo đất chua. Aragonit CaCO₃: trắng, ánh thủy tinh, độ cứng 3,5–4, lăng trụ kim, tỏa tia, không có cát khai thoi rõ, sủi bọt HCl. Dolomit CaMg(CO₃)₂: trắng, xám, hồng nhạt, độ cứng 3,5–4, cát khai thoi, phản ứng yếu với HCl loãng nguội ở dạng khối (rõ hơn khi tán bột); cung cấp Ca, Mg. Magnezit MgCO₃: trắng, xám, độ cứng 3,5–4,5, dạng khối hạt mịn như sứ, chỉ sủi bọt với HCl nóng; vật liệu chịu lửa. Siderit FeCO₃: vàng nâu đến nâu, độ cứng 3,5–4, cát khai thoi, khá nặng, sủi bọt với HCl nóng; quặng sắt. Rodocrozit MnCO₃: hồng đến đỏ hồng, độ cứng 3,5–4, cát khai thoi, sủi bọt với HCl nóng; quặng mangan, đá trang trí. Malachit Cu₂CO₃(OH)₂: lục, vạch lục nhạt, dạng thận, dải đồng tâm, độ cứng 3,5–4, sủi bọt HCl; quặng đồng, đá trang trí. Azurit Cu₃(CO₃)₂(OH)₂: lam đậm, vạch lam nhạt, độ cứng 3,5–4, sủi bọt HCl; quặng đồng. — SULFAT. Barit BaSO₄: trắng, xám, hồng nhạt, ánh thủy tinh, độ cứng 3–3,5, cát khai 3 phương, nặng bất thường; dung dịch khoan, chất độn. Thạch cao CaSO₄·2H₂O: trắng, không màu, xám nhạt, ánh thủy tinh đến ngọc trai, độ cứng 2, cát khai hoàn toàn 1 phương, bị móng tay vạch; vật liệu xây dựng, cải tạo đất mặn kiềm. — WOLFRAMAT. Wolframit (Fe,Mn)WO₄: nâu đen đến đen, vạch nâu đen, ánh bán kim, độ cứng 4–4,5, cát khai hoàn toàn 1 phương, rất nặng; quặng vonfram. — HALOGENUA. Halit NaCl: không màu, trắng, ánh thủy tinh, độ cứng 2,5, cát khai 3 phương lập phương, tan trong nước, vị mặn (không nếm); liên quan đất mặn. Sylvin KCl: không màu, trắng, hồng, độ cứng 2, cát khai lập phương, tan trong nước, vị đắng (không nếm); phân kali. Fluorit CaF₂: tím, lục, vàng, không màu, ánh thủy tinh, độ cứng 4, cát khai hoàn toàn 4 phương (bát diện), thường phát quang; trợ dung luyện kim, sản xuất HF.",
+  "mon": {
+   "ma": "Đ&KV",
+   "ten": "Thực tập Đá và Khoáng vật",
+   "hoc_phan": "Đá và khoáng vật (LEC10001)",
+   "rubric": "rubric của phiếu",
+   "url": "https://diemdanhsv.com/dkv/online.html",
+   "nhan_cham": "phần mềm chấm tự động, bài ôn tập không tính điểm"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu ôn tập ở nhà (không tính điểm) của sinh viên.",
+   "quy_tac_sua": "Ở sua_bai chỉ rõ câu nào sai, vì sao (dấu hiệu nào trong mô tả chỉ ra tên đúng), không chỉ chép đáp án. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
+  },
+  "max_attempts": 0,
+  "score_policy": "BEST"
+ },
+ "12": {
+  "title": "Ôn tập 2 – Khoáng vật (2/2): nhận biết theo mô tả",
+  "tuan": 2,
+  "ngay": "",
+  "on_tap": true,
+  "sections": [
+   {
+    "id": "mau",
+    "type": "info",
+    "title": "Phiếu ôn tập ở nhà",
+    "lines": [
+     "Phiếu ôn tập, KHÔNG tính điểm, làm không giới hạn số lần. Nộp xong em thấy ngay điểm tự chấm và đáp án tham khảo.",
+     "Câu 1–8: đọc mô tả, gọi tên khoáng vật (hoặc đá) và nêu một dấu hiệu quyết định. Câu 9–10: câu vận dụng.",
+     "Dùng bảng tra và tài liệu trên trang lớp để ôn; tự làm trước rồi mới xem đáp án."
+    ]
+   },
+   {
+    "id": "ontap",
+    "type": "questions",
+    "title": "Câu hỏi ôn tập",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Tách thành lá mỏng đàn hồi, trong suốt hoặc trắng bạc, cát khai hoàn toàn 1 phương, độ cứng 2–2,5."
+     },
+     {
+      "id": "q2",
+      "text": "Màu hồng hoặc trắng, độ cứng 6, hai phương cát khai gần vuông góc, không có vạch song song trên mặt cát khai."
+     },
+     {
+      "id": "q3",
+      "text": "Trắng xám, độ cứng 6–6,5, hai phương cát khai gần vuông góc, có các vạch song song mảnh trên mặt cát khai."
+     },
+     {
+      "id": "q4",
+      "text": "Màu đen, lăng trụ dài, độ cứng 5,5–6, hai phương cát khai giao nhau khoảng 124° và 56°."
+     },
+     {
+      "id": "q5",
+      "text": "Xanh lục ô liu, dạng hạt, độ cứng 6,5–7, không cát khai rõ, hay gặp trong bazan."
+     },
+     {
+      "id": "q6",
+      "text": "Trắng, độ cứng 3, cát khai 3 phương dạng thoi, sủi bọt mạnh với HCl loãng nguội."
+     },
+     {
+      "id": "q7",
+      "text": "Trắng, độ cứng 2, móng tay vạch được, một phương cát khai hoàn toàn, tấm uốn thì gãy."
+     },
+     {
+      "id": "q8",
+      "text": "Tím hoặc lục, ánh thủy tinh, độ cứng 4, cát khai hoàn toàn 4 phương (bát diện), thường phát quang."
+     },
+     {
+      "id": "q9",
+      "text": "Phân biệt canxit và dolomit trên mẫu tay."
+     },
+     {
+      "id": "q10",
+      "text": "Kaolinit hình thành như thế nào và ảnh hưởng gì đến tính chất của đất?"
+     }
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "q1",
+     "name": "Câu 1: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q2",
+     "name": "Câu 2: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q3",
+     "name": "Câu 3: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q4",
+     "name": "Câu 4: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q5",
+     "name": "Câu 5: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q6",
+     "name": "Câu 6: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q7",
+     "name": "Câu 7: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q8",
+     "name": "Câu 8: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q9",
+     "name": "Câu 9: vận dụng: đủ ý chính, lập luận đúng",
+     "max": 1
+    },
+    {
+     "id": "q10",
+     "name": "Câu 10: vận dụng: đủ ý chính, lập luận đúng",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Muscovit (mica trắng). Dấu hiệu: lá mỏng đàn hồi bật lại, cát khai 1 phương.",
+   "q2": "Felspat kali (orthoclas, microclin). Dấu hiệu: không có vạch song tinh, thường màu hồng.",
+   "q3": "Plagioclas. Dấu hiệu: vạch song tinh song song trên mặt cát khai.",
+   "q4": "Amfibol (hornblend). Dấu hiệu: góc cát khai 124°/56°, lăng trụ dài (pyroxen cát khai gần 90°).",
+   "q5": "Olivin ((Mg,Fe)₂SiO₄). Dấu hiệu: màu lục ô liu, dạng hạt trong đá mafic.",
+   "q6": "Canxit (CaCO₃). Dấu hiệu: sủi mạnh HCl nguội, cát khai thoi, độ cứng 3.",
+   "q7": "Thạch cao (CaSO₄·2H₂O). Dấu hiệu: móng tay vạch được; khác muscovit vì tấm không đàn hồi.",
+   "q8": "Fluorit (CaF₂). Dấu hiệu: cát khai bát diện, độ cứng 4.",
+   "q9": "HCl loãng nguội: canxit sủi bọt mạnh ngay trên mẫu; dolomit sủi yếu, chỉ rõ khi cạo thành bột hoặc dùng HCl ấm. Độ cứng: canxit 3, dolomit 3,5–4.",
+   "q10": "Kaolinit là sản phẩm phong hóa hóa học của felspat và các alumosilicat trong khí hậu nóng ẩm (rửa trôi K, Na, Ca, một phần Si). Là khoáng vật sét hạt mịn: làm đất dẻo, dính, giữ nước; khả năng trao đổi cation thấp hơn các sét như smectit; là nguyên liệu gốm sứ."
+  },
+  "answer_hints": "Phiếu ôn tập: câu 1–8 đúng tên là đạt phần lớn điểm (tên đúng 0,75, dấu hiệu quyết định 0,25); câu 9–10 chấm theo ý chính trong đáp án.",
+  "reference": "BẢNG ĐỐI CHIẾU KHOÁNG VẬT của học phần (dùng chung cho mọi buổi khoáng vật; mẫu phát ở phòng thực tập lấy trong bảng này). Vật thử độ cứng: móng tay khoảng 2,5; đồng xu khoảng 3,5; dao thép, mảnh kính khoảng 5,5. Màu có thể đổi theo tạp chất và mức phong hóa; vết vạch ổn định hơn màu. — NGUYÊN TỐ TỰ SINH. Graphit C: đen chì, vạch đen xám, ánh kim loại đến mỡ, độ cứng 1, cát khai hoàn toàn 1 phương, vảy mềm trơn, bẩn tay, dẫn điện; ruột bút chì, vật liệu chịu lửa. Vàng Au: vàng kim, vạch vàng, ánh kim, độ cứng 2,5–3, không cát khai, dẻo, rất nặng; kim loại quý. — SULFUR VÀ TƯƠNG TỰ. Pyrit FeS₂: vàng đồng thau nhạt, vạch đen hơi lục, ánh kim, độ cứng 6–6,5, không cát khai, tinh thể lập phương có vết khía; phong hóa sinh axit sulfuric (liên quan đất phèn); nguyên liệu axit sulfuric. Chalcopyrit CuFeS₂: vàng đồng thau đậm, mặt thường xỉn sặc sỡ, vạch đen lục, ánh kim, độ cứng 3,5–4, không cát khai rõ; quặng đồng. Arsenopyrit FeAsS: trắng bạc đến xám thép, vạch đen xám, ánh kim, độ cứng 5,5–6, tinh thể trụ thoi, đập có mùi tỏi; quặng asen. Pyrotin Fe₁₋ₓS: vàng đồng thau ánh nâu đỏ, vạch xám đen, ánh kim, độ cứng 3,5–4,5, có từ tính yếu. Galenit PbS: xám chì, vạch xám chì đến đen, ánh kim mạnh, độ cứng 2,5–3, cát khai hoàn toàn 3 phương lập phương, rất nặng; quặng chì. Antimonit Sb₂S₃: xám chì, vạch xám chì, ánh kim, độ cứng 2, tinh thể que kim tỏa tia có vạch dọc, cát khai hoàn toàn 1 phương; quặng antimon. Molipdenit MoS₂: xám chì ánh lam, vạch xám lục, ánh kim, độ cứng 1–1,5, vảy mềm bẩn tay (khác graphit ở vết vạch ánh lục và nặng hơn); quặng molipden. Sphalerit ZnS: nâu, vàng nâu, đen, vạch nâu nhạt đến trắng vàng, ánh kim cương đến nhựa, độ cứng 3,5–4, cát khai hoàn toàn nhiều phương; quặng kẽm. Bornit Cu₅FeS₄: đỏ đồng trên mặt vỡ mới, mặt cũ xỉn tím xanh sặc sỡ, vạch xám đen, ánh kim, độ cứng 3; quặng đồng. — OXIT VÀ HYDROXIT. Magnetit Fe₃O₄: đen, vạch đen, ánh kim, độ cứng 5,5–6,5, không cát khai, có từ tính mạnh; quặng sắt. Hematit Fe₂O₃: đỏ nâu, xám thép, đen, vạch đỏ nâu (đỏ anh đào), ánh kim đến ánh đất, độ cứng 5–6,5, không cát khai; quặng sắt, tạo màu đỏ cho đất. Goethit FeO(OH): nâu đến nâu đen, vạch nâu vàng, ánh bán kim đến ánh đất, độ cứng 5–5,5; thành phần chính của limonit, tạo màu vàng nâu cho đất. Pyrolusit MnO₂: đen, vạch đen, ánh bán kim đến ánh đất, độ cứng 2–6 (dạng bột mềm, bẩn tay), dạng cành cây hoặc kết hạch; quặng mangan. Manganit MnO(OH): đen đến xám thép, vạch nâu đen, ánh bán kim, độ cứng 4, lăng trụ có khía dọc; quặng mangan. Psilomelan (Ba,Mn) oxit mangan ngậm nước: đen, vạch nâu đen, dạng thận, chùm nho, độ cứng 5–6; quặng mangan. Corindon Al₂O₃: xám, nâu, xanh, đỏ (ruby, saphia), ánh thủy tinh, độ cứng 9, lăng trụ hoặc tháp đôi sáu phương, không cát khai; vật liệu mài, đá quý. Diaspor AlO(OH): trắng, xám, ánh thủy tinh đến ngọc trai, độ cứng 6,5–7, cát khai hoàn toàn 1 phương; thành phần bauxit. Boehmit AlO(OH): trắng, độ cứng 3–3,5, thường ẩn tinh trong bauxit. Gibbsit (gipxit) Al(OH)₃: trắng, xám, ánh ngọc trai đến thủy tinh, độ cứng 2,5–3,5, cát khai hoàn toàn 1 phương; quặng nhôm chính của bauxit nhiệt đới. Thạch anh SiO₂: không màu, trắng, xám, tím, ánh thủy tinh, độ cứng 7, không cát khai, vết vỡ vỏ sò, vạch được kính; thành phần chính của cát và đất cát. Opal SiO₂·nH₂O: không màu, trắng, nhiều màu, ánh thủy tinh đến nhựa, vô định hình, độ cứng 5,5–6,5, vết vỡ vỏ sò. Chalcedon SiO₂ ẩn tinh: trắng, xám, nhiều màu, dạng thận, chùm nho, dải đồng tâm (agat), ánh sáp, độ cứng 6,5–7, vết vỡ vỏ sò. Quặng limonit: hỗn hợp hydroxit sắt (chủ yếu goethit), vàng nâu đến nâu đen, vạch nâu vàng, dạng đất, xốp, kết hạch; có trong laterit, tạo màu vàng nâu cho đất; quặng sắt nghèo. Quặng bauxit: hỗn hợp gibbsit, boehmit, diaspor cùng oxit sắt và kaolinit, dạng hạt đậu (pizolit) hoặc đất, đỏ nâu, trắng, xám; quặng nhôm, sản phẩm phong hóa laterit nhiệt đới. — SILICAT VÀ ALUMOSILICAT. Olivin (Mg,Fe)₂SiO₄: xanh lục, vàng lục, ánh thủy tinh, độ cứng 6,5–7, không cát khai rõ, dạng hạt; trong đá mafic và siêu mafic, phong hóa nhanh giải phóng Mg, Fe. Pyroxen (augit): đen lục, lục sẫm, ánh thủy tinh, độ cứng 5,5–6, 2 phương cát khai gần vuông góc (khoảng 87°), lăng trụ ngắn; trong đá mafic. Amfibol (hornblend): đen, lục đen, ánh thủy tinh, độ cứng 5,5–6, 2 phương cát khai giao nhau khoảng 124° và 56°, lăng trụ dài; trong đá trung tính, biến chất. Mica – muscovit: không màu, trắng bạc, vàng nhạt, ánh thủy tinh đến ngọc trai, độ cứng 2–2,5, cát khai hoàn toàn 1 phương, tách lá mỏng đàn hồi; góp phần hình thành khoáng vật sét. Mica – biotit: nâu sẫm, nâu đen, đen, độ cứng 2,5–3, cát khai hoàn toàn 1 phương, lá mỏng; phong hóa giải phóng K, Fe, Mg. Felspat – felspat kali (orthoclas, microclin): trắng, hồng, đỏ nhạt, ánh thủy tinh, độ cứng 6, 2 phương cát khai gần vuông góc, không có vạch song song; cung cấp kali khi phong hóa, tạo sét. Felspat – plagioclas: trắng, xám, độ cứng 6–6,5, 2 phương cát khai gần vuông góc, có vạch song song (song tinh) trên mặt cát khai; cung cấp Ca, Na khi phong hóa. Turmalin: đen (schorl), nâu, lục, hồng, ánh thủy tinh, độ cứng 7–7,5, không cát khai, lăng trụ có khía dọc, mặt cắt tam giác cầu; trong pegmatit, granit. Kaolinit: trắng, trắng ngà, xám nhạt, ánh đất, mờ, độ cứng 2–2,5, dạng đất mịn, dẻo khi ướt; khoáng vật sét, ảnh hưởng tính chất cơ lý và giữ nước của đất; nguyên liệu gốm sứ. Talc: trắng, xanh nhạt, xám lục, ánh ngọc trai đến mỡ, độ cứng 1, cát khai hoàn toàn 1 phương, trơn như xà phòng; khoáng sản công nghiệp. Serpentin: lục, lục vàng, lục đen, ánh mỡ đến sáp, độ cứng 2,5–4, sờ trơn, dạng khối hoặc sợi (chrysotil, amiăng); sản phẩm biến đổi olivin, pyroxen. Granat: đỏ, đỏ nâu, nâu, ánh thủy tinh đến nhựa, độ cứng 6,5–7,5, không cát khai, tinh thể 12 mặt thoi hoặc 24 mặt; trong đá biến chất; vật liệu mài, đá quý. — CARBONAT. Canxit CaCO₃: không màu, trắng, ánh thủy tinh, độ cứng 3, cát khai hoàn toàn 3 phương dạng thoi, sủi bọt mạnh với HCl loãng nguội; thành phần đá vôi, cải tạo đất chua. Aragonit CaCO₃: trắng, ánh thủy tinh, độ cứng 3,5–4, lăng trụ kim, tỏa tia, không có cát khai thoi rõ, sủi bọt HCl. Dolomit CaMg(CO₃)₂: trắng, xám, hồng nhạt, độ cứng 3,5–4, cát khai thoi, phản ứng yếu với HCl loãng nguội ở dạng khối (rõ hơn khi tán bột); cung cấp Ca, Mg. Magnezit MgCO₃: trắng, xám, độ cứng 3,5–4,5, dạng khối hạt mịn như sứ, chỉ sủi bọt với HCl nóng; vật liệu chịu lửa. Siderit FeCO₃: vàng nâu đến nâu, độ cứng 3,5–4, cát khai thoi, khá nặng, sủi bọt với HCl nóng; quặng sắt. Rodocrozit MnCO₃: hồng đến đỏ hồng, độ cứng 3,5–4, cát khai thoi, sủi bọt với HCl nóng; quặng mangan, đá trang trí. Malachit Cu₂CO₃(OH)₂: lục, vạch lục nhạt, dạng thận, dải đồng tâm, độ cứng 3,5–4, sủi bọt HCl; quặng đồng, đá trang trí. Azurit Cu₃(CO₃)₂(OH)₂: lam đậm, vạch lam nhạt, độ cứng 3,5–4, sủi bọt HCl; quặng đồng. — SULFAT. Barit BaSO₄: trắng, xám, hồng nhạt, ánh thủy tinh, độ cứng 3–3,5, cát khai 3 phương, nặng bất thường; dung dịch khoan, chất độn. Thạch cao CaSO₄·2H₂O: trắng, không màu, xám nhạt, ánh thủy tinh đến ngọc trai, độ cứng 2, cát khai hoàn toàn 1 phương, bị móng tay vạch; vật liệu xây dựng, cải tạo đất mặn kiềm. — WOLFRAMAT. Wolframit (Fe,Mn)WO₄: nâu đen đến đen, vạch nâu đen, ánh bán kim, độ cứng 4–4,5, cát khai hoàn toàn 1 phương, rất nặng; quặng vonfram. — HALOGENUA. Halit NaCl: không màu, trắng, ánh thủy tinh, độ cứng 2,5, cát khai 3 phương lập phương, tan trong nước, vị mặn (không nếm); liên quan đất mặn. Sylvin KCl: không màu, trắng, hồng, độ cứng 2, cát khai lập phương, tan trong nước, vị đắng (không nếm); phân kali. Fluorit CaF₂: tím, lục, vàng, không màu, ánh thủy tinh, độ cứng 4, cát khai hoàn toàn 4 phương (bát diện), thường phát quang; trợ dung luyện kim, sản xuất HF.",
+  "mon": {
+   "ma": "Đ&KV",
+   "ten": "Thực tập Đá và Khoáng vật",
+   "hoc_phan": "Đá và khoáng vật (LEC10001)",
+   "rubric": "rubric của phiếu",
+   "url": "https://diemdanhsv.com/dkv/online.html",
+   "nhan_cham": "phần mềm chấm tự động, bài ôn tập không tính điểm"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu ôn tập ở nhà (không tính điểm) của sinh viên.",
+   "quy_tac_sua": "Ở sua_bai chỉ rõ câu nào sai, vì sao (dấu hiệu nào trong mô tả chỉ ra tên đúng), không chỉ chép đáp án. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
+  },
+  "max_attempts": 0,
+  "score_policy": "BEST"
+ },
+ "13": {
+  "title": "Ôn tập 3 – Đá magma: nhận biết theo mô tả",
+  "tuan": 3,
+  "ngay": "",
+  "on_tap": true,
+  "sections": [
+   {
+    "id": "mau",
+    "type": "info",
+    "title": "Phiếu ôn tập ở nhà",
+    "lines": [
+     "Phiếu ôn tập, KHÔNG tính điểm, làm không giới hạn số lần. Nộp xong em thấy ngay điểm tự chấm và đáp án tham khảo.",
+     "Câu 1–8: đọc mô tả, gọi tên khoáng vật (hoặc đá) và nêu một dấu hiệu quyết định. Câu 9–10: câu vận dụng.",
+     "Dùng bảng tra và tài liệu trên trang lớp để ôn; tự làm trước rồi mới xem đáp án."
+    ]
+   },
+   {
+    "id": "ontap",
+    "type": "questions",
+    "title": "Câu hỏi ôn tập",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Hạt thô thấy rõ bằng mắt, sáng màu; gồm thạch anh, felspat kali hồng, ít biotit."
+     },
+     {
+      "id": "q2",
+      "text": "Đen, hạt rất mịn không thấy hạt, nặng, đôi khi có lỗ bọt khí."
+     },
+     {
+      "id": "q3",
+      "text": "Hạt thô, đốm trắng đen kiểu muối tiêu; chủ yếu plagioclas và amfibol, hầu như không có thạch anh."
+     },
+     {
+      "id": "q4",
+      "text": "Đen bóng như thủy tinh, vết vỡ vỏ sò, không thấy hạt khoáng vật."
+     },
+     {
+      "id": "q5",
+      "text": "Sáng màu, rất nhẹ, nhiều lỗ bọt khí, nổi được trên nước."
+     },
+     {
+      "id": "q6",
+      "text": "Hạt thô, sẫm màu, nặng; gồm plagioclas giàu Ca và pyroxen, có thể có olivin."
+     },
+     {
+      "id": "q7",
+      "text": "Lục sẫm, hạt thô, chủ yếu olivin và pyroxen, không có felspat."
+     },
+     {
+      "id": "q8",
+      "text": "Nền hạt mịn màu xám, nổi các ban tinh plagioclas và amfibol."
+     },
+     {
+      "id": "q9",
+      "text": "Kiến trúc ban trạng (porphyr) cho biết điều gì về quá trình nguội của magma?"
+     },
+     {
+      "id": "q10",
+      "text": "Xếp granit, diorit, gabro, peridotit theo chỉ số màu tăng dần và giải thích vì sao đá sẫm dần."
+     }
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "q1",
+     "name": "Câu 1: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q2",
+     "name": "Câu 2: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q3",
+     "name": "Câu 3: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q4",
+     "name": "Câu 4: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q5",
+     "name": "Câu 5: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q6",
+     "name": "Câu 6: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q7",
+     "name": "Câu 7: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q8",
+     "name": "Câu 8: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q9",
+     "name": "Câu 9: vận dụng: đủ ý chính, lập luận đúng",
+     "max": 1
+    },
+    {
+     "id": "q10",
+     "name": "Câu 10: vận dụng: đủ ý chính, lập luận đúng",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Granit — đá magma xâm nhập, axit.",
+   "q2": "Bazan — đá magma phun trào, bazơ.",
+   "q3": "Diorit — xâm nhập, trung tính.",
+   "q4": "Obsidian — thủy tinh núi lửa (magma nguội rất nhanh).",
+   "q5": "Đá bọt (pumice) — phun trào axit giàu khí.",
+   "q6": "Gabro — xâm nhập, bazơ (tương đương xâm nhập của bazan).",
+   "q7": "Peridotit — xâm nhập, siêu bazơ.",
+   "q8": "Andesit (kiến trúc ban trạng) — phun trào, trung tính.",
+   "q9": "Hai giai đoạn nguội: lúc đầu nguội chậm dưới sâu tạo các ban tinh lớn, sau đó magma đi lên gần mặt đất hoặc phun trào, nguội nhanh tạo nền hạt mịn (hoặc thủy tinh).",
+   "q10": "Granit < diorit < gabro < peridotit. Đá sẫm dần vì tỉ lệ khoáng vật mafic giàu Fe, Mg (biotit, amfibol, pyroxen, olivin) tăng, còn thạch anh và felspat sáng màu giảm; SiO₂ giảm từ axit đến siêu bazơ."
+  },
+  "answer_hints": "Phiếu ôn tập: câu 1–8 đúng tên là đạt phần lớn điểm (tên đúng 0,75, dấu hiệu quyết định 0,25); câu 9–10 chấm theo ý chính trong đáp án.",
+  "reference": "BẢNG ĐỐI CHIẾU ĐÁ MAGMA. Chỉ số màu: axit (felsic) dưới 15 phần trăm, trung tính 15–40, bazơ (mafic) 40–70, siêu bazơ trên 70. Granit: xâm nhập, axit, hạt thô thấy bằng mắt, sáng màu (trắng, hồng, xám), thạch anh, felspat kali, plagioclas, biotit hoặc muscovit; đá xây dựng, ốp lát; phong hóa cho đất nhiều cát thạch anh. Diorit: xâm nhập, trung tính, hạt thô, đốm trắng đen kiểu muối tiêu, chủ yếu plagioclas và amfibol, hầu như không có thạch anh. Gabro: xâm nhập, bazơ, hạt thô, sẫm màu, nặng, plagioclas và pyroxen, có thể có olivin. Peridotit: xâm nhập, siêu bazơ, hạt thô, lục sẫm đến đen lục, chủ yếu olivin và pyroxen; dễ biến đổi thành serpentinit. Riolit: phun trào, axit, hạt mịn hoặc ban trạng, sáng màu (hồng, xám nhạt), có thể có ban tinh thạch anh, felspat. Andesit: phun trào, trung tính, hạt mịn hoặc ban trạng, xám đến xám sẫm, ban tinh plagioclas, amfibol hoặc pyroxen. Bazan: phun trào, bazơ, hạt rất mịn, đen hoặc xám đen, chắc, đôi khi có lỗ hổng bọt khí, plagioclas, pyroxen, olivin; phong hóa nhiệt đới tạo đất đỏ bazan. Obsidian: phun trào, thủy tinh núi lửa, đen bóng, vết vỡ vỏ sò. Đá bọt (pumice): phun trào axit, nhiều bọt khí, rất nhẹ, nổi trên nước, sáng màu. Bảng đối chiếu có nhiều loại đá hơn số mẫu phát; giảng viên chọn 5 mẫu cho buổi học.",
+  "mon": {
+   "ma": "Đ&KV",
+   "ten": "Thực tập Đá và Khoáng vật",
+   "hoc_phan": "Đá và khoáng vật (LEC10001)",
+   "rubric": "rubric của phiếu",
+   "url": "https://diemdanhsv.com/dkv/online.html",
+   "nhan_cham": "phần mềm chấm tự động, bài ôn tập không tính điểm"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu ôn tập ở nhà (không tính điểm) của sinh viên.",
+   "quy_tac_sua": "Ở sua_bai chỉ rõ câu nào sai, vì sao (dấu hiệu nào trong mô tả chỉ ra tên đúng), không chỉ chép đáp án. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
+  },
+  "max_attempts": 0,
+  "score_policy": "BEST"
+ },
+ "14": {
+  "title": "Ôn tập 4 – Đá trầm tích: nhận biết theo mô tả",
+  "tuan": 4,
+  "ngay": "",
+  "on_tap": true,
+  "sections": [
+   {
+    "id": "mau",
+    "type": "info",
+    "title": "Phiếu ôn tập ở nhà",
+    "lines": [
+     "Phiếu ôn tập, KHÔNG tính điểm, làm không giới hạn số lần. Nộp xong em thấy ngay điểm tự chấm và đáp án tham khảo.",
+     "Câu 1–8: đọc mô tả, gọi tên khoáng vật (hoặc đá) và nêu một dấu hiệu quyết định. Câu 9–10: câu vận dụng.",
+     "Dùng bảng tra và tài liệu trên trang lớp để ôn; tự làm trước rồi mới xem đáp án."
+    ]
+   },
+   {
+    "id": "ontap",
+    "type": "questions",
+    "title": "Câu hỏi ôn tập",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Các hạt lớn hơn 2 mm, tròn cạnh, gắn với nhau bằng xi măng."
+     },
+     {
+      "id": "q2",
+      "text": "Các hạt lớn hơn 2 mm, sắc cạnh, gắn với nhau bằng xi măng."
+     },
+     {
+      "id": "q3",
+      "text": "Sờ nhám tay, thấy rõ hạt cát (chủ yếu thạch anh), có thể phân lớp."
+     },
+     {
+      "id": "q4",
+      "text": "Mềm, mặt trơn mịn, tách lớp mỏng, dẻo dính khi ướt, không sủi HCl."
+     },
+     {
+      "id": "q5",
+      "text": "Trắng xám, sủi bọt mạnh với HCl loãng, có thể chứa hóa thạch vỏ sò, san hô."
+     },
+     {
+      "id": "q6",
+      "text": "Nâu đỏ, nhiều lỗ dạng tổ ong, kết von sắt, không sủi HCl."
+     },
+     {
+      "id": "q7",
+      "text": "Đen, nhẹ, bẩn tay hoặc ánh bán kim, phân lớp, nguồn gốc từ thực vật."
+     },
+     {
+      "id": "q8",
+      "text": "Xám hoặc trắng ngà, phản ứng yếu với HCl nguội, sủi rõ hơn khi cạo thành bột."
+     },
+     {
+      "id": "q9",
+      "text": "Cát kết có hạt tròn, chọn lọc tốt, gần như chỉ có thạch anh cho biết điều gì về lịch sử của nó?"
+     },
+     {
+      "id": "q10",
+      "text": "Đất hình thành trên sét kết và trên cát kết khác nhau thế nào về thành phần cơ giới và nước?"
+     }
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "q1",
+     "name": "Câu 1: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q2",
+     "name": "Câu 2: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q3",
+     "name": "Câu 3: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q4",
+     "name": "Câu 4: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q5",
+     "name": "Câu 5: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q6",
+     "name": "Câu 6: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q7",
+     "name": "Câu 7: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q8",
+     "name": "Câu 8: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q9",
+     "name": "Câu 9: vận dụng: đủ ý chính, lập luận đúng",
+     "max": 1
+    },
+    {
+     "id": "q10",
+     "name": "Câu 10: vận dụng: đủ ý chính, lập luận đúng",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Cuội kết — đá vụn cơ học hạt thô.",
+   "q2": "Dăm kết — hạt chưa được mài tròn, gần nguồn.",
+   "q3": "Cát kết — hạt 2–0,0625 mm.",
+   "q4": "Sét kết — hạt dưới 0,004 mm, khoáng vật sét.",
+   "q5": "Đá vôi — chủ yếu canxit, trầm tích sinh hóa.",
+   "q6": "Laterit (đá ong) — sản phẩm phong hóa nhiệt đới, tích tụ Fe, Al.",
+   "q7": "Than đá — trầm tích sinh vật (đá cháy).",
+   "q8": "Đá dolomit — chủ yếu khoáng vật dolomit.",
+   "q9": "Trầm tích trưởng thành: vận chuyển xa, phong hóa hóa học mạnh phá hủy các khoáng vật kém bền như felspat; môi trường năng lượng ổn định như bãi biển, cồn cát gió.",
+   "q10": "Trên sét kết: đất nặng, nhiều sét, giữ nước và dinh dưỡng tốt nhưng thoát nước kém, dẻo dính khi ướt, nứt khi khô. Trên cát kết: đất nhẹ, nhiều cát, thoát nước nhanh, dễ làm đất, nhưng giữ nước kém, nghèo dinh dưỡng."
+  },
+  "answer_hints": "Phiếu ôn tập: câu 1–8 đúng tên là đạt phần lớn điểm (tên đúng 0,75, dấu hiệu quyết định 0,25); câu 9–10 chấm theo ý chính trong đáp án.",
+  "reference": "BẢNG ĐỐI CHIẾU ĐÁ TRẦM TÍCH. Cấp hạt Wentworth: trên 2 mm cuội, sỏi; 2–0,0625 mm cát; 0,0625–0,004 mm bột; dưới 0,004 mm sét. Cuội kết: hạt trên 2 mm tròn cạnh gắn bằng xi măng, nhiều màu, vụn cơ học. Dăm kết: hạt trên 2 mm sắc cạnh, vụn cơ học, gần nguồn. Cát kết: hạt cát, chủ yếu thạch anh, có thể có felspat và mảnh đá, vàng, nâu, đỏ, xám, nhám tay, có thể phân lớp; phong hóa cho đất cát nhẹ, thoát nước tốt. Bột kết: hạt bột, xám, nâu, hơi nhám mịn, phân lớp mỏng. Sét kết: hạt sét, mềm, mặt trơn, phân phiến hoặc lớp mỏng, khoáng vật sét, dẻo khi ướt; nguyên liệu gạch, gốm; cho đất nặng, giữ nước. Đá vôi: chủ yếu canxit, sủi bọt mạnh với HCl loãng, trắng, xám, có thể chứa hóa thạch, trầm tích hóa học hoặc sinh hóa; nguyên liệu xi măng, vôi, cải tạo đất chua; địa hình karst. Đá dolomit: chủ yếu dolomit, phản ứng yếu với HCl nguội (rõ hơn khi tán bột), xám, trắng ngà. Laterit (đá ong): nâu đỏ, kết von sắt nhôm, lỗ hổng dạng tổ ong, không sủi HCl, sản phẩm phong hóa nhiệt đới; vật liệu xây dựng; làm đất mỏng, khó canh tác. Than đá: đen, nhẹ, bẩn tay hoặc ánh bán kim, phân lớp, trầm tích sinh vật (thực vật). Bảng đối chiếu có nhiều loại đá hơn số mẫu phát; giảng viên chọn 5 mẫu cho buổi học.",
+  "mon": {
+   "ma": "Đ&KV",
+   "ten": "Thực tập Đá và Khoáng vật",
+   "hoc_phan": "Đá và khoáng vật (LEC10001)",
+   "rubric": "rubric của phiếu",
+   "url": "https://diemdanhsv.com/dkv/online.html",
+   "nhan_cham": "phần mềm chấm tự động, bài ôn tập không tính điểm"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu ôn tập ở nhà (không tính điểm) của sinh viên.",
+   "quy_tac_sua": "Ở sua_bai chỉ rõ câu nào sai, vì sao (dấu hiệu nào trong mô tả chỉ ra tên đúng), không chỉ chép đáp án. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
+  },
+  "max_attempts": 0,
+  "score_policy": "BEST"
+ },
+ "15": {
+  "title": "Ôn tập 5 – Đá biến chất: nhận biết theo mô tả",
+  "tuan": 5,
+  "ngay": "",
+  "on_tap": true,
+  "sections": [
+   {
+    "id": "mau",
+    "type": "info",
+    "title": "Phiếu ôn tập ở nhà",
+    "lines": [
+     "Phiếu ôn tập, KHÔNG tính điểm, làm không giới hạn số lần. Nộp xong em thấy ngay điểm tự chấm và đáp án tham khảo.",
+     "Câu 1–8: đọc mô tả, gọi tên khoáng vật (hoặc đá) và nêu một dấu hiệu quyết định. Câu 9–10: câu vận dụng.",
+     "Dùng bảng tra và tài liệu trên trang lớp để ôn; tự làm trước rồi mới xem đáp án."
+    ]
+   },
+   {
+    "id": "ontap",
+    "type": "questions",
+    "title": "Câu hỏi ôn tập",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Hạt rất mịn, xám đen, tách thành tấm phẳng mỏng, gõ nghe đanh."
+     },
+     {
+      "id": "q2",
+      "text": "Mặt phiến ánh lụa, hơi gợn sóng; chưa thấy vảy mica bằng mắt."
+     },
+     {
+      "id": "q3",
+      "text": "Phiến rõ, vảy mica lấp lánh nhìn thấy được, có thể có hạt granat đỏ."
+     },
+     {
+      "id": "q4",
+      "text": "Hạt thô, các dải sáng (thạch anh, felspat) xen dải sẫm (biotit hoặc amfibol)."
+     },
+     {
+      "id": "q5",
+      "text": "Không phiến, độ cứng khoảng 7, vỡ xuyên qua hạt, không sủi HCl."
+     },
+     {
+      "id": "q6",
+      "text": "Không phiến, tinh thể canxit lấp lánh, sủi bọt HCl, dao thép vạch được."
+     },
+     {
+      "id": "q7",
+      "text": "Lục đến lục đen, ánh mỡ, sờ trơn; biến đổi từ đá siêu bazơ."
+     },
+     {
+      "id": "q8",
+      "text": "Không phiến, hạt rất mịn, sẫm, rất chắc, vỡ sắc cạnh; hình thành sát khối magma xâm nhập."
+     },
+     {
+      "id": "q9",
+      "text": "Sắp xếp đá phiến sét, phyllit, đá phiến mica, gneis theo mức biến chất tăng dần và nêu sự thay đổi."
+     },
+     {
+      "id": "q10",
+      "text": "Đá mẹ của đá hoa và của quarzit là gì? Phân biệt nhanh hai đá này bằng cách nào?"
+     }
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "q1",
+     "name": "Câu 1: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q2",
+     "name": "Câu 2: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q3",
+     "name": "Câu 3: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q4",
+     "name": "Câu 4: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q5",
+     "name": "Câu 5: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q6",
+     "name": "Câu 6: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q7",
+     "name": "Câu 7: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q8",
+     "name": "Câu 8: Gọi tên khoáng vật (hoặc đá) đúng với mô tả và nêu 1 dấu hiệu quyết định",
+     "max": 1
+    },
+    {
+     "id": "q9",
+     "name": "Câu 9: vận dụng: đủ ý chính, lập luận đúng",
+     "max": 1
+    },
+    {
+     "id": "q10",
+     "name": "Câu 10: vận dụng: đủ ý chính, lập luận đúng",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Đá phiến sét (slate) — biến chất thấp từ sét kết.",
+   "q2": "Phyllit — biến chất thấp đến trung bình.",
+   "q3": "Đá phiến mica (schist) — biến chất trung bình.",
+   "q4": "Gneis — biến chất cao.",
+   "q5": "Quarzit — biến chất từ cát kết thạch anh.",
+   "q6": "Đá hoa (marble) — biến chất từ đá vôi, dolomit.",
+   "q7": "Serpentinit — chủ yếu serpentin.",
+   "q8": "Hornfels — biến chất tiếp xúc (nhiệt) từ đá sét.",
+   "q9": "Đá phiến sét → phyllit → đá phiến mica → gneis. Nhiệt độ, áp suất tăng làm khoáng vật tái kết tinh lớn dần: từ hạt rất mịn tách tấm, sang ánh lụa, sang vảy mica thấy rõ, đến hạt thô phân dải sáng tối.",
+   "q10": "Đá hoa từ đá vôi hoặc dolomit; quarzit từ cát kết thạch anh. Phân biệt: đá hoa sủi HCl, độ cứng khoảng 3 (dao vạch được); quarzit không sủi HCl, độ cứng khoảng 7 (vạch được kính)."
+  },
+  "answer_hints": "Phiếu ôn tập: câu 1–8 đúng tên là đạt phần lớn điểm (tên đúng 0,75, dấu hiệu quyết định 0,25); câu 9–10 chấm theo ý chính trong đáp án.",
+  "reference": "BẢNG ĐỐI CHIẾU ĐÁ BIẾN CHẤT. Đá phiến sét (slate): xám đến đen, phiến rất mịn, tách tấm phẳng, đá mẹ sét kết, biến chất khu vực mức thấp; lợp mái, ốp lát. Phyllit: phiến gợn sóng, ánh lụa do mica vi tinh, mức thấp đến trung bình. Đá phiến mica (schist): phiến rõ, vảy mica nhìn thấy lấp lánh, có thể có granat, thạch anh; biến chất khu vực mức trung bình. Gneis: phân dải sáng tối, hạt thô, thạch anh và felspat xen mica hoặc amfibol; biến chất khu vực mức cao; đá mẹ granit hoặc đá trầm tích sét. Quarzit: không phiến, trắng, xám, hồng, độ cứng 7, vỡ xuyên hạt, chủ yếu thạch anh; đá mẹ cát kết thạch anh; rất bền phong hóa, cho đất mỏng nhiều cát. Đá hoa (marble): không phiến, tinh thể canxit lấp lánh, sủi bọt HCl, độ cứng 3; đá mẹ đá vôi hoặc dolomit; ốp lát, điêu khắc, nguyên liệu vôi. Hornfels: không phiến, hạt rất mịn, sẫm, chắc, vỡ sắc cạnh; biến chất tiếp xúc từ đá sét. Amfibolit: lục sẫm đến đen, hạt vừa đến thô, chủ yếu amfibol và plagioclas, có thể định hướng; biến chất khu vực từ đá bazơ. Serpentinit: lục đến lục đen, ánh mỡ, sờ trơn, chủ yếu serpentin; biến chất từ đá siêu bazơ. Bảng đối chiếu có nhiều loại đá hơn số mẫu phát; giảng viên chọn 5 mẫu cho buổi học.",
+  "mon": {
+   "ma": "Đ&KV",
+   "ten": "Thực tập Đá và Khoáng vật",
+   "hoc_phan": "Đá và khoáng vật (LEC10001)",
+   "rubric": "rubric của phiếu",
+   "url": "https://diemdanhsv.com/dkv/online.html",
+   "nhan_cham": "phần mềm chấm tự động, bài ôn tập không tính điểm"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Đá và khoáng vật (LEC10001, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu ôn tập ở nhà (không tính điểm) của sinh viên.",
+   "quy_tac_sua": "Ở sua_bai chỉ rõ câu nào sai, vì sao (dấu hiệu nào trong mô tả chỉ ra tên đúng), không chỉ chép đáp án. Mọi nhận xét gửi sinh viên KHÔNG nhắc tới AI, chatbot, Gemini hay trí tuệ nhân tạo."
+  },
+  "max_attempts": 0,
+  "score_policy": "BEST"
  }
 }

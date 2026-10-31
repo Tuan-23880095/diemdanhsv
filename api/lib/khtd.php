@@ -23,6 +23,7 @@ require_once __DIR__ . '/khtd_exam.php';
 require_once __DIR__ . '/chd.php';
 require_once __DIR__ . '/dkv.php';
 require_once __DIR__ . '/khtd_giamsat.php';
+require_once __DIR__ . '/khtd_ontap.php';
 
 const KHTD_TOKEN_TTL = 3 * 3600;
 
@@ -41,14 +42,14 @@ function khtd_ai_for_student(?array $ai): ?array
     return dkv_loc_ai_ket_qua($ai);
 }
 
-/** Chấp nhận token Kind KHTD hoặc GRADE. Trả về studentId, mssv, fullName, email. */
+/** Chấp nhận token Kind KHTD (làm phiếu trên lớp) hoặc GRADE (chế độ ôn tập ở nhà, mục 40). Trả về studentId, mssv, fullName, email, review. */
 function khtd_require_student(string $token): array
 {
     $token = trim($token);
     $msg = 'Phiên làm phiếu đã hết hạn. Vui lòng đăng nhập lại bằng MSSV và mã của buổi học.';
     if ($token === '') throw new RuntimeException($msg);
     $stmt = db()->prepare(
-        "SELECT s.StudentID, s.MSSV, s.FullName, s.Email FROM auth_tokens t " .
+        "SELECT s.StudentID, s.MSSV, s.FullName, s.Email, t.Kind FROM auth_tokens t " .
         "JOIN students s ON s.StudentID = t.SubjectID " .
         "WHERE t.Token = :token AND t.Kind IN ('KHTD','GRADE') AND t.ExpiresAt > NOW() LIMIT 1"
     );
@@ -56,7 +57,8 @@ function khtd_require_student(string $token): array
     $row = $stmt->fetch();
     if (!$row) throw new RuntimeException($msg);
     return ['studentId' => (string) $row['StudentID'], 'mssv' => (string) $row['MSSV'],
-            'fullName' => (string) $row['FullName'], 'email' => (string) ($row['Email'] ?? '')];
+            'fullName' => (string) $row['FullName'], 'email' => (string) ($row['Email'] ?? ''),
+            'review' => $row['Kind'] === 'GRADE'];
 }
 
 /** SV phải ghi danh lớp của phiếu. */
@@ -254,6 +256,9 @@ function action_khtd_list_worksheets(array $params): void
         $sc = json_decode((string) $w['SchemaJSON'], true) ?: [];
         unset($w['SchemaJSON']);
         $w['IsExam'] = khtd_is_exam($sc);
+        $w['IsOnTap'] = khtd_is_ontap($sc);
+        $w['ReviewOnly'] = $me['review'] && !$w['IsOnTap'];   // ôn tập ở nhà: phiếu trên lớp chỉ xem lại
+        if ($w['ReviewOnly']) $w['attempt']['canRetake'] = false;
         if ($w['IsExam']) {
             $p = khtd_practice_summary($sc, $bySheet[$w['WorksheetID']] ?? []);
             unset($p['attitude']);
@@ -298,7 +303,7 @@ function action_khtd_get_worksheet(array $params): void
         // Bảng đối chiếu có ĐÁP ÁN: chỉ trả khi GV đã duyệt VÀ SV không còn làm lại được
         // (nếu không, SV nộp bừa để đọc đáp án rồi làm lại).
         // Phiếu luyện thi: SV được xem ngay dữ liệu chuẩn của mẫu mình đã gọi tên (mục đích học, điểm không vào tổng).
-        if (is_array($sub['ai']) && !$isExam && !($sub['Status'] === 'FINAL' && !$sum['canRetake'])) {
+        if (is_array($sub['ai']) && !$isExam && !khtd_is_ontap($ws['schema']) && !($sub['Status'] === 'FINAL' && !$sum['canRetake'])) {
             unset($sub['ai']['doi_chieu']);
         }
         $sub['ai'] = khtd_ai_for_student(is_array($sub['ai']) ? $sub['ai'] : null);           // bỏ phần chỉ GV xem + lọc thuật ngữ
@@ -318,13 +323,18 @@ function action_khtd_get_worksheet(array $params): void
     } elseif ($sub && $sub['Status'] !== 'DRAFT') {
         $more['forecast'] = khtd_exam_forecast($ws['schema'], $ansArr ?? []);
     }
-    if ($gs = khtd_giamsat_cfg($ws['schema'])) {   // giám sát chống gian lận (docs/04 mục 39)
+    $reviewOnly = $me['review'] && !khtd_is_ontap($ws['schema']);
+    if (khtd_is_ontap($ws['schema']) && $sub && $sub['Status'] !== 'DRAFT') $more['onTapKey'] = khtd_ontap_key($ws['schema']);   // mục 40
+    if (!$reviewOnly && ($gs = khtd_giamsat_cfg($ws['schema']))) {   // giám sát chống gian lận (docs/04 mục 39)
         $more['giamSat'] = $gs + khtd_giamsat_state($ws['WorksheetID'], $me['studentId'], $gs);
     }
+    $attPub = khtd_attempt_public($sum);
+    if ($reviewOnly) $attPub['canRetake'] = false;
     api_ok(['worksheet' => ['id' => $ws['WorksheetID'], 'no' => (int) $ws['No'], 'title' => $ws['Title'],
-            'classId' => $ws['ClassID'], 'open' => khtd_is_open($ws), 'closeAt' => $ws['CloseAt'], 'schema' => $schema,
-            'maxAttempts' => (int) $ws['MaxAttempts'], 'scorePolicy' => $ws['ScorePolicy']],
-            'submission' => $sub, 'attempt' => khtd_attempt_public($sum), 'student' => $me] + $more);
+            'classId' => $ws['ClassID'], 'open' => khtd_is_open($ws) && !$reviewOnly, 'closeAt' => $ws['CloseAt'], 'schema' => $schema,
+            'maxAttempts' => (int) $ws['MaxAttempts'], 'scorePolicy' => $ws['ScorePolicy'],
+            'reviewOnly' => $reviewOnly, 'onTap' => khtd_is_ontap($ws['schema'])],
+            'submission' => $sub, 'attempt' => $attPub, 'student' => $me] + $more);
 }
 
 function khtd_clean_answers($raw): array
@@ -351,6 +361,7 @@ function action_khtd_save_draft(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không lưu được nữa.'); return; }
+    if (!khtd_review_guard($me, $ws)) return;   // chế độ ôn tập ở nhà (mục 40)
     if (!khtd_giamsat_guard($ws, $me['studentId'])) return;   // bài đang khoá do vi phạm giám sát (mục 39)
     $answers = khtd_clean_meta(khtd_clean_photo_refs(khtd_clean_answers($params['answers'] ?? null), $ws, $me['studentId']));
     $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
@@ -382,6 +393,7 @@ function action_khtd_submit(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không nộp được nữa.'); return; }
+    if (!khtd_review_guard($me, $ws)) return;   // chế độ ôn tập ở nhà (mục 40)
     if (!khtd_giamsat_guard($ws, $me['studentId'])) return;   // bài đang khoá do vi phạm giám sát (mục 39)
     $ip = rate_limit_client_ip();
     rate_limit_guard('khtd_submit_ip', $ip);
@@ -440,7 +452,7 @@ function action_khtd_submit(array $params): void
     // trang, lưu PDF hoặc chụp màn hình; email (kèm PDF) chỉ gửi khi giảng viên duyệt và chốt điểm.
     if ($ai) {   // đáp án: SV chỉ xem sau khi GV duyệt (phiếu luyện thi: xem ngay)
         $ai = khtd_ai_for_student($ai);
-        if (!$isExam) unset($ai['doi_chieu']);
+        if (!$isExam && !khtd_is_ontap($ws['schema'])) unset($ai['doi_chieu']);
     }
     api_ok(['submissionId' => $id, 'attemptNo' => $no, 'status' => $ai ? 'AI_GRADED' : 'SUBMITTED', 'ai' => $ai,
             'attempt' => khtd_attempt_public($sum),
@@ -458,6 +470,7 @@ function action_khtd_retake(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không làm lại được.'); return; }
+    if (!khtd_review_guard($me, $ws)) return;   // chế độ ôn tập ở nhà (mục 40)
     $sum = khtd_attempt_summary($ws, khtd_student_attempts($ws['WorksheetID'], $me['studentId']), khtd_extra_attempts($ws['WorksheetID'], $me['studentId']));
     $latest = $sum['latest'];
     if (!$latest) { api_fail('Bạn chưa làm phiếu này — cứ làm và nộp bình thường.'); return; }
@@ -588,6 +601,7 @@ function action_khtd_upload_photo(array $params): void
     $ws = khtd_worksheet((string) ($params['worksheetId'] ?? ''));
     khtd_assert_enrolled($me['studentId'], (string) $ws['ClassID']);
     if (!khtd_is_open($ws)) { api_fail('Phiếu đã đóng, không tải ảnh được nữa.'); return; }
+    if (!khtd_review_guard($me, $ws)) return;   // chế độ ôn tập ở nhà (mục 40)
     if (!khtd_giamsat_guard($ws, $me['studentId'])) return;   // bài đang khoá do vi phạm giám sát (mục 39)
     $ip = rate_limit_client_ip();
     rate_limit_guard('khtd_upload_ip', $ip);
@@ -1323,8 +1337,10 @@ function action_khtd_export_csv(array $params): void
     $ws->execute(['c' => $classId]);
     $sheets = $ws->fetchAll();
     $boards = [];   // phiếu luyện thi: không vào điểm tổng — xuất cột riêng (dự báo, điểm cộng đề xuất, thái độ)
+    $onTapNos = [];  // phiếu ôn tập ở nhà (mục 40): không vào điểm — chỉ xuất số lần làm
     foreach ($sheets as $w) {
         $sc = json_decode((string) $w['SchemaJSON'], true) ?: [];
+        if (khtd_is_ontap($sc)) $onTapNos[$w['No']] = $w['WorksheetID'];
         if (khtd_is_exam($sc)) {
             $b = khtd_practice_board(['WorksheetID' => $w['WorksheetID'], 'ClassID' => $classId, 'No' => $w['No'], 'Title' => $w['Title'], 'schema' => $sc]);
             foreach ($b['rows'] as $r) $boards[$w['No']][$r['mssv']] = $r;
@@ -1339,9 +1355,14 @@ function action_khtd_export_csv(array $params): void
     foreach ($st->fetchAll() as $s) {
         $r = ['MSSV' => $s['MSSV'], 'HoTen' => $s['FullName']];
         foreach ($sheets as $w) {
-            if (isset($boards[$w['No']])) continue;
+            if (isset($boards[$w['No']]) || isset($onTapNos[$w['No']])) continue;   // luyện thi / ôn tập: không vào điểm phiếu
             $x = $sum[$w['WorksheetID'] . '|' . $s['StudentID']] ?? null;
             $r['Phieu' . $w['No']] = ($x && $x['score'] !== null) ? $x['score'] : '';
+        }
+        if ($onTapNos) {
+            $n = 0;
+            foreach ($onTapNos as $wid) { $x = $sum[$wid . '|' . $s['StudentID']] ?? null; $n += $x ? (int) $x['used'] : 0; }
+            $r['OnTap_SoLanNop'] = $n;
         }
         foreach ($boards as $no => $b) {
             $p = $b[$s['MSSV']] ?? null;

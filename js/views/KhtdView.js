@@ -105,7 +105,8 @@ class KhtdView {
   /* ---------- Sinh viên ---------- */
   setStudent(st) {
     this.student = st || null;
-    const el = this.$('who'); if (el) el.textContent = st ? `${st.fullName} · ${st.mssv}${st.email ? ' · ' + st.email : ''}` : '';
+    const el = this.$('who'); if (el) el.textContent = st ? `${st.fullName} · ${st.mssv}${st.email ? ' · ' + st.email : ''}${st.review ? ' · ôn tập ở nhà' : ''}` : '';
+    this.show('review-banner', !!(st && st.review));
   }
 
   /* Nhãn ngắn về số lần làm: "" khi phiếu chỉ cho nộp một lần và chưa được cấp thêm lượt. */
@@ -124,13 +125,14 @@ class KhtdView {
       const draftNo = att && att.currentNo > 1 && st === 'DRAFT' ? ` lần ${att.currentNo}` : '';
       const label = { DRAFT: `Đang làm${draftNo} (nháp)`, SUBMITTED: 'Đã nộp – chờ chấm', AI_GRADED: 'Đã nộp – có điểm tạm', FINAL: 'Đã có điểm chính thức' }[st] || st;
       const score = w.FinalScore != null ? `<b>${this._esc(w.FinalScore)}</b>/10` : (w.AiScore != null ? `tạm ${this._esc(w.AiScore)}/10` : '');
-      const open = w.Status === 'OPEN';
+      const open = w.Status === 'OPEN' && !w.ReviewOnly;
       const badge = this._attemptBadge(att);
       const retake = att && att.canRetake ? `<br/><span class="text-xs font-semibold text-blue-700">${w.IsExam ? 'Luyện tiếp được' : 'Có thể làm lại'}</span>` : '';
-      const examTag = w.IsExam ? '<br/><span class="inline-block rounded bg-amber-100 px-1.5 text-xs font-semibold text-amber-900">Luyện thi · không tính điểm tổng</span>' : '';
+      const examTag = (w.IsExam ? '<br/><span class="inline-block rounded bg-amber-100 px-1.5 text-xs font-semibold text-amber-900">Luyện thi · không tính điểm tổng</span>' : '')
+        + (w.IsOnTap ? '<br/><span class="inline-block rounded bg-emerald-100 px-1.5 text-xs font-semibold text-emerald-900">Ôn tập · không tính điểm · làm không giới hạn</span>' : '');
       return `<button data-ws="${this._esc(w.WorksheetID)}" class="ws-item flex w-full items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left shadow-sm hover:border-blue-400">
         <span><span class="text-xs text-slate-500">${this._esc(w.ClassCode)} · Phiếu ${this._esc(w.No)}</span><br/><span class="font-semibold">${this._esc(w.Title)}</span>${examTag}${badge ? `<br/><span class="text-xs text-slate-500">${this._esc(badge)}</span>` : ''}</span>
-        <span class="shrink-0 text-right text-sm"><span class="${open ? 'text-green-700' : 'text-slate-400'}">${open ? 'Đang mở' : 'Đã đóng'}</span><br/>${this._esc(label)} ${score}${retake}</span></button>`;
+        <span class="shrink-0 text-right text-sm"><span class="${open ? 'text-green-700' : w.ReviewOnly ? 'text-emerald-700' : 'text-slate-400'}">${open ? 'Đang mở' : w.ReviewOnly ? 'Xem lại' : 'Đã đóng'}</span><br/>${this._esc(label)} ${score}${retake}</span></button>`;
     }).join('');
   }
 
@@ -196,7 +198,29 @@ class KhtdView {
     if (rb && att) rb.textContent = att.remaining == null ? 'Làm lại (lần mới)' : `Làm lại (còn ${att.remaining} lượt)`;
     this.renderAttempts(sub, att);
     this.renderResult(sub, att);
-    if (!ws.open && !locked) this.msg('Phiếu này đã đóng — chỉ xem, không nộp được.', 'err');
+    this.renderOnTapKey(this.extra.onTapKey);
+    if (!ws.open) this.$('ws-body').querySelectorAll('textarea, input, select').forEach((el) => { el.disabled = true; });   // chỉ xem: khoá ô nhập
+    if (ws.reviewOnly) this.msg('Chế độ ôn tập ở nhà: phiếu làm trên lớp chỉ xem lại — không sửa, không nộp; điểm giữ nguyên.', 'info');
+    else if (!ws.open && !locked) this.msg('Phiếu này đã đóng — chỉ xem, không nộp được.', 'err');
+  }
+
+  /* Đáp án tham khảo của phiếu ôn tập (sau khi nộp, docs/04 mục 40). */
+  renderOnTapKey(key) {
+    const old = document.getElementById('ontap-key'); if (old) old.remove();
+    if (!key || !key.length) return;
+    const box = document.createElement('section'); box.id = 'ontap-key';
+    box.className = 'mt-5 rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-sm';
+    box.innerHTML = `<h3 class="font-bold text-emerald-900">Đáp án tham khảo</h3><p class="text-xs text-emerald-800">So với bài em vừa làm; muốn luyện lại thì bấm “Làm lại”.</p>` +
+      key.map((k, i) => `<div class="mt-2"><p><b>Câu ${i + 1}.</b> ${this._esc(k.text)}</p><p class="mt-0.5 border-l-4 border-emerald-500 pl-2 text-emerald-950">${this._esc(k.answer)}</p></div>`).join('');
+    this.$('ws-body').appendChild(box);
+  }
+
+  /* Khung mã ôn tập ở nhà trên trang GV. */
+  renderReviewCode(r) {
+    const box = this.$('review-box'); if (!box) return;
+    box.classList.remove('hidden');
+    this.$('review-code').textContent = r && r.active ? r.code : '------';
+    this.$('review-until').textContent = r ? (r.active ? `dùng được tới hết ngày ${String(r.expiresAt).slice(8, 10)}/${String(r.expiresAt).slice(5, 7)}/${String(r.expiresAt).slice(0, 4)}` : `mã ${r.code} đã hết hạn`) : 'Lớp chưa có mã ôn tập — bấm “Tạo mã mới”.';
   }
 
   /* Khung "các lần làm": quy định số lần + cách tính điểm + bảng lịch sử. Ẩn khi phiếu chỉ cho nộp 1 lần và chưa nộp lần 2. */
