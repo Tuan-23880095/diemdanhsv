@@ -28,6 +28,7 @@ nav.top a{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--
   border-radius:10px;padding:9px 14px;font-size:14px;font-weight:600;text-decoration:none}
 nav.top a:hover{border-color:var(--b)}
 nav.top a.primary{background:var(--b);border-color:var(--b);color:#fff}
+nav.top a.ontap{background:var(--b2);border-color:var(--b2);color:#fff}
 section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:16px}
 section h2{margin:0 0 4px;font-size:17px;color:var(--b)}
 @media(prefers-color-scheme:dark){section h2{color:#7cb3f0}}
@@ -81,6 +82,7 @@ footer a{color:var(--mute)}
 <nav class="top">
 <a href="../index.html">← Trang chủ diemdanhsv</a>
 <a class="primary" href="online.html">Làm phiếu thực tập online</a>
+<a class="ontap" href="online.html?ontap=1">Ôn tập ở nhà (mã 6 ký tự)</a>
 <a href="trinhchieu.html">Trình chiếu bài giảng</a>
 <a href="sv.html">Trang sinh viên (tương tác)</a>
 <a href="#lich">Lịch thực tập</a>
@@ -123,7 +125,7 @@ footer a{color:var(--mute)}
 <div class="two">
 <section><h2>Phần 2 – Thực tập: làm phiếu trên web</h2>
 <p class="note">Đăng nhập bằng <b>MSSV</b> và <b>mã 4 ký tự</b> giảng viên công bố ở buổi thực tập (cùng mã điểm danh). Mỗi mẫu khoáng vật hoặc đá có <b>cột ảnh mẫu</b>: chụp ảnh mẫu đang mô tả ngay trên điện thoại để giảng viên kiểm chứng. Bài làm tự lưu nháp; nộp xong, trang hiện ngay <b>phiếu báo điểm tạm tính</b> của hệ thống chấm điểm kèm danh sách chỗ cần sửa — lưu PDF hoặc chụp màn hình để giữ lại. <b>Giảng viên chưa chốt điểm</b> cho tới khi duyệt; điểm chính thức gửi qua email sau khi duyệt.</p>
-<div class="btnrow"><a class="btn primary" href="online.html">Mở trang làm phiếu →</a></div>
+<div class="btnrow"><a class="btn primary" href="online.html">Mở trang làm phiếu →</a><a class="btn green" href="online.html?ontap=1">Ôn tập ở nhà →</a></div>
 <p class="note" style="margin-top:10px"><b>Ôn bài ở nhà:</b> vào trang làm phiếu, nhập MSSV và <b>mã ôn tập 6 ký tự</b> của lớp (giảng viên công bố) để xem lại các phiếu đã làm trên lớp và làm 5 <b>phiếu ôn tập</b> nhận biết khoáng vật, đá (không tính điểm, làm bao nhiêu lần cũng được, nộp xong có đáp án tham khảo).</p></section>
 <section><h2>Tài liệu thực tập</h2>
 <ul class="list">

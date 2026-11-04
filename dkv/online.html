@@ -82,5 +82,14 @@
     new KhtdController(new APIService(CONFIG.API_URL), new KhtdView(), 'student').init();
   });
 </script>
+<script>
+/* Link "Ôn tập ở nhà" từ dkv/index.html: online.html?ontap=1 → gợi ý nhập mã ôn tập 6 ký tự. */
+(function(){ try {
+  if (!/[?&]ontap=1\b/.test(location.search)) return;
+  var c = document.getElementById('code'); if (c) { c.placeholder = 'ABC123'; }
+  var l = document.querySelector('label[for="code"]'); if (l) l.textContent = 'Mã ôn tập (6 ký tự) — giảng viên công bố';
+  var m = document.getElementById('mssv'); if (m) setTimeout(function(){ m.focus(); }, 300);
+} catch (e) {} })();
+</script>
 </body>
 </html>
