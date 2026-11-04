@@ -9,8 +9,8 @@
 <link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png?v=20261014-logo">
 <meta name="theme-color" content="#0b4f9e">
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css?v=20261024-baodiem">
-<script src="../js/ui/logo-fallback.js?v=20261024-baodiem"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261104-ontap">
+<script src="../js/ui/logo-fallback.js?v=20261104-ontap"></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
 
@@ -34,17 +34,19 @@
   <!-- Đăng nhập -->
   <section id="login" class="hidden mx-auto max-w-lg">
     <form id="login-form" class="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p class="rounded-lg border border-emerald-200 bg-emerald-50 p-2 text-sm text-emerald-900"><b>Ôn bài ở nhà:</b> nhập MSSV và <b>mã ôn tập 6 ký tự</b> của lớp (giảng viên công bố) để xem lại các phiếu đã làm trên lớp, điểm và nhận xét.</p>
       <p class="text-sm text-slate-600">Đăng nhập bằng <b>MSSV</b> và <b>mã 4 ký tự</b> giảng viên công bố ở buổi thực tập (cùng mã điểm danh). Phiên làm việc 3 giờ; bài làm tự lưu nháp. Một số phiếu cho làm lại nhiều lần — xem ghi chú trong từng phiếu. Hệ thống ghi nhận số lần dán (paste) nội dung để giảng viên phát hiện bài chép — hãy tự viết bằng lời của mình.</p>
       <div><label for="mssv" class="block text-sm font-medium text-slate-700">Mã số sinh viên</label>
         <input id="mssv" type="text" inputmode="numeric" maxlength="10" required autocomplete="off" placeholder="25160053" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"></div>
-      <div><label for="code" class="block text-sm font-medium text-slate-700">Mã buổi học (4 ký tự)</label>
-        <input id="code" type="text" maxlength="4" required autocomplete="off" placeholder="ABCD" class="code-input mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-center text-2xl uppercase tracking-[0.5em] focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"></div>
+      <div><label for="code" class="block text-sm font-medium text-slate-700">Mã buổi học (4 ký tự) hoặc mã ôn tập (6 ký tự)</label>
+        <input id="code" type="text" maxlength="6" required autocomplete="off" placeholder="ABCD" class="code-input mt-1 w-full rounded-lg border border-slate-300 px-3 py-3 text-center text-2xl uppercase tracking-[0.35em] focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"></div>
       <button class="w-full rounded-lg bg-blue-700 py-3 font-semibold text-white hover:bg-blue-800">Vào làm phiếu</button>
     </form>
   </section>
 
   <!-- Danh sách phiếu -->
   <section id="list" class="hidden">
+    <div id="review-banner" class="hidden mb-3 rounded-xl border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-900"><b>Chế độ ôn tập ở nhà.</b> Phiếu đã làm trên lớp chỉ <b>xem lại</b> (bài đã nộp, ảnh mẫu, điểm, nhận xét, chỗ cần sửa) — không sửa, không nộp lại, điểm giữ nguyên. Phiên ôn tập 4 giờ.</div>
     <h2 class="mb-3 text-lg font-bold">Phiếu học tập của bạn</h2>
     <div id="ws-list" class="space-y-2"></div>
     <p class="mt-4 text-xs text-slate-500">Bản in A4 của các phiếu: <a class="underline" href="index.html">trang lớp học</a>. Nộp phiếu xong, trang hiện ngay phiếu báo điểm tạm tính của hệ thống chấm điểm (theo Rubric R2) kèm danh sách chỗ cần sửa — lưu PDF hoặc chụp màn hình để giữ lại. Giảng viên duyệt lại; điểm chính thức gửi qua email sau khi duyệt. Phiếu <b>luyện thi cuối khóa</b> chỉ để luyện — không tính vào điểm tổng.</p>
@@ -68,15 +70,24 @@
   </section>
 </main>
 
-<script src="../js/config/config.js?v=20261024-baodiem"></script>
-<script src="../js/services/APIService.js?v=20261024-baodiem"></script>
-<script src="../js/views/KhtdView.js?v=20261024-baodiem"></script>
-<script src="../js/views/KhtdExamView.js?v=20261024-baodiem"></script>
-<script src="../js/controllers/KhtdController.js?v=20261024-baodiem"></script>
+<script src="../js/config/config.js?v=20261104-ontap"></script>
+<script src="../js/services/APIService.js?v=20261104-ontap"></script>
+<script src="../js/views/KhtdView.js?v=20261104-ontap"></script>
+<script src="../js/views/KhtdExamView.js?v=20261104-ontap"></script>
+<script src="../js/controllers/KhtdController.js?v=20261104-ontap"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     new KhtdController(new APIService(CONFIG.API_URL), new KhtdView(), 'student').init();
   });
+</script>
+<script>
+/* Link "Ôn tập ở nhà" từ trang học phần: online.html?ontap=1 → gợi ý nhập mã ôn tập 6 ký tự. */
+(function(){ try {
+  if (!/[?&]ontap=1\b/.test(location.search)) return;
+  var c = document.getElementById('code'); if (c) { c.placeholder = 'ABC123'; }
+  var l = document.querySelector('label[for="code"]'); if (l) l.textContent = 'Mã ôn tập (6 ký tự) — giảng viên công bố';
+  var m = document.getElementById('mssv'); if (m) setTimeout(function(){ m.focus(); }, 300);
+} catch (e) {} })();
 </script>
 </body>
 </html>

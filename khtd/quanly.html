@@ -9,8 +9,8 @@
 <link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png?v=20261014-logo">
 <meta name="theme-color" content="#0b4f9e">
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="../css/main.css?v=20261024-baodiem">
-<script src="../js/ui/logo-fallback.js?v=20261024-baodiem"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261104-ontap">
+<script src="../js/ui/logo-fallback.js?v=20261104-ontap"></script>
 <script src="/js/ui/menu-he-thong.js?v=20261102" defer></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
@@ -51,6 +51,16 @@
       </div>
       <p class="mt-2 text-xs text-blue-700">Sinh viên dùng mã này để điểm danh (trang Điểm danh) và để đăng nhập làm phiếu (khtd/online.html). Thời hạn mã theo cấu hình điểm danh.</p>
     </div>
+    <div id="review-box" class="hidden mt-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+      <div class="flex flex-wrap items-center gap-3"><p class="font-semibold uppercase tracking-wide text-emerald-800">Mã ôn tập ở nhà</p>
+        <p id="review-code" class="font-mono text-3xl font-black tracking-[0.3em]">------</p><p id="review-until" class="text-emerald-800"></p></div>
+      <div class="mt-2 flex flex-wrap items-center gap-2">
+        <label>Hạn dùng <select id="review-days" class="rounded border px-2 py-1"><option value="7">7 ngày</option><option value="30" selected>30 ngày</option><option value="60">60 ngày</option><option value="120">120 ngày (cả học kỳ)</option></select></label>
+        <button id="btn-review-create" class="rounded bg-emerald-700 px-3 py-1.5 font-semibold text-white hover:bg-emerald-800">Tạo mã mới</button>
+        <button id="btn-review-revoke" class="rounded border border-emerald-700 px-3 py-1.5 hover:bg-white">Thu hồi mã</button>
+      </div>
+      <p class="mt-2 text-xs">Sinh viên nhập MSSV + mã này ở <b>khtd/online.html</b> (nút <b>Ôn tập ở nhà</b> trên trang học phần) để ôn bài ở nhà: phiếu đã làm trên lớp chỉ xem lại (bài đã nộp, điểm, nhận xét, chỗ cần sửa; không sửa, không nộp, điểm giữ nguyên). Mỗi lớp một mã; tạo mã mới thì mã cũ hết hiệu lực.</p>
+    </div>
     <h2 class="mt-5 mb-2 font-bold">Phiếu của lớp</h2>
     <div id="lec-ws" class="grid gap-2 sm:grid-cols-2"></div>
     <div id="lec-practice" class="hidden mt-4 rounded-2xl border-2 border-amber-200 bg-white p-4 shadow-sm"></div>
@@ -65,11 +75,11 @@
     <div id="sub-detail" class="hidden mt-5 rounded-2xl border bg-white p-4 shadow-sm"></div>
   </div>
 </main>
-<script src="../js/config/config.js?v=20261024-baodiem"></script>
-<script src="../js/services/APIService.js?v=20261024-baodiem"></script>
-<script src="../js/views/KhtdView.js?v=20261024-baodiem"></script>
-<script src="../js/views/KhtdExamView.js?v=20261024-baodiem"></script>
-<script src="../js/controllers/KhtdController.js?v=20261024-baodiem"></script>
+<script src="../js/config/config.js?v=20261104-ontap"></script>
+<script src="../js/services/APIService.js?v=20261104-ontap"></script>
+<script src="../js/views/KhtdView.js?v=20261104-ontap"></script>
+<script src="../js/views/KhtdExamView.js?v=20261104-ontap"></script>
+<script src="../js/controllers/KhtdController.js?v=20261104-ontap"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     new KhtdController(new APIService(CONFIG.API_URL), new KhtdView(), 'lecturer').init();

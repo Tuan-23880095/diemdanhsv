@@ -289,7 +289,7 @@ class KhtdController {
     this.loadStats();
   }
 
-  /* ---------- Mã ôn tập ở nhà (docs/04 mục 40); chỉ trang có #review-box (dkv/quanly.html) ---------- */
+  /* ---------- Mã ôn tập ở nhà (docs/04 mục 40); trang quanly.html nào có #review-box (dkv, khtd, chd-tt) ---------- */
   async loadReview(op) {
     if (!this.classId || !document.getElementById('review-box')) return;
     if (op === 'revoke' && !confirm('Thu hồi mã ôn tập? Sinh viên đang ôn sẽ không đăng nhập lại được bằng mã này.')) return;
