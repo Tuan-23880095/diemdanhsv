@@ -1444,5 +1444,511 @@
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng không có ảnh minh chứng thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
   },
   "status": "HIDDEN"
+ },
+ "21": {
+  "title": "Buổi 1 – Phiếu con 1A: mô tả đất bằng mắt và tay (ASTM D2488)",
+  "buoi": "Buổi 1",
+  "cdr": "G1.1, G1.3, G6.1",
+  "sections": [
+   {
+    "id": "nguoi",
+    "type": "table",
+    "title": "Thông tin trạm",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm / tổ",
+     "Người thực hiện tại trạm (họ tên, MSSV)",
+     "Ngày thí nghiệm",
+     "Mã hiệu mẫu / lỗ khoan / độ sâu"
+    ],
+    "photos": false
+   },
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Cách dùng phiếu con này",
+    "lines": [
+     "Mô tả bằng mắt và tay theo ASTM D2488 (nhận biết – mô tả đất, quy trình thủ công). Đây là đánh giá sơ bộ để đối chiếu với kết quả Atterberg ở phiếu 1D, không thay cho phân loại theo chỉ số dẻo.",
+     "Ghi đúng một mức theo thang gợi ý ở mỗi hàng; ghi thêm điều quan sát được nếu cần.",
+     "Hàng nào có số đọc từ cân hoặc dụng cụ thì chụp 1 ảnh lúc đọc số; ảnh phải thấy rõ con số và số hiệu hộp, dao vòng hoặc bình. Hàng số hiệu và hàng kết quả tính không bắt buộc ảnh."
+    ]
+   },
+   {
+    "id": "mota",
+    "type": "table",
+    "title": "Mô tả đất bằng mắt và tay (ASTM D2488)",
+    "columns": [
+     "Kết quả quan sát (chọn một mức)",
+     "Ghi chú"
+    ],
+    "rows": [
+     "Trạng thái ẩm (khô / ẩm / ướt)",
+     "Màu chính, màu phụ (ghi theo mẫu ẩm)",
+     "Mùi (không / mùi hữu cơ)",
+     "Độ bền khô (không / thấp / trung bình / cao / rất cao)",
+     "Phản ứng lắc – nước nổi lên mặt (không / chậm / nhanh)",
+     "Độ dai khi vê sợi 3 mm (thấp / trung bình / cao)",
+     "Độ dẻo (không dẻo / thấp / trung bình / cao)",
+     "Hàm lượng cát, sỏi ước lượng (%)",
+     "Tên đất sơ bộ (vd sét, sét pha, bụi, cát pha)"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp mẫu đất (toàn mẫu và cận cảnh), sợi đất vê, mặt mẫu sau khi lắc, cục đất khô khi bóp tay."
+   },
+   {
+    "id": "vandung",
+    "type": "questions",
+    "title": "Câu hỏi nhanh",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Từ độ bền khô, phản ứng lắc và độ dai, em dự đoán đất thiên về sét hay bụi? Kết quả nào ở phiếu 1D sẽ xác nhận dự đoán đó?"
+     }
+    ]
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Làm đủ các phép thử bằng tay đúng thao tác",
+     "Phân biệt sét và bụi bằng phản ứng lắc, độ bền khô"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "mota",
+     "name": "Mô tả đủ các mục theo đúng thang mức của ASTM D2488, có ảnh",
+     "max": 6
+    },
+    {
+     "id": "nhatquan",
+     "name": "Các kết quả nhất quán với nhau và với tên đất sơ bộ",
+     "max": 2
+    },
+    {
+     "id": "vd",
+     "name": "Câu hỏi nhanh",
+     "max": 2
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Độ bền khô cao, lắc không phản ứng hoặc rất chậm, độ dai trung bình–cao → thiên về sét; độ bền khô thấp, lắc nhanh → thiên về bụi. Xác nhận bằng chỉ số dẻo IP = WL − WP ở phiếu 1D (IP lớn, > 17 là sét theo TCVN 9362:2012) và vị trí điểm (WL, IP) trên biểu đồ dẻo."
+  },
+  "reference": "ASTM D2488 – mô tả và nhận biết đất (quy trình thủ công). Thang mức: độ bền khô None/Low/Medium/High/Very high; phản ứng lắc (dilatancy) None/Slow/Rapid; độ dai (toughness) Low/Medium/High; độ dẻo Nonplastic/Low/Medium/High. Gợi ý nhận biết: sét dẻo cao – độ bền khô cao đến rất cao, lắc không phản ứng, độ dai cao; sét dẻo thấp – độ bền khô trung bình đến cao, lắc không phản ứng hoặc chậm, độ dai trung bình; bụi – độ bền khô không đến thấp, lắc chậm đến nhanh, độ dai thấp, vê sợi khó hoặc không được. Màu ghi theo mẫu ẩm. Chấm theo tính nhất quán giữa các mục, không có đáp số cố định.",
+  "answer_hints": "Chấm theo tính nhất quán giữa độ bền khô, phản ứng lắc, độ dai và tên sơ bộ.",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO10404)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Phiếu ghi số liệu tại trạm: mỗi nhóm có mẫu và số đọc RIÊNG nên KHÔNG so với đáp số cố định. TỰ TÍNH LẠI cột kết quả từ số liệu thô sinh viên ghi theo công thức trong 'du_lieu_chuan'; sai lệch ≤ 2 % là đúng, 2–5 % đúng một phần, > 5 % sai. Kiểm tra đủ 2 lần thử song song, chênh lệch giữa 2 lần trong ngưỡng nêu ở 'du_lieu_chuan', đơn vị, dấu phẩy thập phân và tính hợp lý vật lý. Ô 'khô' còn trống khi mẫu chưa sấy xong thì ghi vào 'sua_bai' là chưa hoàn tất, không trừ điểm số liệu đã đo. Phiếu 1A không có số đo: kiểm tra từng hàng có ghi một mức thuộc thang của ASTM D2488 và các mức không mâu thuẫn nhau (vd lắc phản ứng nhanh mà độ bền khô rất cao là mâu thuẫn).",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng có số đọc từ cân hoặc dụng cụ mà không có ảnh minh chứng (không tính hàng số hiệu, hàng kết quả tính) thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "max_attempts": 2,
+  "score_policy": "BEST"
+ },
+ "22": {
+  "title": "Buổi 1 – Phiếu con 1B: dao vòng và độ ẩm (TCVN 4202:2012, TCVN 4196:2012)",
+  "buoi": "Buổi 1",
+  "cdr": "G1.1, G1.2, G6.1",
+  "sections": [
+   {
+    "id": "nguoi",
+    "type": "table",
+    "title": "Thông tin trạm",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm / tổ",
+     "Người thực hiện tại trạm (họ tên, MSSV)",
+     "Ngày thí nghiệm",
+     "Mã hiệu mẫu / lỗ khoan / độ sâu"
+    ],
+    "photos": false
+   },
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Cách dùng phiếu con này",
+    "lines": [
+     "Đây là phiếu ghi số liệu tại trạm của Buổi 1. Người làm ở trạm nào ghi phiếu của trạm đó, ngay khi đọc số, không chép lại từ giấy nháp.",
+     "Hàng nào có số đọc từ cân hoặc dụng cụ thì chụp 1 ảnh lúc đọc số; ảnh phải thấy rõ con số và số hiệu hộp, dao vòng hoặc bình. Hàng số hiệu và hàng kết quả tính không bắt buộc ảnh.",
+     "Mẫu cần sấy 105–110 °C đến khối lượng không đổi (đất sét thường cần từ 8 giờ trở lên) nên ô 'khô' có thể chưa có trong buổi: bấm Lưu nháp, đầu buổi sau cân rồi điền nốt và nộp.",
+     "Số liệu của phiếu con được chép sang Phiếu 1 (báo cáo tổng hợp của nhóm); hai nơi phải ghi cùng một số.",
+     "Hai lần thử song song nghĩa là hai dao vòng và hai hộp nhôm khác nhau, mỗi dao vòng, mỗi hộp có khối lượng riêng — không dùng chung một giá trị m₀."
+    ]
+   },
+   {
+    "id": "daovong",
+    "type": "table",
+    "title": "I. Khối lượng thể tích bằng dao vòng (TCVN 4202:2012)",
+    "columns": [
+     "Lần 1",
+     "Lần 2"
+    ],
+    "rows": [
+     "Số hiệu dao vòng",
+     "Đường kính trong d (cm) và chiều cao h (cm) — đo hoặc theo nhãn dao",
+     "Thể tích dao vòng V (cm³)",
+     "Khối lượng dao vòng m₀ (g)",
+     "Dao vòng + đất ẩm m₁ (g)",
+     "Khối lượng thể tích ρ = (m₁ − m₀)/V (g/cm³)"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp màn hình cân khi cân dao rỗng, cân dao + đất; chụp mặt mẫu sau khi gọt phẳng hai đầu."
+   },
+   {
+    "id": "doam",
+    "type": "table",
+    "title": "II. Độ ẩm bằng phương pháp sấy khô (TCVN 4196:2012)",
+    "columns": [
+     "Hộp lần 1",
+     "Hộp lần 2"
+    ],
+    "rows": [
+     "Số hiệu hộp nhôm",
+     "Khối lượng hộp m₁ (g)",
+     "Hộp + đất ẩm m₂ (g)",
+     "Hộp + đất khô m₃ (g) — sau khi sấy đến khối lượng không đổi",
+     "Thời gian sấy (giờ) và nhiệt độ tủ (°C)",
+     "Độ ẩm w = (m₂ − m₃)/(m₃ − m₁)·100 (%)"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp màn hình cân mỗi lần cân, thấy rõ số hiệu hộp; lần cân khô chụp kèm hộp vừa lấy từ bình hút ẩm."
+   },
+   {
+    "id": "ketqua",
+    "type": "table",
+    "title": "III. Kết quả trung bình",
+    "columns": [
+     "Giá trị",
+     "Chênh lệch giữa 2 lần"
+    ],
+    "rows": [
+     "Khối lượng thể tích ρ trung bình (g/cm³)",
+     "Độ ẩm w trung bình (%)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Gọt mẫu dao vòng phẳng, không để rỗ",
+     "Cân và sấy độ ẩm đúng quy trình"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "daovong",
+     "name": "Dao vòng: đủ 2 lần, V và m₀ riêng từng dao, ρ tính đúng, có ảnh",
+     "max": 4
+    },
+    {
+     "id": "doam",
+     "name": "Độ ẩm: đủ 2 hộp, w tính đúng, có ảnh",
+     "max": 4
+    },
+    {
+     "id": "ketqua",
+     "name": "Trung bình và chênh lệch 2 lần trong ngưỡng",
+     "max": 2
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "TCVN 4202:2012 (khối lượng thể tích, dao vòng) và TCVN 4196:2012 (độ ẩm, sấy 105–110 °C đến khối lượng không đổi). V = π·d²·h/4; ρ = (m₁ − m₀)/V; w = (m₂ − m₃)/(m₃ − m₁)·100 (ký hiệu theo phiếu này: m₁ hộp, m₂ hộp + đất ẩm, m₃ hộp + đất khô). Ngưỡng chênh lệch giữa 2 lần song song dùng để chấm (giảng viên đặt, theo TCVN): ρ ≤ 0,03 g/cm³; w ≤ 1 % (tuyệt đối). Kiểm tra hợp lý: đất dính thường ρ 1,6–2,1 g/cm³; m₃ < m₂; dao vòng d = 6 cm, h = 2 cm thì V = 56,55 cm³. Mẫu chuẩn ST-01 (giáo trình): V = 56,55 cm³, đất ẩm 102,92 g → ρ = 1,820 g/cm³; hộp 12,50 g, hộp + đất ẩm 48,60 g, hộp + đất khô 38,80 g → w = 37,26 %.",
+  "answer_hints": "Mẫu ST-01: ρ 1,820 g/cm³; w 37,26 %.",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO10404)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Phiếu ghi số liệu tại trạm: mỗi nhóm có mẫu và số đọc RIÊNG nên KHÔNG so với đáp số cố định. TỰ TÍNH LẠI cột kết quả từ số liệu thô sinh viên ghi theo công thức trong 'du_lieu_chuan'; sai lệch ≤ 2 % là đúng, 2–5 % đúng một phần, > 5 % sai. Kiểm tra đủ 2 lần thử song song, chênh lệch giữa 2 lần trong ngưỡng nêu ở 'du_lieu_chuan', đơn vị, dấu phẩy thập phân và tính hợp lý vật lý. Ô 'khô' còn trống khi mẫu chưa sấy xong thì ghi vào 'sua_bai' là chưa hoàn tất, không trừ điểm số liệu đã đo. Hai dao vòng dùng chung một m₀ hoặc một V là lỗi phương pháp: ghi vào 'sua_bai'.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng có số đọc từ cân hoặc dụng cụ mà không có ảnh minh chứng (không tính hàng số hiệu, hàng kết quả tính) thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "max_attempts": 2,
+  "score_policy": "BEST"
+ },
+ "23": {
+  "title": "Buổi 1 – Phiếu con 1C: khối lượng riêng hạt đất bằng bình tỷ trọng (TCVN 4195:2012)",
+  "buoi": "Buổi 1",
+  "cdr": "G1.1, G1.2, G6.1",
+  "sections": [
+   {
+    "id": "nguoi",
+    "type": "table",
+    "title": "Thông tin trạm",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm / tổ",
+     "Người thực hiện tại trạm (họ tên, MSSV)",
+     "Ngày thí nghiệm",
+     "Mã hiệu mẫu / lỗ khoan / độ sâu"
+    ],
+    "photos": false
+   },
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Cách dùng phiếu con này",
+    "lines": [
+     "Đây là phiếu ghi số liệu tại trạm của Buổi 1. Người làm ở trạm nào ghi phiếu của trạm đó, ngay khi đọc số, không chép lại từ giấy nháp.",
+     "Hàng nào có số đọc từ cân hoặc dụng cụ thì chụp 1 ảnh lúc đọc số; ảnh phải thấy rõ con số và số hiệu hộp, dao vòng hoặc bình. Hàng số hiệu và hàng kết quả tính không bắt buộc ảnh.",
+     "Đất dùng cho bình tỷ trọng là đất đã sấy khô, nghiền nhỏ, lọt sàng theo TCVN 4195:2012. Làm 2 bình song song.",
+     "Đun sôi để đuổi hết bọt khí theo thời gian TCVN quy định cho loại đất, để nguội rồi mới thêm nước đến vạch. Ghi nhiệt độ nước lúc cân vì khối lượng riêng của nước ρw thay đổi theo nhiệt độ — không mặc định 25 °C.",
+     "Số liệu của phiếu con được chép sang Phiếu 1 (báo cáo tổng hợp của nhóm); hai nơi phải ghi cùng một số."
+    ]
+   },
+   {
+    "id": "binh",
+    "type": "table",
+    "title": "Khối lượng riêng hạt đất bằng bình tỷ trọng (TCVN 4195:2012)",
+    "columns": [
+     "Bình 1",
+     "Bình 2"
+    ],
+    "rows": [
+     "Số hiệu bình, dung tích (ml)",
+     "Bình khô m₁ (g)",
+     "Bình + đất khô m₂ (g)",
+     "Khối lượng đất khô ms = m₂ − m₁ (g)",
+     "Thời gian đun sôi (phút)",
+     "Bình + đất + nước đến vạch m₄ (g)",
+     "Bình + nước đến vạch m₃ (g)",
+     "Nhiệt độ nước khi cân T (°C) và ρw tra bảng (g/cm³)",
+     "Khối lượng riêng ρs = ms·ρw/(ms + m₃ − m₄) (g/cm³)"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp màn hình cân mỗi lần cân (thấy số hiệu bình), nhiệt kế khi đo nhiệt độ nước, bình lúc đang đun sôi."
+   },
+   {
+    "id": "ketqua",
+    "type": "table",
+    "title": "Kết quả",
+    "columns": [
+     "Giá trị"
+    ],
+    "rows": [
+     "ρs trung bình (g/cm³)",
+     "Chênh lệch giữa 2 bình (g/cm³)",
+     "Tỷ trọng Gs = ρs/ρw (không thứ nguyên)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "vandung",
+    "type": "questions",
+    "title": "Câu hỏi nhanh",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Nếu đun sôi chưa đủ, bọt khí còn trong bình thì ρs tính ra lớn hơn hay nhỏ hơn giá trị thật? Giải thích."
+     }
+    ]
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Đuổi bọt khí và đưa nước đúng vạch",
+     "Phân biệt khối lượng riêng ρs và tỷ trọng Gs"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "binh",
+     "name": "Đủ 2 bình, đủ số cân, có nhiệt độ nước, ρs tính đúng, có ảnh",
+     "max": 6
+    },
+    {
+     "id": "ketqua",
+     "name": "Trung bình, chênh lệch 2 bình, Gs đúng đơn vị",
+     "max": 2
+    },
+    {
+     "id": "vd",
+     "name": "Câu hỏi nhanh",
+     "max": 2
+    }
+   ]
+  },
+  "answer_key": {
+   "q1": "Nhỏ hơn. Bọt khí chiếm chỗ của nước nên m₄ (bình + đất + nước) nhỏ hơn thật; mẫu số ms + m₃ − m₄ lớn hơn, nên ρs tính ra nhỏ hơn giá trị thật."
+  },
+  "reference": "TCVN 4195:2012 – xác định khối lượng riêng (bình tỷ trọng). ρs = ms·ρw(T)/(ms + m₃ − m₄), với m₃ = bình + nước, m₄ = bình + đất + nước, cả hai ở cùng nhiệt độ T. ρw: 20 °C 0,9982; 25 °C 0,9970; 30 °C 0,9957 g/cm³. Gs = ρs/ρw (không thứ nguyên); ghi ρs bằng g/cm³. Ngưỡng chênh lệch giữa 2 bình dùng để chấm (giảng viên đặt, theo TCVN): ≤ 0,02 g/cm³. Hợp lý: đất khoáng 2,60–2,80 g/cm³; < 2,5 nghi có hữu cơ hoặc còn bọt khí. m₄ > m₃ luôn đúng.",
+  "answer_hints": "Kiểm tra ρs = ms·ρw/(ms + m₃ − m₄); thường 2,60–2,80 g/cm³.",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO10404)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Phiếu ghi số liệu tại trạm: mỗi nhóm có mẫu và số đọc RIÊNG nên KHÔNG so với đáp số cố định. TỰ TÍNH LẠI cột kết quả từ số liệu thô sinh viên ghi theo công thức trong 'du_lieu_chuan'; sai lệch ≤ 2 % là đúng, 2–5 % đúng một phần, > 5 % sai. Kiểm tra đủ 2 lần thử song song, chênh lệch giữa 2 lần trong ngưỡng nêu ở 'du_lieu_chuan', đơn vị, dấu phẩy thập phân và tính hợp lý vật lý. Ô 'khô' còn trống khi mẫu chưa sấy xong thì ghi vào 'sua_bai' là chưa hoàn tất, không trừ điểm số liệu đã đo. Nhầm ρs (g/cm³) với Gs (không đơn vị), hoặc dùng ρw = 1 mà không ghi nhiệt độ: ghi vào 'sua_bai'.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng có số đọc từ cân hoặc dụng cụ mà không có ảnh minh chứng (không tính hàng số hiệu, hàng kết quả tính) thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "max_attempts": 2,
+  "score_policy": "BEST"
+ },
+ "24": {
+  "title": "Buổi 1 – Phiếu con 1D: giới hạn chảy, giới hạn dẻo (TCVN 4197:2012)",
+  "buoi": "Buổi 1",
+  "cdr": "G1.1, G1.2, G1.3, G6.1",
+  "sections": [
+   {
+    "id": "nguoi",
+    "type": "table",
+    "title": "Thông tin trạm",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm / tổ",
+     "Người thực hiện tại trạm (họ tên, MSSV)",
+     "Ngày thí nghiệm",
+     "Mã hiệu mẫu / lỗ khoan / độ sâu"
+    ],
+    "photos": false
+   },
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Cách dùng phiếu con này",
+    "lines": [
+     "Đây là phiếu ghi số liệu tại trạm của Buổi 1. Người làm ở trạm nào ghi phiếu của trạm đó, ngay khi đọc số, không chép lại từ giấy nháp.",
+     "Hàng nào có số đọc từ cân hoặc dụng cụ thì chụp 1 ảnh lúc đọc số; ảnh phải thấy rõ con số và số hiệu hộp, dao vòng hoặc bình. Hàng số hiệu và hàng kết quả tính không bắt buộc ảnh.",
+     "Mẫu cần sấy 105–110 °C đến khối lượng không đổi (đất sét thường cần từ 8 giờ trở lên) nên ô 'khô' có thể chưa có trong buổi: bấm Lưu nháp, đầu buổi sau cân rồi điền nốt và nộp.",
+     "Giới hạn chảy WL: chùy Vaxiliev 76 g, mũi côn 30°, tự rơi vào đất trong 10 giây; đất đạt WL khi chùy lún 10 mm. Nếu lún khác 10 mm thì thêm nước hoặc hong khô rồi thử lại; ghi độ lún thật của lần lấy mẫu.",
+     "Giới hạn dẻo WP: lăn sợi đất trên kính mờ đến đường kính 3 mm thì sợi bắt đầu nứt và đứt thành đoạn ngắn.",
+     "Số liệu của phiếu con được chép sang Phiếu 1 (báo cáo tổng hợp của nhóm); hai nơi phải ghi cùng một số."
+    ]
+   },
+   {
+    "id": "wl",
+    "type": "table",
+    "title": "I. Giới hạn chảy WL (TCVN 4197:2012, chùy Vaxiliev)",
+    "columns": [
+     "Lần 1",
+     "Lần 2"
+    ],
+    "rows": [
+     "Độ lún của chùy khi lấy mẫu (mm)",
+     "Số hiệu hộp",
+     "Hộp m₁ (g)",
+     "Hộp + đất ẩm m₂ (g)",
+     "Hộp + đất khô m₃ (g)",
+     "WL (%)"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp vạch lún của chùy trên mặt đất (thấy vạch 10 mm) và màn hình cân mỗi lần cân."
+   },
+   {
+    "id": "wp",
+    "type": "table",
+    "title": "II. Giới hạn dẻo WP (TCVN 4197:2012, lăn sợi 3 mm)",
+    "columns": [
+     "Lần 1",
+     "Lần 2"
+    ],
+    "rows": [
+     "Số hiệu hộp",
+     "Hộp m₁ (g)",
+     "Hộp + đất ẩm m₂ (g)",
+     "Hộp + đất khô m₃ (g)",
+     "WP (%)"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh minh chứng",
+    "photo_hint": "Chụp sợi đất 3 mm vừa nứt (đặt cạnh thước) và màn hình cân mỗi lần cân."
+   },
+   {
+    "id": "ketqua",
+    "type": "table",
+    "title": "III. Kết quả",
+    "columns": [
+     "Giá trị",
+     "Ghi chú"
+    ],
+    "rows": [
+     "WL trung bình (%)",
+     "WP trung bình (%)",
+     "Chỉ số dẻo IP = WL − WP (%)",
+     "So với dự đoán ở phiếu 1A (đúng / khác, vì sao)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "Tự đánh giá (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Chỉnh độ ẩm để chùy lún đúng 10 mm",
+     "Nhận ra lúc sợi đất 3 mm bắt đầu nứt"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "wl",
+     "name": "WL: đủ 2 lần, độ lún gần 10 mm, tính đúng, có ảnh",
+     "max": 4
+    },
+    {
+     "id": "wp",
+     "name": "WP: đủ 2 lần, tính đúng, có ảnh",
+     "max": 3
+    },
+    {
+     "id": "ketqua",
+     "name": "IP đúng, đối chiếu với phiếu 1A hợp lý",
+     "max": 3
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "TCVN 4197:2012 – giới hạn dẻo và giới hạn chảy. WL bằng chùy Vaxiliev 76 g, côn 30°, lún 10 mm trong 10 giây; WP bằng lăn sợi 3 mm. w = (m₂ − m₃)/(m₃ − m₁)·100 cho từng hộp. IP = WL − WP. Phân loại theo IP (TCVN 9362:2012, cùng thang với Phiếu 1): 1–7 cát pha; 7–17 sét pha; > 17 sét. Ngưỡng chênh lệch giữa 2 lần dùng để chấm (giảng viên đặt): ≤ 2 % cho WL và cho WP. Độ lún của lần lấy mẫu WL nên trong khoảng 9–11 mm; xa hơn là chưa đạt trạng thái giới hạn chảy. Hợp lý: WL > WP; sét thường WL 30–70 %. Mẫu chuẩn ST-01: WL = 45,2 %, WP = 22,8 % → IP = 22,4 % (sét).",
+  "answer_hints": "Mẫu ST-01: WL 45,2 %; WP 22,8 %; IP 22,4 → sét.",
+  "mon": {
+   "ma": "CHĐ",
+   "ten": "Thực tập Cơ học đất",
+   "hoc_phan": "Cơ học đất (GEO10404)",
+   "url": "https://diemdanhsv.com/chd-tt/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Cơ học đất (GEO10404, Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu báo cáo thực hành thí nghiệm của sinh viên ngành Địa chất (chuyên ngành Địa chất Công trình – Địa chất Thủy văn).",
+   "quy_tac_bang": "Phiếu ghi số liệu tại trạm: mỗi nhóm có mẫu và số đọc RIÊNG nên KHÔNG so với đáp số cố định. TỰ TÍNH LẠI cột kết quả từ số liệu thô sinh viên ghi theo công thức trong 'du_lieu_chuan'; sai lệch ≤ 2 % là đúng, 2–5 % đúng một phần, > 5 % sai. Kiểm tra đủ 2 lần thử song song, chênh lệch giữa 2 lần trong ngưỡng nêu ở 'du_lieu_chuan', đơn vị, dấu phẩy thập phân và tính hợp lý vật lý. Ô 'khô' còn trống khi mẫu chưa sấy xong thì ghi vào 'sua_bai' là chưa hoàn tất, không trừ điểm số liệu đã đo. Độ lún ghi ngoài 9–11 mm mà vẫn lấy làm WL: ghi vào 'sua_bai' là chưa đạt giới hạn chảy.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ ô nào (vd 'Bảng II – Lần 2, cột Độ ẩm'), sai thế nào (công thức, đơn vị, làm tròn, nhầm cấp tải) và cách tự kiểm lại; không chép nguyên đáp số. Bảng có cột ảnh: hàng có số đọc từ cân hoặc dụng cụ mà không có ảnh minh chứng (không tính hàng số hiệu, hàng kết quả tính) thì ghi vào 'sua_bai' là thiếu minh chứng (không trừ quá 0,25 điểm mỗi bảng)."
+  },
+  "max_attempts": 2,
+  "score_policy": "BEST"
  }
 }

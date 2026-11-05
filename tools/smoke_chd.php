@@ -88,27 +88,27 @@ $sv = $tok('KHTD', 'CHT_S1');
 
 echo "== Bộ phiếu CHĐ (api/lib/chd_phieu.json) ==\n";
 $defs = chd_default_worksheets();
-check('đọc được 11 phiếu (1–6 thực hành, 11–15 chuyên đề)', array_keys($defs) === [1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15], array_keys($defs));
+check('đọc được 15 phiếu (1–6 thực hành, 11–15 chuyên đề, 21–24 phiếu con trạm buổi 1)', array_keys($defs) === [1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 21, 22, 23, 24], array_keys($defs));
 $okRub = true; $okPhoto = true;
 foreach ($defs as $no => $d) {
     $sum = array_sum(array_column($d['rubric']['criteria'], 'max'));
     if (abs($sum - 10) > 1e-9) $okRub = false;
     $hasPhoto = false; foreach ($d['sections'] as $s) if (($s['type'] ?? '') === 'table' && !empty($s['photos'])) $hasPhoto = true;
-    if ($no <= 6 && !$hasPhoto) $okPhoto = false;
+    if (($no <= 6 || $no >= 21) && !$hasPhoto) $okPhoto = false;
 }
 check('mỗi phiếu rubric tổng 10 điểm', $okRub);
-check('mỗi phiếu thực hành 1–6 có bảng có cột ảnh minh chứng', $okPhoto);
+check('mỗi phiếu thực hành 1–6 và phiếu con 21–24 có bảng có cột ảnh minh chứng', $okPhoto);
 check('phiếu có thông tin môn CHĐ', ($defs[1]['mon']['ma'] ?? '') === 'CHĐ' && str_contains($defs[1]['mon']['url'], 'chd-tt'));
 
 echo "== Tạo phiếu cho lớp (bo=chd) ==\n";
 $r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'CHT_C1', 'bo' => 'chd']);
-check('GV tạo 11 phiếu CHĐ', ok($r) && count($r['data']['created']) === 11, $r);
+check('GV tạo 15 phiếu CHĐ', ok($r) && count($r['data']['created']) === 15, $r);
 $ids = []; foreach (($r['data']['created'] ?? []) as $c) $ids[(int) $c['no']] = $c['id'];
 $r = call('POST', ['action' => 'khtdSeedWorksheets', 'token' => $gv, 'classId' => 'CHT_C1', 'bo' => 'chd']);
 check('tạo lại không trùng (0 phiếu mới)', ok($r) && count($r['data']['created']) === 0, $r);
 $st = $pdo->query("SELECT No, Status, MaxAttempts, ScorePolicy FROM khtd_worksheets WHERE ClassID = 'CHT_C1' ORDER BY No")->fetchAll();
 $by = []; foreach ($st as $x) $by[(int) $x['No']] = $x;
-check('phiếu 1–6 và mốc 1 (số 11) mở; mốc 12–15 ẩn', $by[1]['Status'] === 'OPEN' && $by[11]['Status'] === 'OPEN' && $by[12]['Status'] === 'HIDDEN' && $by[15]['Status'] === 'HIDDEN', $st);
+check('phiếu 1–6, phiếu con 21–24 và mốc 1 (số 11) mở; mốc 12–15 ẩn', $by[1]['Status'] === 'OPEN' && $by[21]['Status'] === 'OPEN' && $by[24]['Status'] === 'OPEN' && $by[11]['Status'] === 'OPEN' && $by[12]['Status'] === 'HIDDEN' && $by[15]['Status'] === 'HIDDEN', $st);
 check('phiếu thực hành cho làm 2 lần, lấy điểm cao nhất', (int) $by[1]['MaxAttempts'] === 2 && $by[1]['ScorePolicy'] === 'BEST', $by[1]);
 check('mốc chuyên đề tính lần cuối', $by[11]['ScorePolicy'] === 'LAST' && (int) $by[14]['MaxAttempts'] === 1, [$by[11], $by[14]]);
 $sch = json_decode((string) $pdo->query("SELECT SchemaJSON FROM khtd_worksheets WHERE WorksheetID = " . $pdo->quote($ids[12]))->fetchColumn(), true);
@@ -161,7 +161,7 @@ check('email KHTĐ giữ [KHTĐ], rubric R2, link khtd', $mk['ma'] === 'KHTĐ' &
 
 echo "== Giảng viên ==\n";
 $r = call('GET', ['action' => 'khtdLecturerList', 'token' => $gv, 'classId' => 'CHT_C1']);
-check('GV xem danh sách 11 phiếu + bài nộp', ok($r) && count($r['data']['worksheets']) === 11 && count($r['data']['submissions'] ?? $r['data']['rows'] ?? []) >= 1, ok($r) ? array_keys($r['data']) : $r);
+check('GV xem danh sách 15 phiếu + bài nộp', ok($r) && count($r['data']['worksheets']) === 15 && count($r['data']['submissions'] ?? $r['data']['rows'] ?? []) >= 1, ok($r) ? array_keys($r['data']) : $r);
 $r = call('POST', ['action' => 'khtdSetWorksheetStatus', 'token' => $gv, 'worksheetId' => $ids[12], 'status' => 'OPEN']);
 check('GV mở mốc 2 khi tới hạn', ok($r), $r);
 $r = call('GET', ['action' => 'khtdListWorksheets', 'token' => $sv]);
