@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Toán 7 – Phòng Tương Tác Học Sinh · ThS. Đinh Quốc Tuấn</title>
+<link rel="icon" type="image/svg+xml" href="https://diemdanhsv.com/images/logo-sen.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --luc: #0F6B55;
+  --luc-sang: #10B981;
+  --luc-nhe: #ECFDF5;
+  --lam: #1F4E79;
+  --lam-dam: #102A43;
+  --vang: #D97706;
+  --do: #DC2626;
+  --giay: #F8FAFC;
+  --muc: #0F172A;
+  --line: #E2E8F0;
+  --card: #FFFFFF;
+  --serif: 'Source Serif 4', Georgia, serif;
+  --sans: 'Be Vietnam Pro', -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background-color: #F1F5F9;
+  color: var(--muc);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header di động */
+header {
+  background: linear-gradient(135deg, #102A43 0%, #1F4E79 100%);
+  color: #fff;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 3px;
+}
+.brand-logo img { width: 100%; height: 100%; object-fit: contain; }
+.brand-text h1 { font-size: 15px; font-weight: 700; font-family: var(--serif); color: #fff; }
+.brand-text p { font-size: 11px; color: #CBD5E1; }
+
+.user-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  background: rgba(255,255,255,0.12);
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.live-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 6px #10B981;
+}
+
+/* Thanh Tabs điều hướng */
+.tab-bar {
+  display: flex;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 60px;
+  z-index: 40;
+}
+.tab-btn {
+  flex: 1;
+  padding: 12px 6px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748B;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all .2s;
+}
+.tab-btn.active {
+  color: var(--luc);
+  border-bottom-color: var(--luc);
+}
+
+/* Vùng nội dung chính */
+main {
+  flex: 1;
+  padding: 16px;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Thẻ Câu Hỏi Hiện Tại */
+.q-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  border: 1px solid var(--line);
+  margin-bottom: 16px;
+}
+.q-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--line);
+}
+.q-badge {
+  background: #E0F2FE;
+  color: #0369A1;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 99px;
+  text-transform: uppercase;
+}
+.lock-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: #DC2626;
+  background: #FEE2E2;
+  padding: 4px 10px;
+  border-radius: 99px;
+  display: none;
+}
+.lock-badge.on { display: inline-block; }
+
+.q-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--muc);
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+.q-svg {
+  text-align: center;
+  margin: 12px 0;
+  background: #F8FAFC;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+}
+
+/* Lưới 4 nút chọn đáp án */
+.ans-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+.ans-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #FFFFFF;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all .15s ease;
+  font-family: inherit;
+  text-align: left;
+}
+.ans-btn:active {
+  transform: scale(0.98);
+}
+.ans-key {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #F1F5F9;
+  color: var(--lam);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  flex: none;
+}
+.ans-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1E293B;
+  flex: 1;
+}
+
+/* Trạng thái được chọn */
+.ans-btn.selected {
+  border-color: var(--luc);
+  background: var(--luc-nhe);
+}
+.ans-btn.selected .ans-key {
+  background: var(--luc);
+  color: #fff;
+}
+
+/* Trạng thái Đáp án đúng / sai khi thầy công bố */
+.ans-btn.is-correct {
+  border-color: var(--luc-sang);
+  background: #ECFDF5;
+}
+.ans-btn.is-correct .ans-key {
+  background: var(--luc-sang);
+  color: #fff;
+}
+.ans-btn.is-wrong {
+  border-color: #F87171;
+  background: #FEF2F2;
+}
+.ans-btn.is-wrong .ans-key {
+  background: #EF4444;
+  color: #fff;
+}
+
+/* Thanh trạng thái gửi phiếu */
+.submit-status-bar {
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  border-radius: 12px;
+  padding: 12px 14px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+}
+.submit-status-bar.ok {
+  background: #DCFCE7;
+  border-color: #86EFAC;
+  color: #15803D;
+}
+.submit-status-bar.locked {
+  background: #FEE2E2;
+  border-color: #FCA5A5;
+  color: #B91C1C;
+}
+
+/* Banner Thông Báo Kết Quả Khi Thầy Chiếu Đáp Án */
+.result-banner {
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 16px;
+  display: none;
+  animation: fadeIn .3s ease;
+}
+.result-banner.win {
+  display: block;
+  background: #ECFDF5;
+  border: 2px solid #10B981;
+  color: #065F46;
+}
+.result-banner.lose {
+  display: block;
+  background: #FFFBEB;
+  border: 2px solid #F59E0B;
+  color: #92400E;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hướng dẫn giải chi tiết */
+.sol-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  border: 1px solid var(--line);
+  margin-top: 14px;
+  display: none;
+}
+.sol-card.show { display: block; }
+.sol-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--luc);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sol-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #334155;
+  margin-bottom: 12px;
+}
+
+/* Màn hình Chờ / Bìa */
+.waiting-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  border: 1px solid var(--line);
+}
+.waiting-icon {
+  font-size: 48px;
+  margin-bottom: 14px;
+}
+.waiting-card h2 {
+  font-size: 20px;
+  color: var(--lam);
+  font-family: var(--serif);
+  margin-bottom: 8px;
+}
+.waiting-card p {
+  font-size: 14px;
+  color: #64748B;
+  line-height: 1.5;
+}
+
+/* Modal đổi tên */
+.name-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.name-modal.on { display: flex; }
+.name-box {
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.name-box h3 { font-size: 18px; color: var(--muc); margin-bottom: 12px; }
+.name-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  margin-bottom: 16px;
+  font-family: inherit;
+}
+.name-input:focus { border-color: var(--luc); }
+.name-submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--luc);
+  color: #fff;
+  border: 0;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Tab Lịch sử làm bài */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.history-item {
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.history-title { font-size: 14px; font-weight: 700; color: #1E293B; }
+.history-tag {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.history-tag.correct { background: #DCFCE7; color: #15803D; }
+.history-tag.wrong { background: #FEE2E2; color: #B91C1C; }
+</style>
+
+<!-- MathJax 3 -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  },
+  options: { enableMenu: false }
+};
+</script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">
+      <img src="https://diemdanhsv.com/images/logo-sen.svg" alt="Sen">
+    </div>
+    <div class="brand-text">
+      <h1>Lớp Học Trực Tuyến Toán 7</h1>
+      <p>ThS. Đinh Quốc Tuấn · HCMUS</p>
+    </div>
+  </div>
+
+  <div class="user-status" onclick="openNameModal()">
+    <span class="live-indicator"></span>
+    <span id="header-student-name">Học sinh</span>
+    <span style="font-size:10px; opacity:0.7;">✏️</span>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-btn-live" onclick="switchTab('live')">📱 Làm Bài Trực Tiếp</button>
+  <button class="tab-btn" id="tab-btn-history" onclick="switchTab('history')">📊 Lịch Sử & Điểm</button>
+</div>
+
+<main>
+  <!-- TAB 1: LÀM BÀI TRỰC TIẾP -->
+  <div id="pane-live">
+    <!-- MÀN HÌNH CHỜ (KHI CHƯA CHIẾU ĐỀ) -->
+    <div class="waiting-card" id="waiting-pane" style="display:none;">
+      <div class="waiting-icon">⏳</div>
+      <h2>Phòng Học Đang Kết Nối...</h2>
+      <p>Thầy Đinh Quốc Tuấn đang chuẩn bị chiếu câu hỏi tiếp theo. Hãy giữ màn hình sáng và sẵn sàng chọn đáp án nhé!</p>
+    </div>
+
+    <!-- MÀN HÌNH CÂU HỎI & CHỌN ĐÁP ÁN -->
+    <div class="q-card" id="q-pane">
+      <div class="q-header">
+        <span class="q-badge" id="q-number-badge">CÂU 1 / 12</span>
+        <span class="lock-badge" id="q-lock-badge">🔒 ĐÃ KHÓA BÌNH CHỌN</span>
+      </div>
+
+      <div class="q-title" id="q-title-text">Đang tải câu hỏi...</div>
+      <div class="q-svg" id="q-svg-box" style="display:none;"></div>
+
+      <div class="ans-grid" id="ans-buttons-box">
+        <!-- 4 nút A, B, C, D sẽ được sinh động bằng JS -->
+      </div>
+
+      <div class="submit-status-bar" id="submit-status">
+        Chạm vào một phương án để chọn đáp án
+      </div>
+
+      <!-- Banner kết quả khi thầy chốt đáp án -->
+      <div class="result-banner" id="res-banner">
+        <div id="res-banner-content"></div>
+      </div>
+
+      <!-- Khung lời giải chi tiết -->
+      <div class="sol-card" id="sol-card">
+        <h3>💡 Lời Giải & Kiến Thức Cốt Lõi:</h3>
+        <p id="sol-text"></p>
+        <div style="background:#EFF6FF; border-left:4px solid #3B82F6; padding:10px; border-radius:8px; font-size:13px; color:#1E3A8A;" id="theory-text"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: LỊCH SỬ LÀM BÀI -->
+  <div id="pane-history" style="display:none;">
+    <div style="background:#fff; border-radius:16px; padding:16px; margin-bottom:14px; border:1px solid var(--line); display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="font-size:13px; color:#64748B;">Tổng số câu đã làm</div>
+        <div style="font-size:24px; font-weight:800; color:var(--lam);" id="stat-total-done">0 / 12</div>
+      </div>
+      <div>
+        <div style="font-size:13px; color:#64748B;">Số câu làm đúng</div>
+        <div style="font-size:24px; font-weight:800; color:var(--luc-sang);" id="stat-correct-count">0</div>
+      </div>
+    </div>
+
+    <div class="history-list" id="history-items-box">
+      <!-- Danh sách lịch sử làm bài -->
+    </div>
+  </div>
+</main>
+
+<!-- MODAL ĐỔI TÊN HỌC SINH -->
+<div class="name-modal" id="nameModal">
+  <div class="name-box">
+    <h3>Nhập Họ & Tên Của Em</h3>
+    <input type="text" class="name-input" id="studentNameInput" placeholder="Ví dụ: Nguyễn Minh Khang" maxlength="40">
+    <button class="name-submit-btn" onclick="saveStudentName()">Xác Nhận & Vào Học</button>
+  </div>
+</div>
+
+<script>
+// 12 CÂU HỎI ĐỒNG BỘ VỚI SLIDE GIẢNG VIÊN
+const QUESTIONS = [
+  {
+    id: 1,
+    title: "Tập hợp các số hữu tỉ được kí hiệu là",
+    opts: [
+      { k: "A", t: "$\\mathbb N$" },
+      { k: "B", t: "$\\mathbb Z$" },
+      { k: "C", t: "$\\mathbb Q$" },
+      { k: "D", t: "$\\mathbb R$" }
+    ],
+    correct: "C",
+    solution: "Tập hợp các số hữu tỉ được kí hiệu là $\\mathbb Q$ (Quotient).",
+    theory: "Số hữu tỉ là số viết được dưới dạng $\\dfrac{a}{b}$ ($a,b \\in \\mathbb Z, b \\ne 0$)."
+  },
+  {
+    id: 2,
+    title: "Giá trị của $\\sqrt{225}$ là",
+    opts: [
+      { k: "A", t: "$-15$" },
+      { k: "B", t: "$15$" },
+      { k: "C", t: "$225$" },
+      { k: "D", t: "$-225$" }
+    ],
+    correct: "B",
+    solution: "Vì $15 \\ge 0$ và $15^2 = 225$ nên $\\sqrt{225} = 15$.",
+    theory: "Căn bậc hai số học của $a \\ge 0$ là số không âm $x$ sao cho $x^2 = a$."
+  },
+  {
+    id: 3,
+    title: "Giá trị tuyệt đối của $\\dfrac{3}{-2}$ là",
+    opts: [
+      { k: "A", t: "$\\dfrac{-3}{2}$" },
+      { k: "B", t: "$\\dfrac{3}{2}$" },
+      { k: "C", t: "$\\dfrac{2}{-3}$" },
+      { k: "D", t: "$\\dfrac{3}{-2}$" }
+    ],
+    correct: "B",
+    solution: "Ta có $\\dfrac{3}{-2} = -\\dfrac{3}{2}$. Do đó $\\left|\\dfrac{3}{-2}\\right| = \\dfrac{3}{2}$.",
+    theory: "Giá trị tuyệt đối của một số luôn không âm: $|x| \\ge 0$."
+  },
+  {
+    id: 4,
+    title: "Chọn câu đúng. Nếu $a\\cdot d = b\\cdot c$ và $a, b, c, d \\ne 0$ thì",
+    opts: [
+      { k: "A", t: "$\\dfrac{a}{b} = \\dfrac{c}{d}$" },
+      { k: "B", t: "$\\dfrac{d}{a} = \\dfrac{b}{c}$" },
+      { k: "C", t: "$\\dfrac{a}{b} = \\dfrac{d}{c}$" },
+      { k: "D", t: "$\\dfrac{a}{c} = \\dfrac{d}{b}$" }
+    ],
+    correct: "A",
+    solution: "Từ $a \\cdot d = b \\cdot c$, chia 2 vế cho $b \\cdot d$ ta được $\\dfrac{a}{b} = \\dfrac{c}{d}$.",
+    theory: "Tỉ lệ thức: Tích trung tỉ bằng tích ngoại tỉ."
+  },
+  {
+    id: 5,
+    title: "Thứ tự thực hiện đúng trong biểu thức có dấu ngoặc là",
+    opts: [
+      { k: "A", t: "$\\{\\ \\} \\to (\\ ) \\to [\\ ]$" },
+      { k: "B", t: "$\\{\\ \\} \\to [\\ ] \\to (\\ )$" },
+      { k: "C", t: "$(\\ ) \\to [\\ ] \\to \\{\\ \\}$" },
+      { k: "D", t: "$(\\ ) \\to \\{\\ \\} \\to [\\ ]$" }
+    ],
+    correct: "C",
+    solution: "Thực hiện phép tính trong ngoặc tròn $(\\ )$ trước, rồi đến ngoặc vuông $[\\ ]$, cuối cùng đến ngoặc nhọn $\\{\\ \\}$.",
+    theory: "Quy tắc dấu ngoặc SGK: $(\\ ) \\to [\\ ] \\to \\{\\ \\}$."
+  },
+  {
+    id: 6,
+    title: "Các cạnh bên của hình hộp chữ nhật $ABCD.A'B'C'D'$ là:",
+    svg: `<svg width="150" height="95" viewBox="0 0 160 104" xmlns="http://www.w3.org/2000/svg" font-family="serif" font-size="11"><g fill="none" stroke="#1E293B" stroke-width="1.4"><polygon points="30,30 110,30 140,10 60,10"/><polygon points="30,90 110,90 110,30 30,30"/><line x1="110" y1="90" x2="140" y2="70"/><line x1="140" y1="70" x2="140" y2="10"/><line x1="60" y1="70" x2="140" y2="70" stroke-dasharray="3 2"/><line x1="60" y1="70" x2="60" y2="10" stroke-dasharray="3 2"/><line x1="60" y1="70" x2="30" y2="90" stroke-dasharray="3 2"/></g><text x="16" y="30">A</text><text x="114" y="30">D</text><text x="144" y="12">C</text><text x="54" y="8">B</text><text x="16" y="98">A'</text><text x="114" y="98">D'</text><text x="144" y="76">C'</text><text x="46" y="80">B'</text></svg>`,
+    opts: [
+      { k: "A", t: "$AA', BB', CC', DD'$" },
+      { k: "B", t: "$AB, AA', DD', BC'$" },
+      { k: "C", t: "$AC, BA, CC', AD$" },
+      { k: "D", t: "$A'C', B'D', AB, CD$" }
+    ],
+    correct: "A",
+    solution: "Bốn cạnh bên nối các đỉnh tương ứng của hai đáy là $AA', BB', CC', DD'$.",
+    theory: "Hình hộp chữ nhật có 4 cạnh bên song song và bằng nhau."
+  },
+  {
+    id: 7,
+    title: "Mỗi mặt bên của hình lăng trụ đứng tam giác là",
+    opts: [
+      { k: "A", t: "Tam giác" },
+      { k: "B", t: "Hình thang cân" },
+      { k: "C", t: "Hình vuông" },
+      { k: "D", t: "Hình chữ nhật" }
+    ],
+    correct: "D",
+    solution: "Các mặt bên của hình lăng trụ đứng luôn là các hình chữ nhật.",
+    theory: "Hình lăng trụ đứng tam giác có 2 đáy là tam giác và 3 mặt bên là hình chữ nhật."
+  },
+  {
+    id: 8,
+    title: "Góc kề bù với góc $\\widehat{aOb}$ là",
+    svg: `<svg width="180" height="85" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" font-family="serif" font-size="12"><g stroke="#1E293B" stroke-width="1.5" fill="none"><line x1="10" y1="80" x2="190" y2="80"/><line x1="100" y1="80" x2="40" y2="20"/><line x1="100" y1="80" x2="118" y2="12"/></g><text x="28" y="16">b</text><text x="122" y="12">c</text><text x="6" y="94">a</text><text x="96" y="94">O</text><text x="186" y="94">d</text></svg>`,
+    opts: [
+      { k: "A", t: "$\\widehat{bOc}$" },
+      { k: "B", t: "$\\widehat{bOd}$" },
+      { k: "C", t: "$\\widehat{dOc}$" },
+      { k: "D", t: "$\\widehat{aOc}$" }
+    ],
+    correct: "B",
+    solution: "Vì $Oa$ và $Od$ là 2 tia đối nhau nên góc kề bù với $\\widehat{aOb}$ là $\\widehat{bOd}$.",
+    theory: "Hai góc kề bù có tổng số đo bằng $180^\\circ$."
+  },
+  {
+    id: 9,
+    title: "Phát biểu đúng nhất của “Tiên đề Euclid” là",
+    opts: [
+      { k: "A", t: "Qua một điểm ở ngoài một đường thẳng chỉ có một đường thẳng song song với đường thẳng đó" },
+      { k: "B", t: "Qua một điểm ở ngoài một đường thẳng có vô số đường thẳng song song với đường thẳng đó" },
+      { k: "C", t: "Qua một điểm ở ngoài một đường thẳng có ít nhất một đường thẳng song song với đường thẳng đó" },
+      { k: "D", t: "Chỉ có một đường thẳng song song với đường thẳng cho trước" }
+    ],
+    correct: "A",
+    solution: "Tiên đề Euclid khẳng định tính duy nhất của đường thẳng song song đi qua 1 điểm ngoài đường thẳng.",
+    theory: "Tiên đề Euclid: Qua một điểm ở ngoài một đường thẳng chỉ có một đường thẳng song song với đường thẳng đó."
+  },
+  {
+    id: 10,
+    title: "Để $Ot$ là tia phân giác của góc $xOy$ thì",
+    opts: [
+      { k: "A", t: "Tia $Ot$ nằm trong góc $xOy$" },
+      { k: "B", t: "$\\widehat{xOt} = \\widehat{yOt}$" },
+      { k: "C", t: "Tia $Ot$ nằm trong góc $xOy$ và $\\widehat{xOt} = \\widehat{yOt}$" },
+      { k: "D", t: "Tia $Ot$ nằm giữa" }
+    ],
+    correct: "C",
+    solution: "Tia phân giác phải nằm trong góc và chia góc đó thành 2 góc bằng nhau.",
+    theory: "Điều kiện tia phân giác: Tia $Ot$ nằm trong góc $xOy$ và $\\widehat{xOt} = \\widehat{yOt}$."
+  },
+  {
+    id: 11,
+    title: "Giả thiết của định lí “Nếu hai đường thẳng phân biệt cùng vuông góc với một đường thẳng khác thì hai đường thẳng đó song song với nhau” là",
+    opts: [
+      { k: "A", t: "“hai đường thẳng đó song song với nhau”" },
+      { k: "B", t: "“hai đường thẳng phân biệt cùng vuông góc với một đường thẳng khác thì hai đường thẳng đó song song với nhau”" },
+      { k: "C", t: "“hai đường thẳng phân biệt cùng vuông góc”" },
+      { k: "D", t: "“hai đường thẳng phân biệt cùng vuông góc với một đường thẳng khác”" }
+    ],
+    correct: "D",
+    solution: "Giả thiết là mệnh đề nằm sau chữ 'Nếu' và trước chữ 'thì'.",
+    theory: "Định lí có dạng: Nếu [Giả thiết] thì [Kết luận]."
+  },
+  {
+    id: 12,
+    title: "Tổng ba góc của một tam giác bằng",
+    opts: [
+      { k: "A", t: "$90^\\circ$" },
+      { k: "B", t: "$120^\\circ$" },
+      { k: "C", t: "$180^\\circ$" },
+      { k: "D", t: "$360^\\circ$" }
+    ],
+    correct: "C",
+    solution: "Trong mọi tam giác, tổng số đo ba góc trong luôn bằng $180^\\circ$.",
+    theory: "Tổng ba góc của tam giác luôn bằng $180^\\circ$."
+  }
+];
+
+// CLIENT ID & TÊN HỌC SINH
+function getClientId() {
+  let id = localStorage.getItem('toan7_client_id');
+  if (!id) {
+    id = 'sv_' + Math.random().toString(36).substring(2, 12);
+    localStorage.setItem('toan7_client_id', id);
+  }
+  return id;
+}
+const CLIENT_ID = getClientId();
+
+let studentName = localStorage.getItem('toan7_student_name') || 'Học sinh';
+document.getElementById('header-student-name').innerText = studentName;
+
+function openNameModal() {
+  document.getElementById('studentNameInput').value = studentName === 'Học sinh' ? '' : studentName;
+  document.getElementById('nameModal').classList.add('on');
+}
+function saveStudentName() {
+  const val = document.getElementById('studentNameInput').value.trim();
+  if (val) {
+    studentName = val;
+    localStorage.setItem('toan7_student_name', studentName);
+    document.getElementById('header-student-name').innerText = studentName;
+  }
+  document.getElementById('nameModal').classList.remove('on');
+}
+
+// BỘ ĐỆM ĐÁP ÁN ĐÃ CHỌN CỦA HỌC SINH
+let myVotes = {};
+try {
+  const saved = localStorage.getItem('toan7_my_votes');
+  if (saved) myVotes = JSON.parse(saved);
+} catch(e) {}
+
+// ENGINE ĐỒNG BỘ REALTIME TỪ SLIDE GIÁO VIÊN
+let currentExamState = { current_q: 1, slide_type: 'cover', is_locked: false };
+let displayedQ = 0;
+let displayedSlideType = '';
+
+function renderQuestion(qObj) {
+  displayedQ = qObj.id;
+  document.getElementById('q-number-badge').innerText = `CÂU ${qObj.id} / 12`;
+  document.getElementById('q-title-text').innerHTML = `<b>Câu ${qObj.id}:</b> ${qObj.title}`;
+
+  const svgBox = document.getElementById('q-svg-box');
+  if (qObj.svg) {
+    svgBox.innerHTML = qObj.svg;
+    svgBox.style.display = 'block';
+  } else {
+    svgBox.style.display = 'none';
+  }
+
+  const myChoice = myVotes[qObj.id];
+  const btnsBox = document.getElementById('ans-buttons-box');
+  btnsBox.innerHTML = qObj.opts.map(o => `
+    <button type="button" class="ans-btn ${myChoice === o.k ? 'selected' : ''}" id="btn-ans-${o.k}" onclick="pickAnswer('${o.k}')">
+      <div class="ans-key">${o.k}</div>
+      <div class="ans-text">${o.t}</div>
+    </button>
+  `).join('');
+
+  updateSubmitStatus();
+
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    window.MathJax.typesetPromise([document.getElementById('q-pane')]);
+  }
+}
+
+function updateSubmitStatus() {
+  const myChoice = myVotes[displayedQ];
+  const stEl = document.getElementById('submit-status');
+  const lockBadge = document.getElementById('q-lock-badge');
+
+  if (currentExamState.is_locked) {
+    lockBadge.classList.add('on');
+    stEl.className = 'submit-status-bar locked';
+    stEl.innerText = myChoice ? `🔒 Đã khóa nhận bài. Em đã chọn phương án [${myChoice}]` : '🔒 Thầy đã khóa nhận bài cho câu này';
+  } else {
+    lockBadge.classList.remove('on');
+    if (myChoice) {
+      stEl.className = 'submit-status-bar ok';
+      stEl.innerText = `✓ Đã ghi nhận đáp án: [${myChoice}]. Chạm chữ khác để đổi nếu muốn.`;
+    } else {
+      stEl.className = 'submit-status-bar';
+      stEl.innerText = 'Chạm vào A, B, C hoặc D để gửi câu trả lời';
+    }
+  }
+}
+
+function pickAnswer(k) {
+  if (currentExamState.is_locked) {
+    alert('Thầy đã khóa nhận bài cho câu này rồi em nhé!');
+    return;
+  }
+  myVotes[displayedQ] = k;
+  localStorage.setItem('toan7_my_votes', JSON.stringify(myVotes));
+
+  // Cập nhật giao diện nút
+  ['A', 'B', 'C', 'D'].forEach(key => {
+    const b = document.getElementById(`btn-ans-${key}`);
+    if (b) b.classList.toggle('selected', key === k);
+  });
+
+  updateSubmitStatus();
+  updateHistoryTab();
+
+  // Gửi API lên máy chủ
+  fetch('slido-api.php?action=vote&exam=toan7', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      q_id: displayedQ,
+      client_id: CLIENT_ID,
+      student_name: studentName,
+      answer: k
+    })
+  }).catch(() => {});
+}
+
+// CẬP NHẬT GIAO DIỆN THEO LOẠI SLIDE CỦA THẦY
+function applyTeacherSlideType(type, qObj) {
+  const resBanner = document.getElementById('res-banner');
+  const solCard = document.getElementById('sol-card');
+
+  if (type === 'question') {
+    resBanner.style.display = 'none';
+    solCard.classList.remove('show');
+
+    // Khôi phục màu nút bình thường
+    ['A', 'B', 'C', 'D'].forEach(key => {
+      const b = document.getElementById(`btn-ans-${key}`);
+      if (b) {
+        b.classList.remove('is-correct', 'is-wrong');
+        b.classList.toggle('selected', myVotes[qObj.id] === key);
+      }
+    });
+  } else if (type === 'answer') {
+    const myChoice = myVotes[qObj.id];
+    const isCorrect = (myChoice === qObj.correct);
+
+    resBanner.className = isCorrect ? 'result-banner win' : 'result-banner lose';
+    resBanner.innerHTML = isCorrect ? `
+      <div style="font-size:17px; font-weight:800;">🎉 CHÍNH XÁC! TUYỆT VỜI!</div>
+      <div style="font-size:14px; margin-top:4px;">Em đã chọn đúng phương án <b>${qObj.correct}</b>. Em được cộng 1 điểm!</div>
+    ` : `
+      <div style="font-size:17px; font-weight:800;">💡 RẤT TIẾC, CHƯA CHÍNH XÁC!</div>
+      <div style="font-size:14px; margin-top:4px;">Em đã chọn <b>${myChoice || 'chưa chọn'}</b>. Đáp án đúng là <b>${qObj.correct}</b>.</div>
+    `;
+
+    // Highlight nút đáp án đúng
+    ['A', 'B', 'C', 'D'].forEach(key => {
+      const b = document.getElementById(`btn-ans-${key}`);
+      if (b) {
+        b.classList.remove('is-correct', 'is-wrong');
+        if (key === qObj.correct) b.classList.add('is-correct');
+        else if (key === myChoice) b.classList.add('is-wrong');
+      }
+    });
+
+    solCard.classList.remove('show');
+  } else if (type === 'solution') {
+    // Chiếu lời giải chi tiết
+    solCard.classList.add('show');
+    document.getElementById('sol-text').innerHTML = qObj.solution;
+    document.getElementById('theory-text').innerHTML = `<b>Kiến thức SGK:</b> ${qObj.theory}`;
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      window.MathJax.typesetPromise([solCard]);
+    }
+  }
+}
+
+// POLLING TRẠNG THÁI TỪ SLIDE GIÁO VIÊN (1.5 giây / lần)
+function pollTeacherState() {
+  fetch('slido-api.php?action=get_state&exam=toan7')
+    .then(r => r.json())
+    .then(res => {
+      if (res.status !== 'success') return;
+      const st = res.state;
+      currentExamState = st;
+
+      const waitingPane = document.getElementById('waiting-pane');
+      const qPane = document.getElementById('q-pane');
+
+      if (st.slide_type === 'cover') {
+        waitingPane.style.display = 'block';
+        qPane.style.display = 'none';
+        return;
+      }
+
+      waitingPane.style.display = 'none';
+      qPane.style.display = 'block';
+
+      const targetQ = QUESTIONS.find(q => q.id === st.current_q) || QUESTIONS[0];
+
+      // Nếu thầy đổi sang câu hỏi mới
+      if (displayedQ !== targetQ.id) {
+        renderQuestion(targetQ);
+      }
+
+      // Cập nhật trạng thái khóa
+      updateSubmitStatus();
+
+      // Nếu thầy đổi loại slide (Đề ➔ Đáp án ➔ Lời giải)
+      if (displayedSlideType !== st.slide_type || displayedQ !== targetQ.id) {
+        displayedSlideType = st.slide_type;
+        applyTeacherSlideType(st.slide_type, targetQ);
+      }
+    })
+    .catch(() => {});
+}
+
+// TAB ĐIỀU HƯỚNG
+function switchTab(t) {
+  document.getElementById('tab-btn-live').classList.toggle('active', t === 'live');
+  document.getElementById('tab-btn-history').classList.toggle('active', t === 'history');
+  document.getElementById('pane-live').style.display = t === 'live' ? 'block' : 'none';
+  document.getElementById('pane-history').style.display = t === 'history' ? 'block' : 'none';
+  if (t === 'history') updateHistoryTab();
+}
+
+function updateHistoryTab() {
+  let doneCount = 0;
+  let correctCount = 0;
+
+  const html = QUESTIONS.map(q => {
+    const choice = myVotes[q.id];
+    if (choice) doneCount++;
+    const isCor = (choice === q.correct);
+    if (isCor) correctCount++;
+
+    return `
+      <div class="history-item">
+        <div>
+          <div class="history-title">Câu ${q.id}: ${q.title}</div>
+          <div style="font-size:12px; color:#64748B; margin-top:2px;">
+            Em chọn: <b>${choice || 'Chưa làm'}</b> · Đáp án: <b>${q.correct}</b>
+          </div>
+        </div>
+        ${choice ? `
+          <span class="history-tag ${isCor ? 'correct' : 'wrong'}">
+            ${isCor ? '✔ Đúng' : '✘ Sai'}
+          </span>
+        ` : `<span style="font-size:12px; color:#94A3B8;">Chưa chọn</span>`}
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('history-items-box').innerHTML = html;
+  document.getElementById('stat-total-done').innerText = `${doneCount} / 12`;
+  document.getElementById('stat-correct-count').innerText = `${correctCount} câu`;
+}
+
+// KHỞI ĐỘNG
+window.addEventListener('DOMContentLoaded', () => {
+  renderQuestion(QUESTIONS[0]);
+  pollTeacherState();
+  setInterval(pollTeacherState, 1500);
+
+  // Nếu chưa có tên, mở popup hỏi tên
+  if (studentName === 'Học sinh') {
+    setTimeout(openNameModal, 600);
+  }
+});
+</script>
+</body>
+</html>
