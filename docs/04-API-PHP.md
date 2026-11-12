@@ -1372,3 +1372,15 @@ Tuỳ chọn **mã điểm danh đang OPEN** (`attendance_keys`) khi mở phòng
 **Phiếu ôn tập** (`schema.on_tap = true`, `max_attempts 0` = không giới hạn): Đ&KV số 11–15, mỗi tuần một phiếu, 10 câu (8 nhận biết khoáng vật/đá theo mô tả + 2 vận dụng), rubric 1 điểm/câu, `answer_key` từng câu, dữ liệu chuẩn = `reference` của phiếu tuần tương ứng. Làm được ở cả hai chế độ. Nộp xong `khtdGetWorksheet` trả `onTapKey` [{text, answer}] → khung "Đáp án tham khảo"; giữ `doi_chieu` của lần chấm. **Không tính điểm:** `khtdExportCsv` bỏ cột Phieu11–15, thêm `OnTap_SoLanNop`. Seed: "Tạo / bổ sung phiếu Đ&KV" thêm 11–15 (phiếu cũ đã có bài làm giữ nguyên).
 
 **Kiểm thử.** `php tools/smoke_ontap.php --config=<CSDL thử>` 31 ca; `smoke_dkv` cập nhật 11 phiếu (31/33, 2 ca lỗi có sẵn trên main); `smoke_giamsat` 35/35, `smoke_chd` 33/33, `smoke_khtd_attempts` 67/67, `smoke_liveroom` 35/35.
+
+## 41. Seminar Giới thiệu ngành Địa chất `gtn-dc/` trên module phiếu online (13/11/2026) — `api/lib/gtn.php`, `api/lib/gtn_phieu.json`
+
+Mục đích: seminar nhóm 3 tuần cho tân sinh viên Khoa Địa chất dùng chung hệ thống phiếu online (mã vào lớp = mã điểm danh, mã ôn tập 6 ký tự, chấm tạm theo rubric, phiếu điểm PDF, thống kê, lưu trữ cuối học kỳ). **Không thêm bảng, không thêm action, không migration** — như bộ CHĐ (mục 34) và Đ&KV (mục 35).
+
+**Bộ phiếu** (`bo = 'gtn'`): 1 Thẻ khám phá bản thân (OPEN) · 2 Họp nhóm lần đầu: đề tài, 8 vai, giao ước, ảnh biên bản (OPEN) · 3 Đề cương mốc tuần 1, 5 nguồn có kiểm C.R.A.A.P (OPEN) · 4 Tiến độ tuần 2: bảng kế hoạch 6 cột, liên kết slide, giảng lại kiểu Feynman, ảnh tập dượt (HIDDEN) · 5 Phản biện nhóm bạn: 2 câu hỏi Socratic, KEEP/CHANGE (HIDDEN) · 6 Đánh giá chéo trong nhóm 4 tiêu chí × 2,5 điểm + tự nhìn lại (HIDDEN). Tất cả ScorePolicy LAST. `cham.quy_tac_bang`: không đáp số cố định, chấm độ đầy đủ và cụ thể; không chấm kết quả trắc nghiệm tính cách; không trích điểm đánh giá chéo của người khác trong nhận xét. Phiếu 1 dặn SV **không** ghi điều lo lắng, hoàn cảnh riêng vào phiếu (gửi email riêng cho GV).
+
+**Thay đổi code**: `khtd.php` thêm `require gtn.php` và nhánh `$bo === 'gtn'` trong `action_khtd_seed_worksheets`.
+
+**Trang**: `gtn-dc/index.html` (cẩm nang tự chứa: lộ trình, khám phá bản thân 4 bước — hình học tâm lý 3×7 câu theo học phần KNLVN, RIASEC 12 câu, 8 vai, nguồn lực — chạy hoàn toàn trên trình duyệt, lưu nháp `localStorage`, không gửi dữ liệu; nút Sao chép Thẻ để dán vào Phiếu 1; hộp công cụ KNLVN; bảng 20 đề tài lọc theo khối/độ khó/độ hợp; rubric đánh giá chéo), `gtn-dc/online.html` (SV), `gtn-dc/quanly.html` (GV, `KHTD_BO='gtn'`, `KHTD_CLASS_FILTER` khớp “Giới thiệu ngành|GTN|Seminar”), `gtn-dc/anh.php`, `gtn-dc/xuat-pdf.php` (gọi lại bản trong `khtd/`). Trang chủ: thẻ “Seminar Giới thiệu ngành Địa chất”.
+
+**Vận hành**: Quản trị → tạo lớp (tên có “Giới thiệu ngành”), nhập danh sách → `gtn-dc/quanly.html` chọn lớp → “Tạo / bổ sung phiếu Seminar” → mở mã vào lớp; mở Phiếu 4–6 khi tới mốc; tạo mã ôn tập cho SV xem lại ở nhà.
