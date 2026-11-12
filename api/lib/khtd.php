@@ -22,6 +22,7 @@ require_once __DIR__ . '/khtd_kb.php';
 require_once __DIR__ . '/khtd_exam.php';
 require_once __DIR__ . '/chd.php';
 require_once __DIR__ . '/dkv.php';
+require_once __DIR__ . '/gtn.php';
 require_once __DIR__ . '/khtd_giamsat.php';
 require_once __DIR__ . '/khtd_ontap.php';
 
@@ -992,7 +993,7 @@ function action_khtd_seed_worksheets(array $params): void
     assert_class_access($me, $classId);
     $created = []; $updated = [];
     $bo = strtolower(trim((string) ($params['bo'] ?? 'khtd')));
-    $defs = $bo === 'chd' ? chd_default_worksheets() : ($bo === 'dkv' ? dkv_default_worksheets() : khtd_default_worksheets());
+    $defs = $bo === 'chd' ? chd_default_worksheets() : ($bo === 'dkv' ? dkv_default_worksheets() : ($bo === 'gtn' ? gtn_default_worksheets() : khtd_default_worksheets()));
     foreach ($defs as $no => $def) {
         $stmt = db()->prepare('SELECT WorksheetID, SchemaJSON FROM khtd_worksheets WHERE ClassID = :c AND No = :n LIMIT 1');
         $stmt->execute(['c' => $classId, 'n' => $no]);

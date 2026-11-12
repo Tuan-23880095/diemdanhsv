@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seminar đầu tiên – Làm việc nhóm & Học tập | Giới thiệu ngành Địa chất K2026</title>
+<meta name="description" content="Cẩm nang seminar đầu tiên cho tân sinh viên Khoa Địa chất K2026: khám phá bản thân, chia vai nhóm, công cụ học tập, chọn đề tài, đánh giá chéo.">
+<link rel="icon" type="image/svg+xml" href="../workshop/assets/favicon.svg?v=20261014-logo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--luc:#0F6B55;--luc-nhat:#E3F0EC;--lam:#1F4E79;--muc:#10212B;--giay:#F6F7F3;--bac:#D5DCE1;--son:#B5462F;--hoang:#B8862B;--trang:#fff;--chu-phu:#4A5A63;--r:14px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;font-family:"Be Vietnam Pro",system-ui,sans-serif;color:var(--muc);background:var(--giay);line-height:1.6;font-size:16px}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;line-height:1.25;color:var(--muc)}
+h2{font-size:clamp(1.5rem,3vw,2rem);margin:0 0 .4em}
+h3{font-size:1.15rem;margin:1.2em 0 .4em}
+a{color:var(--luc)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+/* thanh điều hướng */
+.nav{position:sticky;top:0;z-index:50;background:rgba(246,247,243,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--bac)}
+.nav .wrap{display:flex;align-items:center;gap:14px;height:58px}
+.nav .brand{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--muc);text-decoration:none;white-space:nowrap}
+.nav .brand img{width:34px;height:34px;background:#fff;border-radius:20%;padding:3px;box-shadow:0 1px 4px rgba(16,33,43,.12)}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0 0 0 auto;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a.tab{display:block;padding:7px 11px;border-radius:999px;text-decoration:none;color:var(--chu-phu);font-size:.9rem;white-space:nowrap}
+.nav a.tab:hover,.nav a.tab.on{background:var(--luc-nhat);color:var(--luc)}
+@media(max-width:760px){.nav .brand span{display:none}}
+/* bìa */
+.hero{background:linear-gradient(160deg,#fff 0%,var(--luc-nhat) 100%);border-bottom:1px solid var(--bac);padding:42px 0 36px}
+.hero .logos{display:flex;align-items:center;gap:18px;margin-bottom:22px}
+.hero .logos .hcmus{height:62px}
+.hero .logos .sep{width:1px;height:48px;background:var(--bac)}
+.hero .logos .sen{width:58px;height:58px;background:#fff;border-radius:20%;padding:5px;box-shadow:0 2px 10px rgba(16,33,43,.08)}
+.hero .kicker{color:var(--luc);font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.hero h1{font-size:clamp(1.8rem,4.6vw,3rem);margin:.2em 0 .3em}
+.hero p.lead{font-size:1.1rem;max-width:760px;color:var(--chu-phu)}
+.pill{display:inline-block;background:#fff;border:1px solid var(--bac);border-radius:999px;padding:4px 12px;font-size:.85rem;margin:4px 6px 0 0}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:10px;padding:10px 18px;font:600 .95rem "Be Vietnam Pro",sans-serif;cursor:pointer;text-decoration:none;background:var(--luc);color:#fff}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:#fff;color:var(--luc);border:1.5px solid var(--luc)}
+.btn.small{padding:6px 12px;font-size:.85rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+section{padding:46px 0;border-bottom:1px solid var(--bac)}
+section .sub{color:var(--chu-phu);max-width:780px;margin:0 0 22px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:#fff;border:1px solid var(--bac);border-radius:var(--r);padding:18px 20px}
+.card h3{margin-top:0}
+.card .tag{display:inline-block;font-size:.75rem;font-weight:600;color:var(--lam);background:#E6EEF6;border-radius:6px;padding:2px 8px;margin-bottom:6px}
+.apply{margin-top:10px;padding:10px 12px;background:var(--luc-nhat);border-radius:10px;font-size:.92rem}
+.apply b{color:var(--luc)}
+.note{border-left:4px solid var(--hoang);background:#FBF6EA;padding:12px 16px;border-radius:0 10px 10px 0;font-size:.95rem}
+.note.lam{border-color:var(--lam);background:#EEF3F8}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--r);overflow:hidden;font-size:.93rem}
+th,td{padding:9px 11px;border-bottom:1px solid var(--bac);text-align:left;vertical-align:top}
+th{background:#EEF2F0;font-weight:600}
+.tbl{overflow-x:auto;border:1px solid var(--bac);border-radius:var(--r)}
+/* lộ trình */
+.week{position:relative;padding-left:58px}
+.week .num{position:absolute;left:0;top:18px;width:42px;height:42px;border-radius:50%;background:var(--luc);color:#fff;display:grid;place-items:center;font:700 1.1rem "Source Serif 4",serif}
+.week ul{margin:.3em 0 0;padding-left:1.1em}
+.week .goal{font-weight:600;color:var(--lam)}
+/* trình khám phá */
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.steps button{border:1px solid var(--bac);background:#fff;border-radius:999px;padding:6px 14px;font:500 .88rem "Be Vietnam Pro";cursor:pointer;color:var(--chu-phu)}
+.steps button.on{background:var(--luc);border-color:var(--luc);color:#fff}
+.steps button.done:not(.on){border-color:var(--luc);color:var(--luc)}
+.pane{display:none}.pane.on{display:block}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.chip{border:1.5px solid var(--bac);background:#fff;border-radius:10px;padding:9px 12px;text-align:left;font:400 .92rem "Be Vietnam Pro";cursor:pointer;color:var(--muc)}
+.chip.on{border-color:var(--luc);background:var(--luc-nhat);font-weight:600}
+.counter{font-weight:600;color:var(--luc)}
+.counter.full{color:var(--son)}
+.likert{display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:center;background:#fff;border:1px solid var(--bac);border-radius:var(--r);padding:14px 16px}
+.likert .opts{display:flex;gap:4px}
+.likert .opts button{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--bac);background:#fff;font:600 .9rem "Be Vietnam Pro";cursor:pointer}
+.likert .opts button.on{background:var(--luc);border-color:var(--luc);color:#fff}
+@media(max-width:600px){.likert{grid-template-columns:1fr}.likert .opts{margin-bottom:8px}}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.role{background:#fff;border:1px solid var(--bac);border-radius:12px;padding:12px 14px}
+.role b{display:block}
+.role small{color:var(--chu-phu)}
+.role .pick{display:flex;gap:4px;margin-top:8px}
+.role .pick button{flex:1;border:1.5px solid var(--bac);background:#fff;border-radius:8px;padding:5px 0;font:500 .8rem "Be Vietnam Pro";cursor:pointer}
+.role .pick button.on[data-k=like]{background:var(--luc);border-color:var(--luc);color:#fff}
+.role .pick button.on[data-k=learn]{background:var(--lam);border-color:var(--lam);color:#fff}
+.role .pick button.on[data-k=avoid]{background:var(--son);border-color:var(--son);color:#fff}
+.form{display:grid;gap:14px}
+.form label{font-weight:600;display:block;margin-bottom:4px}
+.form .row{background:#fff;border:1px solid var(--bac);border-radius:12px;padding:12px 14px}
+.form input[type=text],.form select{width:100%;padding:9px 11px;border:1px solid var(--bac);border-radius:8px;font:inherit}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.checks label{font-weight:400;display:inline-flex;gap:6px;align-items:center;background:var(--giay);border:1px solid var(--bac);border-radius:999px;padding:4px 12px;cursor:pointer;margin:0}
+.navbtns{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+/* thẻ kết quả */
+.idcard{background:#fff;border:2px solid var(--luc);border-radius:18px;padding:22px 24px;max-width:720px}
+.idcard .top{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--bac);padding-bottom:12px;margin-bottom:12px}
+.idcard .shape{width:64px;height:64px;flex:none}
+.idcard h3{margin:0;font-size:1.4rem}
+.idcard dl{display:grid;grid-template-columns:170px 1fr;gap:6px 12px;margin:0}
+.idcard dt{color:var(--chu-phu);font-size:.9rem}
+.idcard dd{margin:0;font-weight:500}
+@media(max-width:600px){.idcard dl{grid-template-columns:1fr}.idcard dt{margin-top:6px}}
+.bars{display:grid;gap:6px;margin:10px 0}
+.bar{display:grid;grid-template-columns:110px 1fr 28px;gap:8px;align-items:center;font-size:.88rem}
+.bar i{display:block;height:10px;border-radius:5px;background:var(--luc)}
+.bar span.track{background:var(--giay);border-radius:5px;overflow:hidden}
+/* đề tài */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters select{padding:8px 10px;border:1px solid var(--bac);border-radius:8px;font:inherit;background:#fff}
+.stars{color:var(--hoang);letter-spacing:1px;white-space:nowrap}
+tr.fit td:first-child{box-shadow:inset 4px 0 0 var(--luc)}
+.fitbadge{display:inline-block;font-size:.72rem;background:var(--luc);color:#fff;border-radius:6px;padding:1px 6px;margin-left:4px;vertical-align:middle}
+details{background:#fff;border:1px solid var(--bac);border-radius:12px;padding:10px 14px;margin-bottom:8px}
+details summary{cursor:pointer;font-weight:600}
+.checklist{list-style:none;padding:0;margin:0}
+.checklist li{padding:6px 0 6px 30px;position:relative;border-bottom:1px dashed var(--bac)}
+.checklist li:before{content:"";position:absolute;left:2px;top:9px;width:16px;height:16px;border:2px solid var(--luc);border-radius:4px}
+footer{padding:34px 0 50px;color:var(--chu-phu);font-size:.88rem}
+footer .refs{columns:2 300px;column-gap:28px}
+footer .refs p{margin:0 0 6px;break-inside:avoid}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--muc);color:#fff;padding:10px 18px;border-radius:10px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99}
+.toast.show{opacity:1}
+@media print{
+ .nav,.btn,.steps,.navbtns,.filters,.no-print,.dqt-sen,.hero .logos .sep{display:none!important}
+ body{background:#fff;font-size:12pt}
+ section{padding:14px 0;page-break-inside:auto}
+ .pane{display:block!important}
+ .card,.idcard,.role{break-inside:avoid}
+ body.print-card > *:not(#kham-pha){display:none!important}
+ body.print-card #kham-pha .pane:not(#p-ket-qua),body.print-card #kham-pha>.wrap>h2,body.print-card #kham-pha .sub{display:none!important}
+}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+ <a class="brand" href="#top"><img class="dqt-sen" src="../workshop/assets/logo-sen.svg" alt="Logo hoa sen"><span>Seminar đầu tiên</span></a>
+ <ul>
+  <li><a class="tab" href="#lo-trinh">Lộ trình</a></li>
+  <li><a class="tab" href="#kham-pha">Khám phá bản thân</a></li>
+  <li><a class="tab" href="#hop-nhom">Họp nhóm</a></li>
+  <li><a class="tab" href="#cong-cu">Hộp công cụ</a></li>
+  <li><a class="tab" href="#de-tai">Đề tài</a></li>
+  <li><a class="tab" href="#danh-gia">Đánh giá</a></li>
+  <li><a class="tab" href="#nguyen-tac">AI &amp; trích dẫn</a></li>
+  <li><a class="tab" href="online.html" style="background:var(--luc);color:#fff">Làm phiếu online</a></li>
+ </ul>
+</div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+ <div class="logos"><img class="hcmus" src="../images/logo-hcmus.png" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM"><span class="sep"></span><img class="sen dqt-sen" src="../workshop/assets/logo-sen.svg" alt="Logo hoa sen"></div>
+ <div class="kicker">Giới thiệu ngành Địa chất · Tân sinh viên K2026 · Khoa Địa chất</div>
+ <h1>Seminar đầu tiên thời sinh viên:<br>làm việc nhóm và học tập</h1>
+ <p class="lead">Ba tuần, một đề tài, tám người bạn mới. Trang này giúp bạn hiểu mình hơn, chia vai cho hợp, học và tìm tài liệu đúng cách, rồi tự tin đứng trước lớp.</p>
+ <span class="pill">3 tuần</span><span class="pill">2 nhóm × 8 bạn</span><span class="pill">20 đề tài gợi ý</span><span class="pill">Không cần biết trước về địa chất</span>
+ <p style="margin-top:20px"><a class="btn" href="#kham-pha">Bắt đầu khám phá bản thân (20 phút)</a> <a class="btn ghost" href="online.html">Làm phiếu online (MSSV + mã lớp)</a> <a class="btn ghost" href="online.html?ontap=1">Ôn tập ở nhà</a></p>
+</div></header>
+
+<section id="lo-trinh"><div class="wrap">
+ <h2>Lộ trình 3 tuần</h2>
+ <p class="sub">Mỗi tuần chỉ có một mốc chính, nộp bằng phiếu online trên <a href="online.html">trang làm phiếu</a> (đăng nhập bằng MSSV và mã vào lớp giảng viên công bố; ở nhà dùng mã ôn tập 6 ký tự để xem lại bài, điểm và nhận xét). Làm xong mốc của tuần là đủ, không cần làm trước, không cần hoàn hảo.</p>
+ <div class="grid">
+  <div class="card week"><div class="num">1</div>
+   <h3>Hiểu mình, hiểu nhóm, chọn đề tài</h3>
+   <p class="goal">Mốc: Phiếu 1 (Thẻ khám phá bản thân), Phiếu 2 (họp nhóm lần đầu), Phiếu 3 (đề cương) trước hết ngày 7.</p>
+   <ul>
+    <li>Ngày 1–2: mỗi bạn làm phần <a href="#kham-pha">Khám phá bản thân</a>, in hoặc chụp lại Thẻ giới thiệu.</li>
+    <li>Ngày 2–3: <a href="#hop-nhom">họp nhóm lần đầu 60 phút</a>: làm quen, bỏ phiếu chọn đề tài, chia vai, ký giao ước nhóm.</li>
+    <li>Ngày 3–6: đọc dàn ý đề tài, tìm 5–8 nguồn tin cậy, viết đề cương: đặt vấn đề → 3 ý chính → liên hệ Việt Nam → câu hỏi của riêng nhóm.</li>
+   </ul></div>
+  <div class="card week"><div class="num">2</div>
+   <h3>Tìm hiểu sâu, làm slide, tập nói</h3>
+   <p class="goal">Mốc: Phiếu 4 – bảng kế hoạch, slide nháp 15–20 trang, buổi tập dượt có bấm giờ.</p>
+   <ul>
+    <li>Mỗi bạn phụ trách một phần; ghi nguồn ngay khi lấy thông tin, hình ảnh.</li>
+    <li>Dùng ảnh Google Earth, sơ đồ, bản đồ thay cho đoạn chữ dài.</li>
+    <li>Tập dượt toàn nhóm, bấm giờ tối đa 15 phút; mỗi bạn nói ít nhất 1 phút.</li>
+   </ul></div>
+  <div class="card week"><div class="num">3</div>
+   <h3>Báo cáo, phản biện, nhìn lại</h3>
+   <p class="goal">Mốc: thuyết trình 15 phút, hỏi đáp chéo 10 phút; Phiếu 5 (phản biện nhóm bạn) và Phiếu 6 (đánh giá chéo, tự nhìn lại).</p>
+   <ul>
+    <li>Nhóm này đặt câu hỏi cho nhóm kia; trả lời theo quy trình <a href="#cong-cu">TRAC</a>.</li>
+    <li>Sau buổi báo cáo: mỗi bạn chấm kín đóng góp của các bạn cùng nhóm và viết 3 câu tự nhìn lại.</li>
+   </ul></div>
+ </div>
+</div></section>
+
+<section id="kham-pha"><div class="wrap">
+ <h2>Khám phá bản thân</h2>
+ <p class="sub">Bốn bước, khoảng 20 phút. <b>Không có đáp án đúng sai</b>, không tính điểm. Kết quả chỉ nằm trên máy của bạn, trang không gửi dữ liệu đi đâu. Cuối cùng bạn nhận một Thẻ giới thiệu: bấm <b>Sao chép Thẻ</b> rồi dán vào <a href="online.html">Phiếu 1</a> để nộp, và đọc Thẻ trong buổi họp nhóm đầu tiên.</p>
+ <div class="steps" id="steps">
+  <button data-p="p-hinh" class="on">1. Hình khối tính cách</button>
+  <button data-p="p-nghe">2. Sở thích nghề</button>
+  <button data-p="p-vai">3. Vai trò trong nhóm</button>
+  <button data-p="p-nguon">4. Nguồn lực &amp; kỹ năng</button>
+  <button data-p="p-ket-qua">Thẻ của tôi</button>
+ </div>
+
+ <div class="pane on" id="p-hinh">
+  <p>Ở mỗi phần, chọn <b>đúng 7 câu</b> giống bạn nhất <i>ở thời điểm hiện tại</i>. Đây là trò chơi khởi động dựa trên mô hình hình học tâm lý (Psycho-Geometrics) dùng trong học phần Kỹ năng làm việc nhóm và học tập, giúp nhóm bắt đầu trò chuyện về cách mỗi người làm việc.</p>
+  <div id="pg"></div>
+  <div class="navbtns"><span></span><button class="btn" data-go="p-nghe" id="go2" disabled>Tiếp: Sở thích nghề →</button></div>
+ </div>
+
+ <div class="pane" id="p-nghe">
+  <p>Mỗi câu chọn từ <b>1</b> (hoàn toàn không giống tôi) đến <b>5</b> (rất giống tôi). Bộ câu hỏi rút gọn theo 6 nhóm sở thích nghề nghiệp của Holland (RIASEC).</p>
+  <div class="likert" id="riasec"></div>
+  <div class="navbtns"><button class="btn ghost" data-go="p-hinh">← Quay lại</button><button class="btn" data-go="p-vai" id="go3" disabled>Tiếp: Vai trò →</button></div>
+ </div>
+
+ <div class="pane" id="p-vai">
+  <p>Chọn <b>2 vai Thích</b>, <b>1 vai Muốn học thêm</b> và <b>1 vai Ngại</b>. Nhóm tốt cần đủ 8 vai; một người có thể giữ 2 vai.</p>
+  <div class="roles" id="roles"></div>
+  <div class="navbtns"><button class="btn ghost" data-go="p-nghe">← Quay lại</button><button class="btn" data-go="p-nguon" id="go4" disabled>Tiếp: Nguồn lực →</button></div>
+ </div>
+
+ <div class="pane" id="p-nguon">
+  <div class="form" id="nguon">
+   <div class="row"><label for="f-ten">Tên gọi thân mật bạn muốn nhóm gọi</label><input type="text" id="f-ten" maxlength="40" placeholder="Ví dụ: Thảo, Tommy…"></div>
+   <div class="row"><label>Thời gian dành cho seminar mỗi tuần</label><div class="checks" data-name="gio" data-single="1">
+    <label><input type="radio" name="gio" value="dưới 3 giờ">dưới 3 giờ</label><label><input type="radio" name="gio" value="3–5 giờ">3–5 giờ</label><label><input type="radio" name="gio" value="5–8 giờ">5–8 giờ</label><label><input type="radio" name="gio" value="trên 8 giờ">trên 8 giờ</label></div></div>
+   <div class="row"><label>Khung giờ có thể họp nhóm</label><div class="checks" data-name="ranh">
+    <label><input type="checkbox" value="sáng">sáng</label><label><input type="checkbox" value="chiều">chiều</label><label><input type="checkbox" value="tối">tối</label><label><input type="checkbox" value="cuối tuần">cuối tuần</label><label><input type="checkbox" value="họp online được">họp online được</label></div></div>
+   <div class="row"><label>Thiết bị</label><div class="checks" data-name="may" data-single="1">
+    <label><input type="radio" name="may" value="laptop riêng">laptop riêng</label><label><input type="radio" name="may" value="máy dùng chung">máy dùng chung</label><label><input type="radio" name="may" value="chỉ điện thoại">chỉ điện thoại</label></div></div>
+   <div class="row"><label>Công cụ bạn dùng tốt</label><div class="checks" data-name="tool">
+    <label><input type="checkbox" value="Word/Google Docs">Word/Google Docs</label><label><input type="checkbox" value="PowerPoint/Canva">PowerPoint/Canva</label><label><input type="checkbox" value="Excel/Google Sheets">Excel/Google Sheets</label><label><input type="checkbox" value="Google Earth">Google Earth</label><label><input type="checkbox" value="chỉnh ảnh">chỉnh ảnh</label><label><input type="checkbox" value="dựng video">dựng video</label><label><input type="checkbox" value="QGIS/bản đồ">QGIS/bản đồ</label><label><input type="checkbox" value="lập trình">lập trình</label><label><input type="checkbox" value="trợ lý AI">trợ lý AI</label></div></div>
+   <div class="row"><label>Đọc tài liệu tiếng Anh</label><div class="checks" data-name="eng" data-single="1">
+    <label><input type="radio" name="eng" value="1 – rất khó khăn">1 – rất khó khăn</label><label><input type="radio" name="eng" value="2 – cần từ điển nhiều">2 – cần từ điển nhiều</label><label><input type="radio" name="eng" value="3 – hiểu ý chính">3 – hiểu ý chính</label><label><input type="radio" name="eng" value="4 – khá thoải mái">4 – khá thoải mái</label></div></div>
+   <div class="row"><label>Kinh nghiệm đã có</label><div class="checks" data-name="kn">
+    <label><input type="checkbox" value="đội tuyển HSG">đội tuyển HSG</label><label><input type="checkbox" value="Đoàn, CLB">Đoàn, CLB</label><label><input type="checkbox" value="MC, văn nghệ">MC, văn nghệ</label><label><input type="checkbox" value="làm thêm">làm thêm</label><label><input type="checkbox" value="NCKH học sinh">NCKH học sinh</label><label><input type="checkbox" value="sưu tầm đá, khoáng vật">sưu tầm đá, khoáng vật</label><label><input type="checkbox" value="chụp ảnh, vẽ">chụp ảnh, vẽ</label><label><input type="checkbox" value="đi phượt, du lịch">đi phượt, du lịch</label></div></div>
+   <div class="row"><label>Kỹ năng mềm bạn đã tự tin</label><div class="checks" data-name="mem">
+    <label><input type="checkbox" value="lắng nghe">lắng nghe</label><label><input type="checkbox" value="nói ý kiến trong nhóm">nói ý kiến trong nhóm</label><label><input type="checkbox" value="thuyết trình">thuyết trình</label><label><input type="checkbox" value="viết mạch lạc">viết mạch lạc</label><label><input type="checkbox" value="quản lý thời gian">quản lý thời gian</label><label><input type="checkbox" value="tìm kiếm thông tin">tìm kiếm thông tin</label><label><input type="checkbox" value="đánh giá nguồn tin">đánh giá nguồn tin</label><label><input type="checkbox" value="góp ý, nhận góp ý">góp ý, nhận góp ý</label><label><input type="checkbox" value="giải quyết bất đồng">giải quyết bất đồng</label><label><input type="checkbox" value="dùng AI có trách nhiệm">dùng AI có trách nhiệm</label></div></div>
+   <div class="row"><label for="f-tien">Kỹ năng bạn muốn tiến bộ nhất sau seminar</label><select id="f-tien">
+    <option value="">— chọn một —</option><option>Thuyết trình trước lớp</option><option>Nói ý kiến trong nhóm</option><option>Quản lý thời gian, đúng hạn</option><option>Tìm và đánh giá nguồn tin</option><option>Viết mạch lạc, trích dẫn đúng</option><option>Làm slide trực quan</option><option>Góp ý và nhận góp ý</option><option>Giải quyết bất đồng</option><option>Dùng AI có trách nhiệm</option></select></div>
+   <div class="row"><label for="f-thuvi">Một điều thú vị về bạn</label><input type="text" id="f-thuvi" maxlength="90" placeholder="Ví dụ: từng leo Fansipan, nuôi một hòn đá làm thú cưng…"></div>
+  </div>
+  <div class="navbtns"><button class="btn ghost" data-go="p-vai">← Quay lại</button><button class="btn" data-go="p-ket-qua" id="go5">Xem Thẻ của tôi →</button></div>
+ </div>
+
+ <div class="pane" id="p-ket-qua">
+  <div id="card-out"></div>
+  <div class="navbtns no-print">
+   <span><button class="btn ghost" data-go="p-nguon">← Sửa câu trả lời</button> <button class="btn ghost" id="reset">Làm lại từ đầu</button></span>
+   <span><button class="btn ghost" id="copy">Sao chép Thẻ</button> <button class="btn" id="print">In / Lưu PDF Thẻ</button></span>
+  </div>
+  <p class="note lam" style="margin-top:18px">Kết quả là ảnh chụp ở thời điểm hiện tại, không phải nhãn dán. Sở thích, tính cách và kỹ năng của người 18 tuổi còn thay đổi nhiều; đại học là nơi để thay đổi. Nếu bạn thấy căng thẳng hay buồn kéo dài, hãy nói với Thầy hoặc tìm đến bộ phận tư vấn tâm lý – hỗ trợ sinh viên của Trường.</p>
+ </div>
+</div></section>
+
+<section id="hop-nhom"><div class="wrap">
+ <h2>Buổi họp nhóm đầu tiên (60 phút)</h2>
+ <p class="sub">Ra về với 3 thứ: đề tài đã chọn, bảng phân vai và bản giao ước nhóm. Mỗi người nhận <b>1 vai chính + 1 vai học thêm</b>; không ai bị xếp vào vai mình ghi là Ngại nếu còn người khác nhận được.</p>
+ <div class="grid g2">
+  <div class="card"><span class="tag">Kịch bản</span>
+   <ol>
+    <li><b>Làm quen – 15 phút.</b> Mỗi bạn đọc Thẻ giới thiệu trong tối đa 90 giây. Người nghe chỉ lắng nghe, chưa bình luận.</li>
+    <li><b>Bầu người giữ nhịp – 5 phút.</b> Một người cầm giờ, một người ghi biên bản (tạm thời).</li>
+    <li><b>Chọn đề tài – 15 phút.</b> Mỗi bạn 3 phiếu cho 3 đề tài ở mục <a href="#de-tai">Đề tài</a>. Lấy 2 đề tài nhiều phiếu nhất, bàn 5 phút, biểu quyết lần cuối.</li>
+    <li><b>Chia vai – 15 phút.</b> Đặt Thẻ của cả nhóm cạnh nhau. Vai đông người thì chia nhỏ việc; vai trống thì mời bạn ghi vai đó là "Muốn học thêm". Xác nhận Trưởng nhóm và Thư ký chính thức.</li>
+    <li><b>Ký giao ước – 10 phút.</b> Thống nhất các điều bên cạnh, mỗi bạn xác nhận trên nhóm chat.</li>
+   </ol></div>
+  <div class="card"><span class="tag">Giao ước nhóm (mẫu, nhóm tự sửa)</span>
+   <ul class="checklist">
+    <li>Họp ít nhất 1 lần mỗi tuần vào khung giờ đã chọn.</li>
+    <li>Trả lời tin nhắn nhóm trong vòng 24 giờ.</li>
+    <li>Không kịp hạn thì báo trước ít nhất 1 ngày, không im lặng.</li>
+    <li>Góp ý vào việc, không nhắm vào người.</li>
+    <li>Mọi thông tin, hình ảnh ghi nguồn ngay khi lấy về.</li>
+    <li>Dùng AI thì ghi rõ dùng cho việc gì và đã kiểm tra lại.</li>
+    <li>Ai cũng nói khi thuyết trình, mỗi người ít nhất 1 phút.</li>
+    <li>Bất đồng không tự giải quyết được sau 2 lần thảo luận thì báo Thầy.</li>
+   </ul></div>
+ </div>
+ <h3>8 vai trong nhóm seminar</h3>
+ <div class="tbl"><table>
+  <tr><th>Vai</th><th>Việc chính trong 3 tuần</th><th>Hợp với người…</th></tr>
+  <tr><td>Điều phối</td><td>Chia việc, giữ bảng kế hoạch, nhắc hạn, chủ trì họp</td><td>quyết đoán, thích tổ chức</td></tr>
+  <tr><td>Khơi ý tưởng</td><td>Đề xuất góc nhìn, câu hỏi riêng của nhóm, ý tưởng mở bài</td><td>sáng tạo, nhiều ý tưởng</td></tr>
+  <tr><td>Săn tư liệu</td><td>Tìm bài báo, báo cáo, ảnh vệ tinh, số liệu; ghi nguồn</td><td>tò mò, kiên nhẫn</td></tr>
+  <tr><td>Kiểm chứng</td><td>Đối chiếu nguồn, soát số liệu, chuẩn bị câu hỏi phản biện</td><td>cẩn thận, hay hỏi "tại sao"</td></tr>
+  <tr><td>Kể chuyện bằng hình</td><td>Slide, sơ đồ, bản đồ, video ngắn</td><td>có mắt thẩm mỹ, thích thiết kế</td></tr>
+  <tr><td>Viết – biên tập</td><td>Đề cương, ghi chú cho người nói, thống nhất văn phong</td><td>viết gọn, ngăn nắp</td></tr>
+  <tr><td>Trình bày</td><td>Dẫn dắt bài nói, điều phối hỏi đáp</td><td>tự tin trước đám đông</td></tr>
+  <tr><td>Kết nối</td><td>Giữ không khí, hỏi han bạn im lặng, hòa giải</td><td>biết lắng nghe, hòa đồng</td></tr>
+ </table></div>
+</div></section>
+
+<section id="cong-cu"><div class="wrap">
+ <h2>Hộp công cụ học tập và làm việc nhóm</h2>
+ <p class="sub">Chọn lọc từ học phần Kỹ năng làm việc nhóm và học tập (KNLVN) của Trường, kèm cách dùng ngay cho bài seminar địa chất.</p>
+ <h3>Học và ghi nhớ</h3>
+ <div class="grid g3">
+  <div class="card"><span class="tag">Truy xuất chủ động</span><h3>Active Recall &amp; Blurting</h3><p>Gấp tài liệu lại, viết ra giấy tất cả những gì còn nhớ, rồi mở ra đối chiếu. Tự kiểm tra giữ kiến thức lâu hơn đọc lại.</p><div class="apply"><b>Seminar:</b> sau khi đọc một bài báo, mỗi bạn viết 5 dòng "mình hiểu gì" mà không nhìn lại.</div></div>
+  <div class="card"><span class="tag">Lặp lại ngắt quãng</span><h3>Spaced Repetition</h3><p>Ôn lại sau 1 ngày, 3 ngày, 7 ngày. Không ôn, kiến thức rơi rất nhanh theo đường cong quên lãng.</p><div class="apply"><b>Seminar:</b> ôn thuật ngữ của đề tài (đá móng, tầng chứa, xâm nhập mặn…) bằng thẻ ghi nhớ trước buổi tập dượt.</div></div>
+  <div class="card"><span class="tag">Đọc hiệu quả</span><h3>SQ3R</h3><p>Khảo sát → Đặt câu hỏi → Đọc → Thuật lại → Ôn tập. Lướt tiêu đề, hình, kết luận trước khi đọc kỹ.</p><div class="apply"><b>Seminar:</b> với bài tiếng Anh, đọc Abstract, hình và Conclusion trước; chỉ đọc kỹ phần cần.</div></div>
+  <div class="card"><span class="tag">Ghi chép</span><h3>Cornell &amp; Sơ đồ tư duy</h3><p>Chia trang 3 phần: từ khóa – ghi chép chính – tóm tắt. Sơ đồ tư duy để thấy toàn cảnh.</p><div class="apply"><b>Seminar:</b> mỗi buổi họp, Thư ký ghi theo Cornell; cả nhóm vẽ sơ đồ tư duy đề tài trong tuần 1.</div></div>
+  <div class="card"><span class="tag">Giảng lại</span><h3>Kỹ thuật Feynman</h3><p>Giải thích một khái niệm bằng lời đơn giản như đang dạy em lớp 8. Chỗ nào vấp là chỗ chưa hiểu.</p><div class="apply"><b>Seminar:</b> mỗi bạn giảng phần của mình cho cả nhóm 2 phút trước khi làm slide.</div></div>
+ </div>
+ <h3>Thời gian và mục tiêu</h3>
+ <div class="grid g3">
+  <div class="card"><span class="tag">Mục tiêu</span><h3>SMART</h3><p>Cụ thể, Đo được, Khả thi, Thực tế, Có thời hạn.</p><div class="apply"><b>Ví dụ:</b> "Trước 20h thứ Năm, Săn tư liệu gửi nhóm 6 nguồn có tên tác giả và năm" thay vì "tìm tài liệu".</div></div>
+  <div class="card"><span class="tag">Ưu tiên</span><h3>Ma trận Eisenhower</h3><p>Quan trọng × Khẩn cấp: Làm ngay · Lên lịch · Ủy thác · Loại bỏ. Dành nhiều thời gian nhất cho ô "Quan trọng – chưa khẩn cấp".</p><div class="apply"><b>Seminar:</b> làm đề cương sớm (ô Lên lịch) để tuần 3 không rơi vào ô Làm ngay.</div></div>
+  <div class="card"><span class="tag">Tập trung</span><h3>Pomodoro &amp; Time Blocking</h3><p>25 phút làm một việc duy nhất, nghỉ 5 phút. Khóa khung giờ trên lịch cho từng việc.</p><div class="apply"><b>Seminar:</b> buổi làm slide chung = 4 Pomodoro, tắt thông báo mạng xã hội.</div></div>
+  <div class="card"><span class="tag">Quy luật</span><h3>80/20 &amp; Parkinson</h3><p>20% việc cốt lõi tạo 80% kết quả; việc luôn giãn ra lấp đầy thời gian cho phép.</p><div class="apply"><b>Seminar:</b> đặt hạn nội bộ sớm hơn hạn của Thầy 1 ngày; ưu tiên 3 ý chính trước khi trang trí slide.</div></div>
+ </div>
+ <h3>Tư duy và giải quyết vấn đề</h3>
+ <div class="grid g3">
+  <div class="card"><span class="tag">Thảo luận nhóm</span><h3>Sáu chiếc mũ tư duy</h3><p>Trắng: dữ kiện · Đỏ: cảm xúc · Đen: rủi ro · Vàng: lợi ích · Xanh lá: ý tưởng mới · Xanh dương: điều phối. Cả nhóm cùng "đội" một mũ một lúc.</p><div class="apply"><b>Seminar:</b> khi bàn đề tài gây tranh luận (băng cháy, bauxit…), đi lần lượt mũ Trắng → Vàng → Đen để có cả hai mặt.</div></div>
+  <div class="card"><span class="tag">Đặt câu hỏi</span><h3>Truy vấn Socratic</h3><p>Hỏi liên tục: điều đó nghĩa là gì? bằng chứng ở đâu? nếu ngược lại thì sao? hệ quả là gì?</p><div class="apply"><b>Seminar:</b> Kiểm chứng dùng Socratic để soạn 5 câu hỏi phản biện cho nhóm bạn và cho chính nhóm mình.</div></div>
+  <div class="card"><span class="tag">Tìm nguyên nhân</span><h3>5W1H &amp; biểu đồ xương cá</h3><p>Cái gì, ở đâu, khi nào, tại sao, ai, như thế nào; xương cá để lần ra nguyên nhân gốc.</p><div class="apply"><b>Seminar:</b> đề tài sụt lún, xói lở, xâm nhập mặn: vẽ xương cá các nguyên nhân tự nhiên và con người.</div></div>
+ </div>
+ <h3>Tìm và thẩm định thông tin</h3>
+ <div class="grid g3">
+  <div class="card"><span class="tag">Tài liệu học thuật</span><h3>C.R.A.A.P</h3><p>Currency (cập nhật) · Relevance (liên quan) · Authority (uy tín tác giả) · Accuracy (chính xác, có bằng chứng) · Purpose (mục đích, thiên kiến).</p><div class="apply"><b>Seminar:</b> mỗi nguồn trong danh mục phải qua đủ 5 câu hỏi; số liệu trữ lượng, tốc độ sụt lún phải lấy bản mới nhất.</div></div>
+  <div class="card"><span class="tag">Tin trên mạng</span><h3>S.I.F.T</h3><p>Stop: dừng lại · Investigate: ai đăng? · Find: tìm nguồn uy tín đối chiếu · Trace: truy về nguồn gốc của ảnh, trích dẫn.</p><div class="apply"><b>Seminar:</b> ảnh "hố sụt", "sạt lở" lan truyền trên mạng xã hội phải truy được nơi, ngày chụp mới đưa vào slide.</div></div>
+  <div class="card"><span class="tag">Tra cứu nâng cao</span><h3>Toán tử tìm kiếm</h3><p><code>"cụm từ chính xác"</code>, <code>AND</code>, <code>OR</code>, <code>site:edu.vn</code>, <code>filetype:pdf</code>; Google Scholar cho bài báo khoa học.</p><div class="apply"><b>Ví dụ:</b> <code>"land subsidence" "Ho Chi Minh City" filetype:pdf</code></div></div>
+ </div>
+ <h3>Thuyết trình và hỏi đáp</h3>
+ <div class="grid g2">
+  <div class="card"><span class="tag">Trả lời câu hỏi</span><h3>Quy trình TRAC</h3><p><b>T</b>hank – cảm ơn người hỏi · <b>R</b>epeat – nhắc lại câu hỏi cho cả lớp nghe · <b>A</b>nswer – trả lời trọng tâm · <b>C</b>ontrol – giữ thời lượng, chuyển câu tiếp.</p><div class="apply"><b>Chưa biết câu trả lời?</b> Nói thật: "Nhóm chưa tìm hiểu phần này, xin phép trả lời qua email sau buổi học". Đó là thái độ khoa học.</div></div>
+  <div class="card"><span class="tag">Slide</span><h3>Slide ít chữ, bài nói hay</h3><ul><li>Mỗi slide một ý, tối đa khoảng 30 chữ.</li><li>Hình, bản đồ, sơ đồ chiếm phần lớn diện tích; nguồn ghi ngay dưới hình.</li><li>Người nói nhìn người nghe, không đọc slide.</li><li>3 phút trước khi lên: hít thở chậm 4 nhịp, đứng thẳng, uống ngụm nước.</li></ul></div>
+ </div>
+</div></section>
+
+<section id="de-tai"><div class="wrap">
+ <h2>Chọn đề tài vừa sức</h2>
+ <p class="sub">Độ khó là ước tính cho sinh viên năm nhất: ★ dễ tiếp cận, nhiều tài liệu tiếng Việt · ★★ cần đọc thêm kiến thức nền · ★★★ nhiều khái niệm chuyên sâu, tài liệu chủ yếu tiếng Anh. Làm xong phần Khám phá bản thân, các đề tài hợp với sở thích của bạn sẽ được đánh dấu.</p>
+ <div class="filters">
+  <select id="flt-khoi"><option value="">Tất cả các khối</option></select>
+  <select id="flt-sao"><option value="">Mọi độ khó</option><option value="1">★</option><option value="2">★★</option><option value="3">★★★</option></select>
+  <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="flt-fit"> Chỉ đề tài hợp với tôi</label>
+ </div>
+ <div class="tbl"><table id="tbl-detai"><thead><tr><th>#</th><th>Đề tài</th><th>Khối</th><th>Độ khó</th><th>Gợi ý thu hẹp cho vừa sức</th></tr></thead><tbody></tbody></table></div>
+ <p class="note" style="margin-top:14px">Nhóm lần đầu làm seminar nên chọn đề tài ★ hoặc ★★. Chọn ★★★ khi nhóm có ít nhất 3 bạn đọc tiếng Anh ở mức 3 trở lên. Mỗi nhóm thêm <b>ít nhất một câu hỏi của riêng mình</b> vào đề cương, đó là phần làm bài seminar thú vị.</p>
+</div></section>
+
+<section id="danh-gia"><div class="wrap">
+ <h2>Kế hoạch nhóm và đánh giá chéo</h2>
+ <p class="sub">Điểm nhóm ghi nhận sự phối hợp; đánh giá chéo trong nhóm bảo đảm công bằng cho từng người, tránh cảnh một bạn gánh cả nhóm.</p>
+ <h3>Bảng kế hoạch tối thiểu (6 cột)</h3>
+ <div class="tbl"><table>
+  <tr><th>STT</th><th>Việc</th><th>Người phụ trách</th><th>Hạn</th><th>Trạng thái</th><th>Link minh chứng</th></tr>
+  <tr><td>1</td><td>Đề cương 1 trang</td><td>Viết – biên tập + cả nhóm</td><td>Ngày 6</td><td>Đã xong</td><td>Google Docs</td></tr>
+  <tr><td>2</td><td>Danh mục 8 nguồn đã qua CRAAP</td><td>Săn tư liệu, Kiểm chứng</td><td>Ngày 9</td><td>Đang làm (5/8)</td><td>Google Sheets</td></tr>
+  <tr><td>3</td><td>Bản đồ, ảnh Google Earth khu vực nghiên cứu</td><td>Kể chuyện bằng hình</td><td>Ngày 11</td><td>Chưa bắt đầu</td><td>Thư mục Drive</td></tr>
+  <tr><td>4</td><td>Tập dượt có bấm giờ</td><td>Cả nhóm</td><td>Ngày 14</td><td>Dời sang ngày 15 (báo trước)</td><td>Biên bản họp</td></tr>
+ </table></div>
+ <p>Bảng này nộp ở Phiếu 4. Làm trên Google Docs, Sheets để có lịch sử chỉnh sửa; đó là minh chứng tự nhiên cho việc ai làm gì, khi nào.</p>
+ <h3>Phiếu đánh giá chéo trong nhóm (cuối tuần 3)</h3>
+ <p>Nộp ở Phiếu 6, chấm kín: chỉ giảng viên xem. Mỗi bạn tự chấm mình và chấm kín từng bạn cùng nhóm theo 4 tiêu chí, mỗi tiêu chí tối đa 2,5 điểm, tổng 10. Rút gọn từ phiếu đánh giá của học phần KNLVN cho seminar 3 tuần.</p>
+ <div class="tbl"><table>
+  <tr><th>Tiêu chí</th><th>Mức 1 (0 – dưới 1,0)</th><th>Mức 2 (1,0 – dưới 2,0)</th><th>Mức 3 (2,0 – 2,5)</th></tr>
+  <tr><td><b>Tham dự &amp; phối hợp</b></td><td>Vắng nhiều buổi họp, gần như không tương tác trên nhóm chat</td><td>Vắng 1 buổi, có tương tác nhưng ít đóng góp ý kiến</td><td>Dự đủ, tương tác đều, đóng góp ý kiến mỗi tuần</td></tr>
+  <tr><td><b>Quản lý công việc</b></td><td>Trễ hạn nhiều việc, không báo trước</td><td>Phần lớn đúng hạn, trễ 1 việc có báo trước</td><td>Đúng hạn hoặc sớm, còn hỗ trợ bạn khác</td></tr>
+  <tr><td><b>Giao tiếp</b></td><td>Thường trả lời sau hơn 24 giờ hoặc không trả lời</td><td>Trả lời trong ngày, đôi khi khó hiểu</td><td>Trả lời nhanh, rõ ràng, góp ý lịch sự</td></tr>
+  <tr><td><b>Giải quyết vấn đề</b></td><td>Không đề xuất giải pháp khi nhóm gặp khó</td><td>Có đề xuất, đôi khi chưa khả thi</td><td>Nhận ra vấn đề sớm, đề xuất giải pháp được nhóm dùng</td></tr>
+ </table></div>
+ <p>Kèm theo, mỗi bạn ghi <b>1 điều nên giữ (KEEP)</b> và <b>1 điều nên đổi (CHANGE)</b> cho từng bạn, cùng 3 câu tự nhìn lại: mình đã làm gì, học được gì, lần sau làm khác điều gì.</p>
+</div></section>
+
+<section id="nguyen-tac"><div class="wrap">
+ <h2>Dùng AI và trích dẫn nguồn</h2>
+ <div class="grid g2">
+  <div class="card"><span class="tag">Quy tắc 3T khi dùng AI</span>
+   <p><b>Tìm</b> – đặt câu hỏi rõ (bối cảnh, yêu cầu, định dạng). <b>Tách</b> – lọc lỗi, thiên kiến, số liệu bịa. <b>Tinh chỉnh</b> – hỏi lại, đối chiếu nguồn gốc rồi mới dùng.</p>
+   <ul><li>Được dùng AI để gợi ý ý tưởng, giải thích khái niệm khó, sửa chính tả.</li><li>Không chép nguyên văn câu trả lời của AI vào slide.</li><li>Mọi con số, tên riêng AI đưa ra phải kiểm tra ở nguồn gốc. AI có thể bịa cả tài liệu tham khảo.</li><li>Slide cuối ghi rõ: nhóm đã dùng công cụ AI nào, cho việc gì.</li></ul>
+   <div class="apply"><b>Bài học thật:</b> nhiều trang cũ vẫn ghi Việt Nam có trữ lượng đất hiếm đứng thứ 2 thế giới (22 triệu tấn), trong khi Cục Khảo sát Địa chất Hoa Kỳ đã hạ con số này xuống 3,5 triệu tấn từ năm 2025. Luôn tìm bản mới nhất.</div></div>
+  <div class="card"><span class="tag">Trích dẫn</span>
+   <ul><li>Ghi nguồn ngay dưới mỗi hình và số liệu: tác giả/cơ quan, năm.</li><li>Slide cuối là danh mục tài liệu tham khảo theo kiểu APA.</li><li>Thứ tự ưu tiên nguồn: bài báo khoa học → báo cáo cơ quan nhà nước, viện nghiên cứu → báo chí chính thống. Wikipedia và blog chỉ dùng để định hướng.</li><li>Sao chép không ghi nguồn là đạo văn, kể cả khi chỉ là một đoạn ngắn.</li></ul>
+   <p style="font-size:.9rem;color:var(--chu-phu)">Ví dụ APA: Minderhoud, P. S. J., et al. (2017). Impacts of 25 years of groundwater extraction on subsidence in the Mekong delta, Vietnam. <i>Environmental Research Letters, 12</i>(6), 064006.</p></div>
+ </div>
+</div></section>
+
+<footer><div class="wrap">
+ <p><b>Seminar Giới thiệu ngành Địa chất – Tân sinh viên K2026</b> · Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM · Giảng viên hướng dẫn: ThS. Đinh Quốc Tuấn (dqtuan@hcmus.edu.vn).</p>
+ <p>Nội dung Hộp công cụ, phiếu hình khối và phiếu đánh giá chéo chọn lọc từ học phần BAA00008 – Kỹ năng làm việc nhóm và học tập (GV phụ trách: ThS. Đinh Thị Kim Liên). Các bộ câu hỏi chỉ dùng để mở đầu trò chuyện và chia vai, chưa được chuẩn hóa như công cụ đo lường tâm lý.</p>
+ <h3 style="font-size:1rem">Tài liệu tham khảo chính</h3>
+ <div class="refs">
+  <p>Blakeslee, S. (2004). The CRAAP test. <i>LOEX Quarterly, 31</i>(3).</p>
+  <p>Caulfield, M. (2019). SIFT (The four moves). Hapgood.</p>
+  <p>Cirillo, F. (2018). <i>The Pomodoro technique</i>. Currency.</p>
+  <p>Cottrell, S. (2019). <i>The study skills handbook</i> (5th ed.). Macmillan.</p>
+  <p>Covey, S. R. (1989). <i>The 7 habits of highly effective people</i>. Simon &amp; Schuster.</p>
+  <p>De Bono, E. (1985). <i>Six thinking hats</i>. Little, Brown and Company.</p>
+  <p>Dellinger, S. (1989). <i>Psycho-geometrics: How to use geometric psychology to influence people</i>. Prentice Hall.</p>
+  <p>Doran, G. T. (1981). There's a S.M.A.R.T. way to write management's goals and objectives. <i>Management Review, 70</i>(11), 35–36.</p>
+  <p>Holland, J. L. (1997). <i>Making vocational choices</i> (3rd ed.). Psychological Assessment Resources.</p>
+  <p>Pauk, W., &amp; Owens, R. J. Q. (2014). <i>How to study in college</i> (11th ed.). Cengage.</p>
+  <p>Roediger, H. L., &amp; Butler, A. C. (2011). The critical role of retrieval practice in long-term retention. <i>Trends in Cognitive Sciences, 15</i>(1), 20–27.</p>
+  <p>U.S. Geological Survey. (2025). <i>Mineral commodity summaries 2025</i>. USGS.</p>
+ </div>
+ <p style="margin-top:14px">© 2026 ThS. Đinh Quốc Tuấn · <a href="../">diemdanhsv.com</a> · <a href="../workshop/cam-nang.html">Cẩm nang Workshop Làm chủ thời gian</a></p>
+</div></footer>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+"use strict";
+var PG={"A":[["Thích lãnh đạo","triangle"],["Có tham vọng","triangle"],["Dễ thông cảm, quan tâm đến người khác","circle"],["Chi tiết, để ý từng li từng tí","square"],["Cổ điển, truyền thống","square"],["Sáng tạo, đổi mới","squiggle"],["Tỉ mỉ, có đầu óc tổ chức","square"],["Khác thường, lập dị","squiggle"],["Sứ giả hòa bình, kết nối mọi người","circle"],["Không thích bị ràng buộc trong một khuôn khổ nào cả","squiggle"],["Tuân thủ nguyên tắc, nội quy","square"],["Đa cảm","circle"],["Thời điểm này tôi hay quên","rectangle"],["Dễ bị người khác ảnh hưởng","rectangle"],["Hay giúp đỡ người khác","circle"],["Thích cạnh tranh, thi đua","triangle"],["Đang trong giai đoạn có nhiều thay đổi","rectangle"],["Thích mạo hiểm","triangle"],["Thoải mái, bộc lộ cảm xúc, suy nghĩ của mình","squiggle"],["Hay cảm thấy bối rối, lúng túng","rectangle"],["Người của mọi người","circle"],["Bốc đồng","squiggle"],["Đáng tin cậy, trung thành","square"],["Quyết đoán","triangle"],["Nhanh nhẹn, mạnh mẽ","triangle"],["Tôi thường lóng cóng, vụng về, đổ vỡ","rectangle"],["Thực tế","square"],["Giàu ý tưởng","squiggle"],["Đúng giờ giấc","square"],["Biết lắng nghe","circle"],["Rộng lượng","circle"],["Dí dỏm, vui tính","squiggle"],["Tôi hay tìm tòi, khám phá","rectangle"],["Nhất định phải thành công","triangle"],["Thiếu tự tin","rectangle"]],"B":[["Tôi luôn là “linh hồn” của các buổi họp mặt, tiệc tùng","squiggle"],["Tôi khó nói không với người khác","circle"],["Thỉnh thoảng tôi không thể hiện, biểu lộ đúng như con người của tôi","rectangle"],["Tôi ra quyết định nhanh và quyết đoán","triangle"],["Tôi rất bừa bộn","squiggle"],["Tôi thích thiết lập quy tắc, thời khóa biểu","square"],["Tôi thích trang trí nhà cửa và nơi làm việc của tôi bằng cây xanh và tranh ảnh","circle"],["Ở thời điểm này, tôi đang nghĩ nhiều đến những hướng đi mới cho bản thân","rectangle"],["Tôi làm việc hết mình và chơi hết mình","triangle"],["Khi có xung đột, tôi sẽ rút lui trước hoặc luôn cố tránh xung đột nếu có thể","circle"],["Tôi thường tranh cãi quyết liệt","triangle"],["Tôi thích sưu tầm đồ vật","square"],["Tôi thích kết giao, cộng tác với những người quan trọng","triangle"],["Tôi thích ở nhà nghỉ ngơi, thư giãn cùng gia đình","circle"],["Tôi thích những sự bất ngờ","squiggle"],["Tôi thường mau chán","squiggle"],["Hiện nay tôi đang trải nghiệm một số thay đổi trong cuộc đời mình","rectangle"],["Tôi thường thay đổi ý nghĩ như chong chóng","rectangle"],["Tâm trạng của tôi thay đổi theo ngày","rectangle"],["Tôi chỉ sử dụng hàng cao cấp, thượng hạng mà thôi","triangle"],["Tôi sợ làm người khác mất lòng nên thường không dám nói và cố gắng tránh đụng chạm","circle"],["Tôi khá trầm lặng và thích riêng tư","square"],["Tôi thường nói nhanh, bộc phát và dùng nhiều điệu bộ, cử chỉ khi nói","squiggle"],["Tôi nói chuyện tự tin và dễ dàng trước công chúng","triangle"],["Tôi thường nghĩ đến lợi ích của người khác","circle"],["Ngăn bàn và tủ quần áo của tôi luôn gọn gàng, ngăn nắp","square"],["Tôi luôn hoàn tất công việc đúng thời hạn","square"]],"C":[["Mọi người thường làm tôi lúng túng bối rối","rectangle"],["Tôi cố gắng tìm những người hiểu được các khó khăn của tôi","rectangle"],["Tôi thích kiểm soát và chịu trách nhiệm","triangle"],["Trong giao tiếp, tôi thích nói hơn lắng nghe","squiggle"],["Tôi đối xử với đồng nghiệp và bạn bè như người thân trong gia đình","circle"],["Tôi thích làm việc theo nhóm","circle"],["Tôi luôn suy nghĩ kĩ trước khi nói","square"],["Tôi không thích hứa hẹn hoặc cam kết điều gì","rectangle"],["Tôi thích làm việc một mình","square"],["Tôi là một người giỏi xã giao","circle"],["Tôi là một người bạn rất trung thành","square"],["Thỉnh thoảng tôi chinh phục người khác bằng đam mê và nhiệt huyết của tôi","squiggle"],["Tôi không e ngại nói thẳng ra những chủ kiến của mình","triangle"],["Tôi dễ dàng thay đổi trong mối quan hệ của mình","squiggle"],["Nếu bạn cần, tôi sẽ hết lòng giúp bạn","circle"],["Tôi ghét rơi vào những tình huống bị mọi người quá chú ý, dòm ngó","square"],["Tôi là tấm gương cho nhiều người","triangle"],["Tôi thích chỉ đạo hoặc giao việc cho người khác làm","triangle"],["Tôi nghĩ gì nói đấy","squiggle"],["Tôi giỏi truyền cảm hứng cho người khác","squiggle"],["Lúc này tôi đang cần một người hướng dẫn, cố vấn cho tôi","rectangle"],["Tôi thích nói chuyện và chia sẻ với mọi người","circle"],["Tôi rất kiên định, một khi đã quyết định thì tôi sẽ theo đuổi đến cùng","square"],["Tôi hay mất kiên nhẫn và thường ngắt lời người khác","triangle"],["Tôi không thích thể hiện tình cảm trước đám đông","square"],["Tôi biết tận dụng tình thế, mối quan hệ để đạt được mục tiêu của mình","triangle"],["Thỉnh thoảng tôi cảm thấy như mình bị lợi dụng","circle"]]};
+var SHAPES={
+ square:{n:"Hình Vuông",q:"Tổ chức, ngăn nắp, đáng tin cậy",d:"Tỉ mỉ, chăm chút chi tiết, thích số liệu cụ thể; đã hứa là làm đến cùng. Có thể ngại thay đổi đột ngột.",team:"Giữ bảng kế hoạch, soát số liệu, danh mục nguồn, bản đồ cần chính xác.",watch:"Đừng cầu toàn quá lâu ở một chi tiết; chốt bản nháp sớm rồi sửa.",c:"#1F4E79"},
+ triangle:{n:"Hình Tam Giác",q:"Quyết đoán, hướng mục tiêu",d:"Tự tin, nhanh, thích kiểm soát và về đích. Tập trung cao độ.",team:"Chốt mục tiêu, giữ tiến độ, đốc thúc khi nhóm chậm.",watch:"Dành thời gian lắng nghe trước khi quyết; hỏi ý kiến bạn ít nói.",c:"#B5462F"},
+ circle:{n:"Hình Tròn",q:"Hòa đồng, biết lắng nghe",d:"Thân thiện, cảm thông, là chất keo kết nối nhóm. Thường né xung đột.",team:"Kết nối thành viên, hòa giải, hỏi han bạn im lặng, giữ không khí.",watch:"Bất đồng về khoa học là bình thường; dám nói khi thấy chưa đúng.",c:"#0F6B55"},
+ squiggle:{n:"Hình Lượn Sóng",q:"Sáng tạo, giàu ý tưởng",d:"Nghĩ bằng trực giác, thích cái mới, tràn năng lượng, truyền cảm hứng. Có thể ngại chi tiết.",team:"Khơi ý tưởng, mở bài ấn tượng, slide và sơ đồ sinh động.",watch:"Ghi ý tưởng vào bảng việc có hạn cụ thể; nhờ Hình Vuông soát chi tiết.",c:"#B8862B"},
+ rectangle:{n:"Hình Chữ Nhật",q:"Đang chuyển mình, ham học hỏi",d:"Giai đoạn nhiều thay đổi, đang tìm hướng đi; đây là lúc học được nhiều nhất và dám thử điều mới.",team:"Nhận một vai chính vừa sức và một vai học thêm; làm cặp với bạn có kinh nghiệm.",watch:"Nói ra khi chưa hiểu việc; hỏi sớm luôn tốt hơn làm sai muộn.",c:"#5B6B75"}};
+var RIA=[["R","Tôi thích làm việc ngoài trời, đi đây đi đó"],["R","Tôi thích dùng máy móc, dụng cụ, tự tay lắp ráp sửa chữa"],["I","Tôi hay thắc mắc “tại sao” và thích tìm ra nguyên nhân"],["I","Tôi thích làm thí nghiệm, quan sát, đo đạc"],["A","Tôi thích vẽ, chụp ảnh, thiết kế, làm video"],["A","Tôi thích nghĩ ra cách trình bày mới lạ"],["S","Tôi thích giải thích, hướng dẫn cho người khác hiểu"],["S","Tôi quan tâm đến vấn đề của cộng đồng và môi trường sống"],["E","Tôi thích đứng ra tổ chức và thuyết phục người khác"],["E","Tôi hứng thú với kinh doanh, dự án, đàm phán"],["C","Tôi thích sắp xếp dữ liệu, bảng biểu ngăn nắp"],["C","Tôi làm việc cẩn thận, theo quy trình, ít sai sót"]];
+var RN={R:"Thực tế (R)",I:"Nghiên cứu (I)",A:"Nghệ thuật (A)",S:"Xã hội (S)",E:"Dám làm (E)",C:"Ngăn nắp (C)"};
+var RG={R:"thực địa, khoan khảo sát, địa kỹ thuật công trình, bay drone",I:"dầu khí, địa hóa, thạch học, ngọc học trong phòng thí nghiệm",A:"bản đồ, viễn thám, mô hình 3D, truyền thông khoa học",S:"môi trường, tai biến, nước sạch cho cộng đồng, giảng dạy",E:"quản lý dự án khảo sát, doanh nghiệp khoáng sản, đá quý",C:"GIS và cơ sở dữ liệu, quan trắc, giám định theo tiêu chuẩn"};
+var ROLES=[["dieuphoi","Điều phối","Chia việc, giữ tiến độ, nhắc hạn"],["ytuong","Khơi ý tưởng","Đề xuất hướng mới, góc nhìn lạ"],["tulieu","Săn tư liệu","Tìm tài liệu, hình ảnh, số liệu, ghi nguồn"],["kiemchung","Kiểm chứng","Soát lỗi, đối chiếu nguồn, đặt câu hỏi khó"],["hinh","Kể chuyện bằng hình","Slide, sơ đồ, bản đồ, video"],["viet","Viết – biên tập","Viết gọn, thống nhất văn phong"],["trinhbay","Trình bày","Nói trước lớp, trả lời câu hỏi"],["ketnoi","Kết nối","Giữ không khí, hòa giải, kéo người im lặng vào cuộc"]];
+var LIM={like:2,learn:1,avoid:1},LBL={like:"Thích",learn:"Học thêm",avoid:"Ngại"};
+var KHOI={dk:"Dầu khí & năng lượng",tv:"Địa chất thủy văn",mt:"Môi trường & tai biến",ks:"Khoáng sản",nh:"Ngọc học",bi:"Địa chất biển",kt:"Địa kỹ thuật & công nghệ số"};
+var DT=[
+[1,"Dầu khí trong đá móng nứt nẻ mỏ Bạch Hổ","dk",3,"IR","Tập trung câu hỏi “vì sao đá granit chứa được dầu”"],
+[2,"Băng cháy (gas hydrate) dưới đáy Biển Đông","dk",3,"I","So sánh lợi ích và rủi ro, không đi sâu minh giải địa chấn"],
+[3,"Thu giữ và lưu trữ carbon (CCS) trong lòng đất","dk",3,"IS","Giải thích “tầng chứa – tầng chắn” bằng mô hình đơn giản"],
+[4,"Sụt lún nền đất TP.HCM và Đồng bằng sông Cửu Long","tv",2,"ISC","Dùng bản đồ sụt lún đã công bố, liên hệ khu nhà mình"],
+[5,"Xâm nhập mặn Đồng bằng sông Cửu Long","tv",1,"SI","Phỏng vấn người thân ở miền Tây nếu có"],
+[6,"Nước khoáng nóng và nước ngầm tự nhiên","tv",2,"IE","Đọc nhãn chai nước khoáng, giải thích các ion"],
+[7,"Trượt lở đất đá và cảnh báo sớm","mt",1,"RS","Phân tích 1–2 vụ cụ thể qua ảnh vệ tinh trước và sau"],
+[8,"Địa hình karst đá vôi và hố sụt","mt",1,"RA","Thí nghiệm nhỏ: nhỏ giấm lên đá vôi, quan sát sủi bọt"],
+[9,"Khai thác cát và xói lở bờ sông miền Tây","mt",1,"SI","So sánh ảnh Google Earth nhiều năm tại một đoạn sông"],
+[10,"Đất hiếm Việt Nam","ks",2,"IE","Đất hiếm nằm ở đâu trong chiếc điện thoại của bạn; dùng số liệu USGS mới nhất"],
+[11,"Bauxit Tây Nguyên và bùn đỏ","ks",2,"IS","Vẽ mặt cắt vỏ phong hóa từ đá bazan lên"],
+[12,"Cát trắng silic – từ bãi biển đến pin mặt trời","ks",2,"IE","Vẽ chuỗi giá trị từ hạt cát đến tấm pin"],
+[13,"Ruby và sapphire Lục Yên, Quỳ Châu","nh",2,"IA","Vì sao cùng một khoáng vật corundum mà khác màu"],
+[14,"Kim cương tự nhiên và kim cương nuôi cấy","nh",3,"IC","Giới hạn ở “vì sao mắt thường không phân biệt được”"],
+[15,"Cẩm thạch và cách phân loại A–B–C","nh",2,"IEA","Khảo sát cách mô tả sản phẩm trên thị trường"],
+[16,"Hình thành rạn san hô và đảo vòng ở Biển Đông","bi",3,"I","Tập trung cơ chế hình thành rạn san hô và đảo vòng"],
+[17,"Nền móng điện gió ngoài khơi","bi",3,"RE","So sánh các kiểu móng bằng hình minh họa"],
+[18,"Xử lý nền đất yếu cho cao tốc miền Tây","kt",3,"RI","Thí nghiệm khay bùn và vật nặng để thấy đất lún"],
+[19,"Đào hầm metro bằng máy TBM ở TP.HCM","kt",2,"RI","Đi Metro số 1, quan sát và chụp ảnh ga ngầm"],
+[20,"AI, drone và LiDAR trong khảo sát địa chất","kt",2,"ACR","Dùng Google Earth dựng mặt cắt địa hình đơn giản"]];
+
+var KEY="gtn-dc-khampha-v1";
+var S={pg:{A:[],B:[],C:[]},ria:{},roles:{},f:{}};
+try{var raw=localStorage.getItem(KEY);if(raw){var o=JSON.parse(raw);if(o&&o.pg)S=o;}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function $(id){return document.getElementById(id)}
+function esc(t){return String(t==null?"":t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},2200)}
+
+/* ---- Bước 1: hình khối ---- */
+var SECT={A:"A. Nét tính cách của bạn",B:"B. Hành vi của bạn",C:"C. Tương quan với mọi người"};
+function renderPG(){
+ var h="";
+ ["A","B","C"].forEach(function(s){
+  h+='<h3>'+SECT[s]+' <span class="counter" id="cnt-'+s+'"></span></h3><div class="chips">';
+  PG[s].forEach(function(it,i){h+='<button type="button" class="chip" data-s="'+s+'" data-i="'+i+'">'+esc(it[0])+'</button>'});
+  h+='</div>';
+ });
+ $("pg").innerHTML=h;
+ $("pg").addEventListener("click",function(e){
+  var b=e.target.closest(".chip");if(!b)return;
+  var s=b.dataset.s,i=+b.dataset.i,arr=S.pg[s],k=arr.indexOf(i);
+  if(k>=0)arr.splice(k,1);else{if(arr.length>=7){toast("Phần "+s+" đã đủ 7 câu. Bỏ chọn một câu trước.");return}arr.push(i)}
+  save();syncPG();
+ });
+ syncPG();
+}
+function syncPG(){
+ document.querySelectorAll("#pg .chip").forEach(function(b){b.classList.toggle("on",S.pg[b.dataset.s].indexOf(+b.dataset.i)>=0)});
+ var ok=true;["A","B","C"].forEach(function(s){var n=S.pg[s].length,c=$("cnt-"+s);c.textContent="("+n+"/7)";c.classList.toggle("full",n===7);if(n!==7)ok=false});
+ $("go2").disabled=!ok;markSteps();
+}
+function pgTally(){var t={square:0,triangle:0,circle:0,squiggle:0,rectangle:0};["A","B","C"].forEach(function(s){S.pg[s].forEach(function(i){t[PG[s][i][1]]++})});return t}
+function pgTop(t){var best=null;Object.keys(t).forEach(function(k){if(best===null||t[k]>t[best])best=k});return best}
+
+/* ---- Bước 2: RIASEC ---- */
+function renderRia(){
+ var h="";
+ RIA.forEach(function(r,i){h+='<div>'+esc(r[1])+'</div><div class="opts" data-i="'+i+'">';for(var v=1;v<=5;v++)h+='<button type="button" data-v="'+v+'" aria-label="'+v+' điểm">'+v+'</button>';h+='</div>'});
+ $("riasec").innerHTML=h;
+ $("riasec").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;S.ria[b.parentNode.dataset.i]=+b.dataset.v;save();syncRia()});
+ syncRia();
+}
+function syncRia(){
+ document.querySelectorAll("#riasec .opts").forEach(function(o){var v=S.ria[o.dataset.i];o.querySelectorAll("button").forEach(function(b){b.classList.toggle("on",+b.dataset.v===v)})});
+ $("go3").disabled=Object.keys(S.ria).length<RIA.length;markSteps();
+}
+function riaScores(){var sc={R:0,I:0,A:0,S:0,E:0,C:0};RIA.forEach(function(r,i){sc[r[0]]+=(S.ria[i]||0)});return sc}
+function riaCode(){var sc=riaScores();return Object.keys(sc).sort(function(a,b){return sc[b]-sc[a]}).slice(0,3)}
+
+/* ---- Bước 3: vai trò ---- */
+function renderRoles(){
+ var h="";
+ ROLES.forEach(function(r){h+='<div class="role"><b>'+r[1]+'</b><small>'+r[2]+'</small><div class="pick" data-r="'+r[0]+'">';["like","learn","avoid"].forEach(function(k){h+='<button type="button" data-k="'+k+'">'+LBL[k]+'</button>'});h+='</div></div>'});
+ $("roles").innerHTML=h;
+ $("roles").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;var r=b.parentNode.dataset.r,k=b.dataset.k;
+  if(S.roles[r]===k){delete S.roles[r]}else{
+   var n=0;Object.keys(S.roles).forEach(function(x){if(S.roles[x]===k&&x!==r)n++});
+   if(n>=LIM[k]){toast("Đã đủ "+LIM[k]+" vai “"+LBL[k]+"”. Bỏ một vai trước.");return}
+   S.roles[r]=k}
+  save();syncRoles();
+ });
+ syncRoles();
+}
+function rolesOf(k){return ROLES.filter(function(r){return S.roles[r[0]]===k}).map(function(r){return r[1]})}
+function syncRoles(){
+ document.querySelectorAll("#roles .pick").forEach(function(p){p.querySelectorAll("button").forEach(function(b){b.classList.toggle("on",S.roles[p.dataset.r]===b.dataset.k)})});
+ $("go4").disabled=!(rolesOf("like").length===2&&rolesOf("learn").length===1&&rolesOf("avoid").length===1);markSteps();
+}
+
+/* ---- Bước 4: nguồn lực ---- */
+function bindForm(){
+ var f=$("nguon");
+ ["f-ten","f-thuvi","f-tien"].forEach(function(id){var el=$(id);if(S.f[id])el.value=S.f[id];el.addEventListener("input",function(){S.f[id]=el.value;save()});el.addEventListener("change",function(){S.f[id]=el.value;save()})});
+ f.querySelectorAll(".checks").forEach(function(g){
+  var name=g.dataset.name,single=g.dataset.single,cur=S.f[name];
+  g.querySelectorAll("input").forEach(function(inp){
+   if(single)inp.checked=(cur===inp.value);else inp.checked=Array.isArray(cur)&&cur.indexOf(inp.value)>=0;
+   inp.addEventListener("change",function(){
+    if(single)S.f[name]=inp.value;else S.f[name]=Array.prototype.filter.call(g.querySelectorAll("input"),function(x){return x.checked}).map(function(x){return x.value});
+    save();
+   });
+  });
+ });
+}
+
+/* ---- Kết quả ---- */
+function shapeSvg(k,c){
+ var p={square:'<rect x="10" y="10" width="44" height="44" rx="3"/>',triangle:'<polygon points="32,8 58,54 6,54"/>',circle:'<circle cx="32" cy="32" r="24"/>',rectangle:'<rect x="6" y="18" width="52" height="28" rx="3"/>',squiggle:'<path d="M6 32 C14 12,22 12,32 32 S50 52,58 32" fill="none" stroke-width="7" stroke-linecap="round"/>'}[k];
+ return '<svg class="shape" viewBox="0 0 64 64" fill="'+c+'" stroke="'+c+'">'+p+'</svg>';
+}
+function fitTopics(){var c=riaCode(),w={};w[c[0]]=3;w[c[1]]=2;w[c[2]]=1;return DT.map(function(d){var sc=0;d[4].split("").forEach(function(l){sc+=w[l]||0});return{n:d[0],sc:sc,k:d[3]}}).filter(function(x){return x.sc>=3}).sort(function(a,b){return b.sc-a.sc||a.k-b.k||a.n-b.n}).slice(0,6).map(function(x){return x.n})}
+function arr(v){return Array.isArray(v)&&v.length?v.join(", "):"—"}
+function renderCard(){
+ var t=pgTally(),top=pgTop(t),sh=SHAPES[top],code=riaCode(),sc=riaScores(),f=S.f;
+ var max=Math.max.apply(null,Object.keys(t).map(function(k){return t[k]}))||1;
+ var bars=Object.keys(t).map(function(k){return '<div class="bar"><span>'+SHAPES[k].n.replace("Hình ","")+'</span><span class="track"><i style="width:'+Math.round(t[k]/21*100)+'%;background:'+SHAPES[k].c+'"></i></span><span>'+t[k]+'</span></div>'}).join("");
+ var fit=fitTopics().map(function(n){return "#"+n}).join(", ");
+ var h='<div class="idcard"><div class="top">'+shapeSvg(top,sh.c)+'<div><div style="color:var(--chu-phu);font-size:.85rem">Thẻ giới thiệu bản thân · Seminar Giới thiệu ngành Địa chất</div><h3>'+esc(f["f-ten"]||"Bạn")+'</h3><div>'+sh.n+' – '+sh.q+'</div></div></div>';
+ h+='<dl><dt>Mã sở thích nghề</dt><dd>'+code.join("–")+' &nbsp;<small style="color:var(--chu-phu)">('+code.map(function(c){return RN[c]+": "+sc[c]+"/10"}).join(" · ")+')</small></dd>';
+ h+='<dt>Mảng địa chất có thể hợp</dt><dd>'+RG[code[0]]+'; '+RG[code[1]]+'</dd>';
+ h+='<dt>2 vai tôi thích</dt><dd>'+rolesOf("like").join(", ")+'</dd><dt>Vai tôi muốn học thêm</dt><dd>'+rolesOf("learn").join(", ")+'</dd><dt>Vai tôi còn ngại</dt><dd>'+rolesOf("avoid").join(", ")+'</dd>';
+ h+='<dt>Thời gian mỗi tuần</dt><dd>'+esc(f.gio||"—")+'</dd><dt>Khung giờ họp</dt><dd>'+esc(arr(f.ranh))+'</dd><dt>Thiết bị</dt><dd>'+esc(f.may||"—")+'</dd><dt>Công cụ dùng tốt</dt><dd>'+esc(arr(f.tool))+'</dd><dt>Đọc tiếng Anh</dt><dd>'+esc(f.eng||"—")+'</dd><dt>Kinh nghiệm</dt><dd>'+esc(arr(f.kn))+'</dd><dt>Kỹ năng đã tự tin</dt><dd>'+esc(arr(f.mem))+'</dd><dt>Muốn tiến bộ nhất</dt><dd>'+esc(f["f-tien"]||"—")+'</dd><dt>Một điều thú vị</dt><dd>'+esc(f["f-thuvi"]||"—")+'</dd><dt>Đề tài có thể hợp</dt><dd>'+fit+' <a href="#de-tai" class="no-print">(xem bảng)</a></dd></dl></div>';
+ h+='<div class="grid g2" style="margin-top:16px"><div class="card"><h3>'+sh.n+': điểm mạnh khi làm nhóm</h3><p>'+sh.d+'</p><div class="apply"><b>Trong seminar:</b> '+sh.team+'</div><p style="margin-bottom:0"><b>Lưu ý:</b> '+sh.watch+'</p></div><div class="card"><h3>Phân bổ 5 hình khối của bạn</h3><div class="bars">'+bars+'</div><p style="font-size:.9rem;color:var(--chu-phu);margin-bottom:0">Hầu hết mọi người là sự pha trộn của nhiều hình. Hình cao thứ hai cũng nói lên nhiều điều về bạn.</p></div></div>';
+ $("card-out").innerHTML=h;
+}
+function cardText(){
+ var t=pgTally(),sh=SHAPES[pgTop(t)],f=S.f,code=riaCode();
+ return ["THẺ GIỚI THIỆU – Seminar Giới thiệu ngành Địa chất","Tên gọi: "+(f["f-ten"]||""),"Hình khối nổi trội: "+sh.n+" ("+sh.q+")","Mã sở thích nghề: "+code.join("-"),"2 vai thích: "+rolesOf("like").join(", "),"Vai muốn học thêm: "+rolesOf("learn").join(", "),"Vai còn ngại: "+rolesOf("avoid").join(", "),"Thời gian/tuần: "+(f.gio||""),"Khung giờ họp: "+arr(f.ranh),"Thiết bị: "+(f.may||""),"Công cụ dùng tốt: "+arr(f.tool),"Đọc tiếng Anh: "+(f.eng||""),"Muốn tiến bộ: "+(f["f-tien"]||""),"Điều thú vị: "+(f["f-thuvi"]||"")].join("\n");
+}
+
+/* ---- điều hướng bước ---- */
+function stepDone(p){
+ if(p==="p-hinh")return ["A","B","C"].every(function(s){return S.pg[s].length===7});
+ if(p==="p-nghe")return Object.keys(S.ria).length===RIA.length;
+ if(p==="p-vai")return !$("go4").disabled;
+ if(p==="p-nguon")return !!(S.f["f-ten"]);
+ return false;
+}
+function allDone(){return stepDone("p-hinh")&&stepDone("p-nghe")&&stepDone("p-vai")}
+function markSteps(){document.querySelectorAll("#steps button").forEach(function(b){b.classList.toggle("done",stepDone(b.dataset.p))})}
+function show(p){
+ if(p==="p-ket-qua"&&!allDone()){toast("Hoàn thành bước 1–3 để xem Thẻ.");return}
+ document.querySelectorAll("#kham-pha .pane").forEach(function(x){x.classList.toggle("on",x.id===p)});
+ document.querySelectorAll("#steps button").forEach(function(b){b.classList.toggle("on",b.dataset.p===p)});
+ if(p==="p-ket-qua"){renderCard();renderTopics()}
+ var top=$("kham-pha").getBoundingClientRect().top+window.pageYOffset-60;window.scrollTo({top:top,behavior:"smooth"});
+}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-go],#steps button");if(!b)return;show(b.dataset.go||b.dataset.p)});
+$("reset").addEventListener("click",function(){if(!confirm("Xóa toàn bộ câu trả lời và làm lại?"))return;S={pg:{A:[],B:[],C:[]},ria:{},roles:{},f:{}};save();location.reload()});
+$("copy").addEventListener("click",function(){var txt=cardText();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast("Đã sao chép Thẻ. Dán vào nhóm chat nhé!")},function(){prompt("Sao chép nội dung dưới đây:",txt)})}else prompt("Sao chép nội dung dưới đây:",txt)});
+$("print").addEventListener("click",function(){document.body.classList.add("print-card");window.print();setTimeout(function(){document.body.classList.remove("print-card")},500)});
+
+/* ---- bảng đề tài ---- */
+function renderTopics(){
+ var k=$("flt-khoi").value,s=$("flt-sao").value,onlyFit=$("flt-fit").checked,fit=allDone()?fitTopics():[];
+ var rows=DT.filter(function(d){return(!k||d[2]===k)&&(!s||d[3]===+s)&&(!onlyFit||fit.indexOf(d[0])>=0)}).map(function(d){var isFit=fit.indexOf(d[0])>=0;return '<tr'+(isFit?' class="fit"':'')+'><td>'+d[0]+'</td><td>'+esc(d[1])+(isFit?'<span class="fitbadge">hợp với bạn</span>':'')+'</td><td>'+KHOI[d[2]]+'</td><td class="stars">'+"★★★".slice(0,d[3])+'</td><td>'+esc(d[5])+'</td></tr>'}).join("");
+ $("tbl-detai").querySelector("tbody").innerHTML=rows||'<tr><td colspan="5">Không có đề tài phù hợp bộ lọc'+(onlyFit&&!allDone()?' (hãy làm phần Khám phá bản thân trước)':'')+'.</td></tr>';
+}
+Object.keys(KHOI).forEach(function(k){var o=document.createElement("option");o.value=k;o.textContent=KHOI[k];$("flt-khoi").appendChild(o)});
+["flt-khoi","flt-sao","flt-fit"].forEach(function(id){$(id).addEventListener("change",renderTopics)});
+
+/* ---- tô sáng mục đang xem ---- */
+var tabs=document.querySelectorAll(".nav a.tab");
+if("IntersectionObserver" in window){var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting)tabs.forEach(function(a){a.classList.toggle("on",a.getAttribute("href")==="#"+en.target.id)})})},{rootMargin:"-45% 0px -50% 0px"});document.querySelectorAll("section[id]").forEach(function(s){io.observe(s)})}
+
+renderPG();renderRia();renderRoles();bindForm();renderTopics();markSteps();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,669 @@
+{
+ "1": {
+  "title": "Phiếu 1 – Thẻ khám phá bản thân (cá nhân, tuần 1)",
+  "kind": "seminar",
+  "max_attempts": 3,
+  "score_policy": "LAST",
+  "status": "OPEN",
+  "sections": [
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Cách làm",
+    "lines": [
+     "Bước 1: mở trang lớp học gtn-dc (mục Khám phá bản thân), làm đủ 4 bước trên máy của bạn; trang không gửi dữ liệu đi đâu.",
+     "Bước 2: bấm 'Sao chép Thẻ' rồi điền các ô dưới đây (có thể dán từng dòng).",
+     "Kết quả trắc nghiệm không có đúng sai và không tính điểm; điểm phiếu chỉ ghi nhận bạn đã hoàn thành và đặt được mục tiêu cụ thể.",
+     "Điều bạn lo lắng hay hoàn cảnh riêng muốn Thầy biết: KHÔNG ghi vào phiếu này, hãy gửi email riêng cho Thầy."
+    ]
+   },
+   {
+    "id": "the",
+    "type": "table",
+    "title": "1. Thẻ giới thiệu bản thân",
+    "columns": [
+     "Câu trả lời của bạn"
+    ],
+    "rows": [
+     "Tên gọi thân mật và nhóm (12 hoặc 13)",
+     "Hình khối nổi trội",
+     "Mã sở thích nghề (3 chữ, vd I–R–C)",
+     "2 vai tôi thích",
+     "Vai tôi muốn học thêm",
+     "Vai tôi còn ngại",
+     "Thời gian mỗi tuần và khung giờ họp được",
+     "Thiết bị và công cụ dùng tốt",
+     "Mức đọc tài liệu tiếng Anh (1–4)",
+     "Một điều thú vị về tôi"
+    ],
+    "photos": false
+   },
+   {
+    "id": "muctieu",
+    "type": "questions",
+    "title": "2. Định hướng và mục tiêu",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Vì sao bạn chọn ngành Địa chất? Trước khi vào trường, bạn hình dung nghề địa chất làm những việc gì?"
+     },
+     {
+      "id": "q2",
+      "text": "Kỹ năng bạn muốn tiến bộ nhất sau seminar là gì? Viết một mục tiêu SMART cho 3 tuần tới (cụ thể, đo được, khả thi, thực tế, có hạn)."
+     }
+    ]
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "3. Tự đánh giá kỹ năng mềm hiện tại (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Lắng nghe người khác nói hết ý",
+     "Nói ý kiến của mình trong nhóm",
+     "Thuyết trình trước lớp",
+     "Quản lý thời gian, đúng hạn",
+     "Tìm và đánh giá nguồn tin",
+     "Dùng AI có trách nhiệm, kiểm tra lại kết quả"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "the",
+     "name": "Thẻ giới thiệu điền đủ, cụ thể",
+     "max": 4
+    },
+    {
+     "id": "muctieu",
+     "name": "Mục tiêu viết theo SMART, có hạn và cách đo",
+     "max": 4
+    },
+    {
+     "id": "tdg",
+     "name": "Hoàn thành tự đánh giá",
+     "max": 2
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Phiếu của seminar Giới thiệu ngành Địa chất cho tân sinh viên: chấm theo mức độ hoàn thành yêu cầu và độ cụ thể của nội dung sinh viên tự viết; không có đáp số cố định. Kiểm tra: đủ các mục bắt buộc, nội dung cụ thể (tên người, việc, hạn, liên kết), có ghi nguồn khi dùng thông tin, có dòng khai báo dùng công cụ AI nếu có dùng. Mục tiêu SMART đạt khi nêu rõ việc gì, đo bằng gì, hạn khi nào (vd 'thuyết trình 2 phút không nhìn slide trong buổi tập dượt ngày 14').",
+  "answer_hints": "",
+  "mon": {
+   "ma": "GTN-ĐC",
+   "ten": "Seminar Giới thiệu ngành Địa chất",
+   "hoc_phan": "Giới thiệu ngành Địa chất",
+   "url": "https://diemdanhsv.com/gtn-dc/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Giới thiệu ngành Địa chất (Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu của TÂN SINH VIÊN NĂM NHẤT trong seminar nhóm đầu tiên. Mục tiêu là khích lệ và giúp các em hình thành thói quen học đại học: viết cụ thể, có kế hoạch, ghi nguồn, phối hợp nhóm. Giọng nhận xét ấm áp, ngắn gọn, khen điểm làm tốt trước rồi mới góp ý.",
+   "quy_tac_bang": "Các bảng trong phiếu này KHÔNG có đáp số cố định. Chấm mức độ đầy đủ và cụ thể: ô có nội dung riêng của sinh viên (tên, việc, hạn, liên kết, trích dẫn) là đạt; ô bỏ trống, chung chung ('sẽ cố gắng', 'tìm tài liệu') hoặc chép lại đề là chưa đạt. Trích dẫn đạt khi có tác giả/cơ quan, năm, tên tài liệu; không đòi hỏi đúng tuyệt đối chuẩn APA. Không chấm theo đúng/sai của kết quả trắc nghiệm tính cách hay sở thích: mọi kết quả đều hợp lệ.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mục nào (vd 'Bảng 3 – Nguồn 2') còn thiếu gì và gợi ý một cách sửa cụ thể, viết cho sinh viên năm nhất dễ làm theo. Không phán xét tính cách, sở thích hay điểm đánh giá chéo mà sinh viên ghi; không trích lại điểm đánh giá chéo của thành viên khác trong nhận xét."
+  }
+ },
+ "2": {
+  "title": "Phiếu 2 – Họp nhóm lần đầu: chọn đề tài, chia vai, giao ước (tuần 1)",
+  "kind": "seminar",
+  "max_attempts": 3,
+  "score_policy": "LAST",
+  "status": "OPEN",
+  "sections": [
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Yêu cầu",
+    "lines": [
+     "Họp 60 phút theo kịch bản ở trang lớp học: làm quen → chọn người giữ nhịp → bỏ phiếu đề tài → chia vai → ký giao ước.",
+     "Mỗi thành viên nộp phiếu của mình; nội dung nhóm (đề tài, bảng vai) giống nhau, phần 'Vai của bạn' ghi riêng.",
+     "Thư ký chụp biên bản họp (giấy hoặc màn hình nhóm chat) và cả nhóm dùng chung ảnh này."
+    ]
+   },
+   {
+    "id": "nhom",
+    "type": "table",
+    "title": "1. Thông tin nhóm và đề tài",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm (12 hoặc 13) và ngày họp",
+     "Đề tài đã chọn (số và tên trong danh sách 20 đề tài)",
+     "Lý do cả nhóm chọn đề tài này (2–3 câu)",
+     "Trưởng nhóm và Thư ký"
+    ],
+    "photos": false
+   },
+   {
+    "id": "vai",
+    "type": "table",
+    "title": "2. Bảng phân vai",
+    "columns": [
+     "Người giữ vai chính",
+     "Người học thêm vai này"
+    ],
+    "rows": [
+     "Điều phối",
+     "Khơi ý tưởng",
+     "Săn tư liệu",
+     "Kiểm chứng",
+     "Kể chuyện bằng hình",
+     "Viết – biên tập",
+     "Trình bày",
+     "Kết nối"
+    ],
+    "photos": false
+   },
+   {
+    "id": "cuaban",
+    "type": "table",
+    "title": "3. Vai của bạn",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Vai chính và vai học thêm của bạn",
+     "Việc đầu tiên bạn nhận và hạn hoàn thành"
+    ],
+    "photos": false
+   },
+   {
+    "id": "giaouoc",
+    "type": "text",
+    "title": "4. Giao ước nhóm",
+    "prompt": "Ghi lại các điều nhóm đã thống nhất (lịch họp, thời gian trả lời tin nhắn, báo trước khi trễ hạn, ghi nguồn, quy định dùng AI, mọi người đều nói khi thuyết trình…)."
+   },
+   {
+    "id": "bienban",
+    "type": "table",
+    "title": "5. Minh chứng họp nhóm",
+    "columns": [
+     "Ngày, người dự, việc đã giao"
+    ],
+    "rows": [
+     "Buổi họp lần đầu"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh biên bản",
+    "photo_hint": "Chụp biên bản họp hoặc màn hình nhóm chat thể hiện danh sách người dự và việc đã giao."
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "nhom",
+     "name": "Đề tài và lý do chọn rõ ràng",
+     "max": 2
+    },
+    {
+     "id": "vai",
+     "name": "Đủ 8 vai, mỗi người có vai chính và vai học thêm",
+     "max": 3
+    },
+    {
+     "id": "cuaban",
+     "name": "Việc của bạn cụ thể, có hạn",
+     "max": 2
+    },
+    {
+     "id": "giaouoc",
+     "name": "Giao ước nhóm cụ thể",
+     "max": 2
+    },
+    {
+     "id": "bienban",
+     "name": "Có minh chứng họp nhóm",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Phiếu của seminar Giới thiệu ngành Địa chất cho tân sinh viên: chấm theo mức độ hoàn thành yêu cầu và độ cụ thể của nội dung sinh viên tự viết; không có đáp số cố định. Kiểm tra: đủ các mục bắt buộc, nội dung cụ thể (tên người, việc, hạn, liên kết), có ghi nguồn khi dùng thông tin, có dòng khai báo dùng công cụ AI nếu có dùng.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "GTN-ĐC",
+   "ten": "Seminar Giới thiệu ngành Địa chất",
+   "hoc_phan": "Giới thiệu ngành Địa chất",
+   "url": "https://diemdanhsv.com/gtn-dc/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Giới thiệu ngành Địa chất (Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu của TÂN SINH VIÊN NĂM NHẤT trong seminar nhóm đầu tiên. Mục tiêu là khích lệ và giúp các em hình thành thói quen học đại học: viết cụ thể, có kế hoạch, ghi nguồn, phối hợp nhóm. Giọng nhận xét ấm áp, ngắn gọn, khen điểm làm tốt trước rồi mới góp ý.",
+   "quy_tac_bang": "Các bảng trong phiếu này KHÔNG có đáp số cố định. Chấm mức độ đầy đủ và cụ thể: ô có nội dung riêng của sinh viên (tên, việc, hạn, liên kết, trích dẫn) là đạt; ô bỏ trống, chung chung ('sẽ cố gắng', 'tìm tài liệu') hoặc chép lại đề là chưa đạt. Trích dẫn đạt khi có tác giả/cơ quan, năm, tên tài liệu; không đòi hỏi đúng tuyệt đối chuẩn APA. Không chấm theo đúng/sai của kết quả trắc nghiệm tính cách hay sở thích: mọi kết quả đều hợp lệ.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mục nào (vd 'Bảng 3 – Nguồn 2') còn thiếu gì và gợi ý một cách sửa cụ thể, viết cho sinh viên năm nhất dễ làm theo. Không phán xét tính cách, sở thích hay điểm đánh giá chéo mà sinh viên ghi; không trích lại điểm đánh giá chéo của thành viên khác trong nhận xét."
+  }
+ },
+ "3": {
+  "title": "Phiếu 3 – Đề cương seminar (mốc tuần 1, gửi Thầy duyệt)",
+  "kind": "seminar",
+  "max_attempts": 3,
+  "score_policy": "LAST",
+  "status": "OPEN",
+  "sections": [
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Yêu cầu",
+    "lines": [
+     "Hạn: trước hết ngày 7 của seminar. Mỗi thành viên nộp; phần đề cương nhóm giống nhau, phần 'Phụ trách của bạn' ghi riêng.",
+     "Đề cương 1 trang: đặt vấn đề → 3 ý chính → liên hệ Việt Nam → câu hỏi riêng của nhóm.",
+     "Nguồn: ưu tiên bài báo khoa học, báo cáo cơ quan nhà nước và viện nghiên cứu; kiểm tra từng nguồn bằng 5 câu hỏi C.R.A.A.P.",
+     "Có dùng AI thì ghi một dòng khai báo ở cuối mục 1: công cụ nào, dùng cho việc gì."
+    ]
+   },
+   {
+    "id": "nhom",
+    "type": "table",
+    "title": "Thông tin nhóm",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm và đề tài",
+     "Liên kết Google Docs đề cương (quyền xem cho người có liên kết)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "decuong",
+    "type": "text",
+    "title": "1. Đề cương chi tiết",
+    "prompt": "Đặt vấn đề (vì sao đề tài đáng quan tâm) → 3 ý chính, mỗi ý 2–3 gạch đầu dòng → liên hệ thực tiễn Việt Nam → kết luận dự kiến."
+   },
+   {
+    "id": "cauhoi",
+    "type": "questions",
+    "title": "2. Câu hỏi riêng của nhóm",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Câu hỏi nào nhóm muốn tự tìm câu trả lời (không có sẵn trong dàn ý gợi ý)? Vì sao câu hỏi này thú vị?"
+     }
+    ]
+   },
+   {
+    "id": "nguon",
+    "type": "table",
+    "title": "3. Nguồn tài liệu đã tìm",
+    "columns": [
+     "Trích dẫn (tác giả/cơ quan, năm, tên tài liệu, nơi đăng)",
+     "Kiểm C.R.A.A.P: đạt hay chưa, vì sao"
+    ],
+    "rows": [
+     "Nguồn 1",
+     "Nguồn 2",
+     "Nguồn 3",
+     "Nguồn 4",
+     "Nguồn 5"
+    ],
+    "photos": false
+   },
+   {
+    "id": "phutrach",
+    "type": "table",
+    "title": "4. Phụ trách của bạn",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Phần nội dung bạn phụ trách",
+     "Sản phẩm bạn sẽ nộp và hạn"
+    ],
+    "photos": false
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "decuong",
+     "name": "Đề cương đủ 4 phần, logic, bám đề tài",
+     "max": 4
+    },
+    {
+     "id": "cauhoi",
+     "name": "Có câu hỏi riêng của nhóm",
+     "max": 2
+    },
+    {
+     "id": "nguon",
+     "name": "Ít nhất 5 nguồn ghi đủ thông tin và có kiểm C.R.A.A.P",
+     "max": 3
+    },
+    {
+     "id": "phutrach",
+     "name": "Phụ trách cá nhân cụ thể",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Phiếu của seminar Giới thiệu ngành Địa chất cho tân sinh viên: chấm theo mức độ hoàn thành yêu cầu và độ cụ thể của nội dung sinh viên tự viết; không có đáp số cố định. Kiểm tra: đủ các mục bắt buộc, nội dung cụ thể (tên người, việc, hạn, liên kết), có ghi nguồn khi dùng thông tin, có dòng khai báo dùng công cụ AI nếu có dùng.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "GTN-ĐC",
+   "ten": "Seminar Giới thiệu ngành Địa chất",
+   "hoc_phan": "Giới thiệu ngành Địa chất",
+   "url": "https://diemdanhsv.com/gtn-dc/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Giới thiệu ngành Địa chất (Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu của TÂN SINH VIÊN NĂM NHẤT trong seminar nhóm đầu tiên. Mục tiêu là khích lệ và giúp các em hình thành thói quen học đại học: viết cụ thể, có kế hoạch, ghi nguồn, phối hợp nhóm. Giọng nhận xét ấm áp, ngắn gọn, khen điểm làm tốt trước rồi mới góp ý.",
+   "quy_tac_bang": "Các bảng trong phiếu này KHÔNG có đáp số cố định. Chấm mức độ đầy đủ và cụ thể: ô có nội dung riêng của sinh viên (tên, việc, hạn, liên kết, trích dẫn) là đạt; ô bỏ trống, chung chung ('sẽ cố gắng', 'tìm tài liệu') hoặc chép lại đề là chưa đạt. Trích dẫn đạt khi có tác giả/cơ quan, năm, tên tài liệu; không đòi hỏi đúng tuyệt đối chuẩn APA. Không chấm theo đúng/sai của kết quả trắc nghiệm tính cách hay sở thích: mọi kết quả đều hợp lệ.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mục nào (vd 'Bảng 3 – Nguồn 2') còn thiếu gì và gợi ý một cách sửa cụ thể, viết cho sinh viên năm nhất dễ làm theo. Không phán xét tính cách, sở thích hay điểm đánh giá chéo mà sinh viên ghi; không trích lại điểm đánh giá chéo của thành viên khác trong nhận xét."
+  }
+ },
+ "4": {
+  "title": "Phiếu 4 – Tiến độ tuần 2: kế hoạch, slide nháp, tập dượt",
+  "kind": "seminar",
+  "max_attempts": 2,
+  "score_policy": "LAST",
+  "status": "HIDDEN",
+  "sections": [
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Yêu cầu",
+    "lines": [
+     "Nộp sau buổi tập dượt có bấm giờ (tối đa 15 phút, mỗi bạn nói ít nhất 1 phút).",
+     "Bảng kế hoạch là bản đang dùng của nhóm; trạng thái ghi trung thực (đang làm, trễ có lý do cũng được ghi nhận).",
+     "Tệp slide và bảng kế hoạch đặt trên Google Drive, dán liên kết; ảnh buổi tập dượt tải vào cột ảnh."
+    ]
+   },
+   {
+    "id": "kehoach",
+    "type": "table",
+    "title": "1. Bảng kế hoạch nhóm",
+    "columns": [
+     "Việc",
+     "Người phụ trách",
+     "Hạn",
+     "Trạng thái",
+     "Liên kết minh chứng"
+    ],
+    "rows": [
+     "Việc 1",
+     "Việc 2",
+     "Việc 3",
+     "Việc 4",
+     "Việc 5",
+     "Việc 6"
+    ],
+    "photos": false
+   },
+   {
+    "id": "lienket",
+    "type": "table",
+    "title": "2. Liên kết sản phẩm",
+    "columns": [
+     "Liên kết"
+    ],
+    "rows": [
+     "Slide nháp của nhóm",
+     "Thư mục Drive chung của nhóm"
+    ],
+    "photos": false
+   },
+   {
+    "id": "hoc",
+    "type": "questions",
+    "title": "3. Học và giảng lại",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Giảng lại phần bạn phụ trách trong khoảng 5 câu thật đơn giản, như đang giải thích cho một bạn lớp 8 (kỹ thuật Feynman)."
+     },
+     {
+      "id": "q2",
+      "text": "Nhóm đã gặp khó khăn gì trong tuần này và đã xử lý thế nào?"
+     }
+    ]
+   },
+   {
+    "id": "taplai",
+    "type": "table",
+    "title": "4. Minh chứng buổi tập dượt",
+    "columns": [
+     "Ngày, thời lượng bài nói, người góp ý"
+    ],
+    "rows": [
+     "Buổi tập dượt"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh tập dượt",
+    "photo_hint": "Ảnh nhóm tập dượt hoặc ảnh màn hình đồng hồ bấm giờ."
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "kehoach",
+     "name": "Bảng kế hoạch đủ cột, cập nhật trung thực",
+     "max": 3
+    },
+    {
+     "id": "lienket",
+     "name": "Có liên kết slide nháp xem được",
+     "max": 2
+    },
+    {
+     "id": "hoc",
+     "name": "Giảng lại đúng ý, dễ hiểu; nêu được khó khăn và cách xử lý",
+     "max": 4
+    },
+    {
+     "id": "taplai",
+     "name": "Có minh chứng tập dượt",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Phiếu của seminar Giới thiệu ngành Địa chất cho tân sinh viên: chấm theo mức độ hoàn thành yêu cầu và độ cụ thể của nội dung sinh viên tự viết; không có đáp số cố định. Kiểm tra: đủ các mục bắt buộc, nội dung cụ thể (tên người, việc, hạn, liên kết), có ghi nguồn khi dùng thông tin, có dòng khai báo dùng công cụ AI nếu có dùng.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "GTN-ĐC",
+   "ten": "Seminar Giới thiệu ngành Địa chất",
+   "hoc_phan": "Giới thiệu ngành Địa chất",
+   "url": "https://diemdanhsv.com/gtn-dc/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Giới thiệu ngành Địa chất (Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu của TÂN SINH VIÊN NĂM NHẤT trong seminar nhóm đầu tiên. Mục tiêu là khích lệ và giúp các em hình thành thói quen học đại học: viết cụ thể, có kế hoạch, ghi nguồn, phối hợp nhóm. Giọng nhận xét ấm áp, ngắn gọn, khen điểm làm tốt trước rồi mới góp ý.",
+   "quy_tac_bang": "Các bảng trong phiếu này KHÔNG có đáp số cố định. Chấm mức độ đầy đủ và cụ thể: ô có nội dung riêng của sinh viên (tên, việc, hạn, liên kết, trích dẫn) là đạt; ô bỏ trống, chung chung ('sẽ cố gắng', 'tìm tài liệu') hoặc chép lại đề là chưa đạt. Trích dẫn đạt khi có tác giả/cơ quan, năm, tên tài liệu; không đòi hỏi đúng tuyệt đối chuẩn APA. Không chấm theo đúng/sai của kết quả trắc nghiệm tính cách hay sở thích: mọi kết quả đều hợp lệ.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mục nào (vd 'Bảng 3 – Nguồn 2') còn thiếu gì và gợi ý một cách sửa cụ thể, viết cho sinh viên năm nhất dễ làm theo. Không phán xét tính cách, sở thích hay điểm đánh giá chéo mà sinh viên ghi; không trích lại điểm đánh giá chéo của thành viên khác trong nhận xét."
+  }
+ },
+ "5": {
+  "title": "Phiếu 5 – Phản biện nhóm bạn (buổi báo cáo tuần 3)",
+  "kind": "seminar",
+  "max_attempts": 2,
+  "score_policy": "LAST",
+  "status": "HIDDEN",
+  "sections": [
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Yêu cầu",
+    "lines": [
+     "Làm trong buổi báo cáo, khi nghe nhóm bạn trình bày.",
+     "Câu hỏi phản biện dùng kiểu Socratic: hỏi bằng chứng, hỏi điều gì xảy ra nếu ngược lại, hỏi hệ quả; lịch sự, nhắm vào nội dung.",
+     "Góp ý theo KEEP (điều nên giữ) và CHANGE (điều nên đổi), cụ thể đến từng slide hoặc từng ý."
+    ]
+   },
+   {
+    "id": "nhom",
+    "type": "table",
+    "title": "Nhóm được phản biện",
+    "columns": [
+     "Nội dung"
+    ],
+    "rows": [
+     "Nhóm và đề tài được nghe"
+    ],
+    "photos": false
+   },
+   {
+    "id": "phanbien",
+    "type": "questions",
+    "title": "1. Câu hỏi phản biện của bạn",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Câu hỏi phản biện thứ nhất (và vì sao bạn hỏi)."
+     },
+     {
+      "id": "q2",
+      "text": "Câu hỏi phản biện thứ hai."
+     }
+    ]
+   },
+   {
+    "id": "gopy",
+    "type": "table",
+    "title": "2. Góp ý KEEP – CHANGE",
+    "columns": [
+     "Nội dung góp ý"
+    ],
+    "rows": [
+     "KEEP – điều nhóm bạn nên giữ",
+     "CHANGE – điều nhóm bạn nên đổi",
+     "Một điều bạn học được từ bài của nhóm bạn"
+    ],
+    "photos": false
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "phanbien",
+     "name": "Câu hỏi phản biện đúng nội dung, có chiều sâu",
+     "max": 5
+    },
+    {
+     "id": "gopy",
+     "name": "Góp ý cụ thể, lịch sự, có ích",
+     "max": 5
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Phiếu của seminar Giới thiệu ngành Địa chất cho tân sinh viên: chấm theo mức độ hoàn thành yêu cầu và độ cụ thể của nội dung sinh viên tự viết; không có đáp số cố định. Kiểm tra: đủ các mục bắt buộc, nội dung cụ thể (tên người, việc, hạn, liên kết), có ghi nguồn khi dùng thông tin, có dòng khai báo dùng công cụ AI nếu có dùng.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "GTN-ĐC",
+   "ten": "Seminar Giới thiệu ngành Địa chất",
+   "hoc_phan": "Giới thiệu ngành Địa chất",
+   "url": "https://diemdanhsv.com/gtn-dc/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Giới thiệu ngành Địa chất (Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu của TÂN SINH VIÊN NĂM NHẤT trong seminar nhóm đầu tiên. Mục tiêu là khích lệ và giúp các em hình thành thói quen học đại học: viết cụ thể, có kế hoạch, ghi nguồn, phối hợp nhóm. Giọng nhận xét ấm áp, ngắn gọn, khen điểm làm tốt trước rồi mới góp ý.",
+   "quy_tac_bang": "Các bảng trong phiếu này KHÔNG có đáp số cố định. Chấm mức độ đầy đủ và cụ thể: ô có nội dung riêng của sinh viên (tên, việc, hạn, liên kết, trích dẫn) là đạt; ô bỏ trống, chung chung ('sẽ cố gắng', 'tìm tài liệu') hoặc chép lại đề là chưa đạt. Trích dẫn đạt khi có tác giả/cơ quan, năm, tên tài liệu; không đòi hỏi đúng tuyệt đối chuẩn APA. Không chấm theo đúng/sai của kết quả trắc nghiệm tính cách hay sở thích: mọi kết quả đều hợp lệ.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mục nào (vd 'Bảng 3 – Nguồn 2') còn thiếu gì và gợi ý một cách sửa cụ thể, viết cho sinh viên năm nhất dễ làm theo. Không phán xét tính cách, sở thích hay điểm đánh giá chéo mà sinh viên ghi; không trích lại điểm đánh giá chéo của thành viên khác trong nhận xét."
+  }
+ },
+ "6": {
+  "title": "Phiếu 6 – Đánh giá chéo trong nhóm và tự nhìn lại (cuối tuần 3)",
+  "kind": "seminar",
+  "max_attempts": 2,
+  "score_policy": "LAST",
+  "status": "HIDDEN",
+  "sections": [
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Yêu cầu",
+    "lines": [
+     "Chấm kín: chỉ giảng viên xem bảng điểm này; thành viên khác trong nhóm không thấy.",
+     "Mỗi tiêu chí 0–2,5 điểm theo bảng mức ở trang lớp học: tham dự & phối hợp · quản lý công việc · giao tiếp · giải quyết vấn đề.",
+     "Mỗi người cần 1 điều KEEP và 1 điều CHANGE, viết tôn trọng, nhắm vào việc làm chứ không nhắm vào con người.",
+     "Hàng đầu tiên là tự chấm bản thân; nhóm ít hơn 8 người thì để trống các hàng thừa."
+    ]
+   },
+   {
+    "id": "cheo",
+    "type": "table",
+    "title": "1. Bảng đánh giá chéo",
+    "columns": [
+     "Họ tên",
+     "Tham dự & phối hợp (0–2,5)",
+     "Quản lý công việc (0–2,5)",
+     "Giao tiếp (0–2,5)",
+     "Giải quyết vấn đề (0–2,5)",
+     "KEEP / CHANGE"
+    ],
+    "rows": [
+     "Bản thân tôi",
+     "Thành viên 2",
+     "Thành viên 3",
+     "Thành viên 4",
+     "Thành viên 5",
+     "Thành viên 6",
+     "Thành viên 7",
+     "Thành viên 8"
+    ],
+    "photos": false
+   },
+   {
+    "id": "nhinlai",
+    "type": "questions",
+    "title": "2. Tự nhìn lại",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Trong 3 tuần, bạn đã thực sự làm những việc gì cho nhóm?"
+     },
+     {
+      "id": "q2",
+      "text": "Bạn học được điều gì (về địa chất, về cách học, về làm việc nhóm)?"
+     },
+     {
+      "id": "q3",
+      "text": "Nếu làm lại, bạn sẽ làm khác điều gì? Mục tiêu SMART ở Phiếu 1 của bạn đã đạt chưa?"
+     }
+    ]
+   },
+   {
+    "id": "tdg",
+    "type": "self",
+    "title": "3. Tự đánh giá kỹ năng mềm sau seminar (Chưa / Tạm được / Tự tin)",
+    "items": [
+     "Lắng nghe người khác nói hết ý",
+     "Nói ý kiến của mình trong nhóm",
+     "Thuyết trình trước lớp",
+     "Quản lý thời gian, đúng hạn",
+     "Tìm và đánh giá nguồn tin",
+     "Dùng AI có trách nhiệm, kiểm tra lại kết quả"
+    ]
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "cheo",
+     "name": "Bảng đánh giá chéo đủ, có KEEP/CHANGE cụ thể và tôn trọng",
+     "max": 4
+    },
+    {
+     "id": "nhinlai",
+     "name": "Tự nhìn lại trung thực, cụ thể, có đối chiếu mục tiêu",
+     "max": 5
+    },
+    {
+     "id": "tdg",
+     "name": "Hoàn thành tự đánh giá",
+     "max": 1
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Phiếu của seminar Giới thiệu ngành Địa chất cho tân sinh viên: chấm theo mức độ hoàn thành yêu cầu và độ cụ thể của nội dung sinh viên tự viết; không có đáp số cố định. Kiểm tra: đủ các mục bắt buộc, nội dung cụ thể (tên người, việc, hạn, liên kết), có ghi nguồn khi dùng thông tin, có dòng khai báo dùng công cụ AI nếu có dùng. Không chấm theo điểm số sinh viên cho bạn cùng nhóm; chỉ chấm việc ghi đủ và góp ý có lý do.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "GTN-ĐC",
+   "ten": "Seminar Giới thiệu ngành Địa chất",
+   "hoc_phan": "Giới thiệu ngành Địa chất",
+   "url": "https://diemdanhsv.com/gtn-dc/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Giới thiệu ngành Địa chất (Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu của TÂN SINH VIÊN NĂM NHẤT trong seminar nhóm đầu tiên. Mục tiêu là khích lệ và giúp các em hình thành thói quen học đại học: viết cụ thể, có kế hoạch, ghi nguồn, phối hợp nhóm. Giọng nhận xét ấm áp, ngắn gọn, khen điểm làm tốt trước rồi mới góp ý.",
+   "quy_tac_bang": "Các bảng trong phiếu này KHÔNG có đáp số cố định. Chấm mức độ đầy đủ và cụ thể: ô có nội dung riêng của sinh viên (tên, việc, hạn, liên kết, trích dẫn) là đạt; ô bỏ trống, chung chung ('sẽ cố gắng', 'tìm tài liệu') hoặc chép lại đề là chưa đạt. Trích dẫn đạt khi có tác giả/cơ quan, năm, tên tài liệu; không đòi hỏi đúng tuyệt đối chuẩn APA. Không chấm theo đúng/sai của kết quả trắc nghiệm tính cách hay sở thích: mọi kết quả đều hợp lệ.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mục nào (vd 'Bảng 3 – Nguồn 2') còn thiếu gì và gợi ý một cách sửa cụ thể, viết cho sinh viên năm nhất dễ làm theo. Không phán xét tính cách, sở thích hay điểm đánh giá chéo mà sinh viên ghi; không trích lại điểm đánh giá chéo của thành viên khác trong nhận xét."
+  }
+ }
+}
