@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hướng dẫn sử dụng – Seminar Giới thiệu ngành Địa chất K2026</title>
+<meta name="description" content="Hướng dẫn sinh viên và giảng viên dùng Cẩm nang seminar và Phiếu online môn Giới thiệu ngành Địa chất.">
+<link rel="icon" type="image/svg+xml" href="../workshop/assets/favicon.svg?v=20261014-logo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--luc:#0F6B55;--luc-nhat:#E3F0EC;--lam:#1F4E79;--muc:#10212B;--giay:#F6F7F3;--bac:#D5DCE1;--son:#B5462F;--hoang:#B8862B;--trang:#fff;--chu-phu:#4A5A63;--r:14px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;font-family:"Be Vietnam Pro",system-ui,sans-serif;color:var(--muc);background:var(--giay);line-height:1.6;font-size:16px}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;line-height:1.25;color:var(--muc)}
+h2{font-size:clamp(1.5rem,3vw,2rem);margin:0 0 .4em}
+h3{font-size:1.15rem;margin:1.2em 0 .4em}
+a{color:var(--luc)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+/* thanh điều hướng */
+.nav{position:sticky;top:0;z-index:50;background:rgba(246,247,243,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--bac)}
+.nav .wrap{display:flex;align-items:center;gap:14px;height:58px}
+.nav .brand{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--muc);text-decoration:none;white-space:nowrap}
+.nav .brand img{width:34px;height:34px;background:#fff;border-radius:20%;padding:3px;box-shadow:0 1px 4px rgba(16,33,43,.12)}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0 0 0 auto;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a.tab{display:block;padding:7px 11px;border-radius:999px;text-decoration:none;color:var(--chu-phu);font-size:.9rem;white-space:nowrap}
+.nav a.tab:hover,.nav a.tab.on{background:var(--luc-nhat);color:var(--luc)}
+@media(max-width:760px){.nav .brand span{display:none}}
+/* bìa */
+.hero{background:linear-gradient(160deg,#fff 0%,var(--luc-nhat) 100%);border-bottom:1px solid var(--bac);padding:42px 0 36px}
+.hero .logos{display:flex;align-items:center;gap:18px;margin-bottom:22px}
+.hero .logos .hcmus{height:62px}
+.hero .logos .sep{width:1px;height:48px;background:var(--bac)}
+.hero .logos .sen{width:58px;height:58px;background:#fff;border-radius:20%;padding:5px;box-shadow:0 2px 10px rgba(16,33,43,.08)}
+.hero .kicker{color:var(--luc);font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.hero h1{font-size:clamp(1.8rem,4.6vw,3rem);margin:.2em 0 .3em}
+.hero p.lead{font-size:1.1rem;max-width:760px;color:var(--chu-phu)}
+.pill{display:inline-block;background:#fff;border:1px solid var(--bac);border-radius:999px;padding:4px 12px;font-size:.85rem;margin:4px 6px 0 0}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:10px;padding:10px 18px;font:600 .95rem "Be Vietnam Pro",sans-serif;cursor:pointer;text-decoration:none;background:var(--luc);color:#fff}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:#fff;color:var(--luc);border:1.5px solid var(--luc)}
+.btn.small{padding:6px 12px;font-size:.85rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+section{padding:46px 0;border-bottom:1px solid var(--bac)}
+section .sub{color:var(--chu-phu);max-width:780px;margin:0 0 22px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:#fff;border:1px solid var(--bac);border-radius:var(--r);padding:18px 20px}
+.card h3{margin-top:0}
+.card .tag{display:inline-block;font-size:.75rem;font-weight:600;color:var(--lam);background:#E6EEF6;border-radius:6px;padding:2px 8px;margin-bottom:6px}
+.apply{margin-top:10px;padding:10px 12px;background:var(--luc-nhat);border-radius:10px;font-size:.92rem}
+.apply b{color:var(--luc)}
+.note{border-left:4px solid var(--hoang);background:#FBF6EA;padding:12px 16px;border-radius:0 10px 10px 0;font-size:.95rem}
+.note.lam{border-color:var(--lam);background:#EEF3F8}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--r);overflow:hidden;font-size:.93rem}
+th,td{padding:9px 11px;border-bottom:1px solid var(--bac);text-align:left;vertical-align:top}
+th{background:#EEF2F0;font-weight:600}
+.tbl{overflow-x:auto;border:1px solid var(--bac);border-radius:var(--r)}
+/* lộ trình */
+.week{position:relative;padding-left:58px}
+.week .num{position:absolute;left:0;top:18px;width:42px;height:42px;border-radius:50%;background:var(--luc);color:#fff;display:grid;place-items:center;font:700 1.1rem "Source Serif 4",serif}
+.week ul{margin:.3em 0 0;padding-left:1.1em}
+.week .goal{font-weight:600;color:var(--lam)}
+/* trình khám phá */
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.steps button{border:1px solid var(--bac);background:#fff;border-radius:999px;padding:6px 14px;font:500 .88rem "Be Vietnam Pro";cursor:pointer;color:var(--chu-phu)}
+.steps button.on{background:var(--luc);border-color:var(--luc);color:#fff}
+.steps button.done:not(.on){border-color:var(--luc);color:var(--luc)}
+.pane{display:none}.pane.on{display:block}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.chip{border:1.5px solid var(--bac);background:#fff;border-radius:10px;padding:9px 12px;text-align:left;font:400 .92rem "Be Vietnam Pro";cursor:pointer;color:var(--muc)}
+.chip.on{border-color:var(--luc);background:var(--luc-nhat);font-weight:600}
+.counter{font-weight:600;color:var(--luc)}
+.counter.full{color:var(--son)}
+.likert{display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:center;background:#fff;border:1px solid var(--bac);border-radius:var(--r);padding:14px 16px}
+.likert .opts{display:flex;gap:4px}
+.likert .opts button{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--bac);background:#fff;font:600 .9rem "Be Vietnam Pro";cursor:pointer}
+.likert .opts button.on{background:var(--luc);border-color:var(--luc);color:#fff}
+@media(max-width:600px){.likert{grid-template-columns:1fr}.likert .opts{margin-bottom:8px}}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.role{background:#fff;border:1px solid var(--bac);border-radius:12px;padding:12px 14px}
+.role b{display:block}
+.role small{color:var(--chu-phu)}
+.role .pick{display:flex;gap:4px;margin-top:8px}
+.role .pick button{flex:1;border:1.5px solid var(--bac);background:#fff;border-radius:8px;padding:5px 0;font:500 .8rem "Be Vietnam Pro";cursor:pointer}
+.role .pick button.on[data-k=like]{background:var(--luc);border-color:var(--luc);color:#fff}
+.role .pick button.on[data-k=learn]{background:var(--lam);border-color:var(--lam);color:#fff}
+.role .pick button.on[data-k=avoid]{background:var(--son);border-color:var(--son);color:#fff}
+.form{display:grid;gap:14px}
+.form label{font-weight:600;display:block;margin-bottom:4px}
+.form .row{background:#fff;border:1px solid var(--bac);border-radius:12px;padding:12px 14px}
+.form input[type=text],.form select{width:100%;padding:9px 11px;border:1px solid var(--bac);border-radius:8px;font:inherit}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.checks label{font-weight:400;display:inline-flex;gap:6px;align-items:center;background:var(--giay);border:1px solid var(--bac);border-radius:999px;padding:4px 12px;cursor:pointer;margin:0}
+.navbtns{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+/* thẻ kết quả */
+.idcard{background:#fff;border:2px solid var(--luc);border-radius:18px;padding:22px 24px;max-width:720px}
+.idcard .top{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--bac);padding-bottom:12px;margin-bottom:12px}
+.idcard .shape{width:64px;height:64px;flex:none}
+.idcard h3{margin:0;font-size:1.4rem}
+.idcard dl{display:grid;grid-template-columns:170px 1fr;gap:6px 12px;margin:0}
+.idcard dt{color:var(--chu-phu);font-size:.9rem}
+.idcard dd{margin:0;font-weight:500}
+@media(max-width:600px){.idcard dl{grid-template-columns:1fr}.idcard dt{margin-top:6px}}
+.bars{display:grid;gap:6px;margin:10px 0}
+.bar{display:grid;grid-template-columns:110px 1fr 28px;gap:8px;align-items:center;font-size:.88rem}
+.bar i{display:block;height:10px;border-radius:5px;background:var(--luc)}
+.bar span.track{background:var(--giay);border-radius:5px;overflow:hidden}
+/* đề tài */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters select{padding:8px 10px;border:1px solid var(--bac);border-radius:8px;font:inherit;background:#fff}
+.stars{color:var(--hoang);letter-spacing:1px;white-space:nowrap}
+tr.fit td:first-child{box-shadow:inset 4px 0 0 var(--luc)}
+.fitbadge{display:inline-block;font-size:.72rem;background:var(--luc);color:#fff;border-radius:6px;padding:1px 6px;margin-left:4px;vertical-align:middle}
+details{background:#fff;border:1px solid var(--bac);border-radius:12px;padding:10px 14px;margin-bottom:8px}
+details summary{cursor:pointer;font-weight:600}
+.checklist{list-style:none;padding:0;margin:0}
+.checklist li{padding:6px 0 6px 30px;position:relative;border-bottom:1px dashed var(--bac)}
+.checklist li:before{content:"";position:absolute;left:2px;top:9px;width:16px;height:16px;border:2px solid var(--luc);border-radius:4px}
+footer{padding:34px 0 50px;color:var(--chu-phu);font-size:.88rem}
+footer .refs{columns:2 300px;column-gap:28px}
+footer .refs p{margin:0 0 6px;break-inside:avoid}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--muc);color:#fff;padding:10px 18px;border-radius:10px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99}
+.toast.show{opacity:1}
+@media print{
+ .nav,.btn,.steps,.navbtns,.filters,.no-print,.dqt-sen,.hero .logos .sep{display:none!important}
+ body{background:#fff;font-size:12pt}
+ section{padding:14px 0;page-break-inside:auto}
+ .pane{display:block!important}
+ .card,.idcard,.role{break-inside:avoid}
+ body.print-card > *:not(#kham-pha){display:none!important}
+ body.print-card #kham-pha .pane:not(#p-ket-qua),body.print-card #kham-pha>.wrap>h2,body.print-card #kham-pha .sub{display:none!important}
+}
+.week ol{margin:.3em 0 0;padding-left:1.2em}
+details p{margin:.5em 0 .2em}
+@media print{details{border:0;padding:0}details:not([open])>*:not(summary){display:block}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+ <a class="brand" href="index.html"><img class="dqt-sen" src="../workshop/assets/logo-sen.svg" alt="Logo hoa sen"><span>Hướng dẫn sử dụng</span></a>
+ <ul>
+  <li><a class="tab" href="#sv">Sinh viên</a></li>
+  <li><a class="tab" href="#lich">Lịch nộp phiếu</a></li>
+  <li><a class="tab" href="#hoi-dap">Hỏi đáp</a></li>
+  <li><a class="tab" href="#gv">Giảng viên</a></li>
+  <li><a class="tab" href="index.html">← Cẩm nang</a></li>
+  <li><a class="tab" href="online.html" style="background:var(--luc);color:#fff">Làm phiếu online</a></li>
+ </ul>
+</div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+ <div class="logos"><img class="hcmus" src="../images/logo-hcmus.png" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM"><span class="sep"></span><img class="sen dqt-sen" src="../workshop/assets/logo-sen.svg" alt="Logo hoa sen"></div>
+ <div class="kicker">Seminar Giới thiệu ngành Địa chất · Tân sinh viên K2026</div>
+ <h1>Hướng dẫn sử dụng</h1>
+ <p class="lead">Trang seminar có hai phần: <b>Cẩm nang</b> để đọc và tự khám phá bản thân, chạy ngay trên máy bạn; <b>Phiếu online</b> để nộp bài theo từng mốc, đăng nhập bằng MSSV và mã vào lớp.</p>
+ <div class="tbl" style="max-width:860px;margin-top:18px"><table>
+  <tr><th>Trang</th><th>Dùng để</th><th>Cần đăng nhập?</th></tr>
+  <tr><td><a href="index.html">gtn-dc/index.html</a> – Cẩm nang</td><td>Lộ trình 3 tuần, Khám phá bản thân, họp nhóm, hộp công cụ, chọn đề tài, đánh giá chéo</td><td>Không</td></tr>
+  <tr><td><a href="online.html">gtn-dc/online.html</a> – Phiếu online</td><td>Làm và nộp Phiếu 1–6, xem điểm tạm và nhận xét</td><td>MSSV + mã 4 ký tự (trên lớp) hoặc mã ôn tập 6 ký tự (ở nhà)</td></tr>
+  <tr><td>gtn-dc/quanly.html</td><td>Giảng viên tạo phiếu, mở mã, duyệt điểm</td><td>Tài khoản giảng viên</td></tr>
+ </table></div>
+ <p style="margin-top:20px"><a class="btn" href="#sv">Hướng dẫn cho sinh viên</a> <a class="btn ghost" href="#gv">Hướng dẫn cho giảng viên</a></p>
+</div></header>
+
+<section id="sv"><div class="wrap">
+ <h2>Dành cho sinh viên</h2>
+ <p class="sub">Làm theo thứ tự dưới đây. Dùng điện thoại được, nhưng làm phiếu dài (Phiếu 3, 4, 6) trên máy tính sẽ dễ hơn.</p>
+
+ <div class="grid">
+  <div class="card week"><div class="num">1</div>
+   <h3>Làm phần Khám phá bản thân</h3>
+   <ol>
+    <li>Mở <a href="index.html#kham-pha">Cẩm nang → Khám phá bản thân</a>.</li>
+    <li><b>Bước 1 – Hình khối:</b> ở mỗi phần A, B, C bấm chọn <b>đúng 7 câu</b> giống bạn nhất. Bấm lại vào câu để bỏ chọn. Bộ đếm "(7/7)" chuyển màu là đủ.</li>
+    <li><b>Bước 2 – Sở thích nghề:</b> chấm mỗi câu từ 1 đến 5.</li>
+    <li><b>Bước 3 – Vai trò:</b> chọn 2 vai <b>Thích</b>, 1 vai <b>Học thêm</b>, 1 vai <b>Ngại</b>. Nút "Tiếp" chỉ sáng khi chọn đủ.</li>
+    <li><b>Bước 4 – Nguồn lực:</b> điền tên gọi, thời gian, thiết bị, công cụ… rồi bấm <b>Xem Thẻ của tôi</b>.</li>
+   </ol>
+   <p class="note lam">Câu trả lời tự lưu trên <b>trình duyệt của máy đang dùng</b>, không gửi lên mạng. Đóng trang mở lại vẫn còn; nhưng đổi máy, đổi trình duyệt hoặc dùng chế độ ẩn danh thì phải làm lại. Không có đáp án đúng sai.</p>
+  </div>
+
+  <div class="card week"><div class="num">2</div>
+   <h3>Lưu Thẻ giới thiệu</h3>
+   <ul>
+    <li><b>Sao chép Thẻ:</b> chép toàn bộ Thẻ dạng chữ, dán vào Phiếu 1 hoặc nhóm chat.</li>
+    <li><b>In / Lưu PDF Thẻ:</b> mở hộp thoại in; chọn máy in "Lưu thành PDF" để giữ một bản trên máy.</li>
+    <li>Sửa câu trả lời: bấm <b>Sửa câu trả lời</b> hoặc bấm vào tên bước ở thanh trên. <b>Làm lại từ đầu</b> xóa toàn bộ.</li>
+    <li>Sau khi có Thẻ, mục <a href="index.html#de-tai">Đề tài</a> sẽ gắn nhãn <span class="fitbadge">hợp với bạn</span> cho tối đa 6 đề tài; tick "Chỉ đề tài hợp với tôi" để lọc.</li>
+   </ul>
+  </div>
+
+  <div class="card week"><div class="num">3</div>
+   <h3>Đăng nhập trang Phiếu online</h3>
+   <ol>
+    <li>Mở <a href="online.html">gtn-dc/online.html</a> (hoặc nút <b>Làm phiếu online</b> trên Cẩm nang).</li>
+    <li>Nhập <b>MSSV</b> và <b>mã 4 ký tự</b> Thầy chiếu trên lớp (cũng là mã điểm danh của buổi đó).</li>
+    <li>Phiên làm bài kéo dài 3 giờ. Hết phiên chỉ cần đăng nhập lại; bài đã lưu nháp vẫn còn.</li>
+   </ol>
+  </div>
+
+  <div class="card week"><div class="num">4</div>
+   <h3>Làm và nộp phiếu</h3>
+   <ol>
+    <li>Chọn phiếu trong danh sách. Phiếu chưa tới mốc thì chưa hiện hoặc đang đóng.</li>
+    <li>Điền từng mục. Bấm <b>Lưu nháp</b> thường xuyên; trang cũng tự lưu.</li>
+    <li><b>Bảng có cột ảnh</b> (biên bản họp, ảnh tập dượt): bấm vào ô ảnh để chụp hoặc chọn ảnh từ máy.</li>
+    <li><b>Tệp đề cương, slide:</b> để trên Google Drive, chỉnh quyền "Bất kỳ ai có đường liên kết đều xem được", rồi dán liên kết vào ô.</li>
+    <li>Kiểm tra lại rồi bấm <b>Nộp phiếu</b>. Hệ thống chấm tạm theo rubric, hiện điểm và danh sách chỗ cần sửa ngay trên trang. Thầy duyệt điểm chính thức sau.</li>
+    <li>Phiếu cho nộp nhiều lần sẽ có nút <b>Làm lại</b>; điểm tính theo lần nộp cuối.</li>
+   </ol>
+   <p class="note">Tự viết bằng lời của mình. Hệ thống ghi nhận số lần dán (paste) nội dung để giảng viên nhận ra bài chép. Có dùng AI thì ghi một dòng khai báo.</p>
+  </div>
+
+  <div class="card week"><div class="num">5</div>
+   <h3>Ôn tập ở nhà</h3>
+   <ul>
+    <li>Thầy công bố <b>mã ôn tập 6 ký tự</b> cho cả lớp.</li>
+    <li>Vào <a href="online.html?ontap=1">trang ôn tập</a>, nhập MSSV và mã ôn tập để <b>xem lại</b> bài đã nộp, điểm, nhận xét, chỗ cần sửa.</li>
+    <li>Chế độ ôn tập chỉ xem, không sửa, không nộp lại; điểm giữ nguyên. Phiên ôn tập 4 giờ.</li>
+   </ul>
+  </div>
+ </div>
+</div></section>
+
+<section id="lich"><div class="wrap">
+ <h2>Lịch nộp phiếu</h2>
+ <p class="sub">Ngày cụ thể do Thầy công bố; phiếu của mốc nào mở trong thời gian của mốc đó.</p>
+ <div class="tbl"><table>
+  <tr><th>Phiếu</th><th>Nội dung</th><th>Khi nào</th><th>Ai nộp</th><th>Số lần nộp</th></tr>
+  <tr><td>1</td><td>Thẻ khám phá bản thân, mục tiêu SMART, tự đánh giá kỹ năng mềm</td><td>Tuần 1, trước buổi họp nhóm</td><td>Từng bạn</td><td>3</td></tr>
+  <tr><td>2</td><td>Họp nhóm lần đầu: đề tài, bảng 8 vai, giao ước, ảnh biên bản</td><td>Tuần 1, sau buổi họp</td><td>Từng bạn (nội dung nhóm giống nhau)</td><td>3</td></tr>
+  <tr><td>3</td><td>Đề cương, câu hỏi riêng của nhóm, 5 nguồn có kiểm C.R.A.A.P</td><td>Trước hết ngày 7</td><td>Từng bạn</td><td>3</td></tr>
+  <tr><td>4</td><td>Bảng kế hoạch, liên kết slide nháp, giảng lại kiểu Feynman, ảnh tập dượt</td><td>Cuối tuần 2</td><td>Từng bạn</td><td>2</td></tr>
+  <tr><td>5</td><td>Phản biện nhóm bạn: 2 câu hỏi, KEEP – CHANGE</td><td>Trong buổi báo cáo tuần 3</td><td>Từng bạn</td><td>2</td></tr>
+  <tr><td>6</td><td>Đánh giá chéo trong nhóm (chấm kín) và tự nhìn lại</td><td>Sau buổi báo cáo</td><td>Từng bạn</td><td>2</td></tr>
+ </table></div>
+</div></section>
+
+<section id="hoi-dap"><div class="wrap">
+ <h2>Hỏi đáp nhanh</h2>
+ <details><summary>Không đăng nhập được Phiếu online</summary><p>Kiểm tra MSSV đủ 8 số, mã gõ đúng (không phân biệt hoa thường) và còn hạn. Mã vào lớp chỉ dùng trong buổi học; ở nhà dùng mã ôn tập. Bạn chưa có trong danh sách lớp thì báo Thầy.</p></details>
+ <details><summary>Phần Khám phá bản thân bị mất câu trả lời</summary><p>Câu trả lời chỉ lưu trên trình duyệt của máy đã làm. Hãy mở lại đúng máy và trình duyệt đó, không dùng chế độ ẩn danh. Nếu đã mất, làm lại khoảng 20 phút; sau đó nhớ bấm Sao chép Thẻ để giữ một bản.</p></details>
+ <details><summary>Lỡ bấm Nộp khi chưa xong</summary><p>Phiếu còn lượt thì bấm <b>Làm lại</b>. Hết lượt thì nhắn Thầy; Thầy có thể bấm "Cho làm lại" để cấp thêm một lượt.</p></details>
+ <details><summary>Thầy không mở được liên kết Drive</summary><p>Mở liên kết bằng một trình duyệt chưa đăng nhập để thử. Trên Drive chọn Chia sẻ → Quyền truy cập chung → "Bất kỳ ai có đường liên kết" → Người xem, rồi dán lại liên kết.</p></details>
+ <details><summary>Điểm hiện trên trang có phải điểm chính thức?</summary><p>Chưa. Đó là điểm tạm theo rubric để bạn biết chỗ cần sửa. Thầy duyệt điểm chính thức sau; khi duyệt, bạn có thể nhận email kèm phiếu điểm PDF.</p></details>
+ <details><summary>Bạn cùng nhóm có xem được điểm mình chấm ở Phiếu 6 không?</summary><p>Không. Phiếu 6 chỉ giảng viên xem. Hãy chấm trung thực và góp ý tôn trọng.</p></details>
+ <details><summary>Muốn kể với Thầy điều riêng tư, lo lắng</summary><p>Đừng ghi vào phiếu. Gửi email riêng cho Thầy: dqtuan@hcmus.edu.vn. Nếu thấy căng thẳng kéo dài, hãy tìm đến bộ phận tư vấn tâm lý – hỗ trợ sinh viên của Trường.</p></details>
+</div></section>
+
+<section id="gv"><div class="wrap">
+ <h2>Dành cho giảng viên</h2>
+ <p class="sub">Phân hệ dùng chung hệ thống phiếu online của KHTĐ, Cơ học đất và Đá – Khoáng vật: cùng mã vào lớp, mã ôn tập, duyệt điểm, phiếu điểm PDF, lưu trữ cuối học kỳ.</p>
+ <div class="grid g2">
+  <div class="card"><span class="tag">Chuẩn bị (một lần)</span>
+   <ol>
+    <li>Vào <a href="../pages/admin.html">Quản trị</a>, tạo lớp có tên chứa <b>"Giới thiệu ngành"</b> (trang quản lý chỉ hiện lớp khớp "Giới thiệu ngành", "GTN" hoặc "Seminar"; không lớp nào khớp thì hiện tất cả).</li>
+    <li>Nhập danh sách sinh viên của lớp.</li>
+    <li>Đăng nhập <a href="../pages/lecturer.html">trang Giảng viên</a> (phiên 6 giờ), rồi mở <a href="quanly.html">gtn-dc/quanly.html</a>.</li>
+    <li>Chọn lớp → bấm <b>Tạo / bổ sung phiếu Seminar (6 phiếu)</b>. Phiếu 1–3 mở sẵn; Phiếu 4–6 ở trạng thái ẩn. Bấm lại nút này không tạo trùng phiếu đã có.</li>
+   </ol></div>
+  <div class="card"><span class="tag">Mỗi buổi học</span>
+   <ol>
+    <li>Ở khung <b>Mã vào lớp</b>, chọn buổi → <b>Mở mã vào lớp</b>, chiếu mã 4 ký tự lên màn hình. Mã này dùng cho cả điểm danh lẫn làm phiếu.</li>
+    <li>Tới mốc nào thì mở phiếu mốc đó: trong danh sách <b>Phiếu của lớp</b>, bấm <b>Mở</b> (hoặc <b>Đóng</b> khi hết hạn). Phiếu 4 cuối tuần 2; Phiếu 5 trong buổi báo cáo; Phiếu 6 sau buổi báo cáo.</li>
+    <li>Mỗi phiếu chỉnh được số lần nộp và cách tính điểm (cao nhất / lần cuối).</li>
+   </ol></div>
+  <div class="card"><span class="tag">Duyệt điểm</span>
+   <ol>
+    <li>Bảng <b>Bài nộp</b> có điểm tạm của hệ thống và cột điểm chính thức. Bấm vào bài để xem chi tiết, ảnh minh chứng, rubric.</li>
+    <li>Nhập điểm chính thức → <b>Duyệt điểm</b>. Tick <b>Gửi email + PDF</b> nếu muốn gửi phiếu điểm cho sinh viên.</li>
+    <li>Sinh viên nộp nhầm: bấm <b>Cho làm lại (+1 lượt)</b> ở dòng bài nộp.</li>
+    <li><b>Phiếu 6</b> chứa điểm đánh giá chéo kín: dùng để điều chỉnh điểm cá nhân, không công bố cho nhóm.</li>
+   </ol></div>
+  <div class="card"><span class="tag">Ôn tập, xuất điểm, lưu trữ</span>
+   <ul>
+    <li><b>Mã ôn tập ở nhà:</b> chọn hạn dùng (7–120 ngày) → <b>Tạo mã mới</b>; <b>Thu hồi mã</b> khi cần. Mỗi lớp một mã; tạo mã mới thì mã cũ hết hiệu lực.</li>
+    <li><b>Xuất CSV điểm phiếu</b> để đưa vào bảng điểm học phần.</li>
+    <li><b>Thống kê theo buổi (phiếu)</b> để theo dõi tình hình nộp bài của lớp.</li>
+    <li>Cuối học kỳ: <a href="../pages/luu-tru.html">Lưu trữ cuối học kỳ</a> để lưu hồ sơ lớp.</li>
+    <li><b>Kiểm tra hệ thống chấm điểm</b> trước buổi đầu để chắc phần chấm tạm đang chạy.</li>
+   </ul></div>
+ </div>
+ <p class="note" style="margin-top:16px">Phần Khám phá bản thân trên Cẩm nang không gửi dữ liệu lên máy chủ; giảng viên chỉ thấy những gì sinh viên tự dán vào Phiếu 1. Danh sách sinh viên chỉ nằm trong cơ sở dữ liệu, không nằm trong mã nguồn trang.</p>
+</div></section>
+
+<footer><div class="wrap">
+ <p><b>Seminar Giới thiệu ngành Địa chất – Tân sinh viên K2026</b> · Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM · Giảng viên hướng dẫn: ThS. Đinh Quốc Tuấn (dqtuan@hcmus.edu.vn).</p>
+ <p>© 2026 ThS. Đinh Quốc Tuấn · <a href="index.html">Cẩm nang seminar</a> · <a href="online.html">Phiếu online</a> · <a href="../">diemdanhsv.com</a></p>
+</div></footer>
+<script>
+(function(){var tabs=document.querySelectorAll(".nav a.tab[href^='#']");if(!("IntersectionObserver" in window))return;var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting)tabs.forEach(function(a){a.classList.toggle("on",a.getAttribute("href")==="#"+en.target.id)})})},{rootMargin:"-45% 0px -50% 0px"});document.querySelectorAll("section[id]").forEach(function(s){io.observe(s)})})();
+</script>
+</body>
+</html>

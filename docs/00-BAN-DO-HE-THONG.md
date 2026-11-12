@@ -42,7 +42,7 @@ Subdomain tạo trong mục *Subdomains* của diemdanhsv.com (không tốn su�
 |---|---|---|---|
 | Thực tập Khoa học Trái đất | `khtd/index.html`, `khtd/online.html` | `khtd/gv.html`, `khtd/quanly.html`, `khtd/Rubric_R1-R4.html` | `khtd*.php` · mục 26–33 |
 | Thực tập Cơ học đất (GEO10404) | `chd-tt/index.html`, `chd-tt/online.html` | `chd-tt/gv.html`, `chd-tt/quanly.html` | `chd.php`, `chd_phieu.json` · mục 34 |
-| Seminar Giới thiệu ngành Địa chất (tân SV) | `gtn-dc/index.html` (cẩm nang, khám phá bản thân chạy trên máy SV), `gtn-dc/online.html` | `gtn-dc/quanly.html` | `gtn.php`, `gtn_phieu.json` (bộ `gtn`, 6 phiếu) · mục 41 |
+| Seminar Giới thiệu ngành Địa chất (tân SV) | `gtn-dc/index.html` (cẩm nang, khám phá bản thân chạy trên máy SV), `gtn-dc/huong-dan.html` (hướng dẫn SV và GV), `gtn-dc/online.html` | `gtn-dc/quanly.html` | `gtn.php`, `gtn_phieu.json` (bộ `gtn`, 6 phiếu) · mục 41 |
 | Đá và Khoáng vật (LEC10001) | `dkv/index.html`, `dkv/online.html`, `dkv/sv.html` | `dkv/gv.html`, `dkv/trinhchieu.html`, `dkv/quanly.html` | `dkv.php`, `liveroom.php`, `dkv/tai-lieu.php`, `khtd_giamsat.php`, `khtd_ontap.php` · mục 35–40 (phiếu 6 có giám sát + PIN; mã ôn tập ở nhà, phiếu ôn tập 11–15) |
 | Kiểm tra trực tuyến | `kiemtra/`, `kiemtra/sv.html?c=MÃ` | `kiemtra/gv.html` | `kiemtra/api/` · bảng `kt_*` · gốc ở repo `KIEMTRA` |
 
