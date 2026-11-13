@@ -92,5 +92,26 @@
   var m = document.getElementById('mssv'); if (m) setTimeout(function(){ m.focus(); }, 300);
 } catch (e) {} })();
 </script>
+<script>
+/* Nhận Thẻ từ trang Khám phá bản thân (nút "Gửi Thẻ vào Phiếu 1"): khi Phiếu 1 mở ra,
+   tự điền các ô còn trống của bảng "Thẻ giới thiệu". Sinh viên vẫn tự kiểm tra và bấm Nộp. */
+(function(){ try {
+  var KEY='gtn-dc-the-p1', raw=localStorage.getItem(KEY); if(!raw) return;
+  var d=JSON.parse(raw); if(!d||!d.rows||Date.now()-(d.at||0)>7*864e5){localStorage.removeItem(KEY);return;}
+  function note(t,ok){var m=document.getElementById('the-note');if(!m){m=document.createElement('p');m.id='the-note';var h=document.querySelector('header');h.parentNode.insertBefore(m,h.nextSibling);}
+    m.className='mx-auto mt-3 max-w-4xl rounded-lg border px-4 py-2 text-sm '+(ok?'border-green-300 bg-green-50 text-green-900':'border-amber-300 bg-amber-50 text-amber-900');m.textContent=t;}
+  note('Thẻ của bạn đã sẵn sàng. Đăng nhập (MSSV + mã vào lớp), rồi mở Phiếu 1: các ô Thẻ giới thiệu sẽ được điền sẵn.',false);
+  function fill(){
+    var cells=document.querySelectorAll('textarea[data-sec="the"][data-c="0"]'); if(!cells.length) return false;
+    var n=0; cells.forEach(function(el){var r=+el.dataset.r,v=d.rows[r]; if(!el.disabled&&!el.value.trim()&&v){el.value=v;n++;}});
+    if(n){cells[0].dispatchEvent(new Event('input',{bubbles:true}));
+      note('Đã điền sẵn '+n+' ô của Thẻ giới thiệu. Ghi thêm số nhóm (12 hoặc 13) ở dòng đầu, làm tiếp mục 2–3 rồi bấm Nộp. Bài chưa được gửi cho Thầy cho tới khi bạn bấm Nộp.',true);}
+    else note('Phiếu 1 đã có nội dung Thẻ nên không ghi đè. Nếu muốn thay, xoá ô cần thay rồi bấm lại "Gửi Thẻ vào Phiếu 1".',true);
+    localStorage.removeItem(KEY); return true;
+  }
+  var ob=new MutationObserver(function(){ if(fill()) ob.disconnect(); });
+  ob.observe(document.body,{childList:true,subtree:true});
+} catch(e){} })();
+</script>
 </body>
 </html>

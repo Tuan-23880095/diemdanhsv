@@ -197,7 +197,7 @@ footer .refs p{margin:0 0 6px;break-inside:avoid}
 
 <section id="kham-pha"><div class="wrap">
  <h2>Khám phá bản thân</h2>
- <p class="sub">Bốn bước, khoảng 20 phút. <b>Không có đáp án đúng sai</b>, không tính điểm. Kết quả chỉ nằm trên máy của bạn, trang không gửi dữ liệu đi đâu. Cuối cùng bạn nhận một Thẻ giới thiệu: bấm <b>Sao chép Thẻ</b> rồi dán vào <a href="online.html">Phiếu 1</a> để nộp, và đọc Thẻ trong buổi họp nhóm đầu tiên.</p>
+ <p class="sub">Bốn bước, khoảng 20 phút. <b>Không có đáp án đúng sai</b>, không tính điểm. Kết quả chỉ nằm trên máy của bạn, trang không gửi dữ liệu đi đâu. Cuối cùng bạn nhận một Thẻ giới thiệu: bấm <b>Gửi Thẻ vào Phiếu 1</b> để điền sẵn vào phiếu online (vẫn phải tự bấm Nộp), hoặc bấm <b>Sao chép Thẻ</b> rồi dán vào <a href="online.html">Phiếu 1</a> để nộp, và đọc Thẻ trong buổi họp nhóm đầu tiên.</p>
  <div class="steps" id="steps">
   <button data-p="p-hinh" class="on">1. Hình khối tính cách</button>
   <button data-p="p-nghe">2. Sở thích nghề</button>
@@ -252,7 +252,7 @@ footer .refs p{margin:0 0 6px;break-inside:avoid}
   <div id="card-out"></div>
   <div class="navbtns no-print">
    <span><button class="btn ghost" data-go="p-nguon">← Sửa câu trả lời</button> <button class="btn ghost" id="reset">Làm lại từ đầu</button></span>
-   <span><button class="btn ghost" id="copy">Sao chép Thẻ</button> <button class="btn" id="print">In / Lưu PDF Thẻ</button></span>
+   <span><button class="btn" id="to-p1" title="Mở trang phiếu online và điền sẵn Thẻ vào Phiếu 1; bạn vẫn tự kiểm tra rồi bấm Nộp">Gửi Thẻ vào Phiếu 1</button> <button class="btn ghost" id="copy">Sao chép Thẻ</button> <button class="btn" id="print">In / Lưu PDF Thẻ</button></span>
   </div>
   <p class="note lam" style="margin-top:18px">Kết quả là ảnh chụp ở thời điểm hiện tại, không phải nhãn dán. Sở thích, tính cách và kỹ năng của người 18 tuổi còn thay đổi nhiều; đại học là nơi để thay đổi. Nếu bạn thấy căng thẳng hay buồn kéo dài, hãy nói với Thầy hoặc tìm đến bộ phận tư vấn tâm lý – hỗ trợ sinh viên của Trường.</p>
  </div>
@@ -572,6 +572,15 @@ function show(p){
 document.addEventListener("click",function(e){var b=e.target.closest("[data-go],#steps button");if(!b)return;show(b.dataset.go||b.dataset.p)});
 $("reset").addEventListener("click",function(){if(!confirm("Xóa toàn bộ câu trả lời và làm lại?"))return;S={pg:{A:[],B:[],C:[]},ria:{},roles:{},f:{}};save();location.reload()});
 $("copy").addEventListener("click",function(){var txt=cardText();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast("Đã sao chép Thẻ. Dán vào nhóm chat nhé!")},function(){prompt("Sao chép nội dung dưới đây:",txt)})}else prompt("Sao chép nội dung dưới đây:",txt)});
+/* Gửi Thẻ vào Phiếu 1: chỉ chuyển Thẻ sang trang phiếu trên CÙNG máy (localStorage);
+   dữ liệu chỉ lên máy chủ khi sinh viên tự bấm Nộp Phiếu 1. */
+$("to-p1").addEventListener("click",function(){
+ var t=pgTally(),sh=SHAPES[pgTop(t)],f=S.f;
+ var rows=[(f["f-ten"]||"")+" – Nhóm ",sh.n+" ("+sh.q+")",riaCode().join("-"),rolesOf("like").join(", "),rolesOf("learn").join(", "),rolesOf("avoid").join(", "),
+  [f.gio||"",(f.ranh||[]).join(", ")].filter(Boolean).join("; khung giờ họp: "),[f.may||"",(f.tool||[]).join(", ")].filter(Boolean).join("; công cụ: "),f.eng||"",f["f-thuvi"]||""];
+ try{localStorage.setItem("gtn-dc-the-p1",JSON.stringify({rows:rows,at:Date.now()}))}catch(e){toast("Trình duyệt chặn lưu tạm. Dùng nút Sao chép Thẻ nhé.");return}
+ location.href="online.html?the=1";
+});
 $("print").addEventListener("click",function(){document.body.classList.add("print-card");window.print();setTimeout(function(){document.body.classList.remove("print-card")},500)});
 
 /* ---- bảng đề tài ---- */
