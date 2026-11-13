@@ -1,6 +1,6 @@
 {
  "1": {
-  "title": "Phiếu 1 – Thẻ khám phá bản thân (cá nhân, tuần 1)",
+  "title": "Phiếu 1 – Thẻ khám phá bản thân (cá nhân, sau buổi 1, hạn 17/11)",
   "kind": "seminar",
   "max_attempts": 3,
   "score_policy": "LAST",
@@ -12,7 +12,7 @@
     "title": "Cách làm",
     "lines": [
      "Bước 1: mở trang lớp học gtn-dc (mục Khám phá bản thân), làm đủ 4 bước trên máy của bạn; trang không gửi dữ liệu đi đâu.",
-     "Bước 2: bấm 'Sao chép Thẻ' rồi điền các ô dưới đây (có thể dán từng dòng).",
+     "Bước 2: bấm 'Gửi Thẻ vào Phiếu 1' (cùng máy, cùng trình duyệt) để điền sẵn bảng dưới đây, hoặc bấm 'Sao chép Thẻ' rồi dán từng dòng.",
      "Kết quả trắc nghiệm không có đúng sai và không tính điểm; điểm phiếu chỉ ghi nhận bạn đã hoàn thành và đặt được mục tiêu cụ thể.",
      "Điều bạn lo lắng hay hoàn cảnh riêng muốn Thầy biết: KHÔNG ghi vào phiếu này, hãy gửi email riêng cho Thầy."
     ]
@@ -49,7 +49,7 @@
      },
      {
       "id": "q2",
-      "text": "Kỹ năng bạn muốn tiến bộ nhất sau seminar là gì? Viết một mục tiêu SMART cho 3 tuần tới (cụ thể, đo được, khả thi, thực tế, có hạn)."
+      "text": "Kỹ năng bạn muốn tiến bộ nhất sau seminar là gì? Viết một mục tiêu SMART cho thời gian seminar, đến 21/12 (cụ thể, đo được, khả thi, thực tế, có hạn)."
      }
     ]
    },
@@ -102,7 +102,7 @@
   }
  },
  "2": {
-  "title": "Phiếu 2 – Họp nhóm lần đầu: chọn đề tài, chia vai, giao ước (tuần 1)",
+  "title": "Phiếu 2 – Họp nhóm lần đầu: chọn đề tài, chia vai, giao ước (sau buổi 2, hạn 22/11)",
   "kind": "seminar",
   "max_attempts": 3,
   "score_policy": "LAST",
@@ -232,7 +232,7 @@
   }
  },
  "3": {
-  "title": "Phiếu 3 – Đề cương seminar (mốc tuần 1, gửi Thầy duyệt)",
+  "title": "Phiếu 3 – Đề cương seminar (sau buổi 3, hạn 29/11, gửi Thầy duyệt)",
   "kind": "seminar",
   "max_attempts": 3,
   "score_policy": "LAST",
@@ -350,7 +350,7 @@
   }
  },
  "4": {
-  "title": "Phiếu 4 – Tiến độ tuần 2: kế hoạch, slide nháp, tập dượt",
+  "title": "Phiếu 4 – Tiến độ: kế hoạch, slide nháp, tập dượt (sau buổi 5, hạn 13/12)",
   "kind": "seminar",
   "max_attempts": 2,
   "score_policy": "LAST",
@@ -470,7 +470,7 @@
   }
  },
  "5": {
-  "title": "Phiếu 5 – Phản biện nhóm bạn (buổi báo cáo tuần 3)",
+  "title": "Phiếu 5 – Phản biện nhóm bạn (buổi báo cáo 18/12)",
   "kind": "seminar",
   "max_attempts": 2,
   "score_policy": "LAST",
@@ -558,7 +558,7 @@
   }
  },
  "6": {
-  "title": "Phiếu 6 – Đánh giá chéo trong nhóm và tự nhìn lại (cuối tuần 3)",
+  "title": "Phiếu 6 – Đánh giá chéo trong nhóm và tự nhìn lại (hạn 21/12)",
   "kind": "seminar",
   "max_attempts": 2,
   "score_policy": "LAST",
