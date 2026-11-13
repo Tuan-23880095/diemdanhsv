@@ -118,7 +118,7 @@ class KhtdView {
 
   renderWorksheetList(list, forecast) {
     const box = this.$('ws-list'); if (!box) return;
-    if (!list.length) { box.innerHTML = '<p class="text-slate-500">Lớp của bạn chưa có phiếu nào được mở.</p>'; return; }
+    if (!list.length) { box.innerHTML = '<p class="text-slate-500">Môn này chưa có phiếu nào được mở cho bạn.</p>'; return; }
     box.innerHTML = (this.forecastCardHtml ? this.forecastCardHtml(forecast) : '') + list.map((w) => {
       const st = w.SubStatus || 'Chưa làm';
       const att = w.attempt || null;

@@ -53,12 +53,21 @@ class KhtdController {
     } catch (err) { this.view.msg(err.message, 'err'); }
   }
 
+  /* Trang phiếu của phân hệ nào chỉ hiện phiếu môn đó (window.KHTD_CLASS_FILTER đặt trên từng online.html).
+     Không đặt bộ lọc thì hiện tất cả như cũ. */
+  onlyThisCourse(list) {
+    let f = null;
+    try { f = window.KHTD_CLASS_FILTER ? new RegExp(window.KHTD_CLASS_FILTER, 'i') : null; } catch (e) { f = null; }
+    if (!f) return list;
+    return list.filter((w) => f.test(`${w.ClassCode || ''} ${w.CourseName || ''} ${w.CourseCode || ''}`));
+  }
+
   async showList() {
     this.view.show('login', false); this.view.show('ws-panel', false); this.view.show('list', true);
     clearTimeout(this.autosave); this._stopTimer(); this._gsStop('Về danh sách phiếu');
     try {
       const d = await this.api.khtdListWorksheets(this.token);
-      this.view.setStudent(d.student); this.view.renderWorksheetList(d.worksheets, d.examForecast);
+      this.view.setStudent(d.student); this.view.renderWorksheetList(this.onlyThisCourse(d.worksheets || []), d.examForecast);
     } catch (err) {
       sessionStorage.removeItem('khtd_token'); this.token = null;
       this.view.show('list', false); this.view.show('login', true); this.view.msg(err.message, 'err');

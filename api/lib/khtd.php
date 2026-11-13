@@ -225,8 +225,8 @@ function action_khtd_list_worksheets(array $params): void
 {
     $me = khtd_require_student((string) ($params['token'] ?? ''));
     $stmt = db()->prepare(
-        "SELECT w.WorksheetID, w.ClassID, c.ClassCode, w.No, w.Title, w.Status, w.OpenAt, w.CloseAt, w.MaxAttempts, w.ScorePolicy, w.SchemaJSON " .
-        "FROM khtd_worksheets w JOIN classes c ON c.ClassID = w.ClassID " .
+        "SELECT w.WorksheetID, w.ClassID, c.ClassCode, co.CourseCode, co.CourseName, w.No, w.Title, w.Status, w.OpenAt, w.CloseAt, w.MaxAttempts, w.ScorePolicy, w.SchemaJSON " .
+        "FROM khtd_worksheets w JOIN classes c ON c.ClassID = w.ClassID LEFT JOIN courses co ON co.CourseID = c.CourseID " .
         "JOIN enrollments e ON e.ClassID = w.ClassID AND e.StudentID = :sid AND e.Status = 'ACTIVE' " .
         "WHERE w.Status <> 'HIDDEN' ORDER BY c.ClassCode, w.No"
     );
