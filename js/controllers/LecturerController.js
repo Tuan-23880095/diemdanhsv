@@ -21,7 +21,16 @@ class LecturerController {
     // Token giữ trong bộ nhớ phiên, không để lại trên máy dùng chung
     const saved = sessionStorage.getItem('dd_token');
     const name  = sessionStorage.getItem('dd_name');
-    if (saved) { this.token = saved; this.view.enterDashboard(name || ''); this.loadClasses(); }
+    if (saved) { if (this.goNext()) return; this.token = saved; this.view.enterDashboard(name || ''); this.loadClasses(); }
+  }
+
+  /* ?next=../<phân hệ>/<trang>.html — đăng nhập xong quay lại trang quản lý phân hệ (cùng tab, giữ phiên).
+     Chỉ nhận đường dẫn tương đối trong site để tránh chuyển hướng ra ngoài. */
+  goNext() {
+    const next = new URLSearchParams(location.search).get('next') || '';
+    if (!/^\.\.\/[a-z0-9-]+\/[a-z0-9-]+\.html$/i.test(next)) return false;
+    location.replace(next);
+    return true;
   }
 
   async login(username, password) {
@@ -32,6 +41,7 @@ class LecturerController {
       sessionStorage.setItem('dd_token', data.token);
       sessionStorage.setItem('dd_name', data.fullName);
       sessionStorage.setItem('dd_role', data.role); // trang quản trị (GĐ7) đọc để bật/tắt phần chỉ ADMIN
+      if (this.goNext()) return;
       this.view.enterDashboard(data.fullName);
       await this.loadClasses();
     } catch (err) {

@@ -40,6 +40,12 @@
       { ten: 'Trình chiếu', url: D + 'dkv/trinhchieu.html', ai: 'GV' },
       { ten: 'Quản lý', url: D + 'dkv/quanly.html', ai: 'GV' },
     ] },
+    { ten: 'Seminar Giới thiệu ngành Địa chất', muc: [
+      { ten: 'Trang seminar', url: D + 'gtn-dc/index.html', ai: 'SV' },
+      { ten: 'Làm phiếu online', url: D + 'gtn-dc/online.html', ai: 'SV' },
+      { ten: 'Hướng dẫn', url: D + 'gtn-dc/huong-dan.html', ai: 'SV' },
+      { ten: 'Quản lý', url: D + 'gtn-dc/quanly.html', ai: 'GV' },
+    ] },
     { ten: 'Thực tập Khoa học Trái đất', muc: [
       { ten: 'Trang học phần', url: D + 'khtd/index.html', ai: 'SV' },
       { ten: 'Làm phiếu online', url: D + 'khtd/online.html', ai: 'SV' },
