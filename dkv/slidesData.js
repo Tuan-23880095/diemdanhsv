@@ -2590,6 +2590,88 @@ window.SLIDES_DATA = [
     "notes": "GV bổ sung ví dụ Việt Nam cho từng dòng (phù sa đồng bằng, cồn cát ven biển, sườn tích chân núi) khi giảng."
    },
    {
+    "type": "fig",
+    "title": "Các kiểu tích tụ theo nguồn gốc",
+    "sub": "Eluvi – coluvi – deluvi – proluvi – aluvi: từ đỉnh núi đến lòng sông",
+    "fig": "C5v2-4_cac_kieu_tich_tu",
+    "cite": "Nguồn: Đinh Quốc Tuấn (2025), bài giảng Địa chất Đệ tứ và vỏ phong hóa, buổi 6 (ký hiệu d, p, a và các kiểu trung gian); Schaetzl & Anderson (2005), tr. 170, 191, 212. Hình: tác giả vẽ",
+    "notes": "Ký hiệu trên bản đồ địa chất Đệ tứ: e, d, p, a; kiểu trung gian ed, dp, ap, ad. Ký hiệu c cho coluvi và e cho eluvi ghi theo quy ước thông dụng."
+   },
+   {
+    "type": "table",
+    "title": "Năm kiểu tích tụ: tác nhân và dấu hiệu nhận biết",
+    "head": [
+     "Kiểu tích tụ",
+     "Ký hiệu",
+     "Tác nhân và vị trí",
+     "Đặc điểm vật liệu"
+    ],
+    "rows": [
+     [
+      "Eluvi (tàn tích)",
+      "e",
+      "Phong hóa tại chỗ, không bị vận chuyển; đỉnh và bề mặt thoải",
+      "Còn liên hệ với đá gốc ngay bên dưới; chuyển dần xuống saprolit"
+     ],
+     [
+      "Deluvi (sườn tích)",
+      "d",
+      "Nước mưa chảy tràn rửa trôi vật liệu; sườn và chân sườn",
+      "Hạt mịn đi xa hơn, hạt thô ở lại phía trên; dày dần về chân sườn"
+     ],
+     [
+      "Coluvi",
+      "c",
+      "Trọng lực: đổ lở, trượt lở; kích hoạt bởi động đất, phá hủy kiến tạo; chân vách dốc",
+      "Khối, tảng ngổn ngang, sắc cạnh, không chọn lọc"
+     ],
+     [
+      "Proluvi (lũ tích)",
+      "p",
+      "Dòng chảy tạm thời, lũ; cửa khe suối ở chân núi",
+      "Nón phóng vật; phân lớp xiên chéo, thô dưới – mịn trên"
+     ],
+     [
+      "Aluvi (bồi tích)",
+      "a",
+      "Sông suối chảy thường xuyên; thung lũng, đồng bằng",
+      "Phân lớp, chọn lọc theo tốc độ dòng; tạo bãi bồi và thềm sông"
+     ]
+    ],
+    "cite": "Nguồn: Đinh Quốc Tuấn (2025), bài giảng Địa chất Đệ tứ và vỏ phong hóa, buổi 6; Schaetzl & Anderson (2005), tr. 170–171, 191, 212, 471",
+    "notes": "Đối chiếu thuật ngữ: trong Schaetzl & Anderson (2005), colluvium chỉ chung vật liệu di chuyển do trọng lực (trượt, đổ, chảy, trườn – tr. 212), còn vật liệu do chảy tràn gọi là slopewash (tr. 471). Hệ thuật ngữ Việt Nam tách hai loại này thành coluvi và deluvi. Vật liệu do phá hủy kiến tạo: khối tảng ngổn ngang ở bờ biển Quy Nhơn, Khánh Hòa, Phú Quốc (bài giảng buổi 6, mục I.1)."
+   },
+   {
+    "type": "cards",
+    "title": "Vì sao phải phân biệt kiểu tích tụ khi đánh giá đất?",
+    "sub": "Cùng một vùng, mỗi kiểu tích tụ cho một loại nền và một loại rủi ro",
+    "cards": [
+     {
+      "h": "Eluvi",
+      "t": [
+       "Tính chất đất dự đoán được từ đá gốc",
+       "Tầng đất dày trên bề mặt thoải, ổn định"
+      ]
+     },
+     {
+      "h": "Deluvi và coluvi",
+      "t": [
+       "Gắn với sườn kém ổn định, có thể tiếp tục dịch chuyển",
+       "Sườn tích dày nhất ở chân sườn và chỗ trũng nhỏ",
+       "Coluvi: dấu hiệu của đổ lở, trượt lở đã từng xảy ra"
+      ]
+     },
+     {
+      "h": "Proluvi và aluvi",
+      "t": [
+       "Proluvi: nằm trên đường đi của lũ tạm thời",
+       "Aluvi: bãi bồi còn ngập lũ; thềm sông đã thoát khỏi ngập lũ, thường là nơi dân cư sinh sống"
+      ]
+     }
+    ],
+    "cite": "Nguồn: Schaetzl & Anderson (2005), tr. 172, 212–215; Đinh Quốc Tuấn (2025), bài giảng Địa chất Đệ tứ và vỏ phong hóa, buổi 6"
+   },
+   {
     "type": "table",
     "title": "Đá gốc quyết định tính chất của tàn tích",
     "head": [
@@ -2695,6 +2777,83 @@ window.SLIDES_DATA = [
      }
     ],
     "cite": "Nguồn: Schaetzl & Anderson (2005), tr. 182–187"
+   },
+   {
+    "type": "table",
+    "title": "Độ linh động của nguyên tố khi phong hóa",
+    "head": [
+     "Nhóm",
+     "Mức độ linh động",
+     "Nguyên tố, hợp chất",
+     "Bậc linh động"
+    ],
+    "rows": [
+     [
+      "1",
+      "Rửa trôi mạnh",
+      "Cl (Br, I), S",
+      "n · 10"
+     ],
+     [
+      "2",
+      "Dễ rửa trôi",
+      "Ca, Na, Mg, K",
+      "n"
+     ],
+     [
+      "3",
+      "Linh động",
+      "SiO₂ (của silicat), P, Mn",
+      "n · 10⁻¹"
+     ],
+     [
+      "4",
+      "Linh động yếu",
+      "Fe, Al, Ti",
+      "n · 10⁻²"
+     ],
+     [
+      "5",
+      "Không linh động",
+      "SiO₂ (thạch anh)",
+      "thấp nhất"
+     ]
+    ],
+    "cite": "Nguồn: Đinh Quốc Tuấn (2025), bài giảng Địa chất Đệ tứ và vỏ phong hóa, Bảng 2.2 “Phân nhóm các nguyên tố theo độ linh động”",
+    "notes": "Đã giới thiệu thứ tự Polynov ở mục 4.2; ở đây dùng để giải thích vì sao tàn tích trên các đá khác nhau lại khác nhau về độ bazơ. Bậc linh động của nhóm 5 trong bản bài giảng bị mất số mũ, Thầy bổ sung khi giảng."
+   },
+   {
+    "type": "cards",
+    "title": "Ion nào bị mang đi, ion nào ở lại?",
+    "sub": "Độ linh động phụ thuộc pH, điều kiện oxy hóa – khử và chất hữu cơ",
+    "cards": [
+     {
+      "h": "Bị mang đi sớm",
+      "t": [
+       "Na, K dễ dàng thoát khỏi vỏ phong hóa",
+       "Ca, Mg: một phần bị mang đi, một phần thấm xuống và tái lắng đọng thành carbonat thứ sinh",
+       "Silic của silicat tan nhiều hơn trong môi trường trung tính và kiềm"
+      ]
+     },
+     {
+      "h": "Ở lại",
+      "t": [
+       "Oxit sắt chỉ tan khi pH < 3 → thực tế không rời vỏ phong hóa",
+       "Al₂O₃ không tan trong khoảng pH 4–9,5",
+       "Còn lại: thạch anh, oxit – hydroxit Fe, Ti, hydroxit Al hoặc kaolinit"
+      ]
+     },
+     {
+      "h": "Khi điều kiện thay đổi",
+      "t": [
+       "Môi trường khử: Fe²⁺, Mn²⁺ tan mạnh hơn Fe³⁺, Mn⁴⁺",
+       "Fe³⁺ có thể di chuyển khi kết hợp với chất hữu cơ",
+       "Hệ số tập trung Kt = hàm lượng trong vỏ phong hóa / hàm lượng trong đá gốc: Kt > 1 tập trung, Kt < 1 bị mang đi"
+      ]
+     }
+    ],
+    "cite": "Nguồn: Đinh Quốc Tuấn (2025), bài giảng Địa chất Đệ tứ và vỏ phong hóa, buổi 3, mục 2.1 và 2.5; buổi 6",
+    "notes": "Liên hệ: rửa trôi Ca, Mg, K, Na làm đất nghèo bazơ và chua dần; Fe, Al ở lại tạo màu đỏ và đới laterit; nếu hỗn hợp Al–Si ở lại dạng kaolinit thì có đới sét kaolin (litoma)."
    },
    {
     "type": "cards",
@@ -2819,16 +2978,43 @@ window.SLIDES_DATA = [
     ]
    },
    {
+    "type": "quiz",
+    "qs": [
+     {
+      "q": "Nón phóng vật ở cửa khe suối chân núi, do dòng lũ tạm thời tạo ra, thuộc kiểu tích tụ nào?",
+      "o": [
+       "Eluvi",
+       "Deluvi",
+       "Proluvi",
+       "Aluvi"
+      ],
+      "a": "C"
+     },
+     {
+      "q": "Nhóm nguyên tố nào dễ bị rửa trôi khỏi vỏ phong hóa hơn cả?",
+      "o": [
+       "Fe, Al, Ti",
+       "Ca, Na, Mg, K",
+       "SiO₂ của thạch anh",
+       "Ti, Al"
+      ],
+      "a": "B"
+     }
+    ]
+   },
+   {
     "type": "sum",
     "points": [
      "Vật liệu mẹ là trạng thái xuất phát của đất, một trong năm yếu tố tạo đất",
-     "Ba nhóm: tại chỗ (tàn tích, saprolit), vận chuyển (nước, gió, băng, trọng lực), hữu cơ",
+     "Năm kiểu tích tụ: eluvi (e), deluvi (d), coluvi (c), proluvi (p), aluvi (a); ngoài ra có vật liệu do gió, băng, hồ, biển và hữu cơ",
      "Đá gốc quyết định độ hạt, độ bazơ và khoáng vật sét của tàn tích",
      "Granit: cát sạn, nghèo bazơ · bazan: nhiều sét, giàu bazơ · đá vôi: sét đỏ trong hốc · serpentinit: giàu Mg, Ni, Cr",
+     "Độ linh động: Cl, S > Ca, Na, Mg, K > Si (silicat) > Fe, Al, Ti > thạch anh → đất nghèo bazơ dần, Fe và Al ở lại",
      "Thành phần cơ giới lưu lại lâu; màu, pH đổi nhanh; ảnh hưởng vật liệu mẹ mờ dần theo thời gian"
     ],
     "refs": [
      "Schaetzl & Anderson (2005), Soils: Genesis and Geomorphology, chương 8, tr. 167–225",
+     "Đinh Quốc Tuấn (2025), bài giảng Địa chất Đệ tứ và vỏ phong hóa, buổi 3 và buổi 6",
      "Đề cương chi tiết học phần LEC10001 (17/8/2026), Chương 5"
     ],
     "next": "Tiếp theo – Mục 5.2: Khoáng vật sét; quan hệ đá mẹ – địa hình – phong hóa – đất"
