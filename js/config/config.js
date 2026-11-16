@@ -19,36 +19,21 @@ const CONFIG = {
 };
 
 /*
- * GĐ10 — CUTOVER (02/10/2026): mặc định gọi backend PHP trên cùng domain.
+ * GĐ10 — BỎ ĐƯỜNG LÙI APPS SCRIPT (16/11/2026): hệ thống chỉ gọi backend PHP (MariaDB, Hostinger).
+ * Đã qua giai đoạn theo dõi cutover ổn định. Đường lùi ?api=gas đã được gỡ bỏ khỏi frontend.
+ * Thư mục gas/ trong repo được giữ lại làm tài liệu tham chiếu lịch sử.
  *
- *   ?api=php  (hoặc không có tham số)  → backend PHP (MariaDB, Hostinger) — BẢN THẬT
- *   ?api=gas                           → Apps Script cũ, giữ làm ĐƯỜNG LÙI ≥ 1 tuần
- *                                        sau cutover; sau đó mới gỡ (xem docs/06).
- *
- * Nguồn gốc cơ chế (GĐ9 — chạy thử song song hai backend trên cùng trang web):
- *
- * CHỈ nhận hai giá trị trên. KHÔNG nhận URL tuỳ ý (?api=https://...): nếu nhận,
- * ai gửi cho sinh viên/giảng viên một đường link có URL lạ là lấy được MSSV, mã
- * điểm danh, cả mật khẩu giảng viên — trang vẫn đúng tên miền thật nên không ai
- * nghi. Thêm backend mới thì thêm vào API_TARGETS ở đây, không nhận từ URL.
- *
- * Lựa chọn được GHI NHỚ trong sessionStorage để còn giữ khi bấm qua trang khác
- * (student.html → diem.html…); mở tab mới là về mặc định (PHP). Không ở backend
- * mặc định thì có dải băng vàng trên cùng mọi trang để không ai lẫn với thật.
- *
- * Mỗi lần sửa file này PHẢI đổi ?v= của config.js trong 4 trang pages/*.html,
- * nếu không máy sinh viên vẫn chạy bản cũ trong cache (docs/06, bước GĐ10).
+ * Mỗi lần sửa file này PHẢI đổi ?v= của config.js trong các trang pages/*.html,
+ * nếu không máy người dùng vẫn chạy bản cũ trong cache.
  */
 const API_TARGETS = {
-  gas: CONFIG.API_URL,
   php: 'https://diemdanhsv.com/api/index.php'
 };
 const DEFAULT_API = 'php';
 
 /* Dải băng cảnh báo khi KHÔNG ở backend mặc định — nội dung theo backend đang gọi. */
 const API_MODE_BANNER = {
-  gas: 'ĐANG DÙNG BẢN DỰ PHÒNG (Apps Script cũ, ?api=gas). Dữ liệu nhập ở đây KHÔNG vào hệ thống mới.',
-  php: 'CHẾ ĐỘ CHẠY THỬ — đang gọi backend PHP (?api=php). Dữ liệu nhập ở đây KHÔNG vào hệ thống đang dùng thật.'
+  php: 'CHẾ ĐỘ CHẠY THỬ — đang gọi backend PHP (?api=php).'
 };
 
 (function applyApiChoice() {

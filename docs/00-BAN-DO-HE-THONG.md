@@ -88,7 +88,7 @@ Backend riêng `bdvh/api.php` (+ `phong-thi-api.php`), dùng chung CSDL qua `../
 | Cao | Merge nhánh `bdvh-phong-thi` | Phòng thi trực tiếp cho BDVH lên trang thật |
 | Cao | Chạy thử KIEMTRA bằng đề 3 câu trước buổi giữa kỳ; rà 18 câu mẫu Đá & khoáng vật | |
 | Sớm | Chọn một bản BDVH làm gốc | Thư mục `bdvh/` (đang chạy) và repo `bdvh` dễ lệch; đề xuất: sửa ở `bdvh/`, repo `bdvh` để lưu trữ |
-| Sớm | Gỡ đường lùi Apps Script `?api=gas` | Kế hoạch sau ≥ 1 tuần từ cutover 03/10; đổi `?v=` ở 4 trang `pages/*.html` |
+| Sớm | ~~Gỡ đường lùi Apps Script `?api=gas`~~ | **Xong 16/11/2026** (nhánh `agent/web-bo-gas`); đổi `?v=20261116-bo-gas` ở các trang `pages/*.html` |
 | Khi rảnh | Liên kết "Kiểm tra trực tuyến" trên trang chủ | Trang chủ chưa trỏ tới `/kiemtra/` |
 | Khi rảnh | Giới hạn xem `bdvh/ket-qua.html?sub_id=` | Bài luyện tập xem được nếu đoán số; bài trong phòng thi đã chặn |
 | Khi rảnh | Ẩn/hiện link "Quản trị" trên trang chủ; xuất bảng điểm CSV/Excel | docs/02 mục 4 |

@@ -88,8 +88,8 @@ gia cố). Migration 002–005 đã áp trên CSDL thật.
    `DEFAULT_API = 'gas'` trong `js/config/config.js` **và đổi `?v=`** trong 4
    trang `pages/*.html`, qua PR → merge → hPanel tự deploy → xóa cache
    (hPanel → Hiệu suất → Trình quản lý bộ nhớ đệm → Xóa tất cả).
-3. **Sau ≥ 1 tuần ổn**: gỡ `gas` khỏi `API_TARGETS` (giữ `gas/` trong repo làm
-   tham chiếu), dừng deployment Apps Script, đổi `?v=`.
+3. **Sau ≥ 1 tuần ổn**: ~~gỡ `gas` khỏi `API_TARGETS` (giữ `gas/` trong repo làm
+   tham chiếu), dừng deployment Apps Script, đổi `?v=`~~ **xong 16/11/2026** (PR `agent/web-bo-gas`: bỏ `gas` khỏi `API_TARGETS`, bỏ băng cảnh báo `?api=gas`, đổi `?v=20261116-bo-gas` ở các trang `pages/*.html`, giữ `gas/` làm tham chiếu).
 4. **Việc còn mở**: ~~hộp thư noreply@ + SMTP thật~~ **xong 03/10** (`api/lib/mailer.php`
    SMTP PHP thuần, `tools/mail_test.php`); ~~cron sao lưu~~ **xong 03/10** (chạy
    hằng ngày, cũng dọn `auth_tokens` — L4 **xong**); ~~tạo tài khoản admin~~ **xong**
