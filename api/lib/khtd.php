@@ -347,6 +347,27 @@ function khtd_clean_answers($raw): array
     return $raw;
 }
 
+/**
+ * Mục 'choice' (ô đánh dấu, phiếu tham quan Bảo tàng — docs/04 mục 42) lưu chỉ số ô; đổi sang nhãn chữ để hệ thống chấm
+ * và PDF đọc được. Dòng chọn một ô → chuỗi; dòng nhiều ô (item.multi) → các nhãn nối bằng dấu phẩy; chưa chọn → ''.
+ */
+function khtd_choice_labels(array $schema, array $answers): array
+{
+    foreach ($schema['sections'] ?? [] as $s) {
+        if (($s['type'] ?? '') !== 'choice' || !isset($answers[$s['id']]) || !is_array($answers[$s['id']])) continue;
+        $out = [];
+        foreach ((array) ($s['items'] ?? []) as $i => $it) {
+            $v = $answers[$s['id']][$i] ?? null;
+            $ks = is_array($v) ? $v : ($v === null ? [] : [$v]);
+            $labels = [];
+            foreach ($ks as $k) if (is_numeric($k) && isset($it['options'][(int) $k])) $labels[] = (string) $it['options'][(int) $k];
+            $out[(string) ($it['text'] ?? ('Dòng ' . ($i + 1)))] = implode(', ', $labels);
+        }
+        $answers[$s['id']] = $out;
+    }
+    return $answers;
+}
+
 /** Thông báo khi lần mới nhất đã nộp mà SV lại lưu/nộp tiếp (vd mở hai tab). */
 function khtd_already_submitted_msg(array $sum): string
 {
@@ -887,7 +908,7 @@ function khtd_gemini_grade(array $ws, array $answers, array $student): ?array
         'dap_an' => $schema['answer_key'] ?? [],
         'dap_an_tong_quat' => $schema['answer_hints'] ?? '',
         'du_lieu_chuan' => $schema['reference'] ?? '',
-        'bai_lam_cua_sinh_vien' => array_diff_key($answers, ['_photos' => 1, '_meta' => 1]),
+        'bai_lam_cua_sinh_vien' => khtd_choice_labels($schema, array_diff_key($answers, ['_photos' => 1, '_meta' => 1])),
         'so_anh_mau_dinh_kem' => array_sum(array_map(static fn ($rows) => is_array($rows) ? array_sum(array_map(static fn ($x) => is_array($x) ? count($x) : 0, $rows)) : 0, (array) ($answers['_photos'] ?? []))),
     ];
     $body = [

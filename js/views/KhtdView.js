@@ -183,6 +183,15 @@ class KhtdView {
       if (s.type === 'text') {
         return `<section class="mt-5"><h3 class="font-bold">${this._esc(s.title)}</h3><p class="text-sm">${this._esc(s.prompt)}</p><textarea data-q="${s.id}" rows="3" ${locked ? 'disabled' : ''} class="mt-1 w-full rounded-lg border border-slate-300 p-2 text-sm">${this._esc(a[s.id] || '')}</textarea></section>`;
       }
+      if (s.type === 'choice') {   // mục đánh dấu (phiếu tham quan Bảo tàng): mỗi dòng chọn 1 ô, hoặc nhiều ô nếu item.multi
+        const v = a[s.id] || [];
+        return `<section class="mt-5"><h3 class="font-bold">${this._esc(s.title)}</h3>${s.hint ? `<p class="text-xs text-slate-600">${this._esc(s.hint)}</p>` : ''}<div class="mt-2 space-y-2">` + s.items.map((it, i) => {
+          const cur = v[i]; const multi = !!it.multi;
+          const on = (k) => multi ? (Array.isArray(cur) && cur.indexOf(k) >= 0) : String(cur) === String(k);
+          return `<div class="rounded-lg border border-slate-200 p-2"><p class="text-sm font-semibold">${this._esc(it.text)}${multi ? ' <span class="font-normal text-xs text-slate-500">(chọn được nhiều ô)</span>' : ''}</p><div class="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-sm">` +
+            (it.options || []).map((o, k) => `<label class="inline-flex items-center gap-1 rounded px-1 hover:bg-slate-50"><input type="${multi ? 'checkbox' : 'radio'}" name="ch-${s.id}-${i}" data-choice="${s.id}" data-i="${i}" value="${k}" ${on(k) ? 'checked' : ''} ${locked ? 'disabled' : ''} class="h-4 w-4"/> ${this._esc(o)}</label>`).join('') + '</div></div>';
+        }).join('') + '</div></section>';
+      }
       if (s.type === 'self') {
         const v = a[s.id] || [];
         return `<section class="mt-5"><h3 class="font-bold">${this._esc(s.title)}</h3><table class="mt-2 w-full text-sm"><tbody>` + s.items.map((it, i) => `<tr class="border-b"><td class="py-1 pr-2">${this._esc(it)}</td>` +
@@ -255,6 +264,7 @@ class KhtdView {
       if (info.emptyQ) blanks.push(`${info.emptyQ} câu trả lời`);
       if (info.emptyCells) blanks.push(`${info.emptyCells} ô trong bảng`);
       if (info.emptySelf) blanks.push(`${info.emptySelf} mục tự đánh giá`);
+      if (info.emptyChoice) blanks.push(`${info.emptyChoice} dòng chưa đánh dấu`);
       if (info.noPhoto) blanks.push(`${info.noPhoto} hàng chưa có ảnh`);
       let after;
       if (info.allowed === 1 && !info.extra) after = '<b>Phiếu này chỉ nộp một lần</b> — sau khi nộp không sửa được nữa.';
@@ -279,8 +289,16 @@ class KhtdView {
   }
 
   /* Đếm ô còn trống để báo trong hộp xác nhận nộp. */
+  /* Nhãn các ô đã đánh dấu của một dòng mục 'choice' (giá trị: chỉ số, hoặc mảng chỉ số nếu multi). */
+  choiceText(it, v) {
+    const opts = (it && it.options) || [];
+    const ks = Array.isArray(v) ? v : (v == null ? [] : [v]);
+    const t = ks.map((k) => opts[k]).filter((x) => x != null);
+    return t.length ? t.join(', ') : '—';
+  }
+
   countBlanks(schema, answers) {
-    let emptyQ = 0, emptyCells = 0, emptySelf = 0, noPhoto = 0;
+    let emptyQ = 0, emptyCells = 0, emptySelf = 0, noPhoto = 0, emptyChoice = 0;
     const ph = answers._photos || {};
     schema.sections.forEach((s) => {
       if (s.layout === 'specimens') {   // luyện thi: đếm mẫu chưa ghi tên / chưa có ảnh trong số mẫu của lần này
@@ -293,8 +311,9 @@ class KhtdView {
       else if (s.type === 'questions') s.items.forEach((q) => { if (!answers[q.id]) emptyQ++; });
       else if (s.type === 'text') { if (!answers[s.id]) emptyQ++; }
       else if (s.type === 'self') (answers[s.id] || []).forEach((v) => { if (v == null) emptySelf++; });
+      else if (s.type === 'choice') (answers[s.id] || []).forEach((v) => { if (v == null || (Array.isArray(v) && !v.length)) emptyChoice++; });
     });
-    return { emptyQ, emptyCells, emptySelf, noPhoto };
+    return { emptyQ, emptyCells, emptySelf, noPhoto, emptyChoice };
   }
 
   renderResult(sub, att) {
@@ -396,6 +415,11 @@ class KhtdView {
         const el = document.querySelector(`textarea[data-q="${s.id}"]`); out[s.id] = el ? el.value.trim() : '';
       } else if (s.type === 'self') {
         out[s.id] = s.items.map((_, i) => { const el = document.querySelector(`input[data-self="${s.id}"][data-i="${i}"]:checked`); return el ? Number(el.value) : null; });
+      } else if (s.type === 'choice') {
+        out[s.id] = s.items.map((it, i) => {
+          const els = Array.from(document.querySelectorAll(`input[data-choice="${s.id}"][data-i="${i}"]:checked`)).map((el) => Number(el.value));
+          return it.multi ? els : (els.length ? els[0] : null);
+        });
       }
     });
     const ph = {};
@@ -476,6 +500,7 @@ class KhtdView {
       if (s.type === 'questions') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4>` + s.items.map((q, i) => `<p class="mt-1 text-sm"><b>Câu ${i + 1}.</b> ${this._esc(q.text)}<br/><span class="whitespace-pre-wrap text-blue-900">${this._esc(a[q.id] || '(trống)')}</span></p>`).join('');
       if (s.type === 'text') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><p class="whitespace-pre-wrap text-sm text-blue-900">${this._esc(a[s.id] || '(trống)')}</p>`;
       if (s.type === 'self') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><p class="text-sm">${s.items.map((it, i) => `${this._esc(it)}: <b>${['Chưa', 'Tạm được', 'Tự tin'][(a[s.id] || [])[i]] || '—'}</b>`).join(' · ')}</p>`;
+      if (s.type === 'choice') return `<h4 class="mt-3 font-semibold">${this._esc(s.title)}</h4><ul class="list-disc pl-5 text-sm">${s.items.map((it, i) => `<li>${this._esc(it.text)}: <b>${this._esc(this.choiceText(it, (a[s.id] || [])[i]))}</b></li>`).join('')}</ul>`;
       return '';
     }).join('');
     const aiErrH = (!ai && row.aiError) ? `<div class="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm"><b>Hệ thống chấm điểm chưa chấm được:</b> ${this._esc(row.aiError)} — bấm “Chấm lại bằng hệ thống” sau khi khắc phục, hoặc chấm tay bên dưới.</div>` : '';

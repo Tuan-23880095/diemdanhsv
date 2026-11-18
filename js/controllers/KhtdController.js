@@ -14,6 +14,8 @@ class KhtdController {
   /* ================= SINH VIÊN ================= */
   _initStudent() {
     const saved = sessionStorage.getItem('khtd_token');
+    // online.html?phieu=7 — mở thẳng phiếu số 7 sau khi vào danh sách (vd từ trang tham quan Bảo tàng).
+    try { const n = Number(new URLSearchParams(location.search).get('phieu')); this._autoNo = n > 0 ? n : null; } catch (e) { this._autoNo = null; }
     document.getElementById('login-form').addEventListener('submit', (e) => { e.preventDefault(); this.login(); });
     document.getElementById('btn-logout').addEventListener('click', () => { sessionStorage.removeItem('khtd_token'); location.reload(); });
     document.getElementById('ws-list').addEventListener('click', (e) => { const b = e.target.closest('.ws-item'); if (b) this.openWorksheet(b.dataset.ws); });
@@ -67,7 +69,13 @@ class KhtdController {
     clearTimeout(this.autosave); this._stopTimer(); this._gsStop('Về danh sách phiếu');
     try {
       const d = await this.api.khtdListWorksheets(this.token);
-      this.view.setStudent(d.student); this.view.renderWorksheetList(this.onlyThisCourse(d.worksheets || []), d.examForecast);
+      const list = this.onlyThisCourse(d.worksheets || []);
+      this.view.setStudent(d.student); this.view.renderWorksheetList(list, d.examForecast);
+      if (this._autoNo) {
+        const no = this._autoNo; this._autoNo = null;
+        const w = list.find((x) => Number(x.No) === no && x.Status !== 'HIDDEN');
+        if (w) this.openWorksheet(w.WorksheetID);
+      }
     } catch (err) {
       sessionStorage.removeItem('khtd_token'); this.token = null;
       this.view.show('list', false); this.view.show('login', true); this.view.msg(err.message, 'err');

@@ -665,5 +665,257 @@
    "quy_tac_bang": "Các bảng trong phiếu này KHÔNG có đáp số cố định. Chấm mức độ đầy đủ và cụ thể: ô có nội dung riêng của sinh viên (tên, việc, hạn, liên kết, trích dẫn) là đạt; ô bỏ trống, chung chung ('sẽ cố gắng', 'tìm tài liệu') hoặc chép lại đề là chưa đạt. Trích dẫn đạt khi có tác giả/cơ quan, năm, tên tài liệu; không đòi hỏi đúng tuyệt đối chuẩn APA. Không chấm theo đúng/sai của kết quả trắc nghiệm tính cách hay sở thích: mọi kết quả đều hợp lệ.",
    "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mục nào (vd 'Bảng 3 – Nguồn 2') còn thiếu gì và gợi ý một cách sửa cụ thể, viết cho sinh viên năm nhất dễ làm theo. Không phán xét tính cách, sở thích hay điểm đánh giá chéo mà sinh viên ghi; không trích lại điểm đánh giá chéo của thành viên khác trong nhận xét."
   }
+ },
+ "7": {
+  "title": "Phiếu 7 – Mô tả mẫu vật cổ sinh (tham quan Bảo tàng Địa chất)",
+  "kind": "seminar",
+  "max_attempts": 2,
+  "score_policy": "LAST",
+  "status": "OPEN",
+  "sections": [
+   {
+    "id": "huongdan",
+    "type": "info",
+    "title": "Cách làm (tại phòng Cổ sinh, Bảo tàng Địa chất)",
+    "lines": [
+     "Đọc trước trang Tham quan Bảo tàng (gtn-dc/bao-tang.html): lý thuyết hóa thạch, Bảng địa niên biểu, sơ đồ phòng, mẫu mô tả tham khảo.",
+     "Chọn MỘT mẫu vật ở một tủ (hoặc khối cúc đá, gỗ hóa đá ở bàn trung tâm). Đọc nhãn, quan sát kỹ, rồi điền phiếu theo 5 bước: nhãn → kích thước → hình thái, đối xứng → dạng bảo tồn → môi trường, ý nghĩa.",
+     "Vẽ mẫu vật lên giấy: vẽ to, rõ, có chú thích các bộ phận và thước tỷ lệ ước lượng.",
+     "Nộp đúng 2 ảnh ở mục cuối: Ảnh 1 chụp mẫu vật bạn mô tả, Ảnh 2 chụp trang giấy bạn đã vẽ. Ảnh được nén tự động trước khi gửi.",
+     "Bài tự lưu nháp. Kiểm tra lại rồi bấm Nộp phiếu (được nộp 2 lần, tính lần cuối). Không chụp ảnh có khuôn mặt người khác."
+    ]
+   },
+   {
+    "id": "chung",
+    "type": "choice",
+    "title": "1. Thông tin chung",
+    "items": [
+     {
+      "text": "Ngành học của bạn",
+      "options": [
+       "Địa chất học",
+       "Kinh tế / Quản lý đất đai",
+       "Ngành khác"
+      ]
+     },
+     {
+      "text": "Vị trí mẫu bạn chọn",
+      "options": [
+       "Tủ 1",
+       "Tủ 2",
+       "Tủ 3",
+       "Tủ 4",
+       "Tủ 5",
+       "Bàn trung tâm – Cúc đá",
+       "Bàn trung tâm – Gỗ hóa đá"
+      ]
+     },
+     {
+      "text": "Nhóm sinh vật (theo nhãn và quan sát)",
+      "options": [
+       "Bọ ba thùy",
+       "Tay cuộn",
+       "San hô",
+       "Da gai",
+       "Cúc đá / Chân đầu",
+       "Chân bụng (ốc)",
+       "Hai mảnh vỏ",
+       "Thực vật / Gỗ hóa đá",
+       "Khác"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "dinhdanh",
+    "type": "table",
+    "title": "2. Định danh và xuất xứ (đọc trên nhãn mẫu)",
+    "columns": [
+     "Ghi chép của bạn"
+    ],
+    "rows": [
+     "Nhóm thực tập và ngày tham quan",
+     "Tên khoa học (chữ Latin trên nhãn) và tên tiếng Việt",
+     "Phân loại: Ngành – Lớp (Bộ, Giống nếu nhãn có)",
+     "Tuổi địa chất: Kỷ / Thế (khoảng bao nhiêu triệu năm, tra Bảng địa niên biểu)",
+     "Nơi thu thập (địa phương, hệ tầng nếu nhãn có ghi)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "hinhthai",
+    "type": "table",
+    "title": "3. Đặc điểm hình thái",
+    "columns": [
+     "Ghi chép của bạn"
+    ],
+    "rows": [
+     "Kích thước ước lượng: dài × rộng × dày hoặc đường kính (cm)",
+     "Hình dạng tổng thể, mô tả bằng lời (2–4 câu)",
+     "Đặc điểm nhận dạng quan trọng nhất bạn thấy (vd: gai má, 3 thùy; rãnh – gờ giữa; sườn, rốn vỏ, đường ráp; vách tổ ong; vòng tuổi gỗ)"
+    ],
+    "photos": false
+   },
+   {
+    "id": "danhdau",
+    "type": "choice",
+    "title": "4. Đánh dấu đặc điểm quan sát được",
+    "hint": "Chọn ô đúng nhất với mẫu bạn thấy; dòng có ghi “chọn được nhiều ô” thì đánh dấu mọi ô phù hợp.",
+    "items": [
+     {
+      "text": "Dạng hình học",
+      "options": [
+       "Dẹt phẳng",
+       "Cầu / trứng",
+       "Cuộn phẳng (xoắn trên một mặt phẳng)",
+       "Cuộn xoắn hình nón (ốc)",
+       "Hình quạt xòe",
+       "Trụ / ống / sừng",
+       "Khối tập đoàn (tổ ong, nhiều ống)",
+       "Khác"
+      ]
+     },
+     {
+      "text": "Tính đối xứng",
+      "options": [
+       "Mỗi mảnh vỏ đối xứng qua đường giữa (Tay cuộn)",
+       "Hai mảnh vỏ đối xứng nhau qua mặt khép vỏ (Hai mảnh vỏ)",
+       "Ba thùy dọc (Bọ ba thùy)",
+       "Đối xứng hai bên của vỏ cuộn (Cúc đá)",
+       "Tỏa tròn / 5 tia (San hô đơn thể, Da gai)",
+       "Không đối xứng rõ (ốc, khối tập đoàn)"
+      ]
+     },
+     {
+      "text": "Hoa văn bề mặt",
+      "multi": true,
+      "options": [
+       "Sườn thô, rõ",
+       "Sườn mịn",
+       "Sườn chẻ đôi (chữ Y)",
+       "Đường sinh trưởng đồng tâm",
+       "Gai, mấu",
+       "Lỗ, ô nhỏ dạng tổ ong",
+       "Vòng tuổi (gỗ)",
+       "Gần như nhẵn"
+      ]
+     },
+     {
+      "text": "Dạng bảo tồn",
+      "multi": true,
+      "options": [
+       "Còn phần cứng (vỏ, xương)",
+       "Khuôn trong",
+       "Khuôn ngoài (vết in trên đá)",
+       "Thay thế khoáng vật (silic hóa, pyrit hóa…)",
+       "Dấu vết hoạt động (vết bò, hang)",
+       "Chưa xác định được"
+      ]
+     },
+     {
+      "text": "Hình vẽ của bạn nhìn mẫu từ phía nào",
+      "multi": true,
+      "options": [
+       "Nhìn từ trên xuống",
+       "Nhìn nghiêng",
+       "Mặt cắt"
+      ]
+     },
+     {
+      "text": "Môi trường sống suy luận",
+      "options": [
+       "Biển khơi, bơi tự do",
+       "Biển nông, nước ấm, trong",
+       "Đáy biển bùn",
+       "Rạn san hô",
+       "Hồ, đầm lầy, sông",
+       "Trên cạn (rừng)",
+       "Chưa xác định được"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "ynghia",
+    "type": "questions",
+    "title": "5. Suy luận và ý nghĩa",
+    "items": [
+     {
+      "id": "q1",
+      "text": "Vì sao bạn suy luận mẫu sống ở môi trường đã chọn? Nêu ít nhất một dấu hiệu nhìn thấy trên mẫu."
+     },
+     {
+      "id": "q2",
+      "text": "Mẫu vật này có ý nghĩa gì với ngành Địa chất học (định tuổi đá, khôi phục môi trường cổ, tìm khoáng sản)?"
+     },
+     {
+      "id": "q3",
+      "text": "Lớp đá chứa loại hóa thạch này có thể liên quan gì đến đất đai (đá mẹ tạo đất, nền móng công trình, karst, di sản – du lịch địa chất)?"
+     },
+     {
+      "id": "q4",
+      "text": "Một điều bạn thấy thú vị nhất, hoặc một câu hỏi bạn muốn hỏi Thầy về mẫu vật."
+     }
+    ]
+   },
+   {
+    "id": "anh",
+    "type": "table",
+    "title": "6. Hai ảnh nộp bài",
+    "columns": [
+     "Chú thích ảnh"
+    ],
+    "rows": [
+     "Ảnh 1 – Mẫu vật bạn mô tả (chụp tại tủ, thấy rõ mẫu; chụp kèm nhãn nếu được)",
+     "Ảnh 2 – Trang giấy hình vẽ tay của bạn (vẽ to, có chú thích bộ phận, thước tỷ lệ, họ tên + MSSV ở góc giấy)"
+    ],
+    "photos": true,
+    "photo_label": "Ảnh",
+    "photo_hint": "Mỗi dòng 1 ảnh, chụp thẳng, đủ sáng, không lóa kính tủ. Ảnh 2 chụp cả trang giấy, chữ đọc được."
+   }
+  ],
+  "rubric": {
+   "criteria": [
+    {
+     "id": "dinhdanh",
+     "name": "Định danh, tuổi, nơi thu thập ghi đúng theo nhãn",
+     "max": 2
+    },
+    {
+     "id": "hinhthai",
+     "name": "Mô tả hình thái cụ thể, có kích thước và đặc điểm nhận dạng",
+     "max": 2.5
+    },
+    {
+     "id": "danhdau",
+     "name": "Đánh dấu đặc điểm phù hợp với nhóm sinh vật đã chọn",
+     "max": 1.5
+    },
+    {
+     "id": "ynghia",
+     "name": "Suy luận môi trường có dấu hiệu; nêu được ý nghĩa địa chất và đất đai",
+     "max": 2
+    },
+    {
+     "id": "anh",
+     "name": "Đủ 2 ảnh: ảnh mẫu vật và ảnh hình vẽ tay có chú thích",
+     "max": 2
+    }
+   ]
+  },
+  "answer_key": {},
+  "reference": "Phiếu thực hành tham quan Bảo tàng Địa chất (phòng Cổ sinh) cho tân sinh viên năm nhất. Không có đáp số cố định vì mỗi sinh viên chọn một mẫu khác nhau; chấm theo độ đầy đủ, cụ thể và sự nhất quán bên trong bài. Kiểm tra nhất quán: nhóm sinh vật đã chọn phải khớp với tính đối xứng và dạng hình học đánh dấu (vd Tay cuộn → mỗi mảnh vỏ đối xứng qua đường giữa, hai mảnh không bằng nhau; Hai mảnh vỏ → hai mảnh đối xứng nhau qua mặt khép vỏ; Bọ ba thùy → ba thùy dọc; Cúc đá → cuộn phẳng, có sườn, vách ngăn, đường ráp; San hô tập đoàn → khối nhiều ống; Gỗ hóa đá → vòng tuổi, thay thế khoáng vật silic). Tuổi địa chất phải phù hợp với nhóm (vd Bọ ba thùy thuộc Đại Cổ sinh, Cambri – Permi; Cúc đá phổ biến Devon – Creta, đặc trưng Trung sinh). Ý nghĩa địa chất đạt khi nêu được định tuổi tương đối hoặc môi trường cổ hoặc liên hệ khoáng sản; ý nghĩa đất đai đạt khi liên hệ đá mẹ – đất, nền móng, karst hoặc di sản. Mục ảnh: đủ điểm khi có 2 ảnh và chú thích; hệ thống chấm không xem được nội dung ảnh nên chấm theo số ảnh và chú thích, giảng viên duyệt lại hình vẽ.",
+  "answer_hints": "",
+  "mon": {
+   "ma": "GTN-ĐC",
+   "ten": "Seminar Giới thiệu ngành Địa chất",
+   "hoc_phan": "Giới thiệu ngành Địa chất",
+   "url": "https://diemdanhsv.com/gtn-dc/online.html"
+  },
+  "cham": {
+   "vai_tro": "Bạn là trợ giảng môn Giới thiệu ngành Địa chất (Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM), chấm phiếu mô tả mẫu vật cổ sinh của TÂN SINH VIÊN NĂM NHẤT sau buổi tham quan Bảo tàng Địa chất. Mục tiêu là khích lệ thói quen quan sát và mô tả có căn cứ. Giọng nhận xét ấm áp, ngắn gọn, khen điểm làm tốt trước rồi mới góp ý.",
+   "quy_tac_bang": "Các bảng không có đáp số cố định. Ô có nội dung riêng, cụ thể (tên Latin, số đo, đặc điểm nhìn thấy) là đạt; ô trống hoặc chung chung ('đẹp', 'cổ', 'không biết') là chưa đạt. Không trừ điểm khi tên khoa học khó đọc nhưng sinh viên ghi gần đúng; trừ nhẹ khi phần đánh dấu mâu thuẫn với nhóm sinh vật đã chọn.",
+   "quy_tac_sua": "Ở 'sua_bai' chỉ rõ mục nào (vd 'Mục 3 – Đặc điểm nhận dạng') còn thiếu gì và gợi ý một cách quan sát cụ thể để bổ sung, viết cho sinh viên năm nhất dễ làm theo."
+  }
  }
 }

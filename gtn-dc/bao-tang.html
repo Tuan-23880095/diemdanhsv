@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tham quan Bảo tàng Địa chất – Phòng Cổ sinh | Giới thiệu ngành Địa chất</title>
+<meta name="description" content="Hướng dẫn tham quan phòng Cổ sinh, Bảo tàng Địa chất (2 Nguyễn Bỉnh Khiêm, TP.HCM): lý thuyết hóa thạch, Bảng địa niên biểu, sơ đồ phòng, ảnh mẫu và phiếu mô tả mẫu vật.">
+<meta name="theme-color" content="#0b4f9e">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg?v=20261014-logo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--luc:#0F6B55;--luc-nhat:#E3F0EC;--lam:#1F4E79;--muc:#10212B;--giay:#F6F7F3;--bac:#D5DCE1;--son:#B5462F;--hoang:#B8862B;--chu-phu:#4A5A63;--r:14px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;font-family:"Be Vietnam Pro",system-ui,sans-serif;color:var(--muc);background:var(--giay);line-height:1.6;font-size:16px}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;line-height:1.25}
+h2{font-size:clamp(1.4rem,3vw,1.9rem);margin:0 0 .4em}
+h3{font-size:1.12rem;margin:1.1em 0 .35em}
+a{color:var(--luc)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+.top{background:#0B4F9E;color:#fff}
+.top .wrap{display:flex;align-items:center;gap:12px;padding-top:10px;padding-bottom:10px}
+.top .hcmus{height:40px;background:rgba(255,255,255,.92);border-radius:6px;padding:3px}
+.top .sen{width:44px;height:44px;background:#fff;border-radius:20%;padding:3px;margin-left:auto}
+.top h1{font-size:1rem;margin:0;font-family:"Be Vietnam Pro",sans-serif;font-weight:700}
+.top small{display:block;opacity:.85;font-weight:400}
+.tabs{position:sticky;top:0;z-index:40;background:rgba(246,247,243,.97);border-bottom:1px solid var(--bac);backdrop-filter:blur(6px)}
+.tabs ul{display:flex;gap:4px;list-style:none;margin:0;padding:8px 16px;overflow-x:auto;scrollbar-width:none;max-width:1040px;margin:0 auto}
+.tabs ul::-webkit-scrollbar{display:none}
+.tabs a{display:block;padding:7px 12px;border-radius:999px;text-decoration:none;color:var(--chu-phu);font-size:.9rem;white-space:nowrap;border:1px solid transparent}
+.tabs a:hover,.tabs a.on{background:var(--luc-nhat);color:var(--luc)}
+.tabs a.cta{background:var(--luc);color:#fff}
+section{padding:34px 0;border-bottom:1px solid var(--bac)}
+.sub{color:var(--chu-phu);max-width:800px;margin:0 0 18px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:#fff;border:1px solid var(--bac);border-radius:var(--r);padding:16px 18px}
+.card h3{margin-top:0}
+.tag{display:inline-block;font-size:.74rem;font-weight:600;color:var(--lam);background:#E6EEF6;border-radius:6px;padding:2px 8px;margin:0 4px 6px 0}
+.note{border-left:4px solid var(--hoang);background:#FBF6EA;padding:11px 15px;border-radius:0 10px 10px 0;font-size:.95rem;margin:12px 0}
+.note.lam{border-color:var(--lam);background:#EEF3F8}
+.note.luc{border-color:var(--luc);background:var(--luc-nhat)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:10px;padding:11px 18px;font:600 .95rem "Be Vietnam Pro",sans-serif;cursor:pointer;text-decoration:none;background:var(--luc);color:#fff}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:#fff;color:var(--luc);border:1.5px solid var(--luc)}
+.btn:disabled{opacity:.5;cursor:wait}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:.92rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--bac);text-align:left;vertical-align:top}
+th{background:#EEF2F0;font-weight:600}
+.tbl{overflow-x:auto;border:1px solid var(--bac);border-radius:var(--r)}
+ol.steps5{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;gap:10px}
+ol.steps5 li{counter-increment:s;background:#fff;border:1px solid var(--bac);border-radius:12px;padding:12px 14px 12px 56px;position:relative}
+ol.steps5 li:before{content:counter(s);position:absolute;left:12px;top:12px;width:32px;height:32px;border-radius:50%;background:var(--luc);color:#fff;display:grid;place-items:center;font:700 1rem "Source Serif 4",serif}
+/* đăng nhập */
+.login{max-width:460px;margin:30px auto;background:#fff;border:1px solid var(--bac);border-radius:18px;padding:22px 22px 18px;box-shadow:0 4px 18px rgba(16,33,43,.06)}
+.login label{display:block;font-weight:600;margin:12px 0 4px}
+.login input{width:100%;padding:12px 12px;border:1.5px solid var(--bac);border-radius:10px;font:500 1.15rem "Be Vietnam Pro";}
+.login input#ma{text-align:center;letter-spacing:.35em;text-transform:uppercase;font-size:1.6rem;font-weight:700}
+.login input:focus{outline:none;border-color:var(--luc);box-shadow:0 0 0 3px var(--luc-nhat)}
+.msg{margin:12px 0 0;padding:10px 12px;border-radius:10px;font-size:.93rem;display:none}
+.msg.err{display:block;background:#FBECE8;color:#8A2E1C;border:1px solid #F0C4B8}
+.msg.ok{display:block;background:var(--luc-nhat);color:#0B4F3E;border:1px solid #BFDCD2}
+.who{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--bac);border-radius:14px;padding:12px 16px;margin-top:16px}
+.hidden{display:none!important}
+/* niên biểu */
+.eon{margin-bottom:10px}
+.period{display:grid;grid-template-columns:86px 1fr;gap:0;background:#fff;border:1px solid var(--bac);border-radius:12px;overflow:hidden;margin-bottom:8px}
+.period .lbl{color:#fff;padding:10px 8px;text-align:center;font-weight:700;display:flex;flex-direction:column;justify-content:center}
+.period .lbl b{font:700 1.6rem "Source Serif 4",serif;line-height:1}
+.period .lbl span{font-size:.72rem;opacity:.95;margin-top:4px}
+.period .body{padding:10px 14px}
+.period .body h4{margin:0 0 4px;font-size:1rem}
+.period .body .age{color:var(--chu-phu);font-size:.85rem;font-weight:500}
+.period .body p{margin:3px 0;font-size:.92rem}
+.period .body p i.k{font-style:normal;font-weight:600}
+.k-dc{color:var(--lam)}.k-dd{color:var(--luc)}.k-sv{color:var(--son)}
+.era-h{font:700 1.05rem "Source Serif 4",serif;margin:18px 0 8px;padding:6px 12px;border-radius:8px;color:#fff;display:inline-block}
+.timebar{display:flex;height:34px;border-radius:8px;overflow:hidden;margin:10px 0 4px;border:1px solid var(--bac)}
+.timebar div{display:grid;place-items:center;color:#fff;font-size:.72rem;font-weight:600;white-space:nowrap;overflow:hidden}
+/* sơ đồ */
+.map{background:#fff;border:1px solid var(--bac);border-radius:var(--r);padding:10px}
+.map svg{width:100%;height:auto;display:block}
+.tu{cursor:pointer}
+.tu:hover rect{filter:brightness(.96)}
+/* ảnh */
+.filt{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.filt button{border:1px solid var(--bac);background:#fff;border-radius:999px;padding:6px 12px;font:500 .86rem "Be Vietnam Pro";cursor:pointer;color:var(--chu-phu)}
+.filt button.on{background:var(--luc);border-color:var(--luc);color:#fff}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.gal figure{margin:0;background:#fff;border:1px solid var(--bac);border-radius:12px;overflow:hidden;cursor:zoom-in}
+.gal img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#eee}
+.gal figcaption{font-size:.78rem;padding:6px 8px;color:var(--chu-phu);line-height:1.35}
+.lb{position:fixed;inset:0;background:rgba(10,20,26,.92);z-index:90;display:none;flex-direction:column;align-items:center;justify-content:center;padding:14px}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:78vh;border-radius:8px}
+.lb p{color:#fff;max-width:760px;text-align:center;font-size:.95rem}
+.lb button{position:absolute;top:12px;right:12px;background:#fff;border:0;border-radius:999px;width:40px;height:40px;font-size:1.3rem;cursor:pointer}
+/* mẫu mô tả */
+details.mau{background:#fff;border:1px solid var(--bac);border-radius:12px;padding:10px 14px;margin-bottom:10px}
+details.mau summary{cursor:pointer;font-weight:600;display:flex;gap:10px;align-items:center}
+details.mau summary img{width:64px;height:48px;object-fit:cover;border-radius:6px;flex:none}
+details.mau dl{display:grid;grid-template-columns:180px 1fr;gap:4px 12px;margin:10px 0 0;font-size:.93rem}
+details.mau dt{color:var(--chu-phu)}
+details.mau dd{margin:0}
+@media(max-width:600px){details.mau dl{grid-template-columns:1fr}details.mau dt{margin-top:6px;font-weight:600}}
+.fill{background:#FFF6D9;border-radius:4px;padding:0 4px;font-style:italic}
+footer{padding:26px 0 46px;color:var(--chu-phu);font-size:.86rem}
+@media print{.tabs,.top .sen,.btn,.who,.lb,.filt,#dang-nhap{display:none!important}body{background:#fff}section{padding:12px 0}.hidden{display:block!important}#login-box{display:none!important}}
+</style>
+<script src="/js/ui/menu-he-thong.js?v=20261113-gtn" defer></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+ <img class="hcmus" src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM">
+ <h1>Tham quan Bảo tàng Địa chất – Phòng Cổ sinh<small>Giới thiệu ngành Địa chất · Khoa Địa chất</small></h1>
+ <img class="sen" src="../images/logo-sen.svg?v=20261014-logo" alt="Biểu tượng hệ thống: hoa sen đọng sương">
+</div></header>
+
+<!-- ============ ĐĂNG NHẬP ============ -->
+<div id="login-box" class="wrap">
+ <form class="login" id="login-form" autocomplete="off">
+  <h2 style="margin:0 0 4px;font-size:1.35rem">Vào phiên tham quan</h2>
+  <p style="margin:0;color:var(--chu-phu);font-size:.93rem">Nhập <b>MSSV</b> và <b>mã vào phòng</b> in dưới mã QR. Mã có hiệu lực 24 giờ kể từ khi Thầy kích hoạt. Đăng nhập xong, hệ thống ghi nhận điểm danh buổi tham quan.</p>
+  <label for="mssv">Mã số sinh viên</label>
+  <input id="mssv" inputmode="numeric" maxlength="10" placeholder="26160000" required>
+  <label for="ma">Mã vào phòng (4 ký tự)</label>
+  <input id="ma" maxlength="4" placeholder="ABCD" required>
+  <p style="margin:16px 0 0"><button class="btn" id="btn-login" style="width:100%;justify-content:center">Vào phiên tham quan</button></p>
+  <div id="login-msg" class="msg"></div>
+ </form>
+</div>
+
+<!-- ============ NỘI DUNG (sau khi đăng nhập) ============ -->
+<div id="content" class="hidden">
+<nav class="tabs"><ul>
+ <li><a href="#huong-dan">Hướng dẫn</a></li>
+ <li><a href="#nien-bieu">Địa niên biểu</a></li>
+ <li><a href="#ly-thuyet">Lý thuyết cổ sinh</a></li>
+ <li><a href="#so-do">Sơ đồ phòng</a></li>
+ <li><a href="#hinh-anh">Hình ảnh mẫu</a></li>
+ <li><a href="#mau-mo-ta">Mẫu mô tả</a></li>
+ <li><a href="#phieu" class="cta">Làm phiếu &amp; nộp bài</a></li>
+ <li><span data-menu-he-thong></span></li>
+</ul></nav>
+
+<div class="wrap">
+ <div class="who" id="who-box"><span id="who"></span><span><a href="#phieu" class="btn" style="padding:8px 14px">Làm phiếu mô tả</a> <button class="btn ghost" id="btn-logout" style="padding:8px 14px">Thoát</button></span></div>
+ <div id="att-msg" class="msg"></div>
+</div>
+
+<!-- 1. HƯỚNG DẪN -->
+<section id="huong-dan"><div class="wrap">
+ <h2>1. Hướng dẫn tham quan</h2>
+ <p class="sub">Bảo tàng Địa chất – số 2 Nguyễn Bỉnh Khiêm, phường Sài Gòn (Bến Nghé cũ), TP.HCM. Lớp chia nhóm và luân chuyển qua các phòng theo hướng dẫn của giảng viên; trang này dành cho <b>phòng Cổ sinh</b> (Thầy Đinh Quốc Tuấn phụ trách).</p>
+ <div class="grid g2">
+  <div class="card"><h3>Mang theo</h3>
+   <ul style="margin:0;padding-left:1.1em"><li>Điện thoại đã sạc, mở được web và máy ảnh.</li><li>Giấy A4 hoặc phiếu in, bút chì, gôm, thước kẻ nhỏ.</li><li>Bìa cứng để kê khi vẽ.</li></ul></div>
+  <div class="card"><h3>Quy tắc trong bảo tàng</h3>
+   <ul style="margin:0;padding-left:1.1em"><li>Không chạm, không gõ vào tủ kính, không tựa người lên tủ.</li><li>Chụp ảnh không dùng đèn flash; không chụp khuôn mặt người khác khi chưa xin phép.</li><li>Nói nhỏ, đi theo nhóm, giữ đúng thời gian luân chuyển phòng.</li></ul></div>
+ </div>
+ <h3>Nhiệm vụ của bạn ở phòng Cổ sinh</h3>
+ <ol class="steps5">
+  <li><b>Đọc nhanh</b> mục Lý thuyết cổ sinh và Bảng địa niên biểu trên trang này (5 phút).</li>
+  <li><b>Đi một vòng</b> theo Sơ đồ phòng: 5 tủ trưng bày và bàn trung tâm (khối cúc đá, gỗ hóa đá). Nghe Thầy giới thiệu mẫu đại diện của từng tủ.</li>
+  <li><b>Chọn một mẫu</b> bạn thích nhất. Mô tả theo 5 bước: <i>đọc nhãn → ước lượng kích thước → hình thái, đối xứng → dạng bảo tồn → môi trường sống và ý nghĩa</i>. Xem mục Mẫu mô tả để biết cách viết.</li>
+  <li><b>Vẽ mẫu lên giấy</b>: vẽ to (ít nhất nửa trang), chú thích tên các bộ phận, thêm thước tỷ lệ ước lượng, ghi họ tên + MSSV ở góc giấy.</li>
+  <li><b>Làm Phiếu 7 và nộp 2 ảnh</b>: Ảnh 1 chụp mẫu vật bạn mô tả, Ảnh 2 chụp trang giấy bạn vẽ. Kiểm tra lại rồi bấm <b>Nộp phiếu</b>.</li>
+ </ol>
+ <div class="note">Phiếu tự lưu nháp. Nếu hết phiên (3 giờ) hoặc đóng trình duyệt, chỉ cần quét lại mã QR và đăng nhập lại bằng MSSV + mã: bài làm và ảnh đã tải vẫn còn. Được nộp 2 lần, tính lần cuối.</div>
+</div></section>
+
+<!-- 2. NIÊN BIỂU -->
+<section id="nien-bieu"><div class="wrap">
+ <h2>2. Bảng địa niên biểu và ý nghĩa từng thời kỳ</h2>
+ <p class="sub">Lịch sử Trái Đất khoảng 4.600 triệu năm được chia thành các <b>liên đại → đại → kỷ → thế</b>. Ranh giới giữa các đại, các kỷ phần lớn được đặt ở những lần sinh giới thay đổi lớn, nên <b>hóa thạch là “kim đồng hồ” để đọc tuổi đá</b>. Mốc tuổi theo Thang thời gian địa chất quốc tế (ICS), làm tròn, đơn vị triệu năm trước (tr.n).</p>
+ <div class="timebar" aria-label="Tỷ lệ thời gian">
+  <div style="flex:88.3;background:#8C3E66">Tiền Cambri ≈ 88%</div>
+  <div style="flex:6.2;background:#5E8E5A" title="Cổ sinh">CS</div>
+  <div style="flex:4;background:#3F86A8" title="Trung sinh">TS</div>
+  <div style="flex:1.4;background:#D19A2A" title="Tân sinh">T</div>
+ </div>
+ <p style="font-size:.82rem;color:var(--chu-phu);margin:0 0 6px">Dải trên vẽ đúng tỷ lệ: Tiền Cambri chiếm gần 9/10 lịch sử Trái Đất; sinh vật có vỏ cứng (để lại nhiều hóa thạch) chỉ phổ biến trong khoảng 540 triệu năm gần đây.</p>
+ <div class="note lam" style="font-size:.9rem">Mỗi thẻ có ba dòng: <span class="k-sv"><b>Sinh vật</b></span> – sự kiện và hóa thạch tiêu biểu; <span class="k-dc"><b>Địa chất học</b></span> – ý nghĩa để định tuổi, khôi phục môi trường, tìm khoáng sản; <span class="k-dd"><b>Đất đai</b></span> – ý nghĩa với kinh tế và quản lý đất đai (đá mẹ tạo đất, nền móng, tai biến, tài nguyên, di sản).</div>
+ <div id="nb"></div>
+ <h3>Vì sao sinh viên Kinh tế – Quản lý đất đai cũng cần biết niên biểu?</h3>
+ <div class="grid g2">
+  <div class="card"><span class="tag">Địa chất học</span><p style="margin:.2em 0">Hóa thạch chỉ đạo cho biết tuổi tương đối của lớp đá; cùng loại hóa thạch ở hai nơi giúp nối (đối sánh) các tầng đá. Tổ hợp hóa thạch cho biết môi trường cổ: biển sâu hay nông, nước ấm hay lạnh, lục địa hay đầm hồ. Từ đó dự đoán nơi có than, dầu khí, đá vôi xi măng, nước ngầm.</p></div>
+  <div class="card"><span class="tag">Kinh tế – Quản lý đất đai</span><p style="margin:.2em 0">Đất hình thành từ đá mẹ: đá càng trẻ và càng bở rời (Đệ Tứ) thì đất yếu, dễ lún, chi phí móng cao; đá vôi (Cổ sinh) dễ tạo hang karst, sụt lún; bazan (Neogen – Đệ Tứ) cho đất đỏ màu mỡ. Biết tuổi và loại đá giúp định giá đất, quy hoạch xây dựng, bảo vệ nguồn nước và khai thác giá trị di sản địa chất.</p></div>
+ </div>
+</div></section>
+
+<!-- 3. LÝ THUYẾT -->
+<section id="ly-thuyet"><div class="wrap">
+ <h2>3. Lý thuyết cổ sinh vật học tinh gọn</h2>
+ <div class="grid g2">
+  <div class="card"><h3>Hóa thạch là gì?</h3><p style="margin:0">Hóa thạch là di tích (vỏ, xương, răng, thân gỗ) hoặc dấu vết hoạt động (vết bò, hang đào) của sinh vật cổ được giữ lại trong đá. Thường chỉ những sinh vật <b>có phần cứng</b> và <b>bị chôn vùi nhanh</b> trong trầm tích hạt mịn (bùn, sét, vôi), ít oxy, mới được bảo tồn. Vì vậy hóa thạch gặp chủ yếu trong <b>đá trầm tích</b>.</p></div>
+  <div class="card"><h3>Các dạng bảo tồn</h3>
+   <ul style="margin:0;padding-left:1.1em"><li><b>Còn phần cứng</b>: vỏ đá vôi, xương… gần như nguyên.</li><li><b>Khuôn trong</b>: trầm tích lấp đầy bên trong vỏ rồi cứng lại; vỏ tan đi, còn “lõi” mang hình mặt trong.</li><li><b>Khuôn ngoài</b>: vết in mặt ngoài của vỏ trên đá.</li><li><b>Thay thế khoáng vật</b>: chất hữu cơ hoặc vỏ bị silic (SiO₂), pyrit… thay thế từng phần tử, giữ nguyên cấu trúc – ví dụ <b>gỗ hóa đá</b>.</li><li><b>Dấu vết hoạt động</b>: vết bò, vết chân, hang ổ.</li></ul></div>
+  <div class="card"><h3>Hai nguyên lý dùng hóa thạch để định tuổi</h3><ul style="margin:0;padding-left:1.1em"><li><b>Chồng chất</b>: trong dãy đá trầm tích chưa bị đảo lộn, lớp dưới cũ hơn lớp trên.</li><li><b>Kế tục sinh vật</b>: sinh giới thay đổi theo thời gian và không lặp lại, nên mỗi khoảng thời gian có một tổ hợp hóa thạch riêng.</li></ul></div>
+  <div class="card"><h3>Hóa thạch chỉ đạo (định tầng)</h3><p style="margin:0 0 4px">Là hóa thạch giúp xác định tuổi đá nhanh và chính xác, cần đủ 4 điều kiện:</p><ul style="margin:0;padding-left:1.1em"><li>Tồn tại trong <b>thời gian ngắn</b> (tiến hóa nhanh).</li><li><b>Phân bố rộng</b> (bơi, trôi nổi khắp đại dương).</li><li><b>Phong phú</b>, dễ tìm.</li><li><b>Dễ nhận dạng</b>.</li></ul><p style="margin:6px 0 0">Ví dụ: bọ ba thùy (Cambri – Ordovic), bút đá (Ordovic – Silur), cúc đá (Devon – Creta, nhất là Jura), trùng thoi (Carbon – Permi).</p></div>
+  <div class="card"><h3>Hóa thạch chỉ tướng (môi trường)</h3><p style="margin:0">Cho biết điều kiện sống: <b>san hô tạo rạn</b> → biển nông, ấm, trong; <b>tay cuộn, huệ biển</b> → thềm biển nông; <b>cúc đá</b> → biển khơi; <b>gỗ, lá, than</b> → lục địa, đầm lầy; <b>vỏ ốc nước ngọt</b> → sông hồ.</p></div>
+  <div class="card"><h3>Đọc tên khoa học trên nhãn</h3><p style="margin:0">Tên loài gồm hai chữ Latin, viết nghiêng: <b>Giống</b> (viết hoa) + <b>loài</b> (viết thường), ví dụ <i>Atrypa reticularis</i>. Ghi <i>sp.</i> khi chưa xác định đến loài. Trên nhãn còn có ký hiệu tuổi: Є Cambri, O Ordovic, S Silur, D Devon, C Carbon, P Permi, T Trias, J Jura, K Creta, E/N Paleogen/Neogen, Q Đệ Tứ (số 1, 2, 3 chỉ sớm, giữa, muộn).</p></div>
+ </div>
+ <h3>Nhận dạng nhanh 8 nhóm hóa thạch thường gặp</h3>
+ <div class="tbl"><table>
+  <thead><tr><th>Nhóm</th><th>Dấu hiệu nhận dạng</th><th>Thời gian phổ biến</th><th>Môi trường</th></tr></thead>
+  <tbody>
+   <tr><td><b>Bọ ba thùy</b> (Trilobita, ngành Chân khớp)</td><td>Thân chia 3 thùy theo chiều dọc (trục giữa + 2 bên) và 3 phần theo chiều ngang (đầu, ngực nhiều đốt, đuôi); mắt kép, có thể có gai má.</td><td>Cambri – Permi, thịnh nhất Cambri – Ordovic</td><td>Biển</td></tr>
+   <tr><td><b>Tay cuộn</b> (Brachiopoda)</td><td>Hai mảnh vỏ <b>không bằng nhau</b> (vỏ bụng, vỏ lưng); <b>mỗi mảnh đối xứng</b> qua đường giữa; có mỏ, lỗ cuống, nhiều loài có rãnh giữa và gờ giữa.</td><td>Cambri – nay, thịnh nhất Ordovic – Permi</td><td>Biển nông</td></tr>
+   <tr><td><b>Hai mảnh vỏ</b> (Bivalvia, Chân rìu)</td><td>Hai mảnh vỏ <b>bằng nhau, đối xứng nhau</b> qua mặt khép vỏ; mỗi mảnh thường lệch; có răng khớp, vết cơ khép vỏ.</td><td>Cambri – nay, thịnh từ Trung sinh</td><td>Biển, nước lợ, nước ngọt</td></tr>
+   <tr><td><b>Chân bụng</b> (Gastropoda, ốc)</td><td>Một vỏ <b>cuộn xoắn</b> hình nón (xoắn ốc không trên một mặt phẳng), có miệng vỏ.</td><td>Cambri – nay</td><td>Biển, nước ngọt, trên cạn</td></tr>
+   <tr><td><b>Cúc đá</b> (Ammonoidea, Chân đầu)</td><td>Vỏ <b>cuộn phẳng</b> trên một mặt phẳng, chia nhiều buồng bằng vách ngăn; <b>đường ráp</b> uốn lượn (càng về sau càng phức tạp); có sườn, rốn vỏ.</td><td>Devon – Creta, đặc trưng Trung sinh</td><td>Biển khơi, bơi</td></tr>
+   <tr><td><b>San hô</b> (Anthozoa, Ruột khoang)</td><td>Dạng đơn thể hình sừng/chén có vách tỏa tia, hoặc <b>tập đoàn</b> nhiều ống ghép như tổ ong, có vách ngang.</td><td>Ordovic – nay</td><td>Biển nông, ấm, trong</td></tr>
+   <tr><td><b>Da gai</b> (Echinodermata)</td><td>Đối xứng <b>5 tia</b>; cầu gai hình cầu/tim có hàng lỗ chân ống; huệ biển có cuống gồm các đốt tròn xếp chồng.</td><td>Cambri – nay</td><td>Biển</td></tr>
+   <tr><td><b>Gỗ hóa đá</b> (Thực vật)</td><td>Hình khúc thân cây, thấy <b>vòng tuổi</b>, thớ gỗ; rất nặng, cứng, gõ kêu đanh vì đã bị silic thay thế.</td><td>Từ Devon (thực vật thân gỗ đầu tiên) – nay</td><td>Lục địa</td></tr>
+  </tbody></table></div>
+ <div class="note luc"><b>Mẹo phân biệt Tay cuộn và Hai mảnh vỏ</b> (hay nhầm nhất): đặt mẫu nằm xuống, nhìn vào chỗ hai mảnh khép lại. Nếu kẻ được đường đối xứng <b>chia đôi mỗi mảnh</b> → Tay cuộn. Nếu đường đối xứng <b>nằm ngay giữa hai mảnh</b> (mảnh trái và mảnh phải như ảnh soi gương) → Hai mảnh vỏ.</div>
+</div></section>
+
+<!-- 4. SƠ ĐỒ -->
+<section id="so-do"><div class="wrap">
+ <h2>4. Sơ đồ phòng Cổ sinh</h2>
+ <p class="sub">Sơ đồ khái quát vị trí 5 tủ trưng bày và bàn trung tâm. Bấm vào một tủ để xem nhóm hóa thạch và cách mô tả mẫu đại diện. Số tủ và vị trí thực tế theo hướng dẫn của Thầy tại phòng.</p>
+ <div class="map"><svg id="map" viewBox="0 0 720 470" role="img" aria-label="Sơ đồ phòng Cổ sinh"></svg></div>
+ <div id="tu-info" class="card" style="margin-top:12px"><p style="margin:0;color:var(--chu-phu)">Bấm vào một tủ trên sơ đồ.</p></div>
+</div></section>
+
+<!-- 5. HÌNH ẢNH -->
+<section id="hinh-anh"><div class="wrap">
+ <h2>5. Hình ảnh mẫu vật tham khảo</h2>
+ <p class="sub">Ảnh từ bộ mẫu thực tập Cổ sinh của Khoa Địa chất (nhãn ghi tên Giống – loài và ký hiệu tuổi) và một số ảnh chụp tại Bảo tàng Địa chất năm 2009. Dùng để luyện mắt trước khi đứng trước tủ thật; mẫu trong tủ bảo tàng có thể khác. Bấm ảnh để phóng to.</p>
+ <div class="filt" id="filt"></div>
+ <div class="gal" id="gal"></div>
+</div></section>
+
+<!-- 6. MẪU MÔ TẢ -->
+<section id="mau-mo-ta"><div class="wrap">
+ <h2>6. Mẫu mô tả tham khảo cho 7 vị trí</h2>
+ <p class="sub">Mỗi tủ có một mẫu đại diện; bàn trung tâm có khối <b>cúc đá</b> và <b>gỗ hóa đá</b>. Dưới đây là cách viết một bài mô tả tốt cho từng nhóm. Phần <span class="fill">tô vàng</span> là chỗ bạn <b>phải đọc trên nhãn hoặc tự đo, tự quan sát</b> – đừng chép nguyên văn.</p>
+ <div id="mau"></div>
+</div></section>
+
+<!-- 7. PHIẾU -->
+<section id="phieu"><div class="wrap">
+ <h2>7. Làm Phiếu 7 – Mô tả mẫu vật và nộp bài</h2>
+ <div class="grid g2">
+  <div class="card"><h3>Phiếu gồm</h3><ol style="margin:0;padding-left:1.2em"><li>Đánh dấu ngành học, vị trí mẫu, nhóm sinh vật.</li><li>Định danh theo nhãn: tên khoa học, phân loại, tuổi, nơi thu thập.</li><li>Hình thái: kích thước, hình dạng, đặc điểm nhận dạng.</li><li>Đánh dấu: dạng hình học, đối xứng, hoa văn, dạng bảo tồn, góc nhìn khi vẽ, môi trường.</li><li>Suy luận và ý nghĩa (4 câu ngắn).</li><li><b>2 ảnh</b>: mẫu vật + trang giấy bạn vẽ.</li></ol></div>
+  <div class="card"><h3>Chấm theo 5 tiêu chí (10 điểm)</h3><ul style="margin:0;padding-left:1.1em"><li>Định danh đúng theo nhãn – 2</li><li>Mô tả hình thái cụ thể – 2,5</li><li>Đánh dấu phù hợp nhóm sinh vật – 1,5</li><li>Suy luận môi trường, ý nghĩa địa chất và đất đai – 2</li><li>Đủ 2 ảnh, hình vẽ có chú thích – 2</li></ul><p style="margin:8px 0 0;font-size:.9rem;color:var(--chu-phu)">Hệ thống chấm điểm cho điểm tạm ngay sau khi nộp; Thầy xem hình vẽ và duyệt điểm chính thức sau.</p></div>
+ </div>
+ <p style="margin-top:18px"><a class="btn" href="online.html?phieu=7" id="go-phieu">Mở Phiếu 7 – Mô tả mẫu vật</a> <a class="btn ghost" href="online.html">Xem tất cả phiếu của tôi</a></p>
+ <p style="font-size:.9rem;color:var(--chu-phu)">Mở trong cùng thẻ trình duyệt này để không phải đăng nhập lại. Nếu được hỏi, nhập lại MSSV và cùng mã vào phòng.</p>
+</div></section>
+</div>
+
+<footer><div class="wrap">
+ <p><b>Giới thiệu ngành Địa chất – Tham quan Bảo tàng Địa chất</b> · Khoa Địa chất, Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM · Phòng Cổ sinh: ThS. Đinh Quốc Tuấn (dqtuan@hcmus.edu.vn).</p>
+ <p>Mốc tuổi địa chất theo International Commission on Stratigraphy (ICS), International Chronostratigraphic Chart (làm tròn). Ảnh mẫu: bộ mẫu thực tập Cổ sinh, Khoa Địa chất; ảnh Bảo tàng Địa chất chụp năm 2009.</p>
+</div></footer>
+
+<div class="lb" id="lb"><button aria-label="Đóng" id="lb-x">×</button><img id="lb-img" alt=""><p id="lb-cap"></p></div>
+
+<script src="../js/config/config.js?v=20261104-ontap"></script>
+<script src="../js/services/APIService.js?v=20261104-ontap"></script>
+<script src="../js/services/DeviceService.js?v=20261104-ontap"></script>
+<script>
+/* ====================== DỮ LIỆU NỘI DUNG ====================== */
+/* Thầy sửa nhóm hóa thạch của từng tủ tại đây nếu bố trí thực tế khác (x,y,w,h: vị trí trên sơ đồ 720×470). */
+var TU = [
+ {id:'t1', ten:'Tủ 1', nhom:'Bọ ba thùy', mau:'tri', x:30,  y:70,  w:190, h:90},
+ {id:'t2', ten:'Tủ 2', nhom:'Tay cuộn',   mau:'bra', x:30,  y:190, w:190, h:90},
+ {id:'t3', ten:'Tủ 3', nhom:'San hô',     mau:'san', x:500, y:70,  w:190, h:90},
+ {id:'t4', ten:'Tủ 4', nhom:'Hai mảnh vỏ',mau:'hmv', x:500, y:190, w:190, h:90},
+ {id:'t5', ten:'Tủ 5', nhom:'Chân bụng (ốc)', mau:'oc', x:180, y:330, w:360, h:70},
+ {id:'b1', ten:'Bàn trung tâm', nhom:'Khối cúc đá', mau:'cuc', x:258, y:85, w:204, h:90, ban:true},
+ {id:'b2', ten:'Bàn trung tâm', nhom:'Gỗ hóa đá',  mau:'go',  x:258, y:190, w:204, h:90, ban:true}
+];
+
+var NB = [
+ {era:'Tân sinh (Kainozoi)', c:'#D19A2A', items:[
+  {k:'Q',  ten:'Đệ Tứ', tu:'2,58', sv:'Loài người xuất hiện và phát triển; các kỳ băng hà; sò, ốc, san hô gần giống ngày nay.',
+   dc:'Bồi tụ hai đồng bằng lớn (sông Hồng, sông Cửu Long), cồn cát ven biển, thềm san hô. Đối tượng chính của địa chất công trình, địa chất thủy văn, môi trường.',
+   dd:'Đất phù sa trẻ, nơi tập trung dân cư và đô thị. Nhiều nơi là đất yếu (bùn sét hữu cơ) nên móng sâu, chi phí xây dựng cao; khai thác nước ngầm quá mức gây sụt lún mặt đất; đất phèn, đất mặn cần cải tạo.'},
+  {k:'N',  ten:'Neogen', tu:'23', sv:'Thú có vú và thực vật hạt kín hiện đại; tổ tiên loài người ở châu Phi.',
+   dc:'Lấp đầy các bể trầm tích chứa dầu khí ở thềm lục địa; than nâu (bể sông Hồng); bazan phun trào ở Tây Nguyên, Đông Nam Bộ (kéo dài sang Đệ Tứ).',
+   dd:'Bazan phong hóa thành <b>đất đỏ bazan</b> tầng dày, màu mỡ (cà phê, cao su, hồ tiêu); dưới lớp đất có bauxit laterit → bài toán chọn khai khoáng hay giữ đất nông nghiệp.'},
+  {k:'E',  ten:'Paleogen', tu:'66', sv:'Sau đại tuyệt chủng cuối Creta, thú có vú và chim phát triển mạnh; trùng lỗ lớn.',
+   dc:'Các bể trầm tích (Cửu Long, Nam Côn Sơn…) hình thành; tầng sét Oligocen giàu hữu cơ là đá mẹ sinh dầu.',
+   dd:'Liên quan nguồn thu dầu khí quốc gia và quy hoạch không gian biển, ven biển cho công nghiệp năng lượng.'}]},
+ {era:'Trung sinh (Mesozoi)', c:'#3F86A8', items:[
+  {k:'K',  ten:'Creta', tu:'145', sv:'Thực vật có hoa xuất hiện; khủng long, cúc đá còn nhiều; cuối kỷ: đại tuyệt chủng (khủng long, cúc đá biến mất).',
+   dc:'Ở Việt Nam phổ biến trầm tích lục địa màu đỏ (đá đỏ) và các khối granit, phun trào (như vùng Đèo Cả, Nam Trung Bộ). Ranh giới Creta – Paleogen là mốc định tuổi quan trọng.',
+   dd:'Granit phong hóa cho đất đồi sét pha cát, thoát nước tốt, nền chịu tải khá – thuận lợi cho khu công nghiệp; cao lanh từ granit phong hóa làm gốm sứ; đá granit làm đá xây dựng, ốp lát.'},
+  {k:'J',  ten:'Jura', tu:'201', sv:'Thời kỳ cực thịnh của <b>cúc đá</b> và khủng long; chim đầu tiên.',
+   dc:'Ở Nam Trung Bộ – Tây Nguyên – Đông Nam Bộ có trầm tích biển Jura chứa cúc đá (vd các hệ tầng Đray Linh, La Ngà) → nơi đây từng là biển. Cúc đá Jura là hóa thạch chỉ đạo kinh điển.',
+   dd:'Đá phiến sét, bột kết Jura phong hóa cho đất sét, sườn dốc dễ trượt lở khi cắt taluy; cần khảo sát khi mở đường, xây hồ chứa.'},
+  {k:'T',  ten:'Trias', tu:'252', sv:'Sinh giới phục hồi sau đại tuyệt chủng Permi – Trias; cúc đá <i>Ceratites</i>, hai mảnh vỏ <i>Halobia</i>, <i>Daonella</i>; khủng long và thú có vú đầu tiên.',
+   dc:'Trias muộn: tích tụ <b>than đá Quảng Ninh</b> (hệ tầng Hòn Gai) từ thực vật đầm lầy. Hai mảnh vỏ vỏ mỏng là hóa thạch định tầng Trias ở Tây Bắc.',
+   dd:'Vùng than: đất bị khai thác, bãi thải cần hoàn nguyên; quy hoạch sử dụng đất sau khai thác; rủi ro sụt lún, ô nhiễm nước.'}]},
+ {era:'Cổ sinh (Paleozoi)', c:'#5E8E5A', items:[
+  {k:'P',  ten:'Permi', tu:'299', sv:'Trùng thoi (Fusulinida), tay cuộn, san hô còn nhiều; cuối kỷ: <b>đại tuyệt chủng lớn nhất</b> (khoảng 90% loài sinh vật biển).',
+   dc:'Đá vôi Carbon – Permi rất dày ở miền Bắc (vùng vịnh Hạ Long, Ninh Bình…) và đá vôi Permi ở Hà Tiên – Kiên Lương: nguyên liệu xi măng, vôi.',
+   dd:'Đá vôi tạo địa hình karst: hang ngầm, phễu sụt → rủi ro nền móng, cần khảo sát trước khi xây; nhưng có cảnh quan, di sản, du lịch; mỏ đá vôi xi măng là tài nguyên lớn.'},
+  {k:'C',  ten:'Carbon', tu:'359', sv:'Rừng dương xỉ, thạch tùng (cây vảy) khổng lồ; bò sát đầu tiên; san hô bốn tia, tay cuộn phong phú.',
+   dc:'Trên thế giới là thời kỳ tạo than lớn (châu Âu, Bắc Mỹ). Ở Việt Nam chủ yếu là đá vôi biển nông (kéo sang Permi) – hóa thạch san hô, tay cuộn, trùng thoi định tuổi.',
+   dd:'Như đá vôi Permi: karst, nước ngầm khe nứt – hang động (nguồn nước sinh hoạt vùng núi đá), di sản địa chất, vật liệu xây dựng.'},
+  {k:'D',  ten:'Devon', tu:'419', sv:'“Kỷ nguyên cá”; tay cuộn (<i>Spirifer</i>…), san hô tập đoàn tạo rạn; rừng cây thân gỗ đầu tiên.',
+   dc:'Trầm tích Devon phổ biến ở miền Bắc (Hà Giang, Cao Bằng, Quảng Bình…): đá vôi chứa san hô, tay cuộn – chỉ thị biển nông ấm; có quặng sắt, mangan, chì – kẽm liên quan.',
+   dd:'Cao nguyên đá vôi (vd Đồng Văn – Hà Giang, công viên địa chất toàn cầu UNESCO): đất mỏng, thiếu nước, nông nghiệp khó → giá trị nằm ở di sản, du lịch địa chất.'},
+  {k:'S',  ten:'Silur', tu:'444', sv:'San hô tạo rạn, bút đá; thực vật bắt đầu lên cạn.',
+   dc:'Đá phiến, đá vôi Silur ở miền Bắc; bút đá giúp định tuổi các tầng đá phiến sét biển sâu.',
+   dd:'Đá phiến phân lớp mỏng, dốc → sườn núi dễ trượt khi mưa lớn; cần tính đến khi bố trí dân cư, làm đường miền núi.'},
+  {k:'O',  ten:'Ordovic', tu:'485', sv:'Bút đá, bọ ba thùy, ốc anh vũ vỏ thẳng; cuối kỷ có đại tuyệt chủng lần thứ nhất.',
+   dc:'Trầm tích biển (cát kết, đá phiến) ở Bắc Bộ, Bắc Trung Bộ; bút đá là hóa thạch chỉ đạo chuẩn toàn cầu.',
+   dd:'Đá phiến, cát kết phong hóa cho đất đồi feralit nghèo, dễ xói mòn → ưu tiên rừng, nông lâm kết hợp.'},
+  {k:'Є',  ten:'Cambri', tu:'539', sv:'“Bùng nổ Cambri”: sinh vật có vỏ cứng xuất hiện hàng loạt; <b>bọ ba thùy</b> thịnh vượng.',
+   dc:'Bọ ba thùy là hóa thạch chỉ đạo của Cambri; ở Việt Nam có trầm tích Cambri chứa bọ ba thùy (vùng Hà Giang). Đánh dấu ranh giới bắt đầu Đại Cổ sinh.',
+   dd:'Vùng núi cao đá cổ: đất dốc, mỏng; giá trị chủ yếu là rừng phòng hộ, di sản địa chất, du lịch.'}]},
+ {era:'Tiền Cambri (Thái cổ, Nguyên sinh)', c:'#8C3E66', items:[
+  {k:'PR–AR', ten:'Tiền Cambri', tu:'4.600', sv:'Sự sống đơn bào, vi khuẩn lam tạo <b>stromatolit</b> (đá tảo); cuối thời kỳ có sinh vật đa bào thân mềm (Ediacara).',
+   dc:'Đá biến chất cổ nhất Việt Nam (gneis, đá phiến kết tinh, đá hoa) ở khối Kon Tum, dãy Phan Si Pan – sông Hồng; quặng sắt (Quý Xa), apatit (Lào Cai), graphit, đá quý trong đá hoa (Lục Yên).',
+   dd:'Nền đá gốc kết tinh rắn chắc, chịu tải tốt; nhưng đất phong hóa ở vùng núi dốc, mỏng → hợp rừng phòng hộ, thủy điện; vùng mỏ cần quy hoạch hoàn nguyên đất.'}]}
+];
+
+/* Ảnh: [file, nhóm, chú thích] */
+var IMG = [
+ ['tri-1','tri','Bọ ba thùy – nhìn rõ 3 thùy dọc, đầu – ngực – đuôi.'],['tri-2','tri','Bọ ba thùy – khuôn in nổi rõ các đốt ngực.'],['tri-3','tri','Bọ ba thùy cuộn – đầu, mắt kép.'],['tri-4','tri','Bọ ba thùy – hình vẽ chú thích các bộ phận (bài mẫu).'],['tri-5','tri','Bọ ba thùy – mẫu có chú thích bộ phận.'],
+ ['bra-1','bra','Tay cuộn Rhynchonella – vỏ có sườn tỏa tia, rãnh giữa.'],['bra-2','bra','Tay cuộn Atrypa reticularis (Devon sớm).'],['bra-3','bra','Tay cuộn Spirifer – đường khớp dài, thẳng.'],['bra-4','bra','Tay cuộn Zeilleria (Jura) – vỏ nhẵn, có lỗ cuống.'],['bra-5','bra','Tay cuộn Gigantoproductus (Carbon) – cỡ lớn.'],
+ ['san-1','san','San hô tập đoàn – các ống xếp sát như tổ ong.'],['san-2','san','San hô đơn thể – mặt chén với vách tỏa tia.'],['san-3','san','San hô đơn thể dạng sừng – đường sinh trưởng.'],['san-4','san','San hô đơn thể Tryplasma (Silur).'],['san-5','san','San hô tập đoàn Syringopora (Carbon) – các ống nhỏ.'],
+ ['dag-1','dag','Cầu gai Hemicidaris – mấu gai lớn.'],['dag-2','dag','Cầu gai lệch – hình tim, 5 tia chân ống.'],['dag-3','dag','Huệ biển dạng chồi Pentremites (Carbon).'],['dag-4','dag','Huệ biển – đài và cuống.'],
+ ['cuc-1','cuc','Cúc đá Crioceratites (Creta) – vòng cuộn hở.'],['cuc-2','cuc','Cúc đá Perisphinctes (Jura) – sườn chẻ đôi.'],['cuc-3','cuc','Cúc đá – sườn rõ, rốn vỏ ở giữa.'],['cuc-4','cuc','Cúc đá vòng cuộn tháo (dạng móc câu).'],['cuc-5','cuc','Cúc đá Hamites (Creta).'],['cuc-6','cuc','Cúc đá Ceratites nodosus (Trias).'],
+ ['oc-1','oc','Ốc – vỏ cuộn xoắn hình thoi, ống siphon dài.'],['oc-2','oc','Ốc Pleurotomaria – vỏ hình nón.'],['oc-3','oc','Ốc – vòng xoắn có mấu.'],['oc-4','oc','Ốc Fusus – vỏ thon dài.'],
+ ['hmv-1','hmv','Hai mảnh vỏ Arca – sườn tỏa tia, bản lề thẳng.'],['hmv-2','hmv','Hai mảnh vỏ Pecten – hình quạt có tai.'],['hmv-3','hmv','Hai mảnh vỏ – đường sinh trưởng đồng tâm.'],
+ ['bt-1','bt','Dạng bảo tồn: khuôn ngoài và vật đúc khuôn trong.'],['bt-2','bt','Dạng bảo tồn: khuôn ngoài vỏ hai mảnh.'],['bt-3','bt','Dạng bảo tồn: khuôn ngoài phần mặt lưng bọ ba thùy.'],
+ ['btdc-1','btdc','Bảo tàng Địa chất (2009) – đá granodiorit (phòng Đá).'],['btdc-2','btdc','Bảo tàng Địa chất (2009) – thạch anh wolframit (phòng Khoáng sản).'],['btdc-3','btdc','Bảo tàng Địa chất (2009) – bauxit (phòng Khoáng sản).'],['btdc-4','btdc','Bảo tàng Địa chất (2009) – quặng sắt magnetit.'],['btdc-5','btdc','Bảo tàng Địa chất (2009) – đá hoa (đá biến chất).'],['btdc-6','btdc','Bảo tàng Địa chất (2009) – than bùn.']
+];
+var NHOM = {tri:'Bọ ba thùy', bra:'Tay cuộn', san:'San hô', dag:'Da gai', cuc:'Cúc đá', oc:'Chân bụng', hmv:'Hai mảnh vỏ', bt:'Dạng bảo tồn', btdc:'Bảo tàng – phòng khác'};
+
+/* Mẫu mô tả: f(x) = phần SV phải tự đọc / tự đo. */
+function f(x){ return '<span class="fill">' + x + '</span>'; }
+var MAU = {
+ tri:{tieu:'Bọ ba thùy (Trilobita)', anh:'tri-1', dl:[
+  ['Định danh', 'Tên trên nhãn: ' + f('Giống, loài (viết nghiêng)') + '. Ngành Chân khớp, lớp Bọ ba thùy. Tuổi: ' + f('ký hiệu trên nhãn, vd Є2') + ' – Đại Cổ sinh. Nơi thu thập: ' + f('ghi theo nhãn') + '.'],
+  ['Kích thước', 'Dài khoảng ' + f('… cm') + ', rộng ' + f('… cm') + ' (ước lượng bằng thước, hoặc so với nhãn).'],
+  ['Hình thái', 'Thân dẹt, hình bầu dục. Theo chiều dọc chia 3 thùy: thùy trục ở giữa nhô cao, hai thùy bên thấp hơn. Theo chiều ngang có 3 phần: mai đầu hình bán nguyệt (có ' + f('mắt kép / gai má?') + '), phần ngực gồm ' + f('… đốt') + ', mai đuôi ' + f('nhỏ / lớn') + '.'],
+  ['Đánh dấu', 'Dẹt phẳng · Ba thùy dọc · Đường sinh trưởng không có, có thể có gai.'],
+  ['Bảo tồn', 'Thường là ' + f('vỏ còn lại hoặc khuôn ngoài') + ' trên đá phiến sét, đá vôi.'],
+  ['Môi trường – ý nghĩa', 'Sống ở đáy biển. Là hóa thạch chỉ đạo của Đại Cổ sinh (nhất là Cambri – Ordovic) → giúp định tuổi các lớp đá biển cổ. Đá phiến chứa bọ ba thùy phân lớp mỏng: sườn dốc dễ trượt, cần lưu ý khi làm đường, bố trí dân cư vùng núi.']]},
+ bra:{tieu:'Tay cuộn (Brachiopoda)', anh:'bra-3', dl:[
+  ['Định danh', 'Tên trên nhãn: ' + f('vd Spirifer sp.') + '. Ngành Tay cuộn. Tuổi: ' + f('ký hiệu trên nhãn') + '. Nơi thu thập: ' + f('theo nhãn') + '.'],
+  ['Kích thước', 'Rộng ' + f('… cm') + ', cao ' + f('… cm') + ', dày ' + f('… cm') + '.'],
+  ['Hình thái', 'Hai mảnh vỏ không bằng nhau: vỏ bụng lớn hơn, có mỏ nhô. Đường khớp ' + f('dài, thẳng / ngắn, cong') + '. Vỏ bụng có rãnh giữa, vỏ lưng có gờ giữa tương ứng. Mặt ngoài có ' + f('sườn tỏa tia / nhẵn') + ' và đường sinh trưởng đồng tâm.'],
+  ['Đánh dấu', 'Hình quạt xòe hoặc cầu · Mỗi mảnh vỏ đối xứng qua đường giữa · Sườn tỏa tia, đường sinh trưởng.'],
+  ['Bảo tồn', 'Thường ' + f('còn vỏ đá vôi') + ', có khi là khuôn trong.'],
+  ['Môi trường – ý nghĩa', 'Sống bám đáy ở thềm biển nông, nước trong. Phổ biến trong đá vôi Devon – Permi, giúp định tuổi và khôi phục môi trường biển cổ. Đá vôi chứa tay cuộn: nguyên liệu xi măng, nhưng dễ tạo karst gây sụt lún nền móng.']]},
+ san:{tieu:'San hô (Anthozoa)', anh:'san-1', dl:[
+  ['Định danh', 'Tên trên nhãn: ' + f('…') + '. Ngành Ruột khoang, lớp San hô. Tuổi: ' + f('…') + '. Nơi thu thập: ' + f('…') + '.'],
+  ['Kích thước', 'Khối ' + f('… × … cm') + '; mỗi ống (cá thể) rộng khoảng ' + f('… mm') + '.'],
+  ['Hình thái', f('Đơn thể hình sừng / Tập đoàn dạng khối') + '. Tập đoàn gồm nhiều ống nhỏ tiết diện đa giác ghép sát như tổ ong; mặt cắt dọc thấy các vách ngang xếp như bậc thang.'],
+  ['Đánh dấu', 'Khối tập đoàn (tổ ong) hoặc trụ / sừng · Tỏa tròn (đơn thể) hoặc không đối xứng rõ (tập đoàn) · Lỗ, ô nhỏ dạng tổ ong.'],
+  ['Bảo tồn', 'Phần xương đá vôi còn lại, thường bị tái kết tinh calcit.'],
+  ['Môi trường – ý nghĩa', 'Biển nông, ấm, nước trong, nhiều ánh sáng (rạn san hô). Là hóa thạch chỉ tướng: thấy san hô tạo rạn → vùng đó từng là biển nhiệt đới nông. Đá vôi san hô: tài nguyên đá vôi, nước ngầm karst; cũng là nền dễ có hang hốc.']]},
+ hmv:{tieu:'Hai mảnh vỏ (Bivalvia)', anh:'hmv-1', dl:[
+  ['Định danh', 'Tên trên nhãn: ' + f('…') + '. Ngành Thân mềm, lớp Hai mảnh vỏ (Chân rìu). Tuổi: ' + f('…') + '. Nơi thu thập: ' + f('…') + '.'],
+  ['Kích thước', 'Dài ' + f('… cm') + ', cao ' + f('… cm') + '.'],
+  ['Hình thái', 'Hai mảnh vỏ trái – phải bằng nhau, đối xứng nhau qua mặt khép vỏ; mỗi mảnh hơi lệch. Đỉnh vỏ ' + f('nhô ở giữa / lệch về trước') + ', bản lề ' + f('thẳng / cong, có răng khớp?') + '. Mặt ngoài có ' + f('sườn tỏa tia / đường sinh trưởng đồng tâm') + '.'],
+  ['Đánh dấu', 'Quạt xòe hoặc dẹt · Hai mảnh vỏ đối xứng nhau qua mặt khép vỏ · Sườn tỏa tia / đường đồng tâm.'],
+  ['Bảo tồn', f('Còn vỏ / khuôn ngoài / khuôn trong') + '.'],
+  ['Môi trường – ý nghĩa', 'Sống ở biển, nước lợ hoặc nước ngọt (xem nhãn). Một số giống vỏ mỏng (vd Halobia) là hóa thạch định tầng Trias. Trầm tích chứa nhiều vỏ sò, ốc trẻ (Đệ Tứ) thường là đất yếu, nước ngầm nông → ảnh hưởng chi phí móng công trình.']]},
+ oc:{tieu:'Chân bụng – ốc (Gastropoda)', anh:'oc-2', dl:[
+  ['Định danh', 'Tên trên nhãn: ' + f('…') + '. Ngành Thân mềm, lớp Chân bụng. Tuổi: ' + f('…') + '. Nơi thu thập: ' + f('…') + '.'],
+  ['Kích thước', 'Cao ' + f('… cm') + ', rộng ' + f('… cm') + '; số vòng xoắn ' + f('…') + '.'],
+  ['Hình thái', 'Một vỏ cuộn xoắn quanh trục thành hình nón ' + f('cao / thấp') + '; vòng cuối lớn nhất, có miệng vỏ ' + f('tròn / dài, có ống') + '. Mặt vỏ có ' + f('mấu, sườn dọc, đường xoắn') + '.'],
+  ['Đánh dấu', 'Cuộn xoắn hình nón · Không đối xứng rõ · Gai, mấu / sườn.'],
+  ['Bảo tồn', f('Còn vỏ / khuôn trong') + '.'],
+  ['Môi trường – ý nghĩa', 'Có loài sống biển, có loài nước ngọt, có loài trên cạn → phải xem nhãn và đá vây quanh để suy luận. Ốc nước ngọt trong trầm tích cho biết từng có sông, hồ, đầm lầy – thường gắn với đất sét yếu, than bùn.']]},
+ cuc:{tieu:'Bàn trung tâm – Khối cúc đá (Ammonoidea)', anh:'cuc-2', dl:[
+  ['Định danh', 'Tên trên nhãn: ' + f('…') + '. Ngành Thân mềm, lớp Chân đầu, phân lớp Cúc đá. Tuổi: ' + f('…') + ' (cúc đá: Devon – Creta). Nơi thu thập: ' + f('…') + '.'],
+  ['Kích thước', 'Đường kính ' + f('… cm') + ', dày ' + f('… cm') + '.'],
+  ['Hình thái', 'Vỏ cuộn phẳng trên một mặt phẳng, đối xứng hai bên; các vòng sau ôm ' + f('ít / nhiều') + ' vòng trước, để lộ rốn vỏ ' + f('rộng / hẹp') + '. Mặt vỏ có sườn ' + f('thô / mịn, chẻ đôi?') + '. Chỗ vỡ thấy vách ngăn chia buồng, đường ráp uốn lượn.'],
+  ['Đánh dấu', 'Cuộn phẳng · Đối xứng hai bên của vỏ cuộn · Sườn thô / chẻ đôi.'],
+  ['Bảo tồn', 'Thường là khuôn trong: trầm tích lấp đầy các buồng rồi hóa đá.'],
+  ['Môi trường – ý nghĩa', 'Bơi tự do ở biển khơi, phân bố rộng, tiến hóa nhanh → hóa thạch chỉ đạo xuất sắc của Trung sinh. Cúc đá ở Nam Trung Bộ – Tây Nguyên chứng tỏ thời Jura nơi đây là biển. Mẫu lớn, đẹp là di sản, có giá trị trưng bày, giáo dục, du lịch.']]},
+ go:{tieu:'Bàn trung tâm – Gỗ hóa đá', anh:null, dl:[
+  ['Định danh', 'Tên trên nhãn: ' + f('…') + '. Giới Thực vật. Tuổi: ' + f('…') + '. Nơi thu thập: ' + f('…') + '.'],
+  ['Kích thước', 'Đoạn thân dài ' + f('… cm') + ', đường kính ' + f('… cm') + '.'],
+  ['Hình thái', 'Hình khúc thân cây; còn thấy vỏ, thớ gỗ, mắt cành. Mặt cắt ngang (nếu được mài) thấy rõ vòng tuổi đồng tâm; màu ' + f('…') + ' do các khoáng vật silic (thạch anh, chalcedon, opal) và oxit sắt.'],
+  ['Đánh dấu', 'Trụ / ống · Vòng tuổi · Thay thế khoáng vật (silic hóa).'],
+  ['Bảo tồn', 'Silic hóa: nước ngầm giàu SiO₂ thay thế dần chất gỗ, giữ lại cấu trúc tế bào.'],
+  ['Môi trường – ý nghĩa', 'Rừng trên lục địa bị chôn vùi nhanh (bởi trầm tích sông, tro núi lửa). Cho biết khí hậu cổ, môi trường lục địa. Gỗ hóa đá là di sản cần bảo tồn, có giá trị trưng bày, du lịch; cấm khai thác, buôn bán trái phép.']]}
+};
+
+/* ====================== GIAO DIỆN ====================== */
+var api = new APIService(CONFIG.API_URL);
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function msg(el, t, ok){ el.className = 'msg ' + (ok ? 'ok' : 'err'); el.innerHTML = esc(t); }
+
+function renderNB(){
+ $('nb').innerHTML = NB.map(function(g){
+  return '<div class="era-h" style="background:' + g.c + '">' + esc(g.era) + '</div>' + g.items.map(function(p){
+   return '<div class="period"><div class="lbl" style="background:' + g.c + '"><b>' + esc(p.k) + '</b><span>' + esc(p.tu) + ' tr.n</span></div><div class="body">' +
+    '<h4>' + esc(p.ten) + ' <span class="age">· bắt đầu khoảng ' + esc(p.tu) + ' triệu năm trước</span></h4>' +
+    '<p><i class="k k-sv">Sinh vật:</i> ' + p.sv + '</p><p><i class="k k-dc">Địa chất học:</i> ' + p.dc + '</p><p><i class="k k-dd">Đất đai:</i> ' + p.dd + '</p></div></div>';
+  }).join('');
+ }).join('');
+}
+
+function renderMap(){
+ var s = '<defs><pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#EEF2F0"/></pattern></defs>' +
+  '<rect x="8" y="40" width="704" height="420" rx="14" fill="url(#g)" stroke="#10212B" stroke-width="2"/>' +
+  '<rect x="290" y="450" width="140" height="20" fill="#F6F7F3" stroke="none"/><text x="360" y="465" text-anchor="middle" font-size="18" fill="#0F6B55" font-weight="700">▲ CỬA VÀO</text>' +
+  '<text x="360" y="28" text-anchor="middle" font-size="22" font-weight="700" fill="#10212B">PHÒNG CỔ SINH – sơ đồ khái quát</text>';
+ TU.forEach(function(t){
+  var fill = t.ban ? '#FBF6EA' : '#E3F0EC', st = t.ban ? '#B8862B' : '#0F6B55';
+  s += '<g class="tu" data-tu="' + t.id + '" tabindex="0"><rect x="' + t.x + '" y="' + t.y + '" width="' + t.w + '" height="' + t.h + '" rx="10" fill="' + fill + '" stroke="' + st + '" stroke-width="2"/>' +
+   '<text x="' + (t.x + t.w / 2) + '" y="' + (t.y + t.h / 2 - 4) + '" text-anchor="middle" font-size="24" font-weight="700" fill="#10212B">' + esc(t.ten) + '</text>' +
+   '<text x="' + (t.x + t.w / 2) + '" y="' + (t.y + t.h / 2 + 22) + '" text-anchor="middle" font-size="20" fill="' + st + '">' + esc(t.nhom) + '</text></g>';
+ });
+ s += '<text x="360" y="308" text-anchor="middle" font-size="16" fill="#4A5A63">Gợi ý: xem lần lượt Tủ 1 → Tủ 5, cuối cùng bàn trung tâm</text>';
+ $('map').innerHTML = s;
+ $('map').addEventListener('click', function(e){ var g = e.target.closest('[data-tu]'); if (g) showTu(g.getAttribute('data-tu')); });
+ $('map').addEventListener('keydown', function(e){ var g = e.target.closest('[data-tu]'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); showTu(g.getAttribute('data-tu')); } });
+}
+function showTu(id){
+ var t = TU.filter(function(x){ return x.id === id; })[0]; if (!t) return;
+ var m = MAU[t.mau];
+ var imgs = IMG.filter(function(x){ return x[1] === t.mau; }).slice(0, 4);
+ $('tu-info').innerHTML = '<h3 style="margin-top:0">' + esc(t.ten) + ' – ' + esc(t.nhom) + '</h3>' +
+  '<p style="margin:0 0 8px">' + esc(m.dl[2][1].replace(/<[^>]+>/g, '')) + '</p>' +
+  (imgs.length ? '<div class="gal">' + imgs.map(function(x){ return '<figure data-img="' + x[0] + '"><img loading="lazy" src="bao-tang/img/' + x[0] + '.jpg" alt="' + esc(x[2]) + '"><figcaption>' + esc(x[2]) + '</figcaption></figure>'; }).join('') + '</div>' : '') +
+  '<p style="margin:10px 0 0"><a href="#mau-' + t.mau + '" onclick="document.getElementById(\'mau-' + t.mau + '\').open=true">Xem mẫu mô tả tham khảo →</a></p>';
+}
+
+function renderGal(){
+ var keys = ['all'].concat(Object.keys(NHOM));
+ $('filt').innerHTML = keys.map(function(k, i){ return '<button data-f="' + k + '"' + (i === 0 ? ' class="on"' : '') + '>' + (k === 'all' ? 'Tất cả' : esc(NHOM[k])) + '</button>'; }).join('');
+ function draw(k){
+  $('gal').innerHTML = IMG.filter(function(x){ return k === 'all' || x[1] === k; }).map(function(x){
+   return '<figure data-img="' + x[0] + '"><img loading="lazy" src="bao-tang/img/' + x[0] + '.jpg" alt="' + esc(x[2]) + '"><figcaption><b>' + esc(NHOM[x[1]]) + '.</b> ' + esc(x[2]) + '</figcaption></figure>';
+  }).join('');
+ }
+ draw('all');
+ $('filt').addEventListener('click', function(e){ var b = e.target.closest('[data-f]'); if (!b) return;
+  Array.prototype.forEach.call($('filt').children, function(x){ x.classList.toggle('on', x === b); }); draw(b.getAttribute('data-f')); });
+}
+document.addEventListener('click', function(e){
+ var fg = e.target.closest('figure[data-img]'); if (!fg) return;
+ var id = fg.getAttribute('data-img'); var x = IMG.filter(function(i){ return i[0] === id; })[0];
+ $('lb-img').src = 'bao-tang/img/' + id + '.jpg'; $('lb-cap').textContent = x ? NHOM[x[1]] + ' – ' + x[2] : ''; $('lb').classList.add('on');
+});
+$('lb').addEventListener('click', function(e){ if (e.target.id === 'lb' || e.target.id === 'lb-x') $('lb').classList.remove('on'); });
+
+function renderMau(){
+ var order = TU.map(function(t){ return [t, MAU[t.mau]]; });
+ $('mau').innerHTML = order.map(function(p){
+  var t = p[0], m = p[1];
+  return '<details class="mau" id="mau-' + t.mau + '"><summary>' + (m.anh ? '<img src="bao-tang/img/' + m.anh + '.jpg" alt="">' : '<span style="width:64px;height:48px;border-radius:6px;background:#E8E1D3;display:grid;place-items:center;flex:none">🪵</span>') +
+   '<span>' + esc(t.ten) + ' · ' + esc(m.tieu) + '</span></summary><dl>' +
+   m.dl.map(function(r){ return '<dt>' + esc(r[0]) + '</dt><dd>' + r[1] + '</dd>'; }).join('') + '</dl></details>';
+ }).join('');
+}
+
+/* ====================== ĐĂNG NHẬP ====================== */
+function showContent(st){
+ $('login-box').classList.add('hidden'); $('content').classList.remove('hidden');
+ $('who').innerHTML = 'Xin chào <b>' + esc(st.fullName || '') + '</b> · MSSV ' + esc(st.mssv || '');
+}
+async function verify(){
+ var tk = sessionStorage.getItem('khtd_token'); if (!tk) return false;
+ try { var d = await api.khtdListWorksheets(tk); showContent(d.student || {}); return true; }
+ catch (e) { sessionStorage.removeItem('khtd_token'); return false; }
+}
+async function checkin(mssv, code){
+ try {
+  var dev = await Promise.race([DeviceService.collect(), new Promise(function(r){ setTimeout(function(){ r({ os: DeviceService.getOS(), browser: DeviceService.getBrowser(), deviceType: DeviceService.getDeviceType(), deviceHash: DeviceService.getDeviceHash() }); }, 12000); })]);
+  var r = await api.checkin(Object.assign({ mssv: mssv, code: code }, dev));
+  var st = (r && (r.status || r.Status)) || '';
+  msg($('att-msg'), 'Đã điểm danh buổi tham quan' + (st === 'LATE' ? ' (ghi nhận đến muộn).' : '.'), true);
+ } catch (e) { msg($('att-msg'), 'Điểm danh chưa ghi được: ' + e.message + ' Bạn vẫn đọc tài liệu và làm phiếu bình thường; báo Thầy nếu cần.', false); }
+}
+$('login-form').addEventListener('submit', async function(e){
+ e.preventDefault();
+ var mssv = $('mssv').value.trim(), code = $('ma').value.replace(/\s+/g, '').toUpperCase();
+ var b = $('btn-login'); b.disabled = true; b.textContent = 'Đang kiểm tra…';
+ try {
+  var d = await api.khtdLogin(mssv, code);
+  sessionStorage.setItem('khtd_token', d.token);
+  try { localStorage.setItem('gtn_bt_mssv', mssv); } catch (x) {}
+  showContent({ fullName: d.fullName, mssv: d.mssv });
+  checkin(mssv, code);
+  window.scrollTo(0, 0);
+ } catch (err) { msg($('login-msg'), err.message, false); }
+ finally { b.disabled = false; b.textContent = 'Vào phiên tham quan'; }
+});
+$('btn-logout').addEventListener('click', function(){ sessionStorage.removeItem('khtd_token'); location.href = location.pathname; });
+
+(function init(){
+ renderNB(); renderMap(); renderGal(); renderMau();
+ var q = new URLSearchParams(location.search);
+ var ma = (q.get('ma') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
+ if (ma) $('ma').value = ma;
+ try { var m = localStorage.getItem('gtn_bt_mssv'); if (m) $('mssv').value = m; } catch (x) {}
+ verify().then(function(ok){ if (!ok) { (ma ? $('mssv') : $('ma')).focus(); } });
+ // Đánh dấu tab đang xem
+ var links = document.querySelectorAll('.tabs a[href^="#"]');
+ window.addEventListener('scroll', function(){
+  var y = window.scrollY + 90, cur = null;
+  links.forEach(function(a){ var s = document.querySelector(a.getAttribute('href')); if (s && s.offsetTop <= y) cur = a; });
+  links.forEach(function(a){ a.classList.toggle('on', a === cur && !a.classList.contains('cta')); });
+ }, { passive: true });
+})();
+</script>
+</body>
+</html>
