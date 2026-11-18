@@ -44,7 +44,9 @@
       { ten: 'Trang seminar', url: D + 'gtn-dc/index.html', ai: 'SV' },
       { ten: 'Làm phiếu online', url: D + 'gtn-dc/online.html', ai: 'SV' },
       { ten: 'Hướng dẫn', url: D + 'gtn-dc/huong-dan.html', ai: 'SV' },
+      { ten: 'Tham quan Bảo tàng Địa chất', url: D + 'gtn-dc/bao-tang.html', ai: 'SV', mo_ta: 'MSSV + mã vào phòng' },
       { ten: 'Quản lý', url: D + 'gtn-dc/quanly.html', ai: 'GV' },
+      { ten: 'Mã QR tham quan Bảo tàng', url: D + 'gtn-dc/bao-tang-gv.html', ai: 'GV', mo_ta: 'in thẻ, kích hoạt 24 giờ' },
     ] },
     { ten: 'Thực tập Khoa học Trái đất', muc: [
       { ten: 'Trang học phần', url: D + 'khtd/index.html', ai: 'SV' },
