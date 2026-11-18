@@ -25,7 +25,7 @@
          class="logo-img h-11 w-11 shrink-0 rounded-lg bg-white/90 p-1 object-contain sm:h-14 sm:w-14">
   </div>
 </header>
-<nav class="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 pt-4 text-sm"><a href="../index.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">← Trang chủ diemdanhsv</a><a href="../pages/lecturer.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Bảng điều khiển giảng viên</a><a href="index.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Xem như sinh viên</a><a href="huong-dan.html#gv" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Hướng dẫn giảng viên</a><a href="../pages/luu-tru.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Lưu trữ cuối học kỳ</a></nav>
+<nav class="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 pt-4 text-sm"><a href="../index.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">← Trang chủ diemdanhsv</a><a href="../pages/lecturer.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Bảng điều khiển giảng viên</a><a href="index.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Xem như sinh viên</a><a href="huong-dan.html#gv" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Hướng dẫn giảng viên</a><a href="../pages/luu-tru.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Lưu trữ cuối học kỳ</a><a href="bao-tang-gv.html" class="rounded-lg border border-green-700 bg-green-50 px-3 py-1.5 font-semibold text-green-800 hover:bg-green-100">Mã QR tham quan Bảo tàng (24 giờ)</a></nav>
 <main class="mx-auto max-w-6xl px-4 py-6">
   <div id="msg" class="hidden"></div>
   <p id="need-login" class="hidden rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm">Bạn chưa đăng nhập giảng viên. <a class="font-semibold underline" href="../pages/lecturer.html?next=../gtn-dc/quanly.html">Bấm vào đây để đăng nhập</a> — đăng nhập xong sẽ tự quay lại trang này (phiên 6 giờ, chỉ trong tab đang mở).</p>
@@ -33,7 +33,7 @@
   <div id="lec-main" class="hidden">
     <div class="flex flex-wrap items-end gap-3 rounded-2xl border bg-white p-4 shadow-sm">
       <label class="text-sm">Lớp<br/><select id="class-select" class="mt-1 rounded border px-2 py-1.5 min-w-[260px]"></select></label>
-      <button id="btn-seed" class="rounded border border-blue-700 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-50">Tạo / bổ sung phiếu Seminar (6 phiếu)</button>
+      <button id="btn-seed" class="rounded border border-blue-700 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-50">Tạo / bổ sung phiếu Seminar (7 phiếu)</button>
       <button id="btn-reload" class="rounded border px-3 py-1.5 text-sm hover:bg-slate-50">Tải lại</button>
       <button id="btn-export" class="rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-900">Xuất CSV điểm phiếu</button>
       <button id="btn-aitest" class="rounded border border-amber-600 px-3 py-1.5 text-sm text-amber-700 hover:bg-amber-50">Kiểm tra hệ thống chấm điểm</button>
@@ -78,9 +78,9 @@
 <script>window.KHTD_BO = 'gtn'; window.KHTD_CLASS_FILTER = 'GEO00001|Gi(ớ|o)i thi(ệ|e)u ng(à|a)nh|GTN|Seminar';</script>
 <script src="../js/config/config.js?v=20261104-ontap"></script>
 <script src="../js/services/APIService.js?v=20261104-ontap"></script>
-<script src="../js/views/KhtdView.js?v=20261113-mon"></script>
+<script src="../js/views/KhtdView.js?v=20261119-baotang"></script>
 <script src="../js/views/KhtdExamView.js?v=20261104-ontap"></script>
-<script src="../js/controllers/KhtdController.js?v=20261113-mon"></script>
+<script src="../js/controllers/KhtdController.js?v=20261119-baotang"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     new KhtdController(new APIService(CONFIG.API_URL), new KhtdView(), 'lecturer').init();

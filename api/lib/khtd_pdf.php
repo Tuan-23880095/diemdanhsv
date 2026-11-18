@@ -538,6 +538,12 @@ function khtd_pdf_render(KhtdPdf $pdf, array $d): void
             $pdf->para((string) $s['title'] . ': ' . (string) ($s['prompt'] ?? ''), 8.5, 'B', [0, 0, 0], 0, 4.2);
             $pdf->para(trim((string) ($a[$s['id']] ?? '')) ?: '(để trống)', 8.5, '', KHTD_PDF_NAVY, 6, 4.2);
             $pdf->Ln(1);
+        } elseif ($t === 'choice') {
+            $lab = khtd_choice_labels(['sections' => [$s]], [$s['id'] => (array) ($a[$s['id']] ?? [])])[$s['id']];
+            $pdf->need(12);
+            $pdf->para((string) $s['title'], 8.5, 'B', [0, 0, 0], 0, 4.2);
+            foreach ($lab as $q => $v) $pdf->para($q . ': ' . ($v !== '' ? $v : '—'), 8, '', [60, 60, 60], 6, 4);
+            $pdf->Ln(1);
         } elseif ($t === 'self') {
             $v = (array) ($a[$s['id']] ?? []);
             $parts = [];

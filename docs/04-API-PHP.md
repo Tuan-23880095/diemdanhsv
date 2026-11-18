@@ -1384,3 +1384,23 @@ Mục đích: seminar nhóm 3 tuần cho tân sinh viên Khoa Địa chất dùn
 **Trang**: `gtn-dc/index.html` (cẩm nang tự chứa: lộ trình, khám phá bản thân 4 bước — hình học tâm lý 3×7 câu theo học phần KNLVN, RIASEC 12 câu, 8 vai, nguồn lực — chạy hoàn toàn trên trình duyệt, lưu nháp `localStorage`, không gửi dữ liệu; nút Sao chép Thẻ để dán vào Phiếu 1; hộp công cụ KNLVN; bảng 20 đề tài lọc theo khối/độ khó/độ hợp; rubric đánh giá chéo), `gtn-dc/online.html` (SV), `gtn-dc/quanly.html` (GV, `KHTD_BO='gtn'`, `KHTD_CLASS_FILTER` khớp “Giới thiệu ngành|GTN|Seminar”), `gtn-dc/anh.php`, `gtn-dc/xuat-pdf.php` (gọi lại bản trong `khtd/`). Trang chủ: thẻ “Seminar Giới thiệu ngành Địa chất”.
 
 **Vận hành**: Quản trị → tạo lớp (tên có “Giới thiệu ngành”), nhập danh sách → `gtn-dc/quanly.html` chọn lớp → “Tạo / bổ sung phiếu Seminar” → mở mã vào lớp; mở Phiếu 4–6 khi tới mốc; tạo mã ôn tập cho SV xem lại ở nhà.
+
+## 42. Tham quan Bảo tàng Địa chất: mã QR 24 giờ, trang tài liệu, Phiếu 7 (19/11/2026) — `api/lib/gtn.php`, `gtn-dc/bao-tang*.html`
+
+Mục đích: buổi tham quan phòng Cổ sinh, Bảo tàng Địa chất (2 Nguyễn Bỉnh Khiêm). GV in sẵn thẻ QR + mã vào phòng; sáng hôm đi bấm kích hoạt, mã sống **24 giờ**. SV quét QR → nhập MSSV + mã → đọc tài liệu (hướng dẫn, địa niên biểu, lý thuyết cổ sinh, sơ đồ phòng, ảnh mẫu, mẫu mô tả) → được điểm danh buổi tham quan → làm Phiếu 7, nộp 2 ảnh (mẫu vật + trang giấy vẽ tay).
+
+**Không thêm bảng, không migration.** Mã tham quan là một dòng `attendance_keys` của buổi học, `KeyID` tiền tố `KTQ_`:
+- *Chờ* (in trước): `Status = CLOSED`, `StartTime = LateAfter = EndTime` = lúc tạo → `khtdLogin`, `checkin` (chỉ nhận `OPEN`) chưa nhận.
+- *Kích hoạt*: `Status = OPEN`, `StartTime = now`, `LateAfter = now + lateMinutes` (1–1440, mặc định 60), `EndTime = now + 24h`; đóng mọi mã đang mở khác của buổi. Từ đây mã vừa là mã điểm danh buổi đó, vừa là mã đăng nhập phiếu online.
+- *Đổi mã* (`renew`): mã chờ cũ lệch `EndTime` 1 giây (không còn chờ), mã đang chạy bị đóng; không xoá dòng nào. *Dừng*: `Status = CLOSED`.
+- Ngoại lệ có chủ đích với kẹp 60 phút của `openAttendance` (M5): chỉ GV đứng lớp/ADMIN, ghi `audit_log` (`GTN_TQ_CREATE/ACTIVATE/STOP`), vẫn qua rate limit `khtd_login_ip`/`checkin_ip`, MSSV phải có trong danh sách lớp.
+
+**Action** (LECTURER/ADMIN, `assert_class_access`): `gtnTqStatus` GET {classId} — buổi ACTIVE + mã mới nhất (`state` none/pending/active/expired/closed) · `gtnTqCreate` POST {sessionId, renew?} · `gtnTqActivate` POST {sessionId, lateMinutes?} · `gtnTqStop` POST {sessionId}.
+
+**Phiếu 7** (`gtn_phieu.json`, bộ `gtn`; GV bấm “Tạo / bổ sung phiếu Seminar” để bổ sung cho lớp đã có phiếu 1–6): thông tin chung, định danh theo nhãn, hình thái, mục đánh dấu, 4 câu suy luận, bảng ảnh 2 dòng. MaxAttempts 2, LAST, OPEN. Rubric 2 + 2,5 + 1,5 + 2 + 2.
+
+**Kiểu mục mới `choice`** (ô đánh dấu): `items: [{text, options[], multi?}]`; bài lưu chỉ số (`null`/số, hoặc mảng nếu `multi`). Hỗ trợ ở `KhtdView` (vẽ, thu, đếm ô trống, xem bài GV), `khtd_choice_labels()` đổi sang nhãn cho hệ thống chấm và PDF (`khtd_pdf.php`).
+
+**Trang**: `gtn-dc/bao-tang.html` (SV; đăng nhập `khtdLogin`, token chung `sessionStorage.khtd_token` với `online.html`; tự gọi `checkin` để điểm danh; `?ma=XXXX` điền sẵn mã; ảnh ở `gtn-dc/bao-tang/img/`; nhóm hóa thạch của từng tủ sửa ở mảng `TU` đầu script) · `gtn-dc/bao-tang-gv.html` (GV: chọn lớp/buổi, tạo buổi “Tham quan Bảo tàng”, tạo/đổi/kích hoạt/dừng mã, in thẻ QR 1/2/4/6 thẻ mỗi trang A4 bằng `dkv/assets/qrcode-generator`) · `online.html?phieu=7` mở thẳng phiếu số 7.
+
+**Kiểm thử**: `php tools/smoke_gtn_bao_tang.php --config=<CSDL thử>` (37 kiểm tra: mã chờ không dùng được, đổi mã, kích hoạt 24 giờ, đóng mã thường, SV ngoài lớp bị chặn, điểm danh, hết hạn, dừng, Phiếu 7 lưu ô đánh dấu + 2 ảnh, đổi nhãn, PDF).

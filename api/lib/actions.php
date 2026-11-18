@@ -79,6 +79,11 @@ const KNOWN_ACTIONS = [
     'khtdReviewCode'         => 'POST',   // ôn tập ở nhà (docs/04 mục 40)
     'khtdReviewLogin'        => 'POST',
     'khtdStats'              => 'GET',
+    // Mã tham quan Bảo tàng Địa chất 24 giờ (api/lib/gtn.php, docs/04 mục 42)
+    'gtnTqStatus'            => 'GET',
+    'gtnTqCreate'            => 'POST',
+    'gtnTqActivate'          => 'POST',
+    'gtnTqStop'              => 'POST',
     // Phiếu luyện thi cuối khóa (api/lib/khtd_exam.php, docs/04 mục 33)
     'khtdStartExam'          => 'POST',
     'khtdSetExamKey'         => 'POST',
@@ -214,6 +219,10 @@ function api_dispatch(string $action, string $method, array $params): void
         case 'khtdReviewLogin':        action_khtd_review_login($params);         return;
         case 'khtdGrantRetake':        action_khtd_grant_retake($params);         return;
         case 'khtdUploadPhoto':        action_khtd_upload_photo($params);         return;
+        case 'gtnTqStatus':            action_gtn_tq_status($params);             return;
+        case 'gtnTqCreate':            action_gtn_tq_create($params);             return;
+        case 'gtnTqActivate':          action_gtn_tq_activate($params);           return;
+        case 'gtnTqStop':              action_gtn_tq_stop($params);               return;
         case 'khtdStats':              action_khtd_stats($params);                return;
         case 'khtdStartExam':          action_khtd_start_exam($params);           return;
         case 'khtdSetExamKey':         action_khtd_set_exam_key($params);         return;

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mã QR tham quan Bảo tàng Địa chất — Giảng viên</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg?v=20261014-logo">
+<meta name="theme-color" content="#0b4f9e">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../css/main.css?v=20261104-ontap">
+<script src="../js/ui/logo-fallback.js?v=20261104-ontap"></script>
+<script src="/js/ui/menu-he-thong.js?v=20261113-gtn" defer></script>
+<script src="../dkv/assets/qrcode-generator-1.4.4.js"></script>
+<style>
+#sheet{display:grid;gap:0;background:#fff}
+.qcard{box-sizing:border-box;border:1.5px dashed #94a3b8;padding:14px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;font-family:"Times New Roman",serif;color:#10212B;break-inside:avoid}
+.qcard .hd{font-size:12px;line-height:1.3;text-transform:uppercase}
+.qcard .hd b{display:block;font-size:13px}
+.qcard h3{font-size:18px;font-weight:700;margin:6px 0 2px}
+.qcard .qr svg{width:100%;height:auto;display:block}
+.qcard .code{font:900 40px/1 "Courier New",monospace;letter-spacing:.25em;margin:4px 0 2px;padding-left:.25em}
+.qcard .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#334155}
+.qcard ol{text-align:left;font-size:12.5px;margin:6px 0 0;padding-left:18px;line-height:1.35}
+.qcard .url{font-size:11px;color:#334155;word-break:break-all;margin-top:4px}
+@media print{
+ @page{size:A4;margin:8mm}
+ body{background:#fff!important}
+ body > *:not(#print-area){display:none!important}
+ #print-area{display:block!important}
+ #sheet{width:194mm}
+}
+</style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+<header class="brand-bar text-white">
+  <div class="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3">
+    <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/Logo-chinh-hcmus.png?alt=media&amp;token=9cf3a1de-75f1-493b-8711-fd22c7b98738" alt="" class="logo-img h-10 w-auto max-w-[110px] shrink-0 rounded bg-white/90 p-1 object-contain">
+    <a href="quanly.html" class="text-white/80 hover:text-white">&larr;</a>
+    <h1 class="min-w-0 truncate text-base font-bold">Tham quan Bảo tàng Địa chất — Mã QR &amp; mã vào phòng (24 giờ)</h1>
+    <div class="ml-auto flex shrink-0 items-center text-slate-900"><span data-menu-he-thong></span></div>
+    <img src="../images/logo-sen.svg?v=20261014-logo" alt="Biểu tượng hệ thống: hoa sen đọng sương" class="logo-img h-11 w-11 shrink-0 rounded-lg bg-white/90 p-1 object-contain sm:h-14 sm:w-14">
+  </div>
+</header>
+<nav class="mx-auto flex max-w-5xl flex-wrap gap-2 px-4 pt-4 text-sm"><a href="quanly.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Quản lý phiếu Seminar</a><a href="bao-tang.html" target="_blank" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Xem trang sinh viên</a><a href="../pages/lecturer.html" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-semibold hover:border-blue-600">Bảng điều khiển giảng viên</a></nav>
+
+<main class="mx-auto max-w-5xl px-4 py-6">
+  <div id="msg" class="hidden mb-3 rounded-lg border p-3 text-sm"></div>
+  <p id="need-login" class="hidden rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm">Bạn chưa đăng nhập giảng viên. <a class="font-semibold underline" href="../pages/lecturer.html?next=../gtn-dc/bao-tang-gv.html">Bấm vào đây để đăng nhập</a> — xong sẽ tự quay lại trang này.</p>
+
+  <div id="main" class="hidden space-y-4">
+    <div class="rounded-2xl border bg-white p-4 shadow-sm text-sm">
+      <p class="font-semibold">Quy trình (3 bước)</p>
+      <ol class="mt-1 list-decimal pl-5 space-y-1 text-slate-700">
+        <li><b>Tối nay:</b> chọn lớp → chọn (hoặc tạo) buổi “Tham quan Bảo tàng Địa chất” → <b>Tạo mã</b> → <b>In</b> thẻ QR. Ở <a class="underline" href="quanly.html">Quản lý phiếu</a> bấm “Tạo / bổ sung phiếu Seminar” để lớp có <b>Phiếu 7 – Mô tả mẫu vật</b>.</li>
+        <li><b>Sáng mai, khi tới bảo tàng:</b> bấm <b>Kích hoạt 24 giờ</b>. Từ lúc đó sinh viên quét QR, nhập MSSV + mã → đọc tài liệu, được điểm danh buổi này và làm Phiếu 7. Trước khi kích hoạt, mã chưa dùng được.</li>
+        <li>Hết 24 giờ mã tự hết hạn (hoặc bấm <b>Dừng</b>). Duyệt điểm Phiếu 7 ở trang Quản lý phiếu như các phiếu khác.</li>
+      </ol>
+    </div>
+
+    <div class="flex flex-wrap items-end gap-3 rounded-2xl border bg-white p-4 shadow-sm">
+      <label class="text-sm">Lớp<br/><select id="cls" class="mt-1 min-w-[260px] rounded border px-2 py-1.5"></select></label>
+      <label class="text-sm">Buổi<br/><select id="ses" class="mt-1 min-w-[300px] rounded border px-2 py-1.5"></select></label>
+      <button id="btn-new-ses" class="rounded border border-blue-700 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-50">+ Tạo buổi “Tham quan Bảo tàng”</button>
+    </div>
+
+    <div id="box" class="hidden rounded-2xl border-2 border-blue-200 bg-blue-50 p-5 text-center">
+      <p class="text-sm font-medium uppercase tracking-wide text-blue-700">Mã vào phòng</p>
+      <p id="code" class="font-mono text-6xl font-black tracking-[0.3em] text-blue-900">----</p>
+      <p id="state" class="mt-2 text-sm"></p>
+      <div class="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
+        <button id="btn-create" class="rounded bg-blue-700 px-3 py-1.5 font-semibold text-white hover:bg-blue-800">Tạo mã</button>
+        <button id="btn-renew" class="rounded border border-blue-700 px-3 py-1.5 text-blue-700 hover:bg-white">Đổi mã</button>
+        <label class="inline-flex items-center gap-1">Tính “đến muộn” sau <select id="late" class="rounded border px-1 py-1"><option value="30">30 phút</option><option value="60" selected>60 phút</option><option value="120">2 giờ</option><option value="240">4 giờ</option><option value="1440">không tính muộn</option></select></label>
+        <button id="btn-act" class="rounded bg-green-700 px-3 py-1.5 font-semibold text-white hover:bg-green-800">Kích hoạt 24 giờ</button>
+        <button id="btn-stop" class="rounded border border-red-600 px-3 py-1.5 text-red-700 hover:bg-white">Dừng</button>
+        <button id="btn-reload" class="rounded border px-3 py-1.5 hover:bg-white">Cập nhật</button>
+      </div>
+      <p class="mt-2 text-xs text-blue-800">Mã này cũng là mã điểm danh của buổi đã chọn. Kích hoạt sẽ đóng mã điểm danh khác đang mở của cùng buổi.</p>
+    </div>
+
+    <div id="print-ctl" class="hidden rounded-2xl border bg-white p-4 shadow-sm text-sm">
+      <div class="flex flex-wrap items-center gap-3">
+        <label>Số thẻ mỗi trang A4 <select id="per" class="rounded border px-2 py-1"><option value="1">1 (dán cửa phòng)</option><option value="2">2</option><option value="4" selected>4</option><option value="6">6</option></select></label>
+        <label class="inline-flex items-center gap-1"><input type="checkbox" id="prefill" checked> Gắn sẵn mã vào QR (sinh viên chỉ cần nhập MSSV)</label>
+        <label>Tiêu đề <input id="ttl" class="rounded border px-2 py-1 min-w-[260px]" value="Tham quan Bảo tàng Địa chất – Phòng Cổ sinh"></label>
+        <button id="btn-print" class="rounded bg-slate-800 px-3 py-1.5 font-semibold text-white hover:bg-slate-900">In thẻ QR</button>
+      </div>
+      <p class="mt-2 text-xs text-slate-500">Xem trước bên dưới. In xong vẫn dùng được nếu chưa bấm “Đổi mã”. Đổi mã thì phải in lại.</p>
+    </div>
+
+    <div id="print-area" class="hidden"><div id="sheet"></div></div>
+  </div>
+</main>
+
+<script src="../js/config/config.js?v=20261104-ontap"></script>
+<script src="../js/services/APIService.js?v=20261104-ontap"></script>
+<script>
+(function(){
+  var api = new APIService(CONFIG.API_URL);
+  var token = sessionStorage.getItem('dd_token');
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
+  var FILTER = /GEO00001|Gi(ớ|o)i thi(ệ|e)u ng(à|a)nh|GTN|Seminar/i;
+  var sessions = [], cur = null, classes = [];
+
+  function say(t, ok){ var m = $('msg'); m.className = 'mb-3 rounded-lg border p-3 text-sm ' + (ok ? 'border-green-300 bg-green-50 text-green-900' : 'border-red-300 bg-red-50 text-red-800'); m.textContent = t; m.classList.remove('hidden'); }
+  function hm(s){ return s ? String(s).substring(11, 16) + ' ' + String(s).substring(8, 10) + '/' + String(s).substring(5, 7) : ''; }
+
+  document.body.appendChild($('print-area'));   // để khi in chỉ còn khung thẻ (body > #print-area)
+  if (!token) { $('need-login').classList.remove('hidden'); return; }
+  $('main').classList.remove('hidden');
+
+  async function loadClasses(){
+    try {
+      var d = await api.listClasses(token);
+      var all = Array.isArray(d) ? d : (d.classes || []);
+      var mine = all.filter(function(c){ return FILTER.test((c.ClassCode || '') + ' ' + (c.CourseName || '') + ' ' + (c.CourseCode || '')); });
+      classes = mine.length ? mine : all;
+      $('cls').innerHTML = '<option value="">— Chọn lớp —</option>' + classes.map(function(c){ return '<option value="' + esc(c.ClassID) + '">' + esc(c.ClassCode) + ' – ' + esc(c.CourseName || '') + '</option>'; }).join('');
+      var last = localStorage.getItem('gtn_tq_cls');
+      if (last && classes.some(function(c){ return c.ClassID === last; })) { $('cls').value = last; loadSessions(); }
+      else if (classes.length === 1) { $('cls').value = classes[0].ClassID; loadSessions(); }
+    } catch (e) { if (/hết hạn|đăng nhập/i.test(e.message)) { $('main').classList.add('hidden'); $('need-login').classList.remove('hidden'); } say(e.message); }
+  }
+
+  async function loadSessions(keep){
+    var cid = $('cls').value; if (!cid) return;
+    localStorage.setItem('gtn_tq_cls', cid);
+    try {
+      var d = await api.get('gtnTqStatus', { token: token, classId: cid });
+      sessions = d.sessions || [];
+      var pick = keep || $('ses').value;
+      if (!pick) { var tq = sessions.filter(function(s){ return /b(ả|a)o t(à|a)ng|tham quan/i.test(s.Content || '') || s.tq; }); if (tq.length) pick = tq[tq.length - 1].SessionID; }
+      $('ses').innerHTML = '<option value="">— Chọn buổi —</option>' + sessions.map(function(s){
+        var st = s.tq ? ({ pending: ' · mã chờ ' + s.tq.code, active: ' · ĐANG CHẠY ' + s.tq.code, expired: ' · mã đã hết hạn', closed: ' · mã đã dừng' }[s.tq.state] || '') : '';
+        return '<option value="' + esc(s.SessionID) + '">Buổi ' + esc(s.SessionNo) + (s.Date ? ' – ' + esc(s.Date) : '') + (s.Content ? ' – ' + esc(String(s.Content).substring(0, 40)) : '') + st + '</option>';
+      }).join('');
+      if (pick) $('ses').value = pick;
+      show();
+    } catch (e) { say(e.message); }
+  }
+
+  function show(){
+    var sid = $('ses').value;
+    var s = sessions.filter(function(x){ return x.SessionID === sid; })[0];
+    $('box').classList.toggle('hidden', !s);
+    if (!s) { $('print-ctl').classList.add('hidden'); $('print-area').classList.add('hidden'); return; }
+    cur = s.tq;
+    var st = cur ? cur.state : 'none';
+    $('code').textContent = cur && st !== 'closed' && st !== 'expired' ? cur.code : '----';
+    $('state').innerHTML = {
+      none: 'Buổi này chưa có mã tham quan. Bấm <b>Tạo mã</b>.',
+      pending: '<span class="font-semibold text-amber-700">Đang chờ kích hoạt</span> — in thẻ QR ngay bây giờ; sinh viên chưa đăng nhập được cho tới khi bấm <b>Kích hoạt 24 giờ</b>.',
+      active: '<span class="font-semibold text-green-700">Đang hiệu lực</span> từ ' + hm(cur && cur.activatedAt) + ' đến <b>' + hm(cur && cur.expiresAt) + '</b> · tính đến muộn sau ' + hm(cur && cur.lateAfter) + '.',
+      expired: '<span class="font-semibold text-slate-600">Mã đã hết hạn</span> lúc ' + hm(cur && cur.expiresAt) + '. Tạo mã mới nếu cần.',
+      closed: '<span class="font-semibold text-slate-600">Mã đã dừng.</span> Tạo mã mới nếu cần.'
+    }[st];
+    $('btn-create').classList.toggle('hidden', st === 'pending' || st === 'active');
+    $('btn-renew').classList.toggle('hidden', !(st === 'pending' || st === 'active'));
+    $('btn-act').classList.toggle('hidden', st !== 'pending');
+    $('late').parentNode.classList.toggle('hidden', st !== 'pending');
+    $('btn-stop').classList.toggle('hidden', st !== 'active');
+    var printable = st === 'pending' || st === 'active';
+    $('print-ctl').classList.toggle('hidden', !printable);
+    $('print-area').classList.toggle('hidden', !printable);
+    if (printable) drawSheet();
+  }
+
+  function qrSvg(text){
+    var q = window.qrcode(0, 'M'); q.addData(text); q.make();
+    return q.createSvgTag({ cellSize: 4, margin: 1, scalable: true });
+  }
+  function drawSheet(){
+    if (!cur) return;
+    var per = Number($('per').value);
+    var url = location.origin + '/gtn-dc/bao-tang.html' + ($('prefill').checked ? '?ma=' + encodeURIComponent(cur.code) : '');
+    var cols = per <= 2 ? 1 : 2, rows = Math.ceil(per / cols);
+    var qrW = { 1: '120mm', 2: '70mm', 4: '58mm', 6: '42mm' }[per];
+    var cardH = { 1: "270mm", 2: "132mm", 4: "132mm", 6: "88mm" }[per];
+    var sh = $('sheet');
+    sh.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+    var one = '<div class="qcard" style="min-height:' + cardH + '">' +
+      '<div class="hd">Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM<b>Khoa Địa chất</b></div>' +
+      '<h3>' + esc($('ttl').value) + '</h3>' +
+      '<div class="qr" style="width:' + qrW + '">' + qrSvg(url) + '</div>' +
+      '<div class="lbl">Mã vào phòng</div><div class="code">' + esc(cur.code) + '</div>' +
+      (per <= 4 ? '<ol><li>Quét mã QR bằng máy ảnh điện thoại.</li><li>Nhập <b>MSSV</b> và <b>mã vào phòng</b> ở trên.</li><li>Đọc hướng dẫn, niên biểu, lý thuyết, sơ đồ phòng; làm <b>Phiếu 7</b>, nộp 2 ảnh.</li></ol>' : '') +
+      '<div class="url">' + esc(location.host + '/gtn-dc/bao-tang.html') + ' · Mã có hiệu lực 24 giờ kể từ khi kích hoạt</div></div>';
+    sh.innerHTML = new Array(per + 1).join(one);
+    sh.style.gridTemplateRows = 'repeat(' + rows + ', auto)';
+  }
+
+  async function post(action, extra, okMsg){
+    try {
+      var d = await api.post(action, Object.assign({ token: token, sessionId: $('ses').value }, extra || {}));
+      if (okMsg) say(okMsg(d), true);
+      await loadSessions($('ses').value);
+    } catch (e) { say(e.message); }
+  }
+
+  $('cls').addEventListener('change', function(){ $('ses').value = ''; loadSessions(); });
+  $('ses').addEventListener('change', show);
+  $('per').addEventListener('change', drawSheet);
+  $('prefill').addEventListener('change', drawSheet);
+  $('ttl').addEventListener('input', drawSheet);
+  $('btn-reload').addEventListener('click', function(){ loadSessions($('ses').value); });
+  $('btn-print').addEventListener('click', function(){ window.print(); });
+  $('btn-create').addEventListener('click', function(){ post('gtnTqCreate', {}, function(d){ return 'Đã tạo mã ' + d.tq.code + ' (chờ kích hoạt). In thẻ QR bên dưới.'; }); });
+  $('btn-renew').addEventListener('click', function(){
+    if (!confirm('Đổi sang mã mới? Thẻ QR đã in với mã cũ sẽ không dùng được' + (cur && cur.state === 'active' ? ', và mã đang chạy sẽ dừng ngay' : '') + '.')) return;
+    post('gtnTqCreate', { renew: 1 }, function(d){ return 'Đã đổi sang mã ' + d.tq.code + ' (chờ kích hoạt). Nhớ in lại thẻ.'; });
+  });
+  $('btn-act').addEventListener('click', function(){
+    if (!confirm('Kích hoạt mã ' + (cur ? cur.code : '') + ' ngay bây giờ? Mã có hiệu lực 24 giờ kể từ lúc này.')) return;
+    post('gtnTqActivate', { lateMinutes: $('late').value }, function(d){ return 'Đã kích hoạt mã ' + d.tq.code + ' — hiệu lực đến ' + hm(d.tq.expiresAt) + '.'; });
+  });
+  $('btn-stop').addEventListener('click', function(){
+    if (!confirm('Dừng mã tham quan? Sinh viên sẽ không đăng nhập mới được nữa (ai đang làm phiếu vẫn làm tiếp trong phiên của mình).')) return;
+    post('gtnTqStop', {}, function(){ return 'Đã dừng mã.'; });
+  });
+  $('btn-new-ses').addEventListener('click', async function(){
+    var cid = $('cls').value; if (!cid) return say('Chọn lớp trước.');
+    var t = new Date(Date.now() + 864e5); var p = function(n){ return (n < 10 ? '0' : '') + n; };
+    var dflt = t.getFullYear() + '-' + p(t.getMonth() + 1) + '-' + p(t.getDate());
+    var date = prompt('Ngày tham quan (YYYY-MM-DD):', dflt); if (!date) return;
+    var start = prompt('Giờ bắt đầu (HH:MM):', '07:30'); if (start === null) return;
+    var maxNo = sessions.reduce(function(m, s){ return Math.max(m, Number(s.SessionNo) || 0); }, 0);
+    try {
+      var d = await api.adminSaveSession(token, { classId: cid, sessionNo: maxNo + 1, date: date, startTime: start, content: 'Tham quan Bảo tàng Địa chất (phòng Cổ sinh)' });
+      say('Đã tạo buổi ' + (maxNo + 1) + ' – Tham quan Bảo tàng Địa chất. Bấm “Tạo mã”.', true);
+      await loadSessions(d.sessionId);
+    } catch (e) { say(e.message); }
+  });
+  loadClasses();
+})();
+</script>
+</body>
+</html>
