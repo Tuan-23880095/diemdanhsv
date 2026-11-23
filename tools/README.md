@@ -66,4 +66,6 @@ Script thêm sau (GĐ7/8 theo PLAN, ví dụ `create-lecturer.php`,
   khẩu. Chạy trước checklist GĐ9 mục 5 (docs/04 mục 25).
 
 - **`smoke_archive.php`** — kiểm thử lưu trữ cuối học kỳ (gói ZIP, khoá an toàn, phạm vi xoá, thống kê ẩn danh) trên CSDL THỬ — docs/04 mục 32. Lưu ý: chức năng xoá dữ liệu lớp nằm trên WEB (pages/luu-tru.html) theo quyết định 14/10/2026, có khoá: đã tải gói, nhập lại mật khẩu, gõ mã lớp, bản cứu 30 ngày.
+- **`cleanup_demo.php`** — xoá dữ liệu demo `DEMO101` (`CourseCode = 'DEMO101'`, `ClassCode` `DEMO101*`, sinh viên seed `22000001`..`22000004` nếu không còn liên kết lớp khác) và các bản ghi phụ thuộc trong 1 transaction; mặc định bỏ qua ID `SMOKE_`/`ARX_`. Hỗ trợ `--dry-run`, `--yes`, `--config=`. Ghi audit `TOOLS_CLEANUP_DEMO`.
+
 
