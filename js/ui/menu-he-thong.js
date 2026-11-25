@@ -66,6 +66,7 @@
       { ten: 'Đề kiểm tra tính giờ', url: B + 'index.html#de-kiem-tra', ai: 'HS' },
       { ten: 'Phiếu kết quả', url: B + 'ket-qua.html', ai: 'HS' },
       { ten: 'Phòng thi trực tiếp', url: B + 'phong-thi.html', ai: 'HS', mo_ta: 'quét QR của GV' },
+      { ten: 'Làm bài tự luận online', url: B + 'tu-luan-online.html', ai: 'HS' },
       { ten: 'Bình chọn Toán 7', url: B + 'sv-toan7.html', ai: 'HS' },
     ] },
     { ten: 'Luyện tập Toán — giáo viên', muc: [
@@ -73,6 +74,8 @@
       { ten: 'Bài giảng trình chiếu', url: B + 'bai-giang.html', ai: 'GV', mo_ta: 'đề Drive + lời giải hệ thống' },
       { ten: 'Quản trị luyện tập Toán (Thầy Tuấn)', url: B + 'thay-tuan.html', ai: 'GV' },
       { ten: 'Giám sát phòng thi', url: B + 'giam-sat.html', ai: 'GV' },
+      { ten: 'Kết quả học sinh (đề riêng)', url: B + 'ket-qua-hs.html', ai: 'GV', mo_ta: 'lọc theo đề, lớp; xuất Excel' },
+      { ten: 'Đề tự luận', url: B + 'tu-luan-giao-vien.html', ai: 'GV', mo_ta: 'soạn, chấm bài tự luận' },
       { ten: 'Phòng chiếu Slido', url: B + 'giao-vien.html', ai: 'GV' },
       { ten: 'Slide Toán 6', url: B + 'slide-toan6.html', ai: 'GV' },
       { ten: 'Slide Toán 7', url: B + 'slide-toan7.html', ai: 'GV' },
