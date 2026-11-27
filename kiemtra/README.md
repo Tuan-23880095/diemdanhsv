@@ -49,6 +49,18 @@ subdomain trên Hostinger, nên **không cần** tạo config mới.
 
 Ảnh câu hỏi lưu ở `private/kiemtra-uploads/` (ngoài `public_html`, không bị auto-deploy xoá).
 
+## Minh chứng bài làm
+
+Bài làm của từng SV nằm trong `kt_attempts` (`AnswersJSON` đáp án đã chọn, `DetailJSON` điểm từng câu, `LayoutJSON` thứ tự câu/phương án riêng),
+nội dung câu hỏi đóng băng trong `kt_exam_items.SnapshotJSON`, nhật ký giám sát trong `kt_events`. Đề đã có bài làm không xoá được.
+Trang **Kết quả** của GV (API `papers`, chỉ đọc) xuất các dữ liệu này:
+
+- **Bài làm** (từng SV) / **Phiếu bài làm cả lớp**: phiếu A4, in hoặc lưu PDF, mỗi SV bắt đầu một trang;
+- **Bài làm từng câu (CSV)**: mỗi SV một dòng, đáp án đã chọn + điểm từng câu;
+- mỗi phiếu có **mã đối chiếu** (16 ký tự đầu của SHA-256 trên dữ liệu bài làm trong CSDL) — xuất lại sau này mà mã khác nghĩa là dữ liệu đã bị đổi.
+
+Hệ thống chỉ giữ đáp án **lúc nộp bài** (không lưu lịch sử đổi đáp án) và chỉ có một bản trong CSDL — nên lưu PDF/CSV vào hồ sơ học phần sau mỗi buổi thi.
+
 ## Chống gian lận — làm được gì, không làm được gì
 
 Trình duyệt **phát hiện và ghi nhận**, không điều khiển được hệ điều hành:

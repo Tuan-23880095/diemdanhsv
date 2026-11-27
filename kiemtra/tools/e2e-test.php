@@ -214,6 +214,23 @@ $rv = ok(call('review', ['t' => $sv['25160001']['t']]), 'SV1 xem lại bài');
 check(isset($rv['items'][0]['explanation']) && $rv['score10'] == 10.0, 'SV xem được đáp án, giải thích và điểm');
 $log = ok(call('attemptLog', ['token' => $tok, 'examId' => $exam, 'attemptId' => array_values(array_filter($res['students'], fn($s) => $s['mssv'] === '25160003'))[0]['attemptId']]), 'Nhật ký SV3');
 check(count(array_filter($log['events'], fn($e) => (int) $e['Counted'] === 1)) === 2, 'Nhật ký SV3 có đúng 2 vi phạm được tính');
+// phiếu bài làm (minh chứng khảo thí)
+$att1 = array_values(array_filter($res['students'], fn($s) => $s['mssv'] === '25160001'))[0]['attemptId'];
+$pp = ok(call('papers', ['token' => $tok, 'examId' => $exam, 'attemptId' => $att1]), 'Phiếu bài làm SV1');
+$one = $pp['papers'][0] ?? [];
+check(count($pp['papers']) === 1 && $one['mssv'] === '25160001' && count($one['order']) === 17, 'Phiếu SV1 đủ 17 câu theo thứ tự SV đã thấy');
+check($one['order'] === array_column($papers['25160001']['questions'], 'id'), 'Thứ tự câu trên phiếu trùng thứ tự đề SV1 nhận lúc thi');
+$q0 = $papers['25160001']['questions'][0];
+check(!isset($q0['options']) || $one['opt'][$q0['id']] === array_column((array) $q0['options'], 'id'), 'Thứ tự phương án trên phiếu trùng thứ tự SV1 thấy');
+check(count(array_filter($one['detail'], fn($d) => $d['s'] === 'correct')) === 17 && strlen($one['checksum']) === 16, 'Phiếu SV1: 17 câu đúng, có mã đối chiếu');
+$all = ok(call('papers', ['token' => $tok, 'examId' => $exam]), 'Phiếu bài làm cả lớp');
+check(count($all['papers']) === 6 && count((array) $all['items']) === 17, 'Cả lớp: 6 phiếu, 17 câu kèm đáp án');
+$p3 = array_values(array_filter($all['papers'], fn($x) => $x['mssv'] === '25160003'))[0];
+check(count(array_filter($p3['events'], fn($e) => $e['counted'] === 1)) === 2, 'Phiếu SV3 kèm nhật ký có 2 vi phạm');
+$again = ok(call('papers', ['token' => $tok, 'examId' => $exam, 'attemptId' => $att1]), 'Xuất lại phiếu SV1');
+check($again['papers'][0]['checksum'] === $one['checksum'], 'Mã đối chiếu ổn định giữa các lần xuất');
+expect_fail(call('papers', ['examId' => $exam]), 'Không đăng nhập thì không lấy được phiếu');
+expect_fail(call('papers', ['token' => $tok, 'examId' => $exam, 'attemptId' => 'ATT_khongco']), 'Mã bài làm lạ bị từ chối');
 expect_fail(call('deleteExam', ['token' => $tok, 'examId' => $exam]), 'Không xoá được đề đã có bài làm');
 $dup = ok(call('duplicateExam', ['token' => $tok, 'examId' => $exam]), 'Nhân bản đề cho lớp khác / thi lại');
 
