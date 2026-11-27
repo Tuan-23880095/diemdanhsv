@@ -70,7 +70,7 @@ $routes = [
     'openRoom' => 'action_openRoom', 'startNow' => 'action_startNow', 'addTime' => 'action_addTime', 'closeExam' => 'action_closeExam',
     'publishResults' => 'action_publishResults', 'monitor' => 'action_monitor', 'unlockAttempt' => 'action_unlockAttempt',
     'allowRejoin' => 'action_allowRejoin', 'forceSubmit' => 'action_forceSubmit', 'removeAttempt' => 'action_removeAttempt',
-    'attemptLog' => 'action_attemptLog', 'results' => 'action_results', 'pushGrades' => 'action_pushGrades', 'cloReport' => 'action_cloReport',
+    'attemptLog' => 'action_attemptLog', 'results' => 'action_results', 'papers' => 'action_papers', 'pushGrades' => 'action_pushGrades', 'cloReport' => 'action_cloReport',
     // sinh viên
     'peek' => 'action_peek', 'join' => 'action_join', 'state' => 'action_state', 'ready' => 'action_ready', 'paper' => 'action_paper',
     'save' => 'action_save', 'pinUnlock' => 'action_pinUnlock', 'submit' => 'action_submit', 'review' => 'action_review',

@@ -527,7 +527,7 @@ async function viewResults(v, examId) {
       <div class="muted small">${esc(e.CourseName)} (${esc(e.CourseCode)}) · Lớp ${esc(e.ClassCode)} · ${e.ItemCount} câu, ${fmtNum(e.MaxPoints, 1)} điểm thô · ${e.StartedAt ? fmtDateTime(e.StartedAt) : ''} ${badge(STATUS, e.Status)}</div></div>
     <div class="row noprint">
       ${e.Status !== 'CLOSED' ? `<a class="btn" href="#mon/${e.ExamID}">Giám sát</a>` : ''}
-      <button class="btn" id="r-csv">⬇ Điểm (CSV)</button><button class="btn" id="r-csv2">⬇ Phân tích câu (CSV)</button><button class="btn" onclick="print()">🖨 In báo cáo</button>
+      <button class="btn" id="r-csv">⬇ Điểm (CSV)</button><button class="btn" id="r-csv2">⬇ Phân tích câu (CSV)</button><button class="btn" id="r-csv3" title="Đáp án từng câu của từng sinh viên">⬇ Bài làm từng câu (CSV)</button><button class="btn" id="r-papers" title="Mỗi sinh viên một phiếu A4: đề đúng thứ tự em đã thấy, đáp án đã chọn, điểm từng câu, nhật ký giám sát">🖨 Phiếu bài làm cả lớp</button><button class="btn" onclick="print()">🖨 In báo cáo</button>
       ${e.Status === 'CLOSED' ? `<button class="btn" id="r-pub">${e.ResultsPublished ? '🔒 Thu hồi đáp án' : '📢 Công bố đáp án cho SV'}</button><button class="btn primary" id="r-push">→ Chuyển điểm vào bảng điểm</button>` : ''}
     </div></div>
 
@@ -563,7 +563,7 @@ async function viewResults(v, examId) {
     ${R.students.map(s => `<tr class="${s.violations ? 'alert' : ''}"><td class="mono">${esc(s.mssv)}</td><td>${esc(s.name)}</td><td>${badge(ATT, s.status)} <span class="tiny muted">${esc(REASON[s.reason] || '')}</span></td>
       <td class="num"><b>${fmtNum(s.score10, 2)}</b></td><td class="num">${fmtNum(s.raw, 2)}</td>
       ${R.clos.filter(c => c.cloId).map(c => { const v = s.clo[c.cloId]; return `<td class="num" style="color:${v === undefined ? '' : v >= c.passThreshold ? 'var(--ok)' : 'var(--bad)'}">${v === undefined ? '—' : Math.round(v) + '%'}</td>`; }).join('')}
-      <td class="num">${s.violations || ''}</td><td><button class="btn sm noprint" data-log="${s.attemptId}">Nhật ký</button></td></tr>`).join('')}
+      <td class="num">${s.violations || ''}</td><td style="white-space:nowrap">${s.status === 'SUBMITTED' ? `<button class="btn sm noprint" data-paper="${s.attemptId}">Bài làm</button> ` : ''}<button class="btn sm noprint" data-log="${s.attemptId}">Nhật ký</button></td></tr>`).join('')}
     ${R.notTaken.map(s => `<tr><td class="mono">${esc(s.MSSV)}</td><td>${esc(s.FullName)}</td><td><span class="badge">Không dự thi</span></td><td colspan="${3 + R.clos.filter(c => c.cloId).length}"></td><td></td></tr>`).join('')}
     </tbody></table></div></div>`;
 
@@ -599,6 +599,24 @@ async function viewResults(v, examId) {
     });
   });
 
+  $$('[data-paper]', v).forEach(b => b.onclick = async () => {
+    try { openPapers(await gapi('papers', { examId, attemptId: b.dataset.paper })); } catch (err) { toast(err.message, 'bad'); }
+  });
+  $('#r-papers').onclick = async () => {
+    try {
+      const P = await gapi('papers', { examId });
+      if (!P.papers.length) return toast('Chưa có bài nào đã nộp.', 'bad');
+      openPapers(P);
+    } catch (err) { toast(err.message, 'bad'); }
+  };
+  $('#r-csv3').onclick = async () => {
+    try {
+      const P = await gapi('papers', { examId });
+      if (!P.papers.length) return toast('Chưa có bài nào đã nộp.', 'bad');
+      downloadCSV(`bai_lam_${e.ClassCode}_${e.Title.replace(/[^\p{L}\p{N}]+/gu, '_')}.csv`, answersCSV(P));
+    } catch (err) { toast(err.message, 'bad'); }
+  };
+
   const cloCols = R.clos.filter(c => c.cloId);
   $('#r-csv').onclick = () => downloadCSV(`diem_${e.ClassCode}_${e.Title.replace(/[^\p{L}\p{N}]+/gu, '_')}.csv`, [
     ['MSSV', 'Họ tên', 'Trạng thái', 'Lý do nộp', 'Điểm (10)', 'Điểm thô', 'Tối đa', ...cloCols.map(c => c.code + ' (%)'), 'Vi phạm', 'Nộp lúc'],
@@ -627,6 +645,104 @@ async function viewResults(v, examId) {
     });
     if (r) toast(`Đã ghi ${r.written} điểm vào cột "${r.columnName}"${r.created ? ' (cột mới)' : ''}.`, 'ok', 6000);
   };
+}
+
+/* ======================= Phiếu bài làm (minh chứng) ======================= */
+
+const PSTAT = { correct: ['Đúng', 'ok'], partial: ['Đúng một phần', 'warn'], wrong: ['Sai', 'bad'], blank: ['Bỏ trống', ''] };
+const PLBL = 'ABCDEFGHIJKL';
+
+/** Chữ cái SV thấy trên máy (theo thứ tự phương án riêng của SV) cho một khoá phương án gốc. */
+function paperLabel(pp, qid, key) { const i = (pp.opt[qid] || []).indexOf(key); return i < 0 ? String(key) : PLBL[i] || String(i + 1); }
+
+function paperHTML(P, pp) {
+  const e = P.exam;
+  const cnt = { correct: 0, partial: 0, wrong: 0, blank: 0 };
+  const qs = pp.order.map((qid, i) => {
+    const it = P.items[qid]; if (!it) return '';
+    const d = pp.detail[qid] || { e: 0, m: it.points, s: 'blank' };
+    const given = pp.answers[qid];
+    cnt[d.s] = (cnt[d.s] || 0) + 1;
+    let body;
+    if (it.type === 'short') {
+      body = `<div class="pp-opt ${d.s === 'correct' ? 'key' : given ? 'wrong' : ''}"><span class="pp-mark">${given ? '✎' : ''}</span><span>SV trả lời: <b>${given ? esc(given) : '(bỏ trống)'}</b></span></div>
+        <div class="pp-opt key"><span class="pp-mark">✔</span><span>Đáp án chấp nhận: ${esc(it.answer.join(' / '))}</span></div>`;
+    } else {
+      const chosen = given === undefined || given === null ? [] : [].concat(given).map(String);
+      const byKey = Object.fromEntries(it.options.map(o => [o.key, o.text]));
+      body = (pp.opt[qid] || []).map((k, j) => {
+        const isKey = it.answer.includes(k), ch = chosen.includes(k);
+        return `<div class="pp-opt ${isKey ? 'key' : ''} ${ch && !isKey ? 'wrong' : ''}"><span class="pp-mark">${ch ? '☑' : '☐'}</span><span><b>${PLBL[j] || j + 1}.</b> ${esc(byKey[k])}${isKey ? ' <i class="pp-note">— đáp án đúng</i>' : ''}${ch ? ' <i class="pp-note">— SV chọn</i>' : ''}</span></div>`;
+      }).join('');
+    }
+    const st = PSTAT[d.s] || [d.s, ''];
+    return `<div class="pp-q"><div class="pp-qh"><b>Câu ${i + 1}</b><span class="pp-meta">câu ${it.ord} đề gốc${it.clo ? ' · ' + esc(it.clo) : ''}${it.bloom ? ' · Bloom ' + it.bloom : ''}${it.type === 'multi' ? ' · nhiều đáp án' : ''}</span>
+        <span class="pp-res ${st[1]}">${st[0]} · ${fmtNum(d.e, 2)}/${fmtNum(it.points, 2)} đ</span></div>
+      <div class="pp-stem">${esc(it.stem)}</div>${it.image ? `<img class="pp-img" src="${imgUrl(it.image)}" alt="">` : ''}${body}</div>`;
+  }).join('');
+  const vio = pp.events.filter(ev => +ev.counted).length;
+  return `<article class="paper">
+    <header class="pp-head"><div><div class="pp-org">Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM · Khoa Địa chất</div>
+      <h1>PHIẾU BÀI LÀM KIỂM TRA TRỰC TUYẾN</h1>
+      <div>${esc(e.CourseName)} (${esc(e.CourseCode)}) · Lớp ${esc(e.ClassCode)}</div><div><b>${esc(e.Title)}</b> · ${e.ItemCount} câu · ${e.DurationMinutes} phút${e.StartedAt ? ' · bắt đầu ' + fmtFull(e.StartedAt) : ''}</div></div>
+      <div class="pp-score"><b>${fmtNum(pp.score10, 2)}</b><span>điểm / 10</span><small>${fmtNum(pp.raw, 2)} / ${fmtNum(pp.max, 2)} điểm thô</small></div></header>
+    <table class="pp-info"><tr><th>Họ tên</th><td><b>${esc(pp.name)}</b></td><th>MSSV</th><td class="mono"><b>${esc(pp.mssv)}</b></td><th>Số thứ tự</th><td>#${pp.seat}</td></tr>
+      <tr><th>Vào phòng</th><td>${fmtFull(pp.joinedAt)}</td><th>Nộp bài</th><td>${fmtFull(pp.submittedAt)}</td><th>Hình thức nộp</th><td>${esc(REASON[pp.reason] || '—')}</td></tr>
+      <tr><th>Kết quả</th><td>${cnt.correct} đúng${cnt.partial ? ' · ' + cnt.partial + ' đúng một phần' : ''} · ${cnt.wrong} sai · ${cnt.blank} bỏ trống</td><th>Vi phạm</th><td>${pp.violations}${pp.unlocks ? ' (mở khoá ' + pp.unlocks + ' lần)' : ''}</td><th>Cộng giờ</th><td>${pp.extraMinutes ? '+' + pp.extraMinutes + ' phút' : '—'}</td></tr>
+      <tr><th>Thiết bị</th><td colspan="5" class="small">${esc(pp.device || '—')} · IP ${esc(pp.ip || '—')}</td></tr></table>
+    <p class="pp-legend">Câu và phương án in theo đúng thứ tự hiển thị trên máy của sinh viên. ☑ = phương án sinh viên chọn lúc nộp bài · nền xanh = đáp án đúng · nền đỏ = chọn sai.</p>
+    ${qs}
+    <div class="pp-log"><h2>Nhật ký giám sát (${pp.events.length} sự kiện, ${vio} lần tính vi phạm)</h2>
+      ${pp.events.length ? `<table><thead><tr><th>Giờ</th><th>Sự kiện</th><th>Chi tiết</th></tr></thead><tbody>${pp.events.map(ev => `<tr class="${+ev.counted ? 'cnt' : ''}"><td class="mono">${String(ev.at).slice(11, 19)}</td><td>${+ev.counted ? '⚠ ' : ''}${esc(evName(ev.type))}</td><td>${esc(ev.detail || '')}</td></tr>`).join('')}</tbody></table>` : '<p class="small">Không có sự kiện.</p>'}</div>
+    <footer class="pp-foot"><span>Trích xuất từ CSDL diemdanhsv.com/kiemtra lúc ${fmtFull(P.generatedAt)}${P.generatedBy ? ' bởi ' + esc(P.generatedBy) : ''}</span><span>Mã bài làm ${esc(pp.attemptId)} · Mã đối chiếu <b class="mono">${esc(pp.checksum)}</b></span></footer>
+  </article>`;
+}
+function fmtFull(s) { return s ? `${String(s).slice(11, 19)} ngày ${String(s).slice(8, 10)}/${String(s).slice(5, 7)}/${String(s).slice(0, 4)}` : '—'; }
+
+/** Mở lớp phủ xem/in phiếu. In ra PDF: mỗi sinh viên bắt đầu ở một trang A4 mới. */
+function openPapers(P) {
+  closePapers();
+  const box = h(`<div id="papers"><div class="pp-bar noprint"><b>${P.papers.length > 1 ? P.papers.length + ' phiếu bài làm · Lớp ' + esc(P.exam.ClassCode) : 'Phiếu bài làm · ' + esc(P.papers[0].mssv) + ' ' + esc(P.papers[0].name)}</b>
+      <span class="spacer"></span><span class="small muted">Chọn “Lưu dưới dạng PDF” trong hộp thoại in để lưu file minh chứng.</span>
+      <button class="btn primary" data-print>🖨 In / Lưu PDF</button><button class="btn" data-close>✕ Đóng</button></div>
+    <div class="pp-sheets">${P.papers.map(pp => paperHTML(P, pp)).join('')}</div></div>`);
+  document.body.appendChild(box);
+  document.body.classList.add('papers-open');
+  const title = document.title;
+  $('[data-close]', box).onclick = closePapers;
+  $('[data-print]', box).onclick = async () => {
+    // chờ ảnh câu hỏi tải xong rồi mới in
+    await Promise.all($$('img.pp-img', box).map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
+    document.title = P.papers.length > 1 ? `Phieu bai lam - ${P.exam.ClassCode} - ${P.exam.Title}` : `Phieu bai lam - ${P.papers[0].mssv} - ${P.exam.Title}`;
+    print();
+    setTimeout(() => { document.title = title; }, 1000);
+  };
+  box._key = ev => { if (ev.key === 'Escape') closePapers(); };
+  document.addEventListener('keydown', box._key);
+  box.scrollTop = 0;
+}
+function closePapers() {
+  const box = $('#papers');
+  if (!box) return;
+  document.removeEventListener('keydown', box._key);
+  box.remove();
+  document.body.classList.remove('papers-open');
+}
+
+/** CSV: mỗi SV một dòng — đáp án đã chọn và điểm từng câu, cột theo thứ tự câu của ĐỀ GỐC, đáp án ghi bằng khoá phương án GỐC. */
+function answersCSV(P) {
+  const qids = Object.keys(P.items).sort((a, b) => P.items[a].ord - P.items[b].ord);
+  const show = v => v === undefined || v === null ? '' : [].concat(v).join('+');
+  return [
+    [`${P.exam.CourseName} (${P.exam.CourseCode})`, `Lớp ${P.exam.ClassCode}`, P.exam.Title, `Trích xuất ${P.generatedAt}`],
+    ['Ghi chú: cột Cn = phương án SV chọn lúc nộp bài, ghi theo ký hiệu phương án của đề gốc (không phải chữ cái hiển thị sau khi xáo trộn); cột Cn điểm = điểm câu đó.'],
+    [],
+    ['MSSV', 'Họ tên', 'Điểm (10)', 'Điểm thô', 'Tối đa', 'Nộp lúc', 'Lý do nộp', 'Vi phạm', ...qids.map(q => 'C' + P.items[q].ord), ...qids.map(q => 'C' + P.items[q].ord + ' điểm'), 'Thứ tự câu SV thấy (số câu đề gốc)', 'Mã đối chiếu'],
+    ['', 'ĐÁP ÁN ĐÚNG', '', '', '', '', '', '', ...qids.map(q => P.items[q].answer.join(P.items[q].type === 'short' ? ' / ' : '+')), ...qids.map(q => P.items[q].points), '', ''],
+    ['', 'CLO', '', '', '', '', '', '', ...qids.map(q => P.items[q].clo || ''), ...qids.map(() => ''), '', ''],
+    ...P.papers.map(pp => [pp.mssv, pp.name, pp.score10, pp.raw, pp.max, pp.submittedAt || '', REASON[pp.reason] || '', pp.violations,
+      ...qids.map(q => show(pp.answers[q])), ...qids.map(q => (pp.detail[q] || {}).e ?? 0), pp.order.map(q => P.items[q].ord).join(' '), pp.checksum]),
+  ];
 }
 
 /* ======================= Ngân hàng câu hỏi ======================= */
@@ -861,6 +977,7 @@ function viewGuide(v) {
       <li><b>Trên lớp</b>: vào <b>Giám sát</b> → <b>Mở phòng</b> → bật máy chiếu, bấm <b>Chiếu mã QR</b>. SV quét QR, nhập MSSV, đọc quy định, bấm <b>Sẵn sàng</b> trong 5 phút chuẩn bị. Hết giờ chuẩn bị bài tự bắt đầu (hoặc bấm <b>Bắt đầu ngay</b>).</li>
       <li><b>Trong giờ</b>: ô SV chuyển đỏ khi vi phạm, nhấp nháy khi <b>bị khoá</b>. Đến bàn SV (số máy hiển thị trên màn hình SV), xử lý rồi nhập <b>PIN giám thị</b> trên máy SV hoặc bấm Mở khoá trên bảng giám sát. Máy hết pin: bấm <b>Cho đổi máy</b> — SV vào lại bằng máy khác, bài đã làm còn nguyên.</li>
       <li><b>Thu bài</b> → <b>Kết quả</b>: phổ điểm, độ tin cậy, phân tích câu (p, D, r<sub>pb</sub>, phương án nhiễu), mức đạt CLO; xuất CSV; <b>Chuyển điểm</b> vào bảng điểm diemdanhsv; <b>Công bố đáp án</b> để SV xem giải thích.</li>
+      <li><b>Minh chứng bài làm</b>: ở trang Kết quả, nút <b>Bài làm</b> cạnh mỗi sinh viên mở phiếu A4 (đề đúng thứ tự em đã thấy, phương án đã chọn, điểm từng câu, nhật ký giám sát); <b>Phiếu bài làm cả lớp</b> in/lưu PDF mỗi em một trang; <b>Bài làm từng câu (CSV)</b> xuất đáp án của cả lớp. Nên lưu PDF + CSV vào hồ sơ học phần ngay sau buổi thi.</li>
     </ol>
     <h2>Hệ thống phát hiện được gì?</h2>
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Hành vi trên máy SV</th><th>Điện thoại</th><th>Laptop</th></tr></thead><tbody>

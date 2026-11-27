@@ -247,6 +247,94 @@ function build_results(array $e): array
     ];
 }
 
+
+/**
+ * Phiếu bài làm — minh chứng khảo thí: dựng lại đúng tờ đề từng SV đã thấy (thứ tự câu,
+ * thứ tự phương án), đáp án SV chọn, đúng/sai, điểm từng câu và nhật ký giám sát.
+ * attemptId trống → mọi bài ĐÃ NỘP của đề (in cả lớp, xuất CSV đáp án từng câu).
+ * Nội dung câu hỏi gửi một lần trong `items`; mỗi phiếu chỉ mang thứ tự + bài làm. Chỉ đọc.
+ */
+function action_papers(array $p): void
+{
+    $me = require_teacher($p);
+    $e = load_exam_for_teacher($me, str_param($p, 'examId', 40));
+    tick_exam($e);
+    $attemptId = str_param($p, 'attemptId', 40);
+    $cols = 'AttemptID, MSSV, FullName, SeatNo, Status, DeviceInfo, IP, Violations, Unlocks, ExtraMinutes, JoinedAt, ReadyAt, SubmittedAt, ' .
+        'SubmitReason, RawScore, MaxScore, Score10, LayoutJSON, AnswersJSON, DetailJSON';
+    if ($attemptId !== '') {
+        $atts = q_all("SELECT $cols FROM kt_attempts WHERE ExamID = :e AND AttemptID = :a", ['e' => $e['ExamID'], 'a' => $attemptId]);
+        if (!$atts) {
+            fail('Không tìm thấy bài làm.');
+        }
+        if ($atts[0]['Status'] !== 'SUBMITTED') {
+            fail('Sinh viên chưa nộp bài — chưa có phiếu bài làm.');
+        }
+    } else {
+        $atts = q_all("SELECT $cols FROM kt_attempts WHERE ExamID = :e AND Status = 'SUBMITTED' ORDER BY MSSV", ['e' => $e['ExamID']]);
+    }
+
+    $snap = exam_items_snapshot((string) $e['ExamID']);
+    $closById = array_column(clos_of((string) $e['_class']['CourseID']), null, 'CloID');
+    $items = [];
+    foreach ($snap as $qid => $it) {
+        $items[$qid] = [
+            'ord' => (int) $it['ord'], 'type' => $it['type'], 'stem' => (string) $it['stem'], 'image' => ($it['imageId'] ?? null) ?: null,
+            'options' => array_values(array_map(fn($o) => ['key' => (string) $o['key'], 'text' => (string) $o['text']], (array) ($it['options'] ?? []))),
+            'answer' => array_values(array_map('strval', (array) $it['answer'])), 'explanation' => (string) ($it['explanation'] ?? ''),
+            'clo' => !empty($it['cloId']) ? ($closById[$it['cloId']]['Code'] ?? ($it['cloCode'] ?? null)) : null,
+            'bloom' => $it['bloom'] ?? null, 'points' => (float) $it['points'],
+        ];
+    }
+
+    // nhật ký giám sát, gom theo lượt làm bài
+    $evBy = [];
+    if ($attemptId !== '') {
+        $evs = q_all('SELECT AttemptID, Type, Detail, Counted, CreatedAt FROM kt_events WHERE AttemptID = :a ORDER BY EventID', ['a' => $attemptId]);
+    } else {
+        $evs = q_all('SELECT AttemptID, Type, Detail, Counted, CreatedAt FROM kt_events WHERE ExamID = :e AND AttemptID IS NOT NULL ORDER BY EventID', ['e' => $e['ExamID']]);
+    }
+    foreach ($evs as $ev) {
+        $evBy[$ev['AttemptID']][] = ['type' => $ev['Type'], 'detail' => (string) $ev['Detail'], 'counted' => (int) $ev['Counted'], 'at' => $ev['CreatedAt']];
+    }
+
+    $papers = [];
+    foreach ($atts as $a) {
+        $lay = jdec($a['LayoutJSON']);
+        $order = array_values(array_filter((array) ($lay['order'] ?? array_keys($snap)), fn($q) => isset($snap[$q])));
+        foreach (array_keys($snap) as $q) { // phòng hờ: câu không có trong bố cục vẫn phải hiện trên phiếu
+            if (!in_array($q, $order, true)) {
+                $order[] = $q;
+            }
+        }
+        $opt = [];
+        foreach ($order as $q) {
+            $keys = array_column($items[$q]['options'], 'key');
+            $mine = array_values(array_intersect(array_map('strval', (array) ($lay['opt'][$q] ?? $keys)), $keys));
+            $opt[$q] = array_values(array_unique(array_merge($mine, $keys)));
+        }
+        $papers[] = [
+            'attemptId' => $a['AttemptID'], 'mssv' => $a['MSSV'], 'name' => $a['FullName'], 'seat' => (int) $a['SeatNo'],
+            'device' => (string) $a['DeviceInfo'], 'ip' => (string) $a['IP'], 'violations' => (int) $a['Violations'], 'unlocks' => (int) $a['Unlocks'],
+            'extraMinutes' => (int) $a['ExtraMinutes'], 'joinedAt' => $a['JoinedAt'], 'readyAt' => $a['ReadyAt'], 'submittedAt' => $a['SubmittedAt'],
+            'reason' => $a['SubmitReason'], 'raw' => $a['RawScore'] === null ? null : (float) $a['RawScore'],
+            'max' => $a['MaxScore'] === null ? null : (float) $a['MaxScore'], 'score10' => $a['Score10'] === null ? null : (float) $a['Score10'],
+            'order' => $order, 'opt' => (object) $opt, 'answers' => (object) jdec($a['AnswersJSON']), 'detail' => (object) jdec($a['DetailJSON']),
+            // mã đối chiếu: đổi bất kỳ dữ liệu bài làm nào trong CSDL thì mã này đổi theo
+            'checksum' => strtoupper(substr(hash('sha256', implode('|', [$a['AttemptID'], $a['MSSV'], (string) $a['LayoutJSON'], (string) $a['AnswersJSON'],
+                (string) $a['DetailJSON'], (string) $a['SubmittedAt'], (string) $a['Score10']])), 0, 16)),
+            'events' => $evBy[$a['AttemptID']] ?? [],
+        ];
+    }
+
+    api_ok([
+        'exam' => ['ExamID' => $e['ExamID'], 'Title' => $e['Title'], 'Status' => $e['Status'], 'ClassCode' => $e['_class']['ClassCode'],
+            'CourseCode' => $e['_class']['CourseCode'], 'CourseName' => $e['_class']['CourseName'], 'StartedAt' => $e['StartedAt'], 'ClosedAt' => $e['ClosedAt'],
+            'DurationMinutes' => (int) $e['DurationMinutes'], 'ItemCount' => count($items), 'MaxPoints' => array_sum(array_column($items, 'points'))],
+        'items' => (object) $items, 'papers' => $papers, 'generatedAt' => now(), 'generatedBy' => (string) $me['name'],
+    ]);
+}
+
 /** Đẩy Score10 của bài đã nộp vào một cột điểm của lớp trên diemdanhsv (tạo cột nếu chưa có). */
 function action_pushGrades(array $p): void
 {
