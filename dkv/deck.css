@@ -551,3 +551,69 @@ table.styled-tbl tr:nth-child(even) td { background: var(--giay); }
     page-break-after: always;
   }
 }
+
+/* ===== Kiểu slide 'html' (Mục 6.3, bản 28/11/2026): khung 1920x1080 thu về 1600x900 ===== */
+.slide.slide-html{padding:0;background:#f8fafc}
+.x63{position:absolute;left:0;top:0;width:1920px;height:1080px;transform:scale(.8333333);transform-origin:0 0;font-size:16px;line-height:normal;text-align:left}
+.x63 *,.x63 *::before,.x63 *::after{box-sizing:content-box}
+.x63 section *{margin:0}
+.x63 section{box-sizing:border-box;width:1920px;height:1080px;position:relative;overflow:hidden}
+.x63 td,.x63 th{padding:.3em .5em;border-bottom:2px solid #cbd5e1;text-align:left}
+.x63 img{max-width:none}
+.x63{--brand:#0b4f9e;--lam:#1f4e79;--luc:#0f6b55;--luc2:#46a385;--ngoc:#8fe0bd;--son:#d2492a;--tho:#d6a130;
+--ink:#0f172a;--mute:#334155;--mute2:#475569;--line:#cbd5e1;--paper:#f8fafc;
+--S1:#047857;--S2:#86d1a8;--S3:#b45309;--N:#b91c1c}
+.x63{font-family:'Be Vietnam Pro',Arial,sans-serif;color:#0f172a}
+.x63 section{counter-increment:page;background:#f8fafc;padding:80px 112px 144px;display:flex;flex-direction:column;gap:32px;color:#0f172a}
+.x63 section.dark{background:#0b4f9e;color:#ffffff}
+.x63 .eyebrow{font-size:40px;font-weight:600;color:#0b4f9e;line-height:1.2}
+.x63 .dark .eyebrow{color:#8fe0bd}
+.x63 h1.title{font-size:78px;font-weight:700;line-height:1.06;color:#0f172a}
+.x63 h2.t{font-size:68px;font-weight:700;line-height:1.1;color:#0f172a}
+.x63 .dark h2.t{color:#ffffff}
+.x63 .head{display:flex;flex-direction:column;gap:8px}
+.x63 h3.c{font-size:52px;font-weight:700;line-height:1.18;color:#0f172a}
+.x63 .dark h3.c{color:#ffffff}
+.x63 p.b{font-size:48px;line-height:1.42;color:#1f2937}
+.x63 p.s{font-size:40px;line-height:1.38;color:#334155}
+.x63 p.cap{font-size:36px;line-height:1.3;color:#475569}
+.x63 .dark p.b,.x63 .dark p.s{color:#dbeafe}
+.x63 .dark p.cap{color:#bfdbfe}
+.x63 .row{display:flex;gap:40px;align-items:stretch}
+.x63 .col{display:flex;flex-direction:column;gap:18px;flex:1}
+.x63 .card{background:#ffffff;border:3px solid #cbd5e1;border-radius:24px;padding:24px 30px;display:flex;flex-direction:column;gap:12px}
+.x63 .card.tint{background:#eff6ff;border-color:#bfdbfe}
+.x63 .card.warn{background:#fef2f2;border-color:#fecaca}
+.x63 .card.ok{background:#ecfdf5;border-color:#a7f3d0}
+.x63 .num{font-size:40px;font-weight:700;color:#0b4f9e;line-height:1.2}
+.x63 .photo{border-radius:20px;object-fit:cover}
+.x63 .map{object-fit:contain;border-radius:16px;border:3px solid #cbd5e1;background:#ffffff}
+.x63 .fig{object-fit:contain;background:#ffffff;border-radius:16px;border:3px solid #cbd5e1}
+.x63 .pill{font-size:40px;font-weight:700;padding:6px 22px;border-radius:999px;color:#ffffff;background:#047857;line-height:1.3}
+.x63 .pill.s2{background:#ecfdf5;color:#065f46;border:3px solid #047857}
+.x63 .pill.s3{background:#b45309}
+.x63 .pill.n{background:#b91c1c}
+.x63 .band{background:#0b4f9e;color:#ffffff;border-radius:20px;padding:22px 32px}
+.x63 .band p.b{color:#ffffff}
+.x63 .dark .band{background:#14365f}
+.x63 .foot{position:absolute;left:112px;bottom:46px;width:1696px;display:flex;justify-content:space-between}
+.x63 .foot p{font-size:36px;color:#64748b;line-height:1.2}
+.x63 .dark .foot p{color:#bfdbfe}
+.x63 .pg::after{content:counter(page)}
+.x63 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.x63 .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.x63 .tile{background:#ffffff;border:3px solid #cbd5e1;border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
+.x63 .tile img{width:100%;object-fit:cover}
+.x63 .tile .tx{padding:18px 24px 20px;display:flex;flex-direction:column;gap:6px}
+.x63 .tile h3{font-size:44px;font-weight:700;color:#0f172a;line-height:1.15}
+.x63 .tile p{font-size:36px;line-height:1.3;color:#475569}
+.x63 .step{display:flex;gap:20px;align-items:flex-start}
+.x63 .dot{font-size:36px;font-weight:700;color:#ffffff;background:#0f6b55;border-radius:999px;width:62px;height:62px;display:flex;align-items:center;justify-content:center;flex:none}
+.x63 .dark .dot{background:#8fe0bd;color:#0b4f9e}
+.x63 .sw{width:44px;height:44px;border-radius:10px;flex:none;border:2px solid rgba(15,23,42,.25)}
+.x63 table{width:100%;border-collapse:collapse}
+.x63 .formula{font-size:72px;font-weight:700;color:#0b4f9e;line-height:1.15}
+.x63 .fragment{opacity:0}
+.x63 .fragment.visible{opacity:1;transition:opacity .4s}
+@keyframes x63rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.x63 .rise{animation:x63rise .6s ease-out both}

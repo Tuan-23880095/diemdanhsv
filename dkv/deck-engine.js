@@ -153,13 +153,17 @@
       case 'sum':
         bodyHtml = renderSumSlide(sl);
         break;
+      case 'html':
+        // Slide dựng sẵn bằng HTML (khung 1920x1080, CSS phạm vi .x63 trong deck.css)
+        bodyHtml = '<div class="x63">' + (sl.html || '') + '</div>';
+        break;
       default:
         bodyHtml = '<div class="s-body"><h2 class="s-title">' + esc(title) + '</h2></div>';
     }
 
     // Chân trang
     var footHtml = '';
-    if (sl.type !== 'title') {
+    if (sl.type !== 'title' && sl.type !== 'html') {
       footHtml = '<footer class="s-foot">' +
         '<img class="hcmus" src="' + LOGO_HCMUS + '" alt="Trường ĐH KHTN">' +
         '<span style="font-weight:600">ĐH KHTN ĐHQG-HCM · Khoa Địa chất</span>' +
@@ -170,7 +174,12 @@
         '</footer>';
     }
 
-    slideEl.innerHTML = '<div class="s-body">' + bodyHtml + '</div>' + footHtml;
+    if (sl.type === 'html') {
+      slideEl.className = 'slide enter slide-html';
+      slideEl.innerHTML = bodyHtml;
+    } else {
+      slideEl.innerHTML = '<div class="s-body">' + bodyHtml + '</div>' + footHtml;
+    }
     scaler.innerHTML = '';
     scaler.appendChild(slideEl);
 
