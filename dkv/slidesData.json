@@ -3488,338 +3488,178 @@
   "title": "Lớp dữ liệu địa chất trong đánh giá và quy hoạch sử dụng đất",
   "slides": [
    {
-    "type": "title"
+    "type": "html",
+    "title": "Lớp dữ liệu địa chất trong đánh giá và quy hoạch sử dụng đất",
+    "notes": "Giới thiệu mục 6.3: tổng hợp kiến thức Chương 3–6 để đưa dữ liệu địa chất vào quyết định quy hoạch. Ảnh bìa: đồi cà phê gần Đà Lạt (P. Hughes, CC BY 4.0) – cà phê là loại hình sử dụng đất của ví dụ xuyên suốt bài.",
+    "html": "<section data-id=\"cover\" style=\"padding:80px 112px 120px\">\n<img class=\"\" src=\"assets/m63/e_caphe_dalat.jpg\" alt=\"Đồi cà phê trên đất đỏ gần Đà Lạt\" style=\"width:900px;height:1080px;position:absolute;left:1020px;top:0;object-fit:cover\">\n<div style=\"display:flex;gap:20px;align-items:center;width:880px\">\n<div style=\"background:#ffffff;border-radius:16px;padding:10px;border:3px solid #cbd5e1\"><img src=\"assets/m63/logo-hcmus.png\" alt=\"Logo Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM\" style=\"width:96px;height:96px;object-fit:contain\"></div>\n<div style=\"background:#ffffff;border-radius:16px;padding:10px;border:3px solid #cbd5e1\"><img src=\"assets/m63/logo-sen.png\" alt=\"Logo hoa sen đọng sương\" style=\"width:96px;height:96px;object-fit:contain\"></div>\n<p class=\"s\">Trường ĐH Khoa học Tự nhiên, ĐHQG-HCM<br>Khoa Địa chất</p></div>\n<div style=\"display:flex;flex-direction:column;gap:26px;width:880px;margin-top:20px\">\n<p class=\"eyebrow\">Đá và khoáng vật (LEC10001) · Chương 6 · Mục 6.3</p>\n<h1 class=\"title rise\">Lớp dữ liệu địa chất trong đánh giá và quy hoạch sử dụng đất</h1>\n<p class=\"b\">Chồng lớp, chấm điểm, nói rõ giới hạn.</p>\n</div>\n<p class=\"s\" style=\"margin-top:auto;width:880px\">ThS. Đinh Quốc Tuấn · Giờ lý thuyết</p>\n</section>"
    },
    {
-    "type": "obj",
-    "items": [
-     {
-      "b": "B1 Nhớ",
-      "t": "Kể tên các lớp dữ liệu địa chất dùng trong đánh giá – quy hoạch đất"
-     },
-     {
-      "b": "B2 Hiểu",
-      "t": "Giải thích vai trò từng lớp và yêu cầu chuẩn hóa"
-     },
-     {
-      "b": "B3 Vận dụng",
-      "t": "Thực hiện chồng lớp có trọng số và phương pháp yếu tố hạn chế"
-     },
-     {
-      "b": "B5 Đánh giá",
-      "t": "Nhận định thuận lợi – hạn chế – rủi ro; nêu giới hạn trung thực"
-     }
-    ]
+    "type": "html",
+    "title": "Giả sử sườn đồi này nằm trong quy hoạch đất ở.",
+    "notes": "Cho sinh viên suy nghĩ 1–2 phút, chưa giảng lý thuyết. Gom câu trả lời thành các \"lớp\": đá gốc, vỏ phong hóa, độ dốc, nước, tai biến – đó chính là 6 nhóm lớp dữ liệu sẽ học. Tình huống là giả định, không gắn với một quy hoạch cụ thể.",
+    "html": "<section data-id=\"hook\" class=\"dark\" style=\"padding:80px 112px 144px 1020px\">\n<img class=\"\" src=\"assets/m63/b_satlo_muongcan.jpg\" alt=\"Taluy đường bị sạt lở, xe tải và xe máy đi qua đống đất đá\" style=\"width:960px;height:1080px;position:absolute;left:0;top:0;object-fit:cover\">\n<p class=\"eyebrow\">Tình huống mở đầu</p>\n<h2 class=\"t\">Giả sử sườn đồi này nằm trong quy hoạch đất ở.</h2>\n<p class=\"b\">Ai sai, và sai ở bước nào?</p>\n<p class=\"b\">Lớp dữ liệu nào đã bị bỏ qua?</p>\n<p class=\"cap\" style=\"margin-top:auto\">Ảnh: Sạt lở Mường Can – ChieuTimViet, CC BY 3.0</p>\n<div class=\"foot\" style=\"left:1020px;width:788px\"><p>© ThS. Đinh Quốc Tuấn</p><p>Mục 6.3 · 2 / 29</p></div>\n</section>"
    },
    {
-    "type": "fig",
-    "title": "Bản đồ tư duy Mục 6.3",
-    "fig": "H6-0_mindmap_muc63"
+    "type": "html",
+    "title": "Sau mục 6.3, sinh viên có thể",
+    "notes": "Đọc nhanh, nhấn vào mức Bloom 5: cuối buổi sinh viên phải biết nói \"kết luận này đúng đến đâu\". Chuẩn đầu ra CHP3, CHP4; đánh giá ĐG1.2, ĐG1.4, ĐG2.",
+    "html": "<section data-id=\"muctieu\">\n<div class=\"head\"><p class=\"eyebrow\">Mục tiêu học tập</p><h2 class=\"t\">Sau mục 6.3, sinh viên có thể</h2></div>\n<div class=\"grid2\" style=\"flex:1;align-content:center\">\n<div class=\"card\"><p class=\"num\">Nhớ · Bloom 1</p><p class=\"b\">Kể tên các lớp dữ liệu địa chất dùng trong quy hoạch đất.</p></div>\n<div class=\"card\"><p class=\"num\">Hiểu · Bloom 2</p><p class=\"b\">Giải thích vai trò từng lớp và vì sao phải chuẩn hóa dữ liệu.</p></div>\n<div class=\"card\"><p class=\"num\">Vận dụng · Bloom 3</p><p class=\"b\">Chồng lớp có trọng số và dùng yếu tố hạn chế để phân hạng.</p></div>\n<div class=\"card\"><p class=\"num\">Đánh giá · Bloom 5</p><p class=\"b\">Nhận định rủi ro từng đơn vị; nêu giới hạn của kết luận.</p></div>\n</div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 3 / 29</p></div>\n</section>"
    },
    {
-    "type": "cards",
-    "title": "Vì sao cần lớp dữ liệu địa chất?",
-    "cards": [
-     {
-      "h": "McHarg (1969)",
-      "t": [
-       "Chồng bản đồ trong suốt",
-       "Tìm vùng thích hợp / nhạy cảm",
-       "Tiền thân của GIS"
-      ]
-     },
-     {
-      "h": "FAO (1976, 2007)",
-      "t": [
-       "Đánh giá theo LUT cụ thể",
-       "Phân hạng S1, S2, S3, N"
-      ]
-     },
-     {
-      "h": "Luật Đất đai 2024",
-      "t": [
-       "Đ.60 k6: khai thác hợp lý tài nguyên, thích ứng BĐKH",
-       "Đ.82 k3: thu hồi đất ở có nguy cơ sạt lở, sụt lún"
-      ]
-     }
-    ]
+    "type": "html",
+    "title": "Chồng các tờ bản đồ trong suốt để thấy vùng thích hợp",
+    "notes": "Câu hỏi chủ đạo: làm sao đưa hiểu biết địa chất vào quyết định quy hoạch một cách có hệ thống, minh bạch, kiểm tra lại được? Trả lời: tổ chức thành lớp dữ liệu không gian rồi tích hợp. Hình 6.1 là hình của giáo trình. Luật Đất đai 2024 còn có Điều 52–53 về điều tra, đánh giá thoái hóa đất.",
+    "html": "<section data-id=\"visao\">\n<div class=\"head\"><p class=\"eyebrow\">6.3.1 · Vì sao cần lớp dữ liệu địa chất?</p><h2 class=\"t\">Chồng các tờ bản đồ trong suốt để thấy vùng thích hợp</h2></div>\n<div class=\"row\" style=\"flex:1;align-items:center\">\n<img class=\"fig\" src=\"assets/m63/h6_1.png\" alt=\"Hình 6.1: năm lớp dữ liệu chồng lên nhau thành bản đồ tổng hợp S1, S2, S3, N\" style=\"width:950px;height:570px\">\n<div class=\"col\" style=\"gap:16px\">\n<div><p class=\"num\">McHarg (1969)</p><p class=\"s\">Mỗi yếu tố một tờ trong suốt; chồng lên nhau lộ ra vùng thích hợp.</p></div>\n<div><p class=\"num\">FAO (1976, 2007)</p><p class=\"s\">Đánh giá đất theo từng loại hình sử dụng đất cụ thể.</p></div>\n<div><p class=\"num\">Luật Đất đai 2024</p><p class=\"s\">Điều 60: quy hoạch thích ứng biến đổi khí hậu. Điều 82: thu hồi đất nguy cơ sạt lở.</p></div>\n</div></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 4 / 29</p></div>\n</section>"
    },
    {
-    "type": "figbul",
-    "title": "Sáu nhóm lớp dữ liệu địa chất",
-    "fig": "H6-1_chong_lop_GIS",
-    "figLeft": true,
-    "bullets": [
-     "Thạch học – đá gốc, đứt gãy",
-     "Vỏ phong hóa: chiều dày, cấp, đá ong",
-     "Vật liệu mẹ – trầm tích Đệ tứ",
-     "Địa hình – địa mạo (DEM, độ dốc)",
-     "Nước dưới đất – thấm",
-     "Tai biến: sạt lở, xói mòn, sụt karst, ngập"
-    ],
-    "cite": "Hình tác giả vẽ; phỏng theo McHarg (1969); FAO (2007)"
+    "type": "html",
+    "title": "Ba lớp về vật liệu: đá gốc, vỏ phong hóa, trầm tích",
+    "notes": "Bảng 6.1. Mỗi lớp là một chương đã học, nay thành một tờ bản đồ. Ảnh: USGS (phạm vi công cộng); Irfan và cs. (CC BY 3.0); USDA NRCS (phạm vi công cộng).",
+    "html": "<section data-id=\"saulop1\">\n<div class=\"head\"><p class=\"eyebrow\">6.3.2 · Sáu nhóm lớp dữ liệu (1–3)</p><h2 class=\"t\">Ba lớp về vật liệu: đá gốc, vỏ phong hóa, trầm tích</h2></div>\n<div class=\"grid3\"><div class=\"tile\"><img src=\"assets/m63/p_bazan_ghenhdadia.jpg\" alt=\"Bờ đá bazan dạng cột ở Gành Đá Đĩa, Phú Yên\" style=\"height:330px\"><div class=\"tx\"><h3>1. Thạch học – đá gốc</h3><p>Vật liệu mẹ, dinh dưỡng, độ bền nền · Ch. 3</p></div></div>\n<div class=\"tile\"><img src=\"assets/m63/h_vophonghoa.jpg\" alt=\"Mặt cắt vỏ phong hóa laterit\" style=\"height:330px\"><div class=\"tx\"><h3>2. Vỏ phong hóa</h3><p>Độ dày tầng đất, thoát nước, sạt lở · Ch. 4</p></div></div>\n<div class=\"tile\"><img src=\"assets/m63/o_xamnhapman.jpg\" alt=\"Rừng ngập mặn chết do xâm nhập mặn và đất phèn\" style=\"height:330px\"><div class=\"tx\"><h3>3. Vật liệu mẹ – Đệ tứ</h3><p>Tính chất đất, phèn tiềm tàng, nền yếu · Ch. 5</p></div></div></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 5 / 29</p></div>\n</section>"
    },
    {
-    "type": "cards",
-    "title": "Chuẩn hóa trước khi chồng lớp",
-    "cards": [
-     {
-      "h": "Tỷ lệ",
-      "t": [
-       "1:200.000 → ranh giới ~100 m",
-       "Tin cậy đến lớp thô nhất"
-      ]
-     },
-     {
-      "h": "Tọa độ",
-      "t": [
-       "Cùng hệ VN-2000",
-       "Tránh lệch vị trí"
-      ]
-     },
-     {
-      "h": "Phân cấp",
-      "t": [
-       "Tên đá → cấp 1–5",
-       "Ghi lý do chuyên môn"
-      ]
-     },
-     {
-      "h": "Metadata",
-      "t": [
-       "Nguồn, năm, tỷ lệ",
-       "Mức tin cậy (CHP4)"
-      ]
-     }
-    ],
-    "size": 14
+    "type": "html",
+    "title": "Ba lớp về điều kiện: địa hình, nước, tai biến",
+    "notes": "Hỏi lại: lớp nào dùng để loại trừ? (tai biến). Lớp nào cần kiến thức Chương 4? (vỏ phong hóa). Ảnh: P. Hughes (CC BY 4.0); Hoàng Giang Hải (CC BY 2.0); Suglo20 (CC BY-SA 4.0).",
+    "html": "<section data-id=\"saulop2\">\n<div class=\"head\"><p class=\"eyebrow\">6.3.2 · Sáu nhóm lớp dữ liệu (4–6)</p><h2 class=\"t\">Ba lớp về điều kiện: địa hình, nước, tai biến</h2></div>\n<div class=\"grid3\"><div class=\"tile\"><img src=\"assets/m63/e_caphe_dalat.jpg\" alt=\"Đồi cà phê nhiều độ dốc khác nhau\" style=\"height:330px\"><div class=\"tx\"><h3>4. Địa hình – địa mạo</h3><p>Độ dốc, catena: xói mòn, cơ giới hóa · Ch. 5</p></div></div>\n<div class=\"tile\"><img src=\"assets/m63/k_lua_bacson.jpg\" alt=\"Ruộng lúa nước trong thung lũng\" style=\"height:330px\"><div class=\"tx\"><h3>5. Nước dưới đất – thấm</h3><p>Tưới tiêu, úng ngập, ô nhiễm · Mục 6.2</p></div></div>\n<div class=\"tile\"><img src=\"assets/m63/l_xoimon.jpg\" alt=\"Rãnh xói mòn sâu trên đất đỏ\" style=\"height:330px\"><div class=\"tx\"><h3>6. Tai biến địa chất</h3><p>Sạt lở, lũ quét, sụt karst: hạn chế hoặc loại trừ</p></div></div></div>\n<p class=\"cap\">Thêm lớp tài nguyên khoáng sản để tránh xung đột giữa quy hoạch đất và quy hoạch khoáng sản.</p>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 6 / 29</p></div>\n</section>"
    },
    {
-    "type": "eq",
-    "title": "Hai phương pháp tích hợp",
-    "eqs": [
-     "Yếu tố hạn chế: hạng = yếu tố bất lợi nhất",
-     "Chồng lớp trọng số: Điểm = Σ (wᵢ × sᵢ),  Σ wᵢ = 1",
-     "Ngưỡng: S1 ≥ 4,0 · S2 ≥ 3,0 · S3 ≥ 2,4 · N < 2,4"
-    ],
-    "bullets": [
-     "Hạn chế: thận trọng, loại trừ vùng nguy hiểm",
-     "Trọng số: bù trừ, dễ làm GIS; trọng số chủ quan (AHP – Saaty, 1980)",
-     {
-      "t": "Nên kết hợp: loại trừ trước, trọng số sau",
-      "b": true
-     },
-     "Khả năng đất 8 cấp (Klingebiel & Montgomery, 1961)"
-    ]
+    "type": "html",
+    "title": "Đá gốc quyết định vật liệu mẹ, độ bền nền",
+    "notes": "Đây là lớp gần học phần Đá và khoáng vật nhất: toàn bộ Chương 3 dùng ở đây. Nguồn: bản đồ địa chất 1:200.000 và 1:50.000, khảo sát vết lộ. Nhấn mạnh ba hệ quả của đá gốc: vật liệu mẹ cho đất, tiềm năng dinh dưỡng, độ bền nền và kiểu tai biến đặc trưng (granit cho tảng lăn và đá đổ; đá vôi cho sụt karst). Ảnh: Prince Roy, CC BY 2.0 · USGS, phạm vi công cộng · BacLuong, CC BY-SA 4.0.",
+    "html": "<section data-id=\"thachhoc\">\n<div class=\"head\"><p class=\"eyebrow\">Lớp 1 · Thạch học – đá gốc</p><h2 class=\"t\">Đá gốc quyết định vật liệu mẹ, độ bền nền</h2></div>\n<div class=\"grid3\">\n<div class=\"tile\"><img src=\"assets/m63/p_bazan_ghenhdadia.jpg\" alt=\"Bờ đá bazan dạng cột ở Gành Đá Đĩa, Phú Yên\" style=\"height:215px\"><div class=\"tx\"><h3>Bazan</h3><p>Vỏ feralit dày, đất đỏ giàu dinh dưỡng.</p><p style=\"color:#0b4f9e;font-weight:700\">→ ĐV1, ĐV2 trong Ví dụ 6.1</p></div></div>\n<div class=\"tile\"><img src=\"assets/m63/i_corestone.jpg\" alt=\"Khối granit nứt nẻ phong hóa thành tảng lăn tròn\" style=\"height:215px\"><div class=\"tx\"><h3>Granit</h3><p>Saprolit cát pha nghèo, nhiều tảng lăn.</p><p style=\"color:#0b4f9e;font-weight:700\">→ ĐV3 trong Ví dụ 6.1</p></div></div>\n<div class=\"tile\"><img src=\"assets/m63/j_karst.jpg\" alt=\"Đá vôi tai mèo lởm chởm và hố sụt ở Hà Giang\" style=\"height:215px\"><div class=\"tx\"><h3>Đá vôi</h3><p>Đất rất mỏng, hang và hố sụt karst.</p><p style=\"color:#0b4f9e;font-weight:700\">→ ĐV5 trong Ví dụ 6.1</p></div></div>\n</div>\n<div class=\"band\"><p class=\"b\">Tên đá không cộng trừ được — phải quy đổi thành cấp 1–5 (mục 6.3.3c).</p></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 7 / 29</p></div>\n</section>"
    },
    {
-    "type": "fig",
-    "title": "Quy trình bảy bước",
-    "fig": "H6-2_quy_trinh_tich_hop",
-    "cite": "Hình tác giả thiết kế; tham khảo FAO (1976, 2007); Serote (2004)"
+    "type": "html",
+    "title": "Tại chỗ hay đã được vận chuyển?",
+    "notes": "Bổ sung sau rà soát: ranh giới lớp 2 – lớp 3 phải rõ. Mực nước dưới đất thuộc lớp 5, không ghi vào lớp 3. Liên hệ Chương 4 (phân đới vỏ) và Chương 5 (vật liệu mẹ).",
+    "html": "<section data-id=\"lop23\">\n<div class=\"head\"><p class=\"eyebrow\">Lớp 2 và lớp 3</p><h2 class=\"t\">Tại chỗ hay đã được vận chuyển?</h2></div>\n<div class=\"row\" style=\"flex:1\">\n<div class=\"card\" style=\"flex:1;justify-content:center\"><h3 class=\"c\">Lớp 2 · Vỏ phong hóa</h3>\n<p class=\"s\">Sản phẩm tại chỗ trên đá gốc: tàn tích (e), saprolit giữ cấu trúc đá.</p>\n<p class=\"s\"><b>Thuộc tính:</b> chiều dày, front phong hóa, cấp I–VI, tầng đá ong.</p>\n<p class=\"s\"><b>Trả lời:</b> tầng đất dày hay mỏng, thoát nước, nguy cơ trượt.</p></div>\n<div class=\"card\" style=\"flex:1;justify-content:center\"><h3 class=\"c\">Lớp 3 · Trầm tích Đệ tứ</h3>\n<p class=\"s\">Vật liệu đã được vận chuyển: sườn tích (d), sông (a), biển (m), đầm lầy (b).</p>\n<p class=\"s\"><b>Thuộc tính:</b> nguồn gốc, tuổi, bề dày, thành phần hạt.</p>\n<p class=\"s\"><b>Trả lời:</b> phèn tiềm tàng (sét chứa pyrit), nền yếu (bùn sét, than bùn).</p></div>\n</div>\n<div class=\"band\"><p class=\"b\">Ký hiệu e là vỏ phong hóa — đừng tính một thuộc tính hai lần.</p></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 8 / 29</p></div>\n</section>"
    },
    {
-    "type": "table",
-    "title": "Ví dụ 6.1 – cà phê tại xã giả định Tây Nguyên",
-    "colW": [
-     1,
-     3.3,
-     0.7,
-     0.7,
-     0.7,
-     0.7,
-     0.7,
-     1.4,
-     1.3,
-     1.8
-    ],
-    "size": 12.5,
-    "head": [
-     "ĐV",
-     "Mô tả",
-     "C1",
-     "C2",
-     "C3",
-     "C4",
-     "C5",
-     "Điểm",
-     "Trọng số",
-     "Hạn chế"
-    ],
-    "rows": [
-     [
-      "ĐV1",
-      "Bazan, dốc 3°",
-      "5",
-      "5",
-      "4",
-      "4",
-      "3",
-      "4,40",
-      "S1",
-      "S1"
-     ],
-     [
-      "ĐV2",
-      "Bazan, dốc 18°",
-      "4",
-      "2",
-      "4",
-      "3",
-      "3",
-      "3,20",
-      "S2",
-      "S2"
-     ],
-     [
-      "ĐV3",
-      "Granit, dốc 25°",
-      "3",
-      "1",
-      "3",
-      "1",
-      "3",
-      "2,10",
-      "N",
-      "N"
-     ],
-     [
-      "ĐV4",
-      "Bồi tích, ngập mùa",
-      "3",
-      "5",
-      "1",
-      "2",
-      "4",
-      "3,00",
-      "S2",
-      "N"
-     ],
-     [
-      "ĐV5",
-      "Đá vôi, đất mỏng",
-      "1",
-      "3",
-      "3",
-      "3",
-      "3",
-      "2,50",
-      "S3",
-      "N"
-     ]
-    ],
-    "cite": "Trọng số: C1 0,25 · C2 0,25 · C3 0,20 · C4 0,20 · C5 0,10 – số liệu giả định cho học tập"
+    "type": "html",
+    "title": "Đọc vỏ phong hóa ngoài thực địa trước khi vẽ thành lớp",
+    "notes": "Liên hệ Chương 4.4–4.5. Hỏi: trên ảnh trái, nếu đặt móng nhà hoặc trồng cà phê thì lớp nào quyết định? Tầng đá ong cản rễ và cản thấm; saprolit dày nhưng nghèo dinh dưỡng – vì vậy C1 trong ví dụ phải hiểu là độ dày tầng đất hữu hiệu cho rễ.",
+    "html": "<section data-id=\"vophonghoa\">\n<div class=\"head\"><p class=\"eyebrow\">Lớp 2 · Vỏ phong hóa</p><h2 class=\"t\">Đọc vỏ phong hóa ngoài thực địa trước khi vẽ thành lớp</h2></div>\n<div class=\"row\">\n<div class=\"col\" style=\"gap:12px\"><img class=\"photo\" src=\"assets/m63/h_vophonghoa.jpg\" alt=\"Vách taluy với ba lớp: limonit ở trên, saprolit ở giữa, đá gốc ở dưới\" style=\"width:828px;height:310px\"><p class=\"cap\">Limonit – saprolit – đá gốc. Ảnh: Irfan và cs., CC BY 3.0</p></div>\n<div class=\"col\" style=\"gap:12px\"><img class=\"photo\" src=\"assets/m63/g_daong.jpg\" alt=\"Bề mặt khối đá ong rỗ tổ ong màu nâu đỏ\" style=\"width:828px;height:310px\"><p class=\"cap\">Đá ong (laterit) ở Sơn Tây. Ảnh: Phó Nháy, phạm vi công cộng</p></div>\n</div>\n<div class=\"band\"><p class=\"s\" style=\"color:#bfdbfe\">Ghi: chiều dày · front phong hóa · cấp I–VI · tầng đá ong</p><p class=\"b\">Vỏ dày chưa chắc tầng đất canh tác dày.</p></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 9 / 29</p></div>\n</section>"
    },
    {
-    "type": "figbul",
-    "title": "So sánh kết quả và bài học",
-    "fig": "H6-3_ket_qua_trong_so",
-    "bullets": [
-     "ĐV4, ĐV5: hai phương pháp cho kết quả khác nhau",
-     "Cà phê không chịu ngập → ĐV4 là N (dù S1 với lúa nước)",
-     "Tầng đất quá mỏng → ĐV5 là N",
-     {
-      "t": "Mức thích hợp luôn gắn với LUT",
-      "b": true
-     }
-    ]
+    "type": "html",
+    "title": "Hai dấu hiệu nhìn thấy bằng mắt thường",
+    "notes": "Hai ảnh lấy từ thư mục tư liệu Vỏ phong hóa trên máy giảng viên; cần xác nhận địa điểm và tên hệ tầng trước khi giảng. Ảnh dùng để minh họa dấu hiệu \"đã vận chuyển\", không phải trầm tích Đệ tứ bở rời.",
+    "html": "<section data-id=\"thucdia\">\n<div class=\"head\"><p class=\"eyebrow\">Đọc lớp dữ liệu ngoài thực địa</p><h2 class=\"t\">Hai dấu hiệu nhìn thấy bằng mắt thường</h2></div>\n<div class=\"row\">\n<div class=\"col\" style=\"gap:12px\"><img class=\"photo\" src=\"assets/m63/td_28.jpg\" alt=\"Bề mặt đá phong hóa trắng xám trơ sỏi sạn, cây con thưa thớt\" style=\"width:828px;height:380px\">\n<h3 class=\"c\">Đá gốc lộ sát mặt đất</h3><p class=\"s\">Tầng đất mỏng, trơ sỏi sạn → điểm C1 thấp, dễ thành yếu tố hạn chế.</p></div>\n<div class=\"col\" style=\"gap:12px\"><img class=\"photo\" src=\"assets/m63/td_37.jpg\" alt=\"Vết lộ cuội kết với các viên cuội tròn cạnh nhiều kích cỡ, búa địa chất làm thước\" style=\"width:828px;height:380px\">\n<h3 class=\"c\">Cuội tròn cạnh</h3><p class=\"s\">Hạt mài tròn = vật liệu từng được vận chuyển, khác tàn tích góc cạnh tại chỗ.</p></div>\n</div>\n<p class=\"cap\">Ảnh thực địa: tư liệu giảng dạy của tác giả (học phần Vỏ phong hóa).</p>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 10 / 29</p></div>\n</section>"
    },
    {
-    "type": "cards",
-    "title": "Giới hạn và đạo đức nghề nghiệp",
-    "cards": [
-     {
-      "h": "Dữ liệu",
-      "t": [
-       "Ranh giới chuyển tiếp",
-       "Tỷ lệ không tương thích",
-       "Dữ liệu lạc hậu"
-      ]
-     },
-     {
-      "h": "Phương pháp",
-      "t": [
-       "Trọng số chủ quan",
-       "Cần phân tích độ nhạy",
-       "Kiểm chứng thực địa"
-      ]
-     },
-     {
-      "h": "Trung thực",
-      "t": [
-       "Nêu mức tin cậy",
-       "Không \"làm đẹp\" kết quả",
-       "Tuân thủ pháp luật (CHP4)"
-      ]
-     }
-    ]
+    "type": "html",
+    "title": "Khoanh vùng tai biến trước, rồi mới phân hạng",
+    "notes": "Hộp 6.1. Đây là chỗ nên chèn ảnh thực địa của chính giảng viên ở Đèo Cả hoặc An Khê nếu có. Nhấn: lớp tai biến thường dùng để loại trừ, không cộng điểm. Nguồn Việt Nam: Đinh Quốc Tuấn (2025).",
+    "html": "<section data-id=\"taibien\">\n<div class=\"head\"><p class=\"eyebrow\">Lớp 6 · Tai biến</p><h2 class=\"t\">Khoanh vùng tai biến trước, rồi mới phân hạng</h2></div>\n<div class=\"row\" style=\"flex:1\">\n<div class=\"col\" style=\"flex:none;width:800px;gap:12px\"><img class=\"fig\" src=\"assets/m63/d_lut_mientrung2020.jpg\" alt=\"Ảnh radar vệ tinh, vùng ngập tô đỏ dọc đồng bằng Quảng Trị – Huế\" style=\"width:800px;height:500px;background:#0f172a\"><p class=\"cap\">Vùng ngập (đỏ) Quảng Trị – Huế, 10/2020. Ảnh: Copernicus Sentinel-1, EU</p></div>\n<div class=\"col\" style=\"gap:24px\">\n<div class=\"card\"><h3 class=\"c\">Philippines</h3><p class=\"s\">Vùng nguy cơ tai biến là khu vực bảo vệ, phân định trước cả khu bảo tồn (Serote, 2004).</p></div>\n<div class=\"card warn\"><h3 class=\"c\">Việt Nam</h3><p class=\"s\">Sườn &gt;30° vỏ vụn thô (Đèo Cả), sườn 25–30° vỏ dày (An Khê): thường đá đổ, trượt đất.</p></div>\n</div></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 11 / 29</p></div>\n</section>"
    },
    {
-    "type": "act",
-    "title": "Thực hành: tổ tư vấn quy hoạch xã",
-    "sub": "Phiếu PTH-03 (1 tiết)",
-    "time": "30'",
-    "bullets": [
-     "Nhận LUT: cà phê / lúa nước / khu dân cư",
-     "Chọn 5 tiêu chí + trọng số có lập luận địa chất",
-     "Chấm điểm, chồng lớp, áp luật loại trừ",
-     "Đề xuất phân vùng + 3 giới hạn; trình bày 3 phút"
-    ]
+    "type": "html",
+    "title": "Kết quả chỉ tin cậy đến mức tỷ lệ của lớp thô nhất",
+    "notes": "Minh họa trực quan: chiếu bản đồ 1:200.000 phóng to lên thửa đất – sinh viên thấy một nét vẽ phủ cả dãy nhà. Siêu dữ liệu là yêu cầu trung thực (CHP4).",
+    "html": "<section data-id=\"chuanhoa\">\n<div class=\"head\"><p class=\"eyebrow\">6.3.3 · Chuẩn hóa trước khi chồng lớp</p><h2 class=\"t\">Kết quả chỉ tin cậy đến mức tỷ lệ của lớp thô nhất</h2></div>\n<div class=\"row\" style=\"flex:1\">\n<div class=\"card tint\" style=\"width:640px;flex:none;justify-content:center;gap:24px\">\n<p class=\"formula\" style=\"font-size:88px\">1 : 200.000</p>\n<p class=\"b\">Nét ranh giới dày 0,5 mm trên giấy = <b>100 m</b> ngoài thực địa.</p>\n<p class=\"b\">Đừng kết luận cho một thửa đất từ bản đồ đó.</p>\n</div>\n<div class=\"col\" style=\"gap:22px;justify-content:center\">\n<div class=\"step\"><p class=\"dot\">a</p><p class=\"s\"><b>Tỷ lệ:</b> cần kết luận chi tiết thì khảo sát bổ sung ở tỷ lệ lớn hơn.</p></div>\n<div class=\"step\"><p class=\"dot\">b</p><p class=\"s\"><b>Hệ tọa độ:</b> mọi lớp cùng VN-2000, đúng múi chiếu, để không lệch.</p></div>\n<div class=\"step\"><p class=\"dot\">c</p><p class=\"s\"><b>Phân cấp:</b> tên đá → \"tiềm năng dinh dưỡng\" hay \"độ bền nền\" cấp 1–5.</p></div>\n<div class=\"step\"><p class=\"dot\">d</p><p class=\"s\"><b>Siêu dữ liệu:</b> nguồn, năm, tỷ lệ, phương pháp, mức tin cậy.</p></div>\n</div></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 12 / 29</p></div>\n</section>"
    },
    {
-    "type": "quiz",
-    "qs": [
-     {
-      "q": "Mức thích hợp theo FAO (1976) được xác định cho:",
-      "o": [
-       "mọi loại sử dụng",
-       "từng LUT cụ thể",
-       "chỉ nông nghiệp",
-       "chỉ đô thị"
-      ],
-      "a": "B"
-     },
-     {
-      "q": "Điểm với trọng số (0,3; 0,3; 0,2; 0,2), điểm (4; 3; 5; 2) là:",
-      "o": [
-       "3,0",
-       "3,5",
-       "4,0",
-       "2,8"
-      ],
-      "a": "B"
-     },
-     {
-      "q": "Nhược điểm chính của chồng lớp trọng số:",
-      "o": [
-       "không dùng GIS được",
-       "bù trừ che lấp yếu tố rất xấu",
-       "quá thận trọng",
-       "không cần dữ liệu"
-      ],
-      "a": "B"
-     }
-    ]
+    "type": "html",
+    "title": "Mắt xích yếu nhất hay điểm trung bình có hệ số?",
+    "notes": "So sánh với đời thường: yếu tố hạn chế giống \"điểm liệt\" trong thi tốt nghiệp; trọng số giống điểm trung bình môn có hệ số. Hỏi: điểm liệt tồn tại để làm gì?",
+    "html": "<section data-id=\"phuongphap\">\n<div class=\"head\"><p class=\"eyebrow\">6.3.4 · Hai cách tích hợp</p><h2 class=\"t\">Mắt xích yếu nhất hay điểm trung bình có hệ số?</h2></div>\n<div class=\"row\" style=\"flex:1\">\n<div class=\"card warn\" style=\"flex:1;justify-content:center\"><p class=\"num\" style=\"color:#991b1b\">a) Yếu tố hạn chế</p>\n<h3 class=\"c\">Yếu tố bất lợi nhất quyết định</h3>\n<p class=\"s\">Đất dày, màu mỡ nhưng dốc 30° → vẫn không thích hợp.</p>\n<p class=\"s\">Thận trọng; nhược điểm: không cho bù trừ.</p></div>\n<div class=\"card ok\" style=\"flex:1;justify-content:center\"><p class=\"num\" style=\"color:#065f46\">b) Chồng lớp có trọng số</p>\n<p class=\"formula\">Điểm = Σ wᵢ × sᵢ</p>\n<p class=\"s\">sᵢ: điểm 1–5 · wᵢ: trọng số, Σ wᵢ = 1 (chuyên gia hoặc AHP).</p>\n<p class=\"s\">Cho bù trừ; nhược điểm: yếu tố rất xấu bị \"che lấp\".</p></div>\n</div>\n<div class=\"band\"><p class=\"b\">Thực tế kết hợp: loại trừ trước, rồi chấm điểm trọng số cho phần còn lại.</p></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 13 / 29</p></div>\n</section>"
    },
    {
-    "type": "sum",
-    "points": [
-     "Sáu nhóm lớp dữ liệu địa chất",
-     "Chuẩn hóa: tỷ lệ, tọa độ, phân cấp, metadata",
-     "Kết hợp yếu tố hạn chế + trọng số",
-     "Phân hạng S1–N theo LUT",
-     "Kiểm chứng, phân tích độ nhạy, nêu giới hạn"
-    ],
-    "refs": [
-     "McHarg (1969). Design with nature.",
-     "FAO (1976; 2007). Land evaluation.",
-     "Klingebiel & Montgomery (1961).",
-     "Saaty (1980). AHP.",
-     "Serote (2004).",
-     "Luật Đất đai 2024 (31/2024/QH15).",
-     "Giáo trình mục 6.3."
-    ],
-    "next": "Ôn tập C4 – C5 – 6.3 · Chuẩn bị kiểm tra và thi"
+    "type": "html",
+    "title": "Hạng luôn gắn với một loại sử dụng đất cụ thể",
+    "notes": "Hỏi Bloom 4: vì sao cùng một đơn vị đất đai có thể N với cà phê nhưng S1 với lúa nước? (yêu cầu sinh thái của LUT khác nhau: thoát nước, độ sâu tầng đất). Phân biệt capability (nhóm hoạt động chung, 8 cấp Klingebiel & Montgomery, 1961) với suitability (từng LUT).",
+    "html": "<section data-id=\"phanhang\">\n<div class=\"head\"><p class=\"eyebrow\">Phân hạng thích hợp (FAO, 1976)</p><h2 class=\"t\">Hạng luôn gắn với một loại sử dụng đất cụ thể</h2></div>\n<div class=\"row\" style=\"flex:1\">\n<div class=\"col\" style=\"flex:none;width:720px;gap:22px;justify-content:center\">\n<div class=\"step\" style=\"align-items:center\"><p class=\"pill\">S1</p><p class=\"b\">Rất thích hợp</p></div>\n<div class=\"step\" style=\"align-items:center\"><p class=\"pill s2\">S2</p><p class=\"b\">Thích hợp trung bình</p></div>\n<div class=\"step\" style=\"align-items:center\"><p class=\"pill s3\">S3</p><p class=\"b\">Ít thích hợp</p></div>\n<div class=\"step\" style=\"align-items:center\"><p class=\"pill n\">N</p><p class=\"b\">Không thích hợp (N1, N2)</p></div>\n</div>\n<div class=\"col\" style=\"gap:16px\">\n<div class=\"row\" style=\"gap:20px\">\n<img class=\"photo\" src=\"assets/m63/f_caphe_daklak.jpg\" alt=\"Cành cà phê vối sai quả ở Đắk Lắk\" style=\"width:440px;height:400px\">\n<img class=\"photo\" src=\"assets/m63/k_lua_bacson.jpg\" alt=\"Ruộng lúa nước trải dài trong thung lũng Bắc Sơn\" style=\"width:440px;height:400px\">\n</div>\n<p class=\"b\">Vùng trũng ngập theo mùa: <b>N</b> với cà phê, có thể <b>S1</b> với lúa nước.</p>\n<p class=\"cap\">Ảnh: ThiênĐế98, CC BY-SA 4.0 · Hoàng Giang Hải, CC BY 2.0</p>\n</div></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 14 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Từ mục tiêu đến khuyến nghị, có vòng lặp",
+    "notes": "Hình 6.2 của giáo trình. Chỉ vào đường đứt đỏ: vòng lặp là điểm khác biệt giữa một quy trình khoa học và việc \"tô màu bản đồ\". Bảy bước: mục tiêu và LUT · thu thập dữ liệu · chuẩn hóa · tiêu chí và trọng số · chồng lớp và phân hạng · kiểm chứng · khuyến nghị và giám sát.",
+    "html": "<section data-id=\"quytrinh\">\n<div class=\"head\"><p class=\"eyebrow\">6.3.5 · Quy trình bảy bước</p><h2 class=\"t\">Từ mục tiêu đến khuyến nghị, có vòng lặp</h2></div>\n<img class=\"fig\" src=\"assets/m63/h6_2.png\" alt=\"Hình 6.2: bảy bước từ xác định mục tiêu và LUT đến khuyến nghị quy hoạch, có vòng lặp từ bước 6 về bước 3–4\" style=\"width:1150px;height:543px;margin:0 auto\">\n<div class=\"band\"><p class=\"b\">Vùng xếp \"S1\" lại từng sạt lở → quay lại bước 3–4.</p></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 15 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Cà phê vối ở một xã giả định ở Tây Nguyên",
+    "notes": "Giảng viên đọc bảng theo hàng: mỗi đơn vị là một tổ hợp đá – địa hình – vỏ phong hóa/trầm tích. Số 1 màu đỏ là điểm \"liệt\". Ngưỡng: S1 ≥ 4,0; S2 3,0–<4,0; S3 2,4–<3,0; N < 2,4 (thang ngưỡng ở slide tính điểm). AHP: Saaty (1980). C1 = tầng đất hữu hiệu cho rễ, không phải toàn bộ vỏ phong hóa; C5 = dinh dưỡng từ vật liệu mẹ (ĐV4 là bồi tích). Năm đơn vị khoanh từ bản đồ địa chất 1:50.000, DEM và khảo sát.",
+    "html": "<section data-id=\"vidu\" style=\"gap:20px\">\n<div class=\"head\"><p class=\"eyebrow\">6.3.6 · Ví dụ 6.1</p><h2 class=\"t\">Cà phê vối ở một xã giả định ở Tây Nguyên</h2></div>\n<table style=\"font-size:40px;color:#0f172a\">\n<tr><th style=\"width:11%\">Đơn vị</th><th style=\"width:24%\">Mô tả</th><th style=\"width:5%;text-align:center\">C1</th><th style=\"width:5%;text-align:center\">C2</th><th style=\"width:5%;text-align:center\">C3</th><th style=\"width:5%;text-align:center\">C4</th><th style=\"width:5%;text-align:center\">C5</th><th style=\"width:11%;text-align:right\">Điểm</th><th style=\"width:9%;text-align:center\">Hạng</th><th style=\"width:20%\">Hạn chế</th></tr>\n<tr><td><b>ĐV1</b></td><td>Bazan, dốc 3°</td><td style=\"text-align:center\">5</td><td style=\"text-align:center\">5</td><td style=\"text-align:center\">4</td><td style=\"text-align:center\">4</td><td style=\"text-align:center\">3</td><td style=\"text-align:right\">4,40</td><td style=\"text-align:center\">S1</td><td>Không</td></tr>\n<tr><td><b>ĐV2</b></td><td>Bazan, dốc 18°</td><td style=\"text-align:center\">4</td><td style=\"text-align:center\">2</td><td style=\"text-align:center\">4</td><td style=\"text-align:center\">3</td><td style=\"text-align:center\">3</td><td style=\"text-align:right\">3,20</td><td style=\"text-align:center\">S2</td><td>C2 = 2</td></tr>\n<tr><td><b>ĐV3</b></td><td>Granit, dốc 25°</td><td style=\"text-align:center\">3</td><td style=\"text-align:center;color:#b91c1c\">1</td><td style=\"text-align:center\">3</td><td style=\"text-align:center;color:#b91c1c\">1</td><td style=\"text-align:center\">3</td><td style=\"text-align:right\">2,10</td><td style=\"text-align:center\">N</td><td>C2, C4 = 1</td></tr>\n<tr><td><b>ĐV4</b></td><td>Bồi tích, ngập mùa</td><td style=\"text-align:center\">3</td><td style=\"text-align:center\">5</td><td style=\"text-align:center;color:#b91c1c\">1</td><td style=\"text-align:center\">2</td><td style=\"text-align:center\">4</td><td style=\"text-align:right\">3,00</td><td style=\"text-align:center\">S2</td><td>C3 = 1</td></tr>\n<tr><td><b>ĐV5</b></td><td>Karst, đất mỏng</td><td style=\"text-align:center;color:#b91c1c\">1</td><td style=\"text-align:center\">3</td><td style=\"text-align:center\">3</td><td style=\"text-align:center\">3</td><td style=\"text-align:center\">3</td><td style=\"text-align:right\">2,50</td><td style=\"text-align:center\">S3</td><td>C1 = 1</td></tr>\n</table>\n<p class=\"s\">Trọng số: C1 0,25 · C2 0,25 · C3 0,20 · C4 0,20 · C5 0,10</p>\n<p class=\"cap\">Điểm và trọng số là giả định cho mục đích học tập, chưa tính bằng AHP.</p>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 16 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Chọn loại sử dụng đất, khoanh đơn vị đất đai",
+    "notes": "Xã giả định. Mỗi ô lưới là một pixel của GIS. Đường đậm là ranh giới đơn vị đất đai – cách tiếp cận land systems ở 6.3.4d. Chỉ từng đơn vị trên bản đồ và nhắc lại nó sinh ra từ đá, địa hình nào.",
+    "html": "<section data-id=\"b1\">\n<div class=\"head\"><p class=\"eyebrow\">Từng bước · Bước 1 và 2</p><h2 class=\"t\">Chọn loại sử dụng đất, khoanh đơn vị đất đai</h2></div>\n<div class=\"row\" style=\"flex:1;align-items:center\">\n<img class=\"map\" src=\"assets/m63/m_base.png\" alt=\"Bản đồ lưới xã giả định với năm đơn vị đất đai ĐV1 đến ĐV5\" style=\"width:930px;height:620px\">\n<div class=\"col\" style=\"gap:16px;justify-content:center\">\n<div class=\"step\"><p class=\"dot\">1</p><p class=\"s\"><b>Mục tiêu:</b> đất nào hợp trồng cà phê vối? Cấp xã.</p></div>\n<div class=\"step\"><p class=\"dot\">2</p><p class=\"s\"><b>Dữ liệu:</b> bản đồ 1:50.000, DEM, khảo sát → 5 đơn vị.</p></div>\n<div class=\"step\" style=\"align-items:center;gap:16px\"><div class=\"sw\" style=\"background:#8c5a3c\"></div><p class=\"s\">ĐV1 · bazan, dốc 3°, vỏ dày</p></div>\n<div class=\"step\" style=\"align-items:center;gap:16px\"><div class=\"sw\" style=\"background:#c08a5c\"></div><p class=\"s\">ĐV2 · bazan, dốc 18°</p></div>\n<div class=\"step\" style=\"align-items:center;gap:16px\"><div class=\"sw\" style=\"background:#e3b4c8\"></div><p class=\"s\">ĐV3 · granit, dốc 25°, tảng lăn</p></div>\n<div class=\"step\" style=\"align-items:center;gap:16px\"><div class=\"sw\" style=\"background:#7fb3d9\"></div><p class=\"s\">ĐV4 · bồi tích, ngập theo mùa</p></div>\n<div class=\"step\" style=\"align-items:center;gap:16px\"><div class=\"sw\" style=\"background:#bdbdb0\"></div><p class=\"s\">ĐV5 · đá vôi karst, đất mỏng</p></div>\n</div></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 17 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Mỗi tiêu chí thành một lớp điểm 1–5, kèm trọng số",
+    "notes": "Con số trong nhãn là điểm của đơn vị ở tiêu chí đó. Nhấn: tên đá không cộng trừ được, phải quy đổi thành điểm theo yêu cầu của cây cà phê. Trọng số ở đây do giáo trình giả định, tổng bằng 1; muốn có trọng số thật thì dùng AHP hoặc dẫn nghiên cứu đã công bố.",
+    "html": "<section data-id=\"b2\">\n<div class=\"head\"><p class=\"eyebrow\">Từng bước · Bước 3 và 4</p><h2 class=\"t\">Mỗi tiêu chí thành một lớp điểm 1–5, kèm trọng số</h2></div>\n<div style=\"display:flex;gap:20px\">\n<div class=\"col\" style=\"gap:10px;flex:none;width:320px\"><img class=\"map\" src=\"assets/m63/m_c1.png\" alt=\"Lớp điểm C1 · Tầng đất\" style=\"width:320px;height:213px\"><p class=\"s\" style=\"font-weight:600;color:#0f172a\">C1 · Tầng đất</p><p class=\"cap\">Trọng số 0,25</p></div>\n<div class=\"col\" style=\"gap:10px;flex:none;width:320px\"><img class=\"map\" src=\"assets/m63/m_c2.png\" alt=\"Lớp điểm C2 · Độ dốc\" style=\"width:320px;height:213px\"><p class=\"s\" style=\"font-weight:600;color:#0f172a\">C2 · Độ dốc</p><p class=\"cap\">Trọng số 0,25</p></div>\n<div class=\"col\" style=\"gap:10px;flex:none;width:320px\"><img class=\"map\" src=\"assets/m63/m_c3.png\" alt=\"Lớp điểm C3 · Thoát nước\" style=\"width:320px;height:213px\"><p class=\"s\" style=\"font-weight:600;color:#0f172a\">C3 · Thoát nước</p><p class=\"cap\">Trọng số 0,20</p></div>\n<div class=\"col\" style=\"gap:10px;flex:none;width:320px\"><img class=\"map\" src=\"assets/m63/m_c4.png\" alt=\"Lớp điểm C4 · Xói mòn\" style=\"width:320px;height:213px\"><p class=\"s\" style=\"font-weight:600;color:#0f172a\">C4 · Xói mòn</p><p class=\"cap\">Trọng số 0,20</p></div>\n<div class=\"col\" style=\"gap:10px;flex:none;width:320px\"><img class=\"map\" src=\"assets/m63/m_c5.png\" alt=\"Lớp điểm C5 · Dinh dưỡng\" style=\"width:320px;height:213px\"><p class=\"s\" style=\"font-weight:600;color:#0f172a\">C5 · Dinh dưỡng</p><p class=\"cap\">Trọng số 0,10</p></div>\n</div>\n<div class=\"row\" style=\"align-items:center;gap:14px\">\n<div class=\"sw\" style=\"background:#b91c1c\"></div><p class=\"cap\">1 rất bất lợi</p>\n<div class=\"sw\" style=\"background:#e08a4f\"></div><p class=\"cap\">2</p>\n<div class=\"sw\" style=\"background:#d6a130\"></div><p class=\"cap\">3</p>\n<div class=\"sw\" style=\"background:#7cbf8f\"></div><p class=\"cap\">4</p>\n<div class=\"sw\" style=\"background:#047857\"></div><p class=\"cap\">5 rất thuận lợi</p>\n</div>\n<div class=\"band\"><p class=\"b\">Lớp C3: thung lũng ĐV4 đỏ vì ngập theo mùa. Lớp C1: vùng karst ĐV5 đỏ vì đất rất mỏng.</p></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 18 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Chồng dần các lớp: vùng nào còn sáng?",
+    "notes": "Giảng viên có thể mở trang Bàn chồng lớp để bật tắt từng lớp trực tiếp trên máy chiếu: https://claude.ai/artifact/PLBSmpZCpksrZ19u6KForx. Chồng bằng mắt cho cảm nhận định tính; slide sau chuyển thành con số.",
+    "html": "<section data-id=\"b3\">\n<div class=\"head\"><p class=\"eyebrow\">Từng bước · Bước 5a</p><h2 class=\"t\">Chồng dần các lớp: vùng nào còn sáng?</h2></div>\n<div class=\"row\" style=\"gap:24px\">\n<div class=\"col\" style=\"gap:12px\"><img class=\"map\" src=\"assets/m63/m_cum1.png\" alt=\"Sau khi chồng một lớp: bản đồ gần như sáng đều, vùng karst hơi tối\" style=\"width:536px;height:338px\"><h3 class=\"c\">1 lớp (C1)</h3><p class=\"s\">Mới thấy vùng karst tối.</p></div>\n<div class=\"col\" style=\"gap:12px\"><img class=\"map\" src=\"assets/m63/m_cum3.png\" alt=\"Sau ba lớp: thung lũng và sườn granit tối dần\" style=\"width:536px;height:338px\"><h3 class=\"c\">3 lớp (C1–C3)</h3><p class=\"s\">Sườn granit, thung lũng tối dần.</p></div>\n<div class=\"col\" style=\"gap:12px\"><img class=\"map\" src=\"assets/m63/m_cum5.png\" alt=\"Sau năm lớp: ĐV1 sáng nhất, ĐV3 tối nhất\" style=\"width:536px;height:338px\"><h3 class=\"c\">5 lớp</h3><p class=\"s\">ĐV1 sáng nhất, ĐV3 tối nhất.</p></div>\n</div>\n<div class=\"band\"><p class=\"b\">Ô càng bất lợi tô càng đậm — đúng cách McHarg làm.</p></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 19 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Tính điểm tổng hợp cho cả năm đơn vị",
+    "notes": "Giảng viên đọc từng hàng, chỉ số hạng nhỏ nhất trong mỗi phép cộng: ĐV4 có 0,20 (thoát nước), ĐV5 có 0,25 (tầng đất), ĐV3 có hai số nhỏ. ĐV4 đúng bằng ngưỡng 3,00 nên xếp S2 – báo trước vấn đề ở slide sau.",
+    "html": "<section data-id=\"cachtinh\">\n<div class=\"head\"><p class=\"eyebrow\">Từng bước · Bước 5b</p><h2 class=\"t\">Tính điểm tổng hợp cho cả năm đơn vị</h2></div>\n<table style=\"font-size:44px;color:#0f172a\">\n<tr><th style=\"width:14%\">Đơn vị</th><th>wᵢ × sᵢ (C1 đến C5), ví dụ 0,25×5 = 1,25</th><th style=\"width:16%;text-align:right\">Điểm</th><th style=\"width:14%;text-align:center\">Hạng</th></tr>\n<tr><td><b>ĐV1</b></td><td>1,25 + 1,25 + 0,80 + 0,80 + 0,30</td><td style=\"text-align:right\"><b>4,40</b></td><td style=\"text-align:center\">S1</td></tr>\n<tr><td><b>ĐV2</b></td><td>1,00 + 0,50 + 0,80 + 0,60 + 0,30</td><td style=\"text-align:right\"><b>3,20</b></td><td style=\"text-align:center\">S2</td></tr>\n<tr><td><b>ĐV3</b></td><td>0,75 + 0,25 + 0,60 + 0,20 + 0,30</td><td style=\"text-align:right\"><b>2,10</b></td><td style=\"text-align:center\">N</td></tr>\n<tr><td><b>ĐV4</b></td><td>0,75 + 1,25 + 0,20 + 0,40 + 0,40</td><td style=\"text-align:right\"><b>3,00</b></td><td style=\"text-align:center\">S2</td></tr>\n<tr><td><b>ĐV5</b></td><td>0,25 + 0,75 + 0,60 + 0,60 + 0,30</td><td style=\"text-align:right\"><b>2,50</b></td><td style=\"text-align:center\">S3</td></tr>\n</table>\n<div style=\"display:flex;flex-direction:column;gap:8px\">\n<div style=\"display:flex;height:56px;border-radius:14px;overflow:hidden\">\n<div style=\"width:35%;background:#b91c1c;display:flex;align-items:center;justify-content:center\"><p class=\"s\" style=\"color:#ffffff;font-weight:700\">N &lt; 2,4</p></div>\n<div style=\"width:15%;background:#b45309;display:flex;align-items:center;justify-content:center\"><p class=\"s\" style=\"color:#ffffff;font-weight:700\">S3</p></div>\n<div style=\"width:25%;background:#ecfdf5;display:flex;align-items:center;justify-content:center;border:3px solid #047857\"><p class=\"s\" style=\"color:#065f46;font-weight:700\">S2</p></div>\n<div style=\"width:25%;background:#047857;display:flex;align-items:center;justify-content:center\"><p class=\"s\" style=\"color:#ffffff;font-weight:700\">S1 ≥ 4,0</p></div>\n</div>\n<div style=\"display:flex;justify-content:space-between\"><p class=\"cap\">1</p><p class=\"cap\">2,4</p><p class=\"cap\">3,0</p><p class=\"cap\">4,0</p><p class=\"cap\">5</p></div>\n</div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 20 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Loại trừ theo yếu tố hạn chế rồi mới phân hạng",
+    "notes": "Hai bản đồ cùng dữ liệu, khác luật tích hợp. Chú giải: xanh đậm S1, xanh nhạt S2, nâu cam S3, đỏ N. Hỏi cả lớp: bản đồ nào an toàn hơn cho người trồng cà phê? Slide sau giải thích bằng ảnh thực tế vì sao ĐV4, ĐV5 phải loại.",
+    "html": "<section data-id=\"b5\">\n<div class=\"head\"><p class=\"eyebrow\">Từng bước · Bước 5c</p><h2 class=\"t\">Loại trừ theo yếu tố hạn chế rồi mới phân hạng</h2></div>\n<div class=\"row\">\n<div class=\"col\" style=\"gap:12px\"><img class=\"map\" src=\"assets/m63/m_ts.png\" alt=\"Bản đồ phân hạng chỉ theo trọng số: ĐV1 S1, ĐV2 S2, ĐV3 N, ĐV4 S2, ĐV5 S3\" style=\"width:730px;height:487px\"><h3 class=\"c\">Chỉ dùng trọng số</h3><p class=\"s\">ĐV4 vẫn S2, ĐV5 vẫn S3.</p></div>\n<div class=\"col\" style=\"gap:12px\"><img class=\"map\" src=\"assets/m63/m_kh.png\" alt=\"Bản đồ kết hợp: ĐV4 và ĐV5 chuyển thành N\" style=\"width:730px;height:487px\"><h3 class=\"c\">Kết hợp: có điểm 1 thì loại</h3><p class=\"s\">ĐV4 (C3 = 1), ĐV5 (C1 = 1) → N.</p></div>\n</div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 21 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Trọng số cho qua, yếu tố hạn chế thì loại",
+    "notes": "Bài học: kết hợp luật loại trừ với chồng lớp trọng số, và luôn đối chiếu với yêu cầu sinh thái của LUT. Quay lại slide năm lớp điểm để chỉ ô đỏ của C3 (ĐV4) và C1 (ĐV5). Ảnh: Hoàng Giang Hải, CC BY 2.0 · BacLuong, CC BY-SA 4.0.",
+    "html": "<section data-id=\"batdong\">\n<div class=\"head\"><p class=\"eyebrow\">Hai phương pháp bất đồng</p><h2 class=\"t\">Trọng số cho qua, yếu tố hạn chế thì loại</h2></div>\n<div class=\"row\">\n<div class=\"col\" style=\"gap:14px\"><img class=\"photo\" src=\"assets/m63/k_lua_bacson.jpg\" alt=\"Thung lũng ruộng lúa thấp, dễ ngập\" style=\"width:828px;height:300px\">\n<div class=\"step\" style=\"align-items:center;gap:16px\"><h3 class=\"c\">ĐV4</h3><p class=\"pill s2\">S2</p><p class=\"b\">→</p><p class=\"pill n\">N</p></div>\n<p class=\"s\">Độ dốc và dinh dưỡng tốt \"bù\" cho thoát nước kém. Cà phê không chịu ngập úng.</p></div>\n<div class=\"col\" style=\"gap:14px\"><img class=\"photo\" src=\"assets/m63/j_karst.jpg\" alt=\"Đá vôi tai mèo lởm chởm và hố sụt ở Hà Giang\" style=\"width:828px;height:300px\">\n<div class=\"step\" style=\"align-items:center;gap:16px\"><h3 class=\"c\">ĐV5</h3><p class=\"pill s3\">S3</p><p class=\"b\">→</p><p class=\"pill n\">N</p></div>\n<p class=\"s\">Tầng đất rất mỏng trên đá vôi: rễ cà phê không phát triển được.</p></div>\n</div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 22 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Kiểm chứng với các điểm sạt lở đã xảy ra",
+    "notes": "Đây là vòng lặp trong Hình 6.2. Ranh giới đơn vị ngoài thực địa chuyển tiếp dần: đất đá từ sườn granit có thể trượt xuống phần ĐV2 bên dưới. Điểm sạt lở là giả định để minh họa bước kiểm chứng.",
+    "html": "<section data-id=\"b6\">\n<div class=\"head\"><p class=\"eyebrow\">Từng bước · Bước 6</p><h2 class=\"t\">Kiểm chứng với các điểm sạt lở đã xảy ra</h2></div>\n<div class=\"row\" style=\"flex:1;align-items:center\">\n<img class=\"map\" src=\"assets/m63/m_kc.png\" alt=\"Bản đồ phân hạng với bốn điểm sạt lở: ba điểm trong ĐV3, một điểm trong ĐV2 sát ranh ĐV3\" style=\"width:830px;height:550px\">\n<div class=\"col\" style=\"gap:12px;justify-content:center\">\n<div class=\"card ok\"><h3 class=\"c\">Khớp</h3><p class=\"s\">3 điểm sạt lở nằm trong ĐV3, đã xếp N.</p></div>\n<div class=\"card warn\"><h3 class=\"c\">Chưa khớp</h3><p class=\"s\">1 điểm trong ĐV2 (S2), sát chân sườn granit.</p></div>\n<div class=\"card\"><h3 class=\"c\">Về bước 3–4</h3><p class=\"s\">Tách dải ĐV2 giáp granit, hạ điểm C4.</p></div>\n</div></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 23 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Đổi trọng số, hạng có đổi không?",
+    "notes": "ĐV2 mới: 0,25×4 + 0,35×2 + 0,20×4 + 0,20×3 + 0×3 = 3,10. Các điểm khác: ĐV1 4,60; ĐV3 1,90; ĐV4 3,10; ĐV5 2,50. Trang Bàn chồng lớp có nút chạy 500 bộ trọng số nếu muốn trình diễn trực tiếp.",
+    "html": "<section data-id=\"b7\">\n<div class=\"head\"><p class=\"eyebrow\">Từng bước · Phân tích độ nhạy</p><h2 class=\"t\">Đổi trọng số, hạng có đổi không?</h2></div>\n<div class=\"row\" style=\"flex:1\">\n<div class=\"col\" style=\"flex:none;width:880px;gap:16px\">\n<p class=\"s\">Thử: độ dốc tăng lên 0,35; dinh dưỡng giảm về 0.</p>\n<table style=\"font-size:40px;color:#0f172a\">\n<tr><th style=\"width:26%\">Đơn vị</th><th>Trọng số gốc</th><th>Trọng số mới</th></tr>\n<tr><td><b>ĐV1</b></td><td>4,40 · S1</td><td>4,60 · S1</td></tr>\n<tr><td><b>ĐV2</b></td><td>3,20 · S2</td><td>3,10 · S2</td></tr>\n<tr><td><b>ĐV3</b></td><td>2,10 · N</td><td>1,90 · N</td></tr>\n<tr><td><b>ĐV4</b></td><td>3,00 · S2</td><td>3,10 · S2</td></tr>\n<tr><td><b>ĐV5</b></td><td>2,50 · S3</td><td>2,50 · S3</td></tr>\n</table>\n</div>\n<div class=\"col\" style=\"gap:20px;justify-content:center\">\n<div class=\"card ok\"><h3 class=\"c\">Hạng không đổi</h3><p class=\"s\">Kết luận ổn định với thay đổi này.</p></div>\n<div class=\"card warn\"><h3 class=\"c\">ĐV4 vẫn sát ngưỡng</h3><p class=\"s\">Đổi trọng số không sửa được lỗi \"che lấp\".</p></div>\n<div class=\"card\"><h3 class=\"c\">Nguyên tắc</h3><p class=\"s\">Báo cáo cả các bộ trọng số đã thử.</p></div>\n</div></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 24 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Vùng trũng đồng bằng sông Cửu Long",
+    "notes": "Ví dụ định tính, không có số liệu: cho thấy ở Ví dụ 6.1 chưa có tiêu chí nào lấy trực tiếp từ lớp trầm tích Đệ tứ, còn ở đồng bằng thì lớp này quyết định. Đất phèn gắn với trầm tích biển – đầm lầy, không phải thềm sông cao thoát nước tốt. Ảnh chụp ở Puerto Rico, chỉ minh họa hiện tượng.",
+    "html": "<section data-id=\"mekong\">\n<div class=\"head\"><p class=\"eyebrow\">Khi lớp 3 quyết định</p><h2 class=\"t\">Vùng trũng đồng bằng sông Cửu Long</h2></div>\n<div class=\"row\" style=\"flex:1\">\n<div class=\"col\" style=\"gap:18px;justify-content:center\">\n<div class=\"step\"><p class=\"dot\">1</p><p class=\"s\"><b>LUT:</b> lúa nước ở vùng trũng, địa hình bằng phẳng.</p></div>\n<div class=\"step\"><p class=\"dot\">2</p><p class=\"s\"><b>Bản đồ Đệ tứ:</b> trầm tích biển – đầm lầy (mb) Holocen, sét chứa pyrit.</p></div>\n<div class=\"step\"><p class=\"dot\">3</p><p class=\"s\"><b>Quy đổi:</b> thành tiêu chí \"độ sâu tầng sinh phèn\".</p></div>\n<div class=\"step\"><p class=\"dot\">4</p><p class=\"s\"><b>Tích hợp:</b> tầng sinh phèn nông là yếu tố hạn chế, dù độ dốc tốt.</p></div>\n<div class=\"step\"><p class=\"dot\">5</p><p class=\"s\"><b>Khuyến nghị:</b> giữ mực nước, không đào sâu tiêu kiệt.</p></div>\n</div>\n<div class=\"col\" style=\"flex:none;width:660px;gap:12px;justify-content:center\"><img class=\"photo\" src=\"assets/m63/o_xamnhapman.jpg\" alt=\"Rừng ngập mặn chết khô trên nền đất phèn\" style=\"width:660px;height:440px\"><p class=\"cap\">Xâm nhập mặn và đất phèn. Ảnh: USDA NRCS, phạm vi công cộng</p></div>\n</div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 25 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Mỗi đơn vị một quyết định, kèm biện pháp",
+    "notes": "Nhấn: khuyến nghị gồm cả \"vùng cần khảo sát chi tiết\" và giám sát, không chỉ là bản đồ màu. Cần phẫu diện đất và khảo sát địa kỹ thuật cho từng thửa.",
+    "html": "<section data-id=\"khuyennghi\">\n<div class=\"head\"><p class=\"eyebrow\">Bước 7 · Khuyến nghị</p><h2 class=\"t\">Mỗi đơn vị một quyết định, kèm biện pháp</h2></div>\n<div class=\"row\" style=\"flex:1\">\n<div class=\"col\" style=\"gap:20px;justify-content:center\">\n<div class=\"step\" style=\"align-items:center;gap:18px\"><p class=\"pill \">ĐV1</p><p class=\"s\">Ưu tiên trồng cà phê.</p></div>\n<div class=\"step\" style=\"align-items:center;gap:18px\"><p class=\"pill s2\">ĐV2</p><p class=\"s\">Làm bậc thang, cây che phủ, băng chống xói.</p></div>\n<div class=\"step\" style=\"align-items:center;gap:18px\"><p class=\"pill n\">ĐV3</p><p class=\"s\">Giữ rừng phòng hộ, cấm cắt taluy cao.</p></div>\n<div class=\"step\" style=\"align-items:center;gap:18px\"><p class=\"pill n\">ĐV4</p><p class=\"s\">Chuyển sang lúa – màu hoặc thủy sản.</p></div>\n<div class=\"step\" style=\"align-items:center;gap:18px\"><p class=\"pill n\">ĐV5</p><p class=\"s\">Bảo tồn cảnh quan karst, rừng.</p></div>\n<p class=\"cap\">Giới hạn: tỷ lệ 1:50.000; điểm và trọng số giả định; chưa xét kinh tế – xã hội, nước tưới.</p>\n</div>\n<div class=\"col\" style=\"flex:none;width:640px;gap:12px;justify-content:center\"><img class=\"photo\" src=\"assets/m63/m_luoichongda.jpg\" alt=\"Lưới thép phủ vách đá dốc bên đường ven biển\" style=\"width:640px;height:460px\"><p class=\"cap\">Lưới thép chống đá rơi. Ảnh: Simon Johnston, CC BY-SA 2.0</p></div>\n</div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 26 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Bản đồ màu đẹp dễ tạo cảm giác chắc chắn",
+    "notes": "Hộp 6.2: nền saprolit dày cần móng sâu; vùng sạt lở bị hạn chế xây dựng; đất phèn tiềm tàng cần quản lý nước. Đây là yêu cầu của chuẩn đầu ra CHP4. Liên hệ: ai chỉnh trọng số để ra kết quả mong muốn là vi phạm đạo đức.",
+    "html": "<section data-id=\"gioihan\">\n<div class=\"head\"><p class=\"eyebrow\">6.3.7 · Giới hạn và đạo đức nghề nghiệp</p><h2 class=\"t\">Bản đồ màu đẹp dễ tạo cảm giác chắc chắn</h2></div>\n<div class=\"grid2\" style=\"flex:1;align-content:center\">\n<div class=\"card\"><h3 class=\"c\">Ranh giới không chắc chắn</h3><p class=\"s\">Ngoài thực địa ranh giới chuyển tiếp dần; bản đồ vẽ nét sắc.</p></div>\n<div class=\"card\"><h3 class=\"c\">Trọng số chủ quan</h3><p class=\"s\">Đổi trọng số có thể đổi hạng: phải phân tích độ nhạy.</p></div>\n<div class=\"card\"><h3 class=\"c\">Tỷ lệ không tương thích</h3><p class=\"s\">Không kết luận cho thửa đất từ bản đồ tỷ lệ nhỏ.</p></div>\n<div class=\"card\"><h3 class=\"c\">Dữ liệu lạc hậu</h3><p class=\"s\">Tai biến và sử dụng đất thay đổi: cập nhật định kỳ.</p></div>\n</div>\n<div class=\"band\"><p class=\"b\">Nêu rõ mức tin cậy, không \"làm đẹp\" kết quả.</p></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 27 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Năm ý cần mang về",
+    "notes": "Tài liệu đọc thêm: McHarg (1969); FAO (1976, 2007); Klingebiel & Montgomery (1961); Saaty (1980); Serote (2004); Waltham (2009); Luật Đất đai 2024 (Điều 52, 53, 60, 82).",
+    "html": "<section data-id=\"tomtat\">\n<div class=\"head\"><p class=\"eyebrow\">Tóm tắt</p><h2 class=\"t\">Năm ý cần mang về</h2></div>\n<div class=\"row\" style=\"flex:1\">\n<div class=\"col\" style=\"gap:20px;justify-content:center\">\n<div class=\"step\"><p class=\"dot\">1</p><p class=\"s\">Sáu lớp địa chất là cơ sở cho quy hoạch đất.</p></div>\n<div class=\"step\"><p class=\"dot\">2</p><p class=\"s\">Chuẩn hóa tỷ lệ, tọa độ, phân cấp, siêu dữ liệu.</p></div>\n<div class=\"step\"><p class=\"dot\">3</p><p class=\"s\">Yếu tố hạn chế và trọng số: nên kết hợp.</p></div>\n<div class=\"step\"><p class=\"dot\">4</p><p class=\"s\">S1, S2, S3, N luôn gắn với một LUT.</p></div>\n<div class=\"step\"><p class=\"dot\">5</p><p class=\"s\">Kiểm chứng, độ nhạy, nêu giới hạn.</p></div>\n</div>\n<div class=\"card tint\" style=\"flex:none;width:800px;gap:16px;justify-content:center\">\n<p class=\"num\">Bốn điều dễ hiểu sai</p>\n<p class=\"s\"><b>Tỷ lệ:</b> chồng lớp không làm dữ liệu chính xác hơn.</p>\n<p class=\"s\"><b>Vỏ phong hóa dày</b> ≠ tầng đất canh tác dày.</p>\n<p class=\"s\"><b>Hạng N</b> với cà phê không có nghĩa đất \"xấu\".</p>\n<p class=\"s\"><b>Ô S1 từng sạt lở:</b> lỗi ở phân cấp hoặc trọng số.</p>\n</div></div>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 28 / 29</p></div>\n</section>"
+   },
+   {
+    "type": "html",
+    "title": "Wikimedia Commons (giấy phép mở) và tư liệu của tác giả",
+    "notes": "Đường dẫn trang gốc từng ảnh có trong tệp credits.json (thư mục anh63 trên máy giảng viên).",
+    "html": "<section data-id=\"nguonanh\">\n<div class=\"head\"><p class=\"eyebrow\">Nguồn ảnh</p><h2 class=\"t\">Wikimedia Commons (giấy phép mở) và tư liệu của tác giả</h2></div>\n<div class=\"row\" style=\"gap:56px\"><div class=\"col\" style=\"gap:14px\"><p class=\"cap\">Sạt lở Mường Can — ChieuTimViet, CC BY 3.0</p><p class=\"cap\">Cà phê Đà Lạt — P. Hughes, CC BY 4.0</p><p class=\"cap\">Cà phê Đắk Lắk — ThiênĐế98, CC BY-SA 4.0</p><p class=\"cap\">Mặt cắt laterit — Irfan và cs., CC BY 3.0</p><p class=\"cap\">Đá ong Sơn Tây — Phó Nháy, công cộng</p><p class=\"cap\">Corestone granit — USGS, công cộng</p><p class=\"cap\">Bazan Gành Đá Đĩa — Prince Roy, CC BY 2.0</p></div><div class=\"col\" style=\"gap:14px\"><p class=\"cap\">Karst Sính Lủng — BacLuong, CC BY-SA 4.0</p><p class=\"cap\">Ruộng lúa Bắc Sơn — H. G. Hải, CC BY 2.0</p><p class=\"cap\">Xói mòn rãnh — Suglo20, CC BY-SA 4.0</p><p class=\"cap\">Lưới chống đá rơi — S. Johnston, CC BY-SA 2.0</p><p class=\"cap\">Đất phèn — USDA NRCS, công cộng</p><p class=\"cap\">Lũ miền Trung 2020 — Copernicus Sentinel-1, EU</p></div></div>\n<p class=\"cap\">Hình 6.1, 6.2, các bản đồ lưới và hai ảnh thực địa cuội kết: tư liệu của tác giả. Ảnh CC BY-SA: bản phái sinh phải giữ cùng giấy phép.</p>\n<div class=\"foot\"><p>© ThS. Đinh Quốc Tuấn · Phi lợi nhuận · Vì giáo dục</p><p>Mục 6.3 · 29 / 29</p></div>\n</section>"
    }
   ]
  }
